@@ -1,0 +1,68 @@
+﻿==================================================================
+https://keybase.io/martincostello
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://api.martincostello.com
+  * I am martincostello (https://keybase.io/martincostello) on keybase.
+  * I have a public key with fingerprint 09E6 0E06 CD38 314B 9F25  1C62 74A5 B223 F73B 2AF3
+
+To do so, I am signing this object:
+
+{
+    "body": {
+        "key": {
+            "eldest_kid": "0101627969ba73e541a5f3d945416ea5f448053207380d6b5e64665461d9fce3f4ef0a",
+            "fingerprint": "09e60e06cd38314b9f251c6274a5b223f73b2af3",
+            "host": "keybase.io",
+            "key_id": "74a5b223f73b2af3",
+            "kid": "0101627969ba73e541a5f3d945416ea5f448053207380d6b5e64665461d9fce3f4ef0a",
+            "uid": "db5898b36f1d1c6b7cb496a98dd61919",
+            "username": "martincostello"
+        },
+        "service": {
+            "hostname": "api.martincostello.com",
+            "protocol": "https:"
+        },
+        "type": "web_service_binding",
+        "version": 1
+    },
+    "ctime": 1458916367,
+    "expire_in": 157680000,
+    "prev": "6796195a58f1b080d845065541216f513c5f2dd2421826e36f3ff921bfcff8dc",
+    "seqno": 8,
+    "tag": "signature"
+}
+
+which yields the signature:
+
+-----BEGIN PGP MESSAGE-----
+Version: Keybase OpenPGP v2.0.51
+Comment: https://keybase.io/crypto
+
+yMIuAnicrVJbSBVBGD7mrSwxFM0gMZfwQU13dnfm7B4tQ19EjSAkgqTDXmZ007N7
+Ome9pxaWPiRFJJUlhJVaISFoEmUXy4gUirKHsNuhwoJILNEIM5uVegh6bF7mn5nv
++/5vPv6RyGBHRFBgcaLpSZv/cdDYcE+FY8dsYVQdo5haDeOqY8rw0obLNey33GW6
+xrgYFrAAcU4JSYrs5DEUgAwJr0kCrRCmtSCILOQ51smLrIYUiJGAEBQQ0CSiYp4I
+mLAyk8YQ3SjBPq9PNyxbVsKIxSxSNV7kgaBIhINApY0EGSocxxMnr3Ay4Smx1PTb
+DGpOkf04XTfpHT24l+z9A/+ffVcsyWkKFCVR4REBGvWpOFVFkJAsiZqGgAQkG+jH
+PkP2YIr2yD5LN1RqHJeXm0x9GkPfKnUV2/Ha//mNk716+t/YdNX0UC2vz7RM1Syn
+mFLL8vpdtoZV47VJVVhx/5ZzK7qh0VwpoxL7/LppMC5Akaql2/pAoKYB4pEzjcHV
+Xt2H3bqNgE4ksnTZfXAllUQ0JyBBGYoEKCzNQxQgiyCNigOIQMCrkHCaxgkcEDmE
+aQo8IRIHFKISImoqY39wr2EyLpHalEuopF8vMWSrwoeZ+rt3ikMcQRGOsNBl9rw5
+Ilas/jOF8XvCFxIa8m+u+tTcsRC+nnhiBzwj/WOMFNd05nJ10cfZ/O6UtsbaREfX
+e+HYl/Yj0Z65ksCJw5uSatsi4kKfZ7SPox/zqQenh3KdH/IWW4YyEkOywlLPHiiG
+Vc3k9f7t51KvZ10tXg5vGVrkjZ6pLQ/y57wDfdMtR3uPM+dPJiXP34si7ROTiYf6
+t/V+ffY0sHX4W8/gu+DOvvhJ1BjZ171zumBl18XOoheTebtIV33ChjeLySn3Cxze
+fRunMnsbLszEDlfGxMmOU4HxdWtyZwIJ6NXu6MFrqRmelx2ns1VrdLF0NHvzpYcT
+M59zlNaekJju1iuZQ4/yKtY23/5Z+P1tSlrO1C8PU0nM
+=CBFb
+-----END PGP MESSAGE-----
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/martincostello
+
+==================================================================

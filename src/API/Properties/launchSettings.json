@@ -1,0 +1,26 @@
+{
+  "iisSettings": {
+    "anonymousAuthentication": true,
+    "windowsAuthentication": false,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:30910/",
+      "sslPort": 44351
+    }
+  },
+  "profiles": {
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "https://localhost:44351/",
+      "environmentVariables": {
+        "Hosting:Environment": "Development"
+      }
+    },
+    "web": {
+      "commandName": "web",
+      "environmentVariables": {
+        "Hosting:Environment": "Development"
+      }
+    }
+  }
+}
