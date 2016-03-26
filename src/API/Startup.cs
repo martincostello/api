@@ -28,15 +28,14 @@ namespace MartinCostello.Api
         {
             var builder = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json")
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables();
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
 
             if (env.IsDevelopment())
             {
                 builder.AddUserSecrets();
             }
 
-
+            builder.AddEnvironmentVariables();
             Configuration = builder.Build();
         }
 
