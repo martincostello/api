@@ -1,0 +1,4 @@
+﻿martinCostello = {
+    api: {
+    }
+};
