@@ -6,6 +6,7 @@ var gulp = require("gulp"),
     concat = require("gulp-concat"),
     cssmin = require("gulp-cssmin"),
     fs = require("fs"),
+    jshint = require("gulp-jshint"),
     //less = require("gulp-less"),
     project = require('./project.json'),
     //sass = require("gulp-sass"),
@@ -47,6 +48,13 @@ gulp.task("sass", function () {
 });
 */
 
+gulp.task("lint", function () {
+    return gulp.src(paths.js)
+       .pipe(jshint())
+       .pipe(jshint.reporter("jshint-stylish"))
+       .pipe(jshint.reporter("fail"));
+});
+
 gulp.task("min:js", function () {
     return gulp.src([paths.js, "!" + paths.minJs], { base: "." })
         .pipe(concat(paths.concatJsDest))
@@ -63,4 +71,4 @@ gulp.task("min:css", function () {
 
 gulp.task("min", ["min:js", "min:css"]);
 
-gulp.task("build", ["clean", "min"/*, "less", "saas"*/]);
+gulp.task("build", ["lint", "clean", "min"/*, "less", "saas"*/]);
