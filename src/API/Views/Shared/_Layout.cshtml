@@ -10,9 +10,17 @@
         string title = ViewBag.Title + " - api.martincostello.com";
         string twitterHandle = "@martin_costello";
 
+        string host = Context.Request.Host.ToString();
+        string[] hostSplit = host.Split(':');
+
         UriBuilder builder = new UriBuilder();
-        builder.Host = Context.Request.Host.ToString().Split(':')[0];
-        builder.Port = int.Parse(Context.Request.Host.ToString().Split(':')[1]);
+        builder.Host = hostSplit[0];
+
+        if (hostSplit.Length > 1)
+        {
+            builder.Port = int.Parse(hostSplit[1], CultureInfo.InvariantCulture);
+        }
+
         builder.Path = Context.Request.Path;
         builder.Query = string.Empty;
         builder.Scheme = "https";
