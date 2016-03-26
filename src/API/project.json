@@ -1,8 +1,26 @@
 ﻿{
-  "userSecretsId": "api.martincostello.com",
+  "authors": [ "Martin Costello" ],
+  "copyright": "Martin Costello (c) 2016",
+  "description": "https://api.martincostello.com/",
+  "iconUrl": "https://martincostello.com/favicon.ico",
+  "licenseUrl": "https://github.com/martincostello/api/blob/master/LICENSE",
+  "owners": [ "Martin Costello" ],
+  "projectUrl": "https://github.com/martincostello/api",
+  "releaseNotes": "https://github.com/martincostello/api/releases",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/martincostello/api.git"
+  },
+  "requireLicenseAcceptance": false,
+  "summary": "Martin Costello's API",
+  "tags": [ ],
+  "title": "api.martincostello.com",
   "version": "1.0.0-*",
+
+  "userSecretsId": "api.martincostello.com",
   "compilationOptions": {
-    "emitEntryPoint": true
+    "emitEntryPoint": true,
+    "warningsAsErrors": true
   },
 
   "dependencies": {
