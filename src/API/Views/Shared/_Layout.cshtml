@@ -169,7 +169,7 @@
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
     @RenderSection("scripts", required: false)
-    @if (false)
+    @if (!Context.Connection.IsLocal)
     {
         <script type="text/javascript">
             (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
