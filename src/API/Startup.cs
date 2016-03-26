@@ -11,6 +11,7 @@ namespace MartinCostello.Api
 {
     using Microsoft.AspNet.Builder;
     using Microsoft.AspNet.Hosting;
+    using Microsoft.AspNet.HttpOverrides;
     using Microsoft.AspNet.Mvc;
     using Microsoft.AspNet.Mvc.Formatters;
     using Microsoft.Extensions.Configuration;
@@ -79,6 +80,13 @@ namespace MartinCostello.Api
             app.UseIISPlatformHandler();
 
             app.UseStaticFiles();
+
+            app.UseOverrideHeaders(
+                new OverrideHeaderMiddlewareOptions()
+                {
+                    ForwardedOptions = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+                });
+            app.UseHttpMethodOverride();
 
             app.UseMvc(
                 (routes) =>
