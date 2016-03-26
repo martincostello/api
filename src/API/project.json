@@ -22,6 +22,20 @@
     "emitEntryPoint": true,
     "warningsAsErrors": true
   },
+  "configurations": {
+    "Debug": {
+      "compilationOptions": {
+        "define": [ "DEBUG", "TRACE" ],
+        "optimize": false
+      }
+    },
+    "Release": {
+      "compilationOptions": {
+        "define": [ "RELEASE", "TRACE" ],
+        "optimize": true
+      }
+    }
+  },
 
   "dependencies": {
     "Microsoft.AspNet.Diagnostics": "1.0.0-rc1-final",
