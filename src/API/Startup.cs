@@ -65,6 +65,7 @@ namespace MartinCostello.Api
             {
                 app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
+                app.UseRuntimeInfoPage();
             }
             else
             {
