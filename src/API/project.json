@@ -19,8 +19,7 @@
 
   "userSecretsId": "api.martincostello.com",
   "compilationOptions": {
-    "emitEntryPoint": true,
-    "warningsAsErrors": true
+    "emitEntryPoint": true
   },
   "configurations": {
     "Debug": {
