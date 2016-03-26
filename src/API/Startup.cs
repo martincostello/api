@@ -11,9 +11,12 @@ namespace MartinCostello.Api
 {
     using Microsoft.AspNet.Builder;
     using Microsoft.AspNet.Hosting;
+    using Microsoft.AspNet.Mvc;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Serialization;
 
     /// <summary>
     /// A class representing the startup logic for the application.
@@ -91,8 +94,30 @@ namespace MartinCostello.Api
         /// <param name="services">The <see cref="IServiceCollection"/> to use.</param>
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services
+                .AddMvc()
+                .AddJsonOptions(ConfigureJsonOptions);
+
             services.AddInstance<IConfiguration>(Configuration);
+        }
+
+        /// <summary>
+        /// Configures the JSON options for MVC.
+        /// </summary>
+        /// <param name="options">The <see cref="MvcJsonOptions"/> to configure.</param>
+        private static void ConfigureJsonOptions(MvcJsonOptions options)
+        {
+            // Serialize and deserialize JSON as "myProperty" => "MyProperty" -> "myProperty"
+            options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+
+            // Make JSON easier to read for debugging at the expense of larger payloads
+            options.SerializerSettings.Formatting = Formatting.Indented;
+
+            // Omit nulls to reduce payload size
+            options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+
+            // Explicitly define behavior when serializing DateTime values
+            options.SerializerSettings.DateFormatString = "yyyy'-'MM'-'dd'T'HH':'mm':'ssK";   // Only return DateTimes to a 1 second precision
         }
     }
 }
