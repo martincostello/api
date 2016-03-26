@@ -17,6 +17,15 @@ namespace MartinCostello.Api.Controllers
     public class HomeController : Controller
     {
         /// <summary>
+        /// Gets the view for the error page.
+        /// </summary>
+        /// <returns>
+        /// The view for the error page.
+        /// </returns>
+        [HttpGet]
+        public IActionResult Error() => View();
+
+        /// <summary>
         /// Gets the view for the home page.
         /// </summary>
         /// <returns>

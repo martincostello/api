@@ -67,6 +67,10 @@ namespace MartinCostello.Api
                 app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseExceptionHandler("/Home/Error");
+            }
 
             app.UseIISPlatformHandler();
 
