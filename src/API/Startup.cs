@@ -9,6 +9,9 @@
 
 namespace MartinCostello.Api
 {
+    using System;
+    using Autofac;
+    using Autofac.Extensions.DependencyInjection;
     using Microsoft.AspNet.Builder;
     using Microsoft.AspNet.Hosting;
     using Microsoft.AspNet.HttpOverrides;
@@ -101,10 +104,20 @@ namespace MartinCostello.Api
         /// Configures the services for the application.
         /// </summary>
         /// <param name="services">The <see cref="IServiceCollection"/> to use.</param>
-        public void ConfigureServices(IServiceCollection services)
+        /// <returns>
+        /// The <see cref="IServiceProvider"/> to use.
+        /// </returns>
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddMvc(ConfigureMvc);
             services.AddSingleton<IConfiguration>((_) => Configuration);
+
+            var builder = new ContainerBuilder();
+
+            builder.Populate(services);
+
+            var container = builder.Build();
+            return container.Resolve<IServiceProvider>();
         }
 
         /// <summary>

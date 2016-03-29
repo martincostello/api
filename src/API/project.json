@@ -1,4 +1,4 @@
-﻿{
+{
   "authors": [ "Martin Costello" ],
   "copyright": "Martin Costello (c) 2016",
   "description": "https://api.martincostello.com/",
@@ -37,6 +37,8 @@
   },
 
   "dependencies": {
+    "Autofac": "4.0.0-rc1-177",
+    "Autofac.Extensions.DependencyInjection": "4.0.0-rc1-177",
     "Microsoft.AspNet.Diagnostics": "1.0.0-rc1-final",
     "Microsoft.AspNet.HttpOverrides": "1.0.0-rc1-final",
     "Microsoft.AspNet.IISPlatformHandler": "1.0.0-rc1-final",
