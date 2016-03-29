@@ -104,7 +104,7 @@ namespace MartinCostello.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc(ConfigureMvc);
-            services.AddInstance<IConfiguration>(Configuration);
+            services.AddSingleton<IConfiguration>((_) => Configuration);
         }
 
         /// <summary>

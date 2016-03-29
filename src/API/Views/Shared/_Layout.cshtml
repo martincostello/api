@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Config
+<!DOCTYPE html>
 <html lang="en-gb">
 <head>
     @{
@@ -182,7 +184,7 @@
     }
 </body>
 <!--
-    Datacenter: 
+    Datacenter: @Config["Azure:Datacenter"]
     Instance:   @Environment.GetEnvironmentVariable("COMPUTERNAME")
 -->
 </html>

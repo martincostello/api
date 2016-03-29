@@ -13,12 +13,14 @@
       "launchBrowser": true,
       "launchUrl": "https://localhost:44351/",
       "environmentVariables": {
+        "Azure:Datacenter": "Local",
         "Hosting:Environment": "Development"
       }
     },
     "web": {
       "commandName": "web",
       "environmentVariables": {
+        "Azure:Datacenter": "Local",
         "Hosting:Environment": "Development"
       }
     }
