@@ -18,9 +18,11 @@
   "version": "1.0.0-*",
 
   "userSecretsId": "api.martincostello.com",
+
   "compilationOptions": {
     "emitEntryPoint": true
   },
+
   "configurations": {
     "Debug": {
       "compilationOptions": {
@@ -57,6 +59,10 @@
     "Microsoft.Extensions.Logging.TraceSource": "1.0.0-rc1-final",
     "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0-rc1-final",
     "Newtonsoft.Json": "7.0.1"
+  },
+
+  "tooling": {
+    "defaultNamespace": "MartinCostello.Api"
   },
 
   "commands": {
