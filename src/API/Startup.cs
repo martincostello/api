@@ -110,6 +110,14 @@ namespace MartinCostello.Api
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddMvc(ConfigureMvc);
+
+            services.ConfigureRouting(
+                (setupAction) =>
+                {
+                    setupAction.AppendTrailingSlash = true;
+                    setupAction.LowercaseUrls = true;
+                });
+
             services.AddSingleton<IConfiguration>((_) => Configuration);
 
             var builder = new ContainerBuilder();
