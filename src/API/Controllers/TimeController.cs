@@ -11,7 +11,7 @@ namespace MartinCostello.Api.Controllers
 {
     using System;
     using System.Globalization;
-    using Microsoft.AspNet.Mvc;
+    using Microsoft.AspNetCore.Mvc;
     using Models;
 
     /// <summary>

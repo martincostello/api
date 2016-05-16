@@ -14,14 +14,16 @@
       "launchUrl": "https://localhost:44351/",
       "environmentVariables": {
         "Azure:Datacenter": "Local",
-        "Hosting:Environment": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "web": {
-      "commandName": "web",
+    "API": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "http://localhost:5000",
       "environmentVariables": {
         "Azure:Datacenter": "Local",
-        "Hosting:Environment": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       }
     }
   }

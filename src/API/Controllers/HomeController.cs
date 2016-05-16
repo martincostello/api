@@ -9,7 +9,7 @@
 
 namespace MartinCostello.Api.Controllers
 {
-    using Microsoft.AspNet.Mvc;
+    using Microsoft.AspNetCore.Mvc;
 
     /// <summary>
     /// A class representing the controller for the <c>/</c> resource.

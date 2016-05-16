@@ -12,11 +12,11 @@ namespace MartinCostello.Api
     using System;
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
-    using Microsoft.AspNet.Builder;
-    using Microsoft.AspNet.Hosting;
-    using Microsoft.AspNet.HttpOverrides;
-    using Microsoft.AspNet.Mvc;
-    using Microsoft.AspNet.Mvc.Formatters;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.HttpOverrides;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Formatters;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
@@ -35,6 +35,7 @@ namespace MartinCostello.Api
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
+                .AddJsonFile("hosting.json")
                 .AddJsonFile("appsettings.json")
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
 
@@ -43,7 +44,9 @@ namespace MartinCostello.Api
                 builder.AddUserSecrets();
             }
 
+            // TODO Also use command-line arguments
             builder.AddEnvironmentVariables();
+
             Configuration = builder.Build();
         }
 
@@ -51,12 +54,6 @@ namespace MartinCostello.Api
         /// Gets or sets the current configuration.
         /// </summary>
         public IConfigurationRoot Configuration { get; set; }
-
-        /// <summary>
-        /// The main entry-point to the application.
-        /// </summary>
-        /// <param name="args">The arguments to the application.</param>
-        public static void Main(string[] args) => WebApplication.Run<Startup>(args);
 
         /// <summary>
         /// Configures the application.
@@ -80,15 +77,15 @@ namespace MartinCostello.Api
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            app.UseIISPlatformHandler();
-
             app.UseStaticFiles();
 
-            app.UseOverrideHeaders(
-                new OverrideHeaderMiddlewareOptions()
+
+            app.UseForwardedHeaders(
+                new ForwardedHeadersOptions()
                 {
-                    ForwardedOptions = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+                    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
                 });
+
             app.UseHttpMethodOverride();
 
             app.UseMvc(
@@ -111,11 +108,11 @@ namespace MartinCostello.Api
         {
             services.AddMvc(ConfigureMvc);
 
-            services.ConfigureRouting(
-                (setupAction) =>
+            services.AddRouting(
+                (p) =>
                 {
-                    setupAction.AppendTrailingSlash = true;
-                    setupAction.LowercaseUrls = true;
+                    p.AppendTrailingSlash = true;
+                    p.LowercaseUrls = true;
                 });
 
             services.AddSingleton<IConfiguration>((_) => Configuration);
@@ -145,7 +142,7 @@ namespace MartinCostello.Api
         /// <summary>
         /// Configures the JSON output formatter for MVC.
         /// </summary>
-        /// <param name="options">The <see cref="JsonOutputFormatter"/> to configure.</param>
+        /// <param name="formatter">The <see cref="JsonOutputFormatter"/> to configure.</param>
         private static void ConfigureJsonFormatter(JsonOutputFormatter formatter)
         {
             // Serialize and deserialize JSON as "myProperty" => "MyProperty" -> "myProperty"
