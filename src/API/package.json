@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "devDependencies": {
+    "bower": "1.7.9",
     "gulp": "3.8.11",
     "gulp-concat": "2.5.2",
     "gulp-cssmin": "0.1.7",
