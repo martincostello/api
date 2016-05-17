@@ -12,7 +12,7 @@
     "keyFile": "",
     "preserveCompilationContext": true,
     "warningsAsErrors": true,
-    "xmlDoc": true,
+    "xmlDoc": false,
     "compile": {
       "exclude": [
         "wwwroot",
