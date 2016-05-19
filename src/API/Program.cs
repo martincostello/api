@@ -23,27 +23,40 @@ namespace MartinCostello.Api
         /// The main entry-point to the application.
         /// </summary>
         /// <param name="args">The arguments to the application.</param>
-        public static void Main(string[] args)
+        /// <returns>
+        /// The exit code from the application.
+        /// </returns>
+        public static int Main(string[] args)
         {
-            // TODO Also use command-line arguments
-            var builder = new WebHostBuilder()
-                .UseKestrel()
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseIISIntegration()
-                .UseStartup<Startup>();
-
-            using (CancellationTokenSource tokenSource = new CancellationTokenSource())
+            try
             {
-                Console.CancelKeyPress += (_, e) =>
-                {
-                    tokenSource.Cancel();
-                    e.Cancel = true;
-                };
+                // TODO Also use command-line arguments
+                var builder = new WebHostBuilder()
+                    .UseKestrel()
+                    .UseContentRoot(Directory.GetCurrentDirectory())
+                    .UseIISIntegration()
+                    .UseStartup<Startup>();
 
-                using (var host = builder.Build())
+                using (CancellationTokenSource tokenSource = new CancellationTokenSource())
                 {
-                    host.Run(tokenSource.Token);
+                    Console.CancelKeyPress += (_, e) =>
+                    {
+                        tokenSource.Cancel();
+                        e.Cancel = true;
+                    };
+
+                    using (var host = builder.Build())
+                    {
+                        host.Run(tokenSource.Token);
+                    }
+
+                    return 0;
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Unhandled exception: {ex}");
+                return -1;
             }
         }
     }
