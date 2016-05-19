@@ -5,24 +5,20 @@ var gulp = require("gulp"),
     rimraf = require("rimraf"),
     concat = require("gulp-concat"),
     cssmin = require("gulp-cssmin"),
-    fs = require("fs"),
-    jshint = require("gulp-jshint"),
-    //less = require("gulp-less"),
-    project = require('./project.json'),
-    //sass = require("gulp-sass"),
-    uglify = require("gulp-uglify");
+    uglify = require("gulp-uglify"),
+    csslint = require("gulp-csslint"),
+    jshint = require("gulp-jshint");
+
+var webroot = "./wwwroot/";
 
 var paths = {
-    styles: "Styles",
-    webroot: "./wwwroot/"
+    js: webroot + "js/**/*.js",
+    minJs: webroot + "js/**/*.min.js",
+    css: webroot + "css/**/*.css",
+    minCss: webroot + "css/**/*.min.css",
+    concatJsDest: webroot + "js/site.min.js",
+    concatCssDest: webroot + "css/site.min.css"
 };
-
-paths.js = paths.webroot + "js/**/*.js";
-paths.minJs = paths.webroot + "js/**/*.min.js";
-paths.css = paths.webroot + "css/**/*.css";
-paths.minCss = paths.webroot + "css/**/*.min.css";
-paths.concatJsDest = paths.webroot + "js/site.min.js";
-paths.concatCssDest = paths.webroot + "css/site.min.css";
 
 gulp.task("clean:js", function (cb) {
     rimraf(paths.concatJsDest, cb);
@@ -34,26 +30,21 @@ gulp.task("clean:css", function (cb) {
 
 gulp.task("clean", ["clean:js", "clean:css"]);
 
-/*
-gulp.task("less", function () {
-    return gulp.src(paths.styles + '/main.less')
-        .pipe(less())
-        .pipe(gulp.dest(project.webroot + '/css'));
+gulp.task("lint:css", function () {
+    return gulp.src(paths.css)
+      .pipe(csslint())
+      .pipe(csslint.reporter())
+      .pipe(csslint.reporter("fail"));
 });
 
-gulp.task("sass", function () {
-    return gulp.src(paths.styles + '/main.scss')
-        .pipe(sass())
-        .pipe(gulp.dest(project.webroot + '/css'));
-});
-*/
-
-gulp.task("lint", function () {
+gulp.task("lint:js", function () {
     return gulp.src(paths.js)
-       .pipe(jshint())
-       .pipe(jshint.reporter("jshint-stylish"))
-       .pipe(jshint.reporter("fail"));
+      .pipe(jshint())
+      .pipe(jshint.reporter("default"))
+      .pipe(jshint.reporter("fail"));
 });
+
+gulp.task("lint", ["lint:js", "lint:css"]);
 
 gulp.task("min:js", function () {
     return gulp.src([paths.js, "!" + paths.minJs], { base: "." })
@@ -70,5 +61,5 @@ gulp.task("min:css", function () {
 });
 
 gulp.task("min", ["min:js", "min:css"]);
-
-gulp.task("build", ["lint", "clean", "min"/*, "less", "saas"*/]);
+gulp.task("build", ["lint"]);
+gulp.task("publish", ["build", "min"]);
