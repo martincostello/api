@@ -14,12 +14,12 @@
     "warningsAsErrors": true,
     "xmlDoc": false,
     "compile": {
-      "exclude": [
-        "wwwroot",
-        "node_modules"
-      ],
-      "excludeFiles": [ 
+      "exclude": [ "wwwroot", "node_modules" ],
+      "excludeFiles": [
       ]
+    },
+    "copyToOutput": {
+      "includeFiles": [ "appsettings.json", "hosting.json", "project.json" ]
     }
   },
 
@@ -117,7 +117,7 @@
 
   "publishOptions": {
     "include": [ "wwwroot", "Views" ],
-    "includeFiles": [ "appsettings.json", "hosting.json" ]
+    "includeFiles": [ "appsettings.json", "hosting.json", "project.json" ]
   },
 
   "scripts": {
