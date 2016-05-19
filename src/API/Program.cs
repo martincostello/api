@@ -26,12 +26,11 @@ namespace MartinCostello.Api
         public static void Main(string[] args)
         {
             // TODO Also use command-line arguments
-            var host = new WebHostBuilder()
+            var builder = new WebHostBuilder()
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
-                .UseStartup<Startup>()
-                .Build();
+                .UseStartup<Startup>();
 
             using (CancellationTokenSource tokenSource = new CancellationTokenSource())
             {
@@ -41,7 +40,10 @@ namespace MartinCostello.Api
                     e.Cancel = true;
                 };
 
-                host.Run(tokenSource.Token);
+                using (var host = builder.Build())
+                {
+                    host.Run(tokenSource.Token);
+                }
             }
         }
     }
