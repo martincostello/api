@@ -13,6 +13,7 @@ namespace MartinCostello.Api
     using System.IO;
     using System.Threading;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.Extensions.Configuration;
 
     /// <summary>
     /// A class representing the entry-point to the application. This class cannot be inherited.
@@ -30,9 +31,13 @@ namespace MartinCostello.Api
         {
             try
             {
-                // TODO Also use command-line arguments
+                var configuration = new ConfigurationBuilder()
+                    .AddCommandLine(args)
+                    .Build();
+
                 var builder = new WebHostBuilder()
                     .UseKestrel()
+                    .UseConfiguration(configuration)
                     .UseContentRoot(Directory.GetCurrentDirectory())
                     .UseIISIntegration()
                     .UseStartup<Startup>();
