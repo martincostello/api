@@ -1,5 +1,5 @@
 {
-  "name": "ASP.NET",
+  "name": "api.martincostello.com",
   "private": true,
   "dependencies": {
     "bootstrap": "3.3.6",
