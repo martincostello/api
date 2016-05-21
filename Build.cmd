@@ -1,5 +1,4 @@
 @echo off
-cd .\src\API
 dotnet restore
-dotnet build
-dotnet publish
+dotnet build src/API
+dotnet publish src/API
