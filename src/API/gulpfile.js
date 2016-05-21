@@ -7,6 +7,7 @@ var gulp = require("gulp"),
     cssmin = require("gulp-cssmin"),
     uglify = require("gulp-uglify"),
     csslint = require("gulp-csslint"),
+    jasmine = require("gulp-jasmine"),
     jshint = require("gulp-jshint");
 
 var webroot = "./wwwroot/";
@@ -14,6 +15,7 @@ var webroot = "./wwwroot/";
 var paths = {
     js: webroot + "js/**/*.js",
     minJs: webroot + "js/**/*.min.js",
+    testsJs: "js/**/*.spec.js",
     css: webroot + "css/**/*.css",
     minCss: webroot + "css/**/*.min.css",
     concatJsDest: webroot + "js/site.min.js",
@@ -61,5 +63,13 @@ gulp.task("min:css", function () {
 });
 
 gulp.task("min", ["min:js", "min:css"]);
+
+gulp.task("test:js", function () {
+    return gulp.src(paths.testsJs)
+      .pipe(jasmine());
+});
+
+gulp.task("test", ["test:js"]);
+
 gulp.task("build", ["lint"]);
-gulp.task("publish", ["build", "min"]);
+gulp.task("publish", ["build", "test", "min"]);
