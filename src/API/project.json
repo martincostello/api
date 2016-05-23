@@ -9,7 +9,7 @@
 
   "buildOptions": {
     "emitEntryPoint": true,
-    "keyFile": "",
+    "keyFile": null,
     "preserveCompilationContext": true,
     "warningsAsErrors": true,
     "xmlDoc": false,
