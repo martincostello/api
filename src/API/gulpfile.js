@@ -8,9 +8,11 @@ var gulp = require("gulp"),
     uglify = require("gulp-uglify"),
     csslint = require("gulp-csslint"),
     jasmine = require("gulp-jasmine"),
-    jshint = require("gulp-jshint");
+    jshint = require("gulp-jshint"),
+    less = require("gulp-less");
 
 var webroot = "./wwwroot/";
+var styles = "/Styles";
 
 var paths = {
     js: webroot + "js/**/*.js",
@@ -19,7 +21,9 @@ var paths = {
     css: webroot + "css/**/*.css",
     minCss: webroot + "css/**/*.min.css",
     concatJsDest: webroot + "js/site.min.js",
-    concatCssDest: webroot + "css/site.min.css"
+    concatCssDest: webroot + "css/site.min.css",
+    less: styles + "/less/site.less",
+    lessDest: webroot + "css"
 };
 
 gulp.task("clean:js", function (cb) {
@@ -32,8 +36,14 @@ gulp.task("clean:css", function (cb) {
 
 gulp.task("clean", ["clean:js", "clean:css"]);
 
+gulp.task("less", function () {
+    return gulp.src(paths.less)
+      .pipe(less())
+      .pipe(gulp.dest(paths.lessDest));
+});
+
 gulp.task("lint:css", function () {
-    return gulp.src(paths.css)
+    return gulp.src(styles)
       .pipe(csslint())
       .pipe(csslint.reporter())
       .pipe(csslint.reporter("fail"));
@@ -71,5 +81,5 @@ gulp.task("test:js", function () {
 
 gulp.task("test", ["test:js"]);
 
-gulp.task("build", ["lint"]);
+gulp.task("build", ["lint", "less"]);
 gulp.task("publish", ["build", "test", "min"]);
