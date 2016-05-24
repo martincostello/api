@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{94A0E905-8142-4667-A244-EBFE3CE20B1A}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		.travis.yml = .travis.yml
 		API.ruleset = API.ruleset
 		Build.cmd = Build.cmd
 		build.sh = build.sh
