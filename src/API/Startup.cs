@@ -78,7 +78,6 @@ namespace MartinCostello.Api
 
             app.UseStaticFiles();
 
-
             app.UseForwardedHeaders(
                 new ForwardedHeadersOptions()
                 {

@@ -7,10 +7,10 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-using Microsoft.Extensions.Configuration;
-
 namespace MartinCostello.Api.Models
 {
+    using Microsoft.Extensions.Configuration;
+
     /// <summary>
     /// A class representing the view model for page metadata. This class cannot be inherited.
     /// </summary>

@@ -7,12 +7,12 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-using System;
-using System.Globalization;
-using Microsoft.AspNetCore.Http;
-
 namespace MartinCostello.Api.Extensions
 {
+    using System;
+    using System.Globalization;
+    using Microsoft.AspNetCore.Http;
+
     /// <summary>
     /// A class containing extension methods for the <see cref="HttpRequest"/> class. This class cannot be inherited.
     /// </summary>

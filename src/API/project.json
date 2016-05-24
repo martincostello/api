@@ -8,6 +8,7 @@
   "userSecretsId": "api.martincostello.com",
 
   "buildOptions": {
+    "additionalArguments": [ "/ruleset:../../API.ruleset", "/additionalfile:../../stylecop.json" ],
     "emitEntryPoint": true,
     "keyFile": null,
     "preserveCompilationContext": true,
@@ -68,7 +69,11 @@
     "Microsoft.Extensions.Logging.TraceSource": "1.0.0-rc2-final",
     "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0-rc2-final",
     "Newtonsoft.Json": "8.0.3",
-    "NodaTime": "2.0.0-alpha20160523"
+    "NodaTime": "2.0.0-alpha20160523",
+    "StyleCop.Analyzers": {
+      "version": "1.0.0",
+      "type": "build"
+    }
   },
 
   "packOptions": {

@@ -1,0 +1,45 @@
+{
+  "$schema": "https://raw.githubusercontent.com/DotNetAnalyzers/StyleCopAnalyzers/master/StyleCop.Analyzers/StyleCop.Analyzers/Settings/stylecop.schema.json",
+  "settings": {
+    "documentationRules": {
+      "companyName": "https://martincostello.com/",
+      "copyrightText": "{ownerName} (c) {year}",
+      "documentExposedElements": true,
+      "documentInterfaces": true,
+      "documentInternalElements": true,
+      "documentPrivateElements": true,
+      "documentPrivateFields": true,
+      "fileNamingConvention": "metadata",
+      "xmlHeader": true,
+      "variables": {
+        "ownerName": "Martin Costello",
+        "year": "2016"
+      }
+    },
+    "layoutRules": {
+      "newlineAtEndOfFile": "require"
+    },
+    "maintainabilityRules": {
+    },
+    "namingRules": {
+      "allowCommonHungarianPrefixes": true,
+      "allowedHungarianPrefixes": [
+      ]
+    },
+    "orderingRules": {
+      "elementOrder": [
+        "kind",
+        "accessibility",
+        "constant",
+        "static",
+        "readonly"
+      ],
+      "systemUsingDirectivesFirst": true,
+      "usingDirectivesPlacement": "insideNamespace"
+    },
+    "readabilityRules": {
+    },
+    "spacingRules": {
+    }
+  }
+}
