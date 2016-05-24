@@ -1,0 +1,61 @@
+﻿{
+  "authors": [ "Martin Costello" ],
+  "copyright": "Martin Costello (c) 2016",
+  "description": "Tests for https://api.martincostello.com/",
+  "title": "api.martincostello.com.Tests",
+  "version": "1.0.0-*",
+
+  "buildOptions": {
+    "additionalArguments": [ "/ruleset:../../API.ruleset", "/additionalfile:../../stylecop.json" ],
+    "copyToOutput": {
+      "include": [ "xunit.runner.json" ]
+    },
+    "keyFile": null,
+    "warningsAsErrors": true,
+    "xmlDoc": false
+  },
+
+  "dependencies": {
+    "API": "1.0.0-*",
+    "dotnet-test-xunit": "1.0.0-rc2-build10015",
+    "NodaTime": "2.0.0-alpha20160523",
+    "NodaTime.Testing": "2.0.0-alpha20160523",
+    "StyleCop.Analyzers": {
+      "version": "1.0.0",
+      "type": "build"
+    },
+    "xunit": "2.1.0"
+  },
+
+  "frameworks": {
+    "netcoreapp1.0": {
+      "dependencies": {
+        "Microsoft.NETCore.App": {
+          "type": "platform",
+          "version": "1.0.0-rc2-3002702"
+        }
+      },
+      "imports": [
+        "dnxcore50",
+        "portable-net45+win8"
+      ]
+    }
+  },
+
+  "packOptions": {
+    "iconUrl": "https://martincostello.com/favicon.ico",
+    "licenseUrl": "https://github.com/martincostello/api/blob/master/LICENSE",
+    "owners": [ "Martin Costello" ],
+    "projectUrl": "https://github.com/martincostello/api",
+    "releaseNotes": "https://github.com/martincostello/api/releases",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/martincostello/api.git"
+    },
+    "requireLicenseAcceptance": false,
+    "summary": "Tests for Martin Costello's API",
+    "tags": [ ]
+  },
+
+  "testRunner": "xunit"
+}
