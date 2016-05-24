@@ -10,6 +10,8 @@ install:
   - ps: $env:DOTNET_INSTALL_DIR = "$pwd\.dotnetcli"
   - ps: '& .\.dotnetcli\install.ps1 -version "$env:CLI_VERSION" -InstallDir "$env:DOTNET_INSTALL_DIR" -NoPath'
   - ps: $env:Path = "$env:DOTNET_INSTALL_DIR;$env:Path"
+  - ps: npm install -g bower
+  - ps: npm install -g gulp
 
 build_script:
   - ps: dotnet --info
