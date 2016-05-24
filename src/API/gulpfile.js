@@ -12,7 +12,7 @@ var gulp = require("gulp"),
     less = require("gulp-less");
 
 var webroot = "./wwwroot/";
-var styles = "/Styles";
+var styles = "./Styles";
 
 var paths = {
     js: webroot + "js/**/*.js",
