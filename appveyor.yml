@@ -11,7 +11,7 @@ install:
   - ps: '& .\.dotnetcli\install.ps1 -version "$env:CLI_VERSION" -InstallDir "$env:DOTNET_INSTALL_DIR" -NoPath'
   - ps: $env:Path = "$env:DOTNET_INSTALL_DIR;$env:Path"
 
-build:
+build_script:
   - ps: dotnet --info
   - ps: .\Build.cmd
 
