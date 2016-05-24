@@ -1,5 +1,10 @@
 # Martin Costello's API
 
+| | Linux | Windows |
+|:-:|:-:|:-:|
+| **Build Status** | [![Build status](https://img.shields.io/travis/martincostello/api/master.svg)](https://travis-ci.org/martincostello/api) | [![Build status](https://img.shields.io/appveyor/ci/martincostello/api/master.svg)](https://ci.appveyor.com/project/martincostello/api) |
+| **Build History** | [![Build history](https://ci-buildstats.azurewebsites.net/travisci/chart/martincostello/api?branch=master&includeBuildsFromPullRequest=false)](https://travis-ci.org/martincostello/api) |  [![Build history](https://ci-buildstats.azurewebsites.net/appveyor/chart/martincostello/api?branch=master&includeBuildsFromPullRequest=false)](https://ci.appveyor.com/project/martincostello/api) |
+
 ## Overview
 
 Source code for building and deploying [api.martincostello.com](https://api.martincostello.com/).
