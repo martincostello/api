@@ -23,7 +23,15 @@ This project is licensed under the [MIT](https://github.com/martincostello/api/b
 
 ## Building and Testing
 
-To build the website run the following command:
+To build and test the website run one of the following commands:
+
+**Linux/OS X**
+
+```sh
+    ./build.sh
+```
+
+**Windows**
 
 ```batchfile
     .\Build.cmd
