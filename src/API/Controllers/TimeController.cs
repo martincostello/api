@@ -9,10 +9,10 @@
 
 namespace MartinCostello.Api.Controllers
 {
-    using System;
     using System.Globalization;
     using Microsoft.AspNetCore.Mvc;
     using Models;
+    using NodaTime;
 
     /// <summary>
     /// A class representing the controller for the <c>/api/time</c> resource.
@@ -20,6 +20,20 @@ namespace MartinCostello.Api.Controllers
     [Route("api/[controller]")]
     public class TimeController : Controller
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TimeController"/> class.
+        /// </summary>
+        /// <param name="clock">The <see cref="IClock"/> to use.</param>
+        public TimeController(IClock clock)
+        {
+            Clock = clock;
+        }
+
+        /// <summary>
+        /// Gets the <see cref="IClock"/> in use by the instance.
+        /// </summary>
+        protected IClock Clock { get; }
+
         /// <summary>
         /// Gets the current UTC time.
         /// </summary>
@@ -30,7 +44,7 @@ namespace MartinCostello.Api.Controllers
         public IActionResult Get()
         {
             var formatProvider = CultureInfo.InvariantCulture;
-            var now = DateTimeOffset.UtcNow;
+            var now = Clock.GetCurrentInstant().ToDateTimeOffset();
 
             var value = new TimeResponse()
             {

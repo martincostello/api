@@ -22,6 +22,7 @@ namespace MartinCostello.Api
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Serialization;
+    using NodaTime;
 
     /// <summary>
     /// A class representing the startup logic for the application.
@@ -114,6 +115,7 @@ namespace MartinCostello.Api
                 });
 
             services.AddSingleton<IConfiguration>((_) => Configuration);
+            services.AddSingleton<IClock>((_) => SystemClock.Instance);
 
             var builder = new ContainerBuilder();
 
