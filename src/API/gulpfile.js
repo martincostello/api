@@ -10,6 +10,7 @@ var gulp = require("gulp"),
     jasmine = require("gulp-jasmine"),
     jshint = require("gulp-jshint"),
     less = require("gulp-less"),
+    lesshint = require("gulp-lesshint"),
     rename = require("gulp-rename"),
     sass = require("gulp-sass");
 
@@ -69,7 +70,13 @@ gulp.task("lint:js", function () {
       .pipe(jshint.reporter("fail"));
 });
 
-gulp.task("lint", ["lint:js", "lint:css"]);
+gulp.task("lint:less", function () {
+    return gulp.src(paths.less)
+        .pipe(lesshint())
+        .pipe(lesshint.reporter());
+});
+
+gulp.task("lint", ["lint:js", "lint:less", "lint:css"]);
 
 gulp.task("min:js", function () {
     return gulp.src([paths.js, "!" + paths.minJs], { base: "." })
