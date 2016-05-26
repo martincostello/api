@@ -9,7 +9,9 @@ var gulp = require("gulp"),
     csslint = require("gulp-csslint"),
     jasmine = require("gulp-jasmine"),
     jshint = require("gulp-jshint"),
-    less = require("gulp-less");
+    less = require("gulp-less"),
+    rename = require("gulp-rename"),
+    sass = require("gulp-sass");
 
 var webroot = "./wwwroot/";
 var styles = "./Styles";
@@ -23,7 +25,9 @@ var paths = {
     concatJsDest: webroot + "js/site.min.js",
     concatCssDest: webroot + "css/site.min.css",
     less: styles + "/less/site.less",
-    lessDest: webroot + "css"
+    lessDest: webroot + "css",
+    sass: styles + "/sass/site.scss",
+    sassDest: webroot + "css"
 };
 
 gulp.task("clean:js", function (cb) {
@@ -36,11 +40,20 @@ gulp.task("clean:css", function (cb) {
 
 gulp.task("clean", ["clean:js", "clean:css"]);
 
-gulp.task("less", function () {
+gulp.task("css:less", function () {
     return gulp.src(paths.less)
       .pipe(less())
       .pipe(gulp.dest(paths.lessDest));
 });
+
+gulp.task("css:sass", function () {
+    return gulp.src(paths.sass)
+      .pipe(sass().on("error", sass.logError))
+      .pipe(rename("sass.css"))
+      .pipe(gulp.dest(paths.sassDest));
+});
+
+gulp.task("css", ["css:less", "css:sass"]);
 
 gulp.task("lint:css", function () {
     return gulp.src(styles)
@@ -65,7 +78,7 @@ gulp.task("min:js", function () {
         .pipe(gulp.dest("."));
 });
 
-gulp.task("min:css", function () {
+gulp.task("min:css", ["css"], function () {
     return gulp.src([paths.css, "!" + paths.minCss])
         .pipe(concat(paths.concatCssDest))
         .pipe(cssmin())
@@ -81,5 +94,5 @@ gulp.task("test:js", function () {
 
 gulp.task("test", ["test:js"]);
 
-gulp.task("build", ["lint", "less"]);
-gulp.task("publish", ["build", "test", "min"]);
+gulp.task("build", ["lint", "min"]);
+gulp.task("publish", ["build", "test"]);
