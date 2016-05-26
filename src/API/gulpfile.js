@@ -12,7 +12,8 @@ var gulp = require("gulp"),
     less = require("gulp-less"),
     lesshint = require("gulp-lesshint"),
     rename = require("gulp-rename"),
-    sass = require("gulp-sass");
+    sass = require("gulp-sass"),
+    sassLint = require("gulp-sass-lint");
 
 var webroot = "./wwwroot/";
 var styles = "./Styles";
@@ -76,7 +77,14 @@ gulp.task("lint:less", function () {
         .pipe(lesshint.reporter());
 });
 
-gulp.task("lint", ["lint:js", "lint:less", "lint:css"]);
+gulp.task("lint:sass", function () {
+    gulp.src(paths.sass)
+      .pipe(sassLint())
+      .pipe(sassLint.format())
+      .pipe(sassLint.failOnError())
+});
+
+gulp.task("lint", ["lint:js", "lint:less", "lint:sass", "lint:css"]);
 
 gulp.task("min:js", function () {
     return gulp.src([paths.js, "!" + paths.minJs], { base: "." })
