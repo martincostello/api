@@ -65,6 +65,8 @@ namespace MartinCostello.Api.Middleware
                     context.Response.Headers.Remove("Server");
                     context.Response.Headers.Remove("X-Powered-By");
 
+                    context.Response.Headers.Add("Arr-Disable-Session-Affinity", bool.TrueString);
+
                     context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
                     context.Response.Headers.Add("X-Frame-Options", "DENY");
                     context.Response.Headers.Add("X-XSS-Protection", "1; mode=block");
