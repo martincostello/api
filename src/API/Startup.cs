@@ -48,12 +48,18 @@ namespace MartinCostello.Api
             }
 
             Configuration = builder.Build();
+            HostingEnvironment = env;
         }
 
         /// <summary>
         /// Gets or sets the current configuration.
         /// </summary>
         public IConfigurationRoot Configuration { get; set; }
+
+        /// <summary>
+        /// Gets or sets the current hosting environment.
+        /// </summary>
+        public IHostingEnvironment HostingEnvironment { get; set; }
 
         /// <summary>
         /// Configures the application.
@@ -84,7 +90,8 @@ namespace MartinCostello.Api
             app.UseForwardedHeaders(
                 new ForwardedHeadersOptions()
                 {
-                    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+                    // Workaround for https://github.com/aspnet/IISIntegration/issues/140 in RC2
+                    ForwardedHeaders = /*ForwardedHeaders.XForwardedFor |*/ ForwardedHeaders.XForwardedProto
                 });
 
             app.UseHttpMethodOverride();
@@ -128,20 +135,6 @@ namespace MartinCostello.Api
         }
 
         /// <summary>
-        /// Configures MVC.
-        /// </summary>
-        /// <param name="options">The <see cref="MvcOptions"/> to configure.</param>
-        private static void ConfigureMvc(MvcOptions options)
-        {
-            JsonOutputFormatter formatter = new JsonOutputFormatter();
-
-            ConfigureJsonFormatter(formatter);
-
-            options.OutputFormatters.Clear();
-            options.OutputFormatters.Add(formatter);
-        }
-
-        /// <summary>
         /// Configures the JSON output formatter for MVC.
         /// </summary>
         /// <param name="formatter">The <see cref="JsonOutputFormatter"/> to configure.</param>
@@ -158,6 +151,25 @@ namespace MartinCostello.Api
 
             // Explicitly define behavior when serializing DateTime values
             formatter.SerializerSettings.DateFormatString = "yyyy'-'MM'-'dd'T'HH':'mm':'ssK";   // Only return DateTimes to a 1 second precision
+        }
+
+        /// <summary>
+        /// Configures MVC.
+        /// </summary>
+        /// <param name="options">The <see cref="MvcOptions"/> to configure.</param>
+        private void ConfigureMvc(MvcOptions options)
+        {
+            if (!HostingEnvironment.IsDevelopment())
+            {
+                options.Filters.Add(new RequireHttpsAttribute());
+            }
+
+            JsonOutputFormatter formatter = new JsonOutputFormatter();
+
+            ConfigureJsonFormatter(formatter);
+
+            options.OutputFormatters.Clear();
+            options.OutputFormatters.Add(formatter);
         }
     }
 }
