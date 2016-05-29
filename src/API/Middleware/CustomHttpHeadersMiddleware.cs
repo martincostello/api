@@ -71,6 +71,11 @@ namespace MartinCostello.Api.Middleware
                     context.Response.Headers.Add("X-Frame-Options", "DENY");
                     context.Response.Headers.Add("X-XSS-Protection", "1; mode=block");
 
+                    if (context.Request.IsHttps)
+                    {
+                        context.Response.Headers.Add("Strict-Transport-Security", "max-age=31536000");
+                    }
+
                     context.Response.Headers.Add("X-Datacenter", _datacenter);
                     context.Response.Headers.Add("X-Environment", _environmentName);
                     context.Response.Headers.Add("X-Instance", Environment.MachineName);
