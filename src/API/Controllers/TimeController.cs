@@ -15,9 +15,9 @@ namespace MartinCostello.Api.Controllers
     using NodaTime;
 
     /// <summary>
-    /// A class representing the controller for the <c>/api/time</c> resource.
+    /// A class representing the controller for the <c>/time</c> resource.
     /// </summary>
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class TimeController : Controller
     {
         /// <summary>
