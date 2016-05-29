@@ -128,7 +128,7 @@
 
   "scripts": {
     "prebuild": [ "gulp build" ],
-    "prepublish": [ "npm install --loglevel=error", "bower install", "gulp publish" ],
+    "prepublish": [ "npm install --force --loglevel=error", "bower install", "gulp publish" ],
     "postpublish": [ "dotnet publish-iis --publish-folder %publish:OutputPath% --framework %publish:FullTargetFramework%" ]
   }
 }
