@@ -63,6 +63,7 @@ namespace MartinCostello.Api.Middleware
             context.Response.OnStarting(() =>
                 {
                     context.Response.Headers.Remove("Server");
+                    context.Response.Headers.Remove("X-Powered-By");
 
                     context.Response.Headers.Add("X-Datacenter", _datacenter);
                     context.Response.Headers.Add("X-Environment", _environmentName);
