@@ -12,6 +12,7 @@ namespace MartinCostello.Api
     using System;
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
+    using Extensions;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.HttpOverrides;
@@ -64,6 +65,8 @@ namespace MartinCostello.Api
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+
+            app.UseCustomHttpHeaders(env.EnvironmentName, Configuration);
 
             if (env.IsDevelopment())
             {
