@@ -1,4 +1,7 @@
 ﻿@model string
+@{
+    string bootstrapVersion = "3.3.6";
+}
     <link rel="canonical" href="@Model" />
     <link rel="manifest" href="@Url.Content("~/manifest.json")" asp-append-version="true" />
     <link rel="sitemap" type="application/xml" href="@Url.Content("~/sitemap.xml")" asp-append-version="true" />
@@ -24,13 +27,13 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     </environment>
     <environment names="Staging,Production">
-    <link rel="prefetch" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.5/css/bootstrap.min.css"
+    <link rel="prefetch" href="https://ajax.aspnetcdn.com/ajax/bootstrap/@bootstrapVersion/css/bootstrap.min.css"
           asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
           asp-fallback-test-class="sr-only"
           asp-fallback-test-property="position"
           asp-fallback-test-value="absolute" />
     <link rel="prefetch" href="~/css/site.min.css" asp-append-version="true" />
-    <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.5/css/bootstrap.min.css"
+    <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/@bootstrapVersion/css/bootstrap.min.css"
           asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
           asp-fallback-test-class="sr-only"
           asp-fallback-test-property="position"
