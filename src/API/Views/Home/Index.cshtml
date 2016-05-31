@@ -1,9 +1,22 @@
-﻿@{
+﻿@using System.Reflection
+@{
     ViewBag.Title = "Home Page";
+    string mvcVersion = typeof(Controller).GetTypeInfo().Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
 }
 <div class="jumbotron">
     <h1>Martin Costello's API</h1>
-    <p class="lead">This API is currently under development.</p>
+    <p class="lead">
+        This website is an excercise in the use of ASP.NET Core for a website and REST API.
+    </p>
+</div>
+<div>
+    <p>
+        This website is hosted in <a href="https://azure.microsoft.com" target="_blank" title="Microsoft Azure">Microsoft Azure</a>
+        and the source code can be found on <a href="https://github.com/martincostello/api" target="_blank" title="This application's GitHub repository">GitHub</a>.
+    </p>
+    <p>
+        It is currently running <a href="https://github.com/aspnet/Mvc" target="_blank" title="ASP.NET MVC on GitHub">ASP.NET MVC @mvcVersion</a>.
+    </p>
 </div>
 <div class="row">
     <div class="col-md-6">
