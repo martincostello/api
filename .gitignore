@@ -20,7 +20,7 @@ src/API/wwwroot/lib/*
 TestResults
 UpgradeLog*.htm
 UpgradeLog*.XML
-*.azurePubxml
+PublishProfiles
 *.DotSettings
 *.GhostDoc.xml
 *.log
