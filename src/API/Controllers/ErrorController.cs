@@ -19,7 +19,7 @@ namespace MartinCostello.Api.Controllers
         /// <summary>
         /// Gets the view for the error page.
         /// </summary>
-        /// <param name="id">The optional HTTP status code associated with the error</param>
+        /// <param name="id">The optional HTTP status code associated with the error.</param>
         /// <returns>
         /// The view for the error page.
         /// </returns>
