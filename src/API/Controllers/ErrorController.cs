@@ -24,6 +24,6 @@ namespace MartinCostello.Api.Controllers
         /// The view for the error page.
         /// </returns>
         [HttpGet]
-        public IActionResult Index(int? id) => View("Error");
+        public IActionResult Index(int? id) => View("Error", id ?? 500);
     }
 }
