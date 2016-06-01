@@ -82,7 +82,8 @@ namespace MartinCostello.Api
             }
             else
             {
-                app.UseExceptionHandler("/Error");
+                app.UseExceptionHandler("/Error")
+                   .UseStatusCodePagesWithReExecute("/Error");
             }
 
             app.UseStaticFiles();
