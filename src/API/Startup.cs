@@ -10,11 +10,15 @@
 namespace MartinCostello.Api
 {
     using System;
+    using System.Globalization;
+    using System.Threading.Tasks;
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
     using Extensions;
     using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Diagnostics;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.HttpOverrides;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Formatters;
@@ -76,14 +80,14 @@ namespace MartinCostello.Api
 
             if (env.IsDevelopment())
             {
-                app.UseBrowserLink();
-                app.UseDeveloperExceptionPage();
-                app.UseRuntimeInfoPage();
+                app.UseBrowserLink()
+                   .UseDeveloperExceptionPage()
+                   .UseRuntimeInfoPage();
             }
             else
             {
                 app.UseExceptionHandler("/error")
-                   .UseStatusCodePagesWithReExecute("/error");
+                   .UseStatusCodePages(HandleError); // Use UseStatusCodePagesWithReExecute when query format supported
             }
 
             app.UseStaticFiles();
@@ -171,6 +175,43 @@ namespace MartinCostello.Api
 
             options.OutputFormatters.Clear();
             options.OutputFormatters.Add(formatter);
+        }
+
+        /// <summary>
+        /// An asynchronous handler for status code errors (such as 404).
+        /// </summary>
+        /// <param name="context">The status code context.</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the error handler.
+        /// </returns>
+        private async Task HandleError(StatusCodeContext context)
+        {
+            var errorPath = new PathString("/error");
+            var errorQueryString = new QueryString(string.Format(CultureInfo.InvariantCulture, "?id={0}", context.HttpContext.Response.StatusCode));
+
+            var originalPath = context.HttpContext.Request.Path;
+            var originalQueryString = context.HttpContext.Request.QueryString;
+
+            context.HttpContext.Features.Set<IStatusCodeReExecuteFeature>(
+                 new StatusCodeReExecuteFeature()
+                 {
+                     OriginalPathBase = context.HttpContext.Request.PathBase.Value,
+                     OriginalPath = originalPath.Value
+                 });
+
+            context.HttpContext.Request.Path = errorPath;
+            context.HttpContext.Request.QueryString = errorQueryString;
+
+            try
+            {
+                await context.Next(context.HttpContext);
+            }
+            finally
+            {
+                context.HttpContext.Request.QueryString = originalQueryString;
+                context.HttpContext.Request.Path = originalPath;
+                context.HttpContext.Features.Set<IStatusCodeReExecuteFeature>(null);
+            }
         }
     }
 }
