@@ -40,6 +40,7 @@ namespace MartinCostello.Api.Controllers
             Assert.NotNull(objectResult.Value);
             var model = Assert.IsType<TimeResponse>(objectResult.Value);
 
+            Assert.Equal(initial.ToDateTimeOffset(), model.Timestamp);
             Assert.Equal("Tue, 24 May 2016 12:34:56 GMT", model.Rfc1123);
             Assert.Equal("Tuesday, 24 May 2016 12:34:56", model.UniversalFull);
             Assert.Equal("2016-05-24 12:34:56Z", model.UniversalSortable);

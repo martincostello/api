@@ -17,7 +17,8 @@ namespace MartinCostello.Api.Controllers
     /// <summary>
     /// A class representing the controller for the <c>/time</c> resource.
     /// </summary>
-    [Route("[controller]")]
+    [Route("time")]
+    [Produces("application/json")]
     public class TimeController : Controller
     {
         /// <summary>
@@ -41,6 +42,7 @@ namespace MartinCostello.Api.Controllers
         /// An <see cref="IActionResult"/> containing the current time.
         /// </returns>
         [HttpGet]
+        [Produces("application/json", Type = typeof(TimeResponse))]
         public IActionResult Get()
         {
             var formatProvider = CultureInfo.InvariantCulture;
@@ -48,6 +50,7 @@ namespace MartinCostello.Api.Controllers
 
             var value = new TimeResponse()
             {
+                Timestamp = now,
                 Rfc1123 = now.ToString("r", formatProvider),
                 UniversalFull = now.UtcDateTime.ToString("U", formatProvider),
                 UniversalSortable = now.UtcDateTime.ToString("u", formatProvider),
