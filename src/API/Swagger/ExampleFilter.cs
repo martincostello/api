@@ -29,7 +29,7 @@ namespace MartinCostello.Api.Swagger
         /// Initializes a new instance of the <see cref="ExampleFilter"/> class.
         /// </summary>
         /// <param name="settings">The <see cref="JsonSerializerSettings"/> to use.</param>
-        internal ExampleFilter(JsonSerializerSettings settings)
+        public ExampleFilter(JsonSerializerSettings settings)
         {
             _settings = settings;
         }

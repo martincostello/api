@@ -14,6 +14,7 @@ namespace MartinCostello.Api.Controllers
     using Microsoft.AspNetCore.Mvc;
     using Models;
     using NodaTime;
+    using Swagger;
     using Swashbuckle.SwaggerGen.Annotations;
 
     /// <summary>
@@ -46,6 +47,7 @@ namespace MartinCostello.Api.Controllers
         [HttpGet]
         [Produces("application/json", Type = typeof(TimeResponse))]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(TimeResponse))]
+        [SwaggerResponseExample(typeof(TimeResponse), typeof(TimeResponseExampleProvider))]
         public IActionResult Get()
         {
             var formatProvider = CultureInfo.InvariantCulture;
