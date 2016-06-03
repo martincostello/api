@@ -34,5 +34,20 @@ namespace MartinCostello.Api.Extensions
         {
             return value.UseMiddleware<CustomHttpHeadersMiddleware>(environmentName, config);
         }
+
+        /// <summary>
+        /// Adds Swagger to the pipeline.
+        /// </summary>
+        /// <param name="value">The <see cref="IApplicationBuilder"/> to add the middleware to.</param>
+        /// <param name="config">The current configuration.</param>
+        /// <returns>
+        /// The value specified by <paramref name="value"/>.
+        /// </returns>
+        public static IApplicationBuilder UseSwagger(this IApplicationBuilder value, IConfiguration config)
+        {
+            return value
+                .UseSwaggerGen()
+                .UseSwaggerUi(baseRoute: config["Site:Api:Documentation:Location"]);
+        }
     }
 }

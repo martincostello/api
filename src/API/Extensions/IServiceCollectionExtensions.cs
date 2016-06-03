@@ -1,0 +1,66 @@
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="IServiceCollectionExtensions.cs" company="https://martincostello.com/">
+//   Martin Costello (c) 2016
+// </copyright>
+// <summary>
+//   IServiceCollectionExtensions.cs
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace MartinCostello.Api.Extensions
+{
+    using System;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Swagger;
+    using Swashbuckle.SwaggerGen.Generator;
+
+    /// <summary>
+    /// A class containing extension methods for the <see cref="IServiceCollection"/> interface. This class cannot be inherited.
+    /// </summary>
+    public static class IServiceCollectionExtensions
+    {
+        /// <summary>
+        /// Adds Swagger to the services.
+        /// </summary>
+        /// <param name="value">The <see cref="IServiceCollection"/> to add the service to.</param>
+        /// <param name="config">The current configuration.</param>
+        public static void AddSwagger(this IServiceCollection value, IConfiguration config)
+        {
+            value.AddSwaggerGen(
+                (p) =>
+                {
+                    p.GroupActionsBy((r) => r.GroupName.ToLowerInvariant());
+                    p.OrderActionGroupsBy(StringComparer.Ordinal);
+
+                    p.DescribeAllEnumsAsStrings();
+                    p.DescribeStringEnumsInCamelCase();
+
+                    p.IgnoreObsoleteActions();
+                    p.IgnoreObsoleteProperties();
+
+                    p.OperationFilter<RemoveStyleCopPrefixesFilter>();
+
+                    p.SingleApiVersion(
+                        new Info()
+                        {
+                            Contact = new Contact()
+                            {
+                                Email = config["Site:Metadata:Author:Email"],
+                                Name = config["Site:Metadata:Author:Name"],
+                                Url = config["Site:Metadata:Author:Website"],
+                            },
+                            Description = config["Site:Metadata:Description"],
+                            License = new License()
+                            {
+                                Name = config["Site:Api:License:Name"],
+                                Url = config["Site:Api:License:Url"],
+                            },
+                            TermsOfService = "https://github.com/martincostello/api/blob/master/LICENSE",
+                            Title = config["Site:Metadata:Name"],
+                            Version = "v1",
+                        });
+                });
+        }
+    }
+}

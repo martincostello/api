@@ -10,9 +10,11 @@
 namespace MartinCostello.Api.Controllers
 {
     using System.Globalization;
+    using System.Net;
     using Microsoft.AspNetCore.Mvc;
     using Models;
     using NodaTime;
+    using Swashbuckle.SwaggerGen.Annotations;
 
     /// <summary>
     /// A class representing the controller for the <c>/time</c> resource.
@@ -43,6 +45,7 @@ namespace MartinCostello.Api.Controllers
         /// </returns>
         [HttpGet]
         [Produces("application/json", Type = typeof(TimeResponse))]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(TimeResponse))]
         public IActionResult Get()
         {
             var formatProvider = CultureInfo.InvariantCulture;

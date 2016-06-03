@@ -28,6 +28,7 @@ namespace MartinCostello.Api
     using Newtonsoft.Json;
     using Newtonsoft.Json.Serialization;
     using NodaTime;
+    using Swagger;
 
     /// <summary>
     /// A class representing the startup logic for the application.
@@ -108,6 +109,8 @@ namespace MartinCostello.Api
                         name: "default",
                         template: "{controller=Home}/{action=Index}/{id?}");
                 });
+
+            app.UseSwagger(Configuration);
         }
 
         /// <summary>
@@ -127,6 +130,8 @@ namespace MartinCostello.Api
                     p.AppendTrailingSlash = true;
                     p.LowercaseUrls = true;
                 });
+
+            services.AddSwagger(Configuration);
 
             services.AddSingleton<IConfiguration>((_) => Configuration);
             services.AddSingleton<IClock>((_) => SystemClock.Instance);
