@@ -32,6 +32,7 @@ namespace MartinCostello.Api
             try
             {
                 var configuration = new ConfigurationBuilder()
+                    .AddEnvironmentVariables()
                     .AddCommandLine(args)
                     .Build();
 
