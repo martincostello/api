@@ -11,7 +11,6 @@ namespace MartinCostello.Api
 {
     using System;
     using System.IO;
-    using System.Threading;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
 
@@ -43,21 +42,12 @@ namespace MartinCostello.Api
                     .UseIISIntegration()
                     .UseStartup<Startup>();
 
-                using (CancellationTokenSource tokenSource = new CancellationTokenSource())
+                using (var host = builder.Build())
                 {
-                    Console.CancelKeyPress += (_, e) =>
-                    {
-                        tokenSource.Cancel();
-                        e.Cancel = true;
-                    };
-
-                    using (var host = builder.Build())
-                    {
-                        host.Run(tokenSource.Token);
-                    }
-
-                    return 0;
+                    host.Run();
                 }
+
+                return 0;
             }
             catch (Exception ex)
             {
