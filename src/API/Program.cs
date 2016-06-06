@@ -40,7 +40,8 @@ namespace MartinCostello.Api
                     .UseConfiguration(configuration)
                     .UseContentRoot(Directory.GetCurrentDirectory())
                     .UseIISIntegration()
-                    .UseStartup<Startup>();
+                    .UseStartup<Startup>()
+                    .CaptureStartupErrors(true);
 
                 using (var host = builder.Build())
                 {
