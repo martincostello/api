@@ -75,12 +75,13 @@ namespace MartinCostello.Api
         public void Configure(IApplicationBuilder app, IHostingEnvironment environment, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
 
             app.UseCustomHttpHeaders(environment, Configuration);
 
             if (environment.IsDevelopment())
             {
+                loggerFactory.AddDebug();
+
                 app.UseBrowserLink()
                    .UseDeveloperExceptionPage()
                    .UseRuntimeInfoPage();
