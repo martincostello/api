@@ -13,6 +13,7 @@ namespace MartinCostello.Api.Middleware
     using System.Diagnostics;
     using System.Globalization;
     using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Configuration;
 
@@ -40,12 +41,12 @@ namespace MartinCostello.Api.Middleware
         /// Initializes a new instance of the <see cref="CustomHttpHeadersMiddleware"/> class.
         /// </summary>
         /// <param name="next">The delegate for the next part of the pipeline.</param>
-        /// <param name="environmentName">The name of the current hosting environment.</param>
+        /// <param name="environment">The current hosting environment.</param>
         /// <param name="config">The current configuration.</param>
-        public CustomHttpHeadersMiddleware(RequestDelegate next, string environmentName, IConfiguration config)
+        public CustomHttpHeadersMiddleware(RequestDelegate next, IHostingEnvironment environment, IConfiguration config)
         {
             _next = next;
-            _environmentName = environmentName;
+            _environmentName = environment.IsProduction() ? null : environment.EnvironmentName;
             _datacenter = config["Azure:Datacenter"] ?? "Local";
         }
 
@@ -77,7 +78,12 @@ namespace MartinCostello.Api.Middleware
                     }
 
                     context.Response.Headers.Add("X-Datacenter", _datacenter);
-                    context.Response.Headers.Add("X-Environment", _environmentName);
+
+                    if (_environmentName != null)
+                    {
+                        context.Response.Headers.Add("X-Environment", _environmentName);
+                    }
+
                     context.Response.Headers.Add("X-Instance", Environment.MachineName);
                     context.Response.Headers.Add("X-Request-Id", context.TraceIdentifier);
 

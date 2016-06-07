@@ -70,16 +70,16 @@ namespace MartinCostello.Api
         /// Configures the application.
         /// </summary>
         /// <param name="app">The <see cref="IApplicationBuilder"/> to use.</param>
-        /// <param name="env">The <see cref="IHostingEnvironment"/> to use.</param>
+        /// <param name="environment">The <see cref="IHostingEnvironment"/> to use.</param>
         /// <param name="loggerFactory">The <see cref="ILoggerFactory"/> to use.</param>
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment environment, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            app.UseCustomHttpHeaders(env.EnvironmentName, Configuration);
+            app.UseCustomHttpHeaders(environment, Configuration);
 
-            if (env.IsDevelopment())
+            if (environment.IsDevelopment())
             {
                 app.UseBrowserLink()
                    .UseDeveloperExceptionPage()
