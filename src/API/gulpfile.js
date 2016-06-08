@@ -16,13 +16,16 @@ var gulp = require("gulp"),
     sassLint = require("gulp-sass-lint");
 
 var webroot = "./wwwroot/";
-var styles = "./Assets/Styles";
+var assets = "./Assets/";
+var scripts = assets + "Scripts/";
+var styles = assets + "Styles/";
 
 var paths = {
-    js: webroot + "js/**/*.js",
+    js: scripts + "js/**/*.js",
+    jsDest: webroot + "js",
     minJs: webroot + "js/**/*.min.js",
     testsJs: "js/**/*.spec.js",
-    css: webroot + "css/**/*.css",
+    css: styles + "css/**/*.css",
     minCss: webroot + "css/**/*.min.css",
     concatJsDest: webroot + "js/site.min.js",
     concatCssDest: webroot + "css/site.min.css",
@@ -87,7 +90,8 @@ gulp.task("lint:sass", function () {
 gulp.task("lint", ["lint:js", "lint:less", "lint:sass", "lint:css"]);
 
 gulp.task("min:js", function () {
-    return gulp.src([paths.js, "!" + paths.minJs], { base: "." })
+    return gulp.src([paths.js, "!" + paths.minJs])
+        .pipe(gulp.dest(paths.jsDest))
         .pipe(concat(paths.concatJsDest))
         .pipe(uglify())
         .pipe(gulp.dest("."));
