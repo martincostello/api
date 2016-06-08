@@ -38,6 +38,11 @@ namespace MartinCostello.Api.Middleware
         private readonly string _datacenter;
 
         /// <summary>
+        /// Whether the current hosting environment is production. This field is read-only.
+        /// </summary>
+        private readonly bool _isProduction;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="CustomHttpHeadersMiddleware"/> class.
         /// </summary>
         /// <param name="next">The delegate for the next part of the pipeline.</param>
@@ -46,7 +51,8 @@ namespace MartinCostello.Api.Middleware
         public CustomHttpHeadersMiddleware(RequestDelegate next, IHostingEnvironment environment, IConfiguration config)
         {
             _next = next;
-            _environmentName = environment.IsProduction() ? null : environment.EnvironmentName;
+            _isProduction = environment.IsProduction();
+            _environmentName = _isProduction ? null : environment.EnvironmentName;
             _datacenter = config["Azure:Datacenter"] ?? "Local";
         }
 
@@ -66,7 +72,10 @@ namespace MartinCostello.Api.Middleware
                     context.Response.Headers.Remove("Server");
                     context.Response.Headers.Remove("X-Powered-By");
 
-                    context.Response.Headers.Add("Arr-Disable-Session-Affinity", bool.TrueString);
+                    if (_isProduction)
+                    {
+                        context.Response.Headers.Add("Arr-Disable-Session-Affinity", bool.TrueString);
+                    }
 
                     context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
                     context.Response.Headers.Add("X-Frame-Options", "DENY");
