@@ -12,6 +12,7 @@ namespace MartinCostello.Api.Middleware
     using System;
     using System.Diagnostics;
     using System.Globalization;
+    using System.Text;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
@@ -26,6 +27,11 @@ namespace MartinCostello.Api.Middleware
         /// The delegate for the next part of the pipeline. This field is read-only.
         /// </summary>
         private readonly RequestDelegate _next;
+
+        /// <summary>
+        /// The current Content Security Policy. This field is read-only.
+        /// </summary>
+        private readonly string _contentSecurityPolicy;
 
         /// <summary>
         /// The name of the current hosting environment. This field is read-only.
@@ -54,6 +60,7 @@ namespace MartinCostello.Api.Middleware
             _isProduction = environment.IsProduction();
             _environmentName = _isProduction ? null : environment.EnvironmentName;
             _datacenter = config["Azure:Datacenter"] ?? "Local";
+            _contentSecurityPolicy = BuildContentSecurityPolicy(_isProduction);
         }
 
         /// <summary>
@@ -77,6 +84,7 @@ namespace MartinCostello.Api.Middleware
                         context.Response.Headers.Add("Arr-Disable-Session-Affinity", bool.TrueString);
                     }
 
+                    context.Response.Headers.Add("Content-Security-Policy", _contentSecurityPolicy);
                     context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
                     context.Response.Headers.Add("X-Frame-Options", "DENY");
                     context.Response.Headers.Add("X-XSS-Protection", "1; mode=block");
@@ -108,6 +116,42 @@ namespace MartinCostello.Api.Middleware
                 });
 
             await _next(context);
+        }
+
+        /// <summary>
+        /// Builds the Content Security Policy to use for the website.
+        /// </summary>
+        /// <param name="isProduction">Whether the current environment is production.</param>
+        /// <returns>
+        /// A <see cref="string"/> containing the Content Security Policy to use.
+        /// </returns>
+        private static string BuildContentSecurityPolicy(bool isProduction)
+        {
+            const string BasePolicy = @"
+default-src 'self';
+script-src 'self' 'unsafe-inline';
+style-src 'self' ajax.aspnetcdn.com fonts.googleapis.com maxcdn.bootstrapcdn.com 'unsafe-inline';
+img-src 'self';
+font-src 'self' fonts.googleapis.com fonts.gstatic.com maxcdn.bootstrapcdn.com;
+connect-src 'self';
+media-src 'none';
+object-src 'none';
+child-src 'none';
+frame-ancestors 'none';
+form-action 'self';
+block-all-mixed-content;
+reflected-xss block;
+base-uri https://api.martincostello.com;
+manifest-src 'self';";
+
+            var builder = new StringBuilder(BasePolicy.Replace(Environment.NewLine, string.Empty));
+
+            if (isProduction)
+            {
+                builder.Append("upgrade-insecure-requests;");
+            }
+
+            return builder.ToString();
         }
     }
 }
