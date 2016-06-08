@@ -82,8 +82,7 @@ namespace MartinCostello.Api
             {
                 loggerFactory.AddDebug();
 
-                app.UseBrowserLink()
-                   .UseDeveloperExceptionPage()
+                app.UseDeveloperExceptionPage()
                    .UseRuntimeInfoPage();
             }
             else
