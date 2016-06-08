@@ -1,5 +1,7 @@
-﻿@model MetaModel
+﻿@using Microsoft.AspNetCore.Hosting
+@model MetaModel
 @inject IConfiguration Config
+@inject IHostingEnvironment Hosting
     <title>@Model.Title</title>
     <meta charset="utf-8" />
     <meta http-equiv="cache-control" content="no-cache, no-store" />
@@ -35,7 +37,7 @@
     <meta name="twitter:title" content="@Model.Title" />
     <meta name="twitter:url" content="@Model.CanonicalUri" />
     <meta name="application-name" content="@Model.SiteName" />
-    <meta name="google-analytics" content="@Config["Site:Analytics:Google"]" />
+    <meta name="google-analytics" content="@(Hosting.IsProduction() ? Config["Site:Analytics:Google"] : string.Empty)" />
     <meta name="msapplication-config" content="browserconfig.xml" />
     <meta name="msapplication-navbutton-color" content="#0095DA" />
     <meta name="msapplication-starturl" content="/" />
