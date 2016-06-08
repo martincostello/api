@@ -28,7 +28,6 @@ namespace MartinCostello.Api
     using Newtonsoft.Json;
     using Newtonsoft.Json.Serialization;
     using NodaTime;
-    using Swagger;
 
     /// <summary>
     /// A class representing the startup logic for the application.
@@ -135,6 +134,7 @@ namespace MartinCostello.Api
 
             services.AddSingleton<IConfiguration>((_) => Configuration);
             services.AddSingleton<IClock>((_) => SystemClock.Instance);
+            services.AddSingleton((p) => new BowerVersions(p.GetRequiredService<IHostingEnvironment>()));
 
             var builder = new ContainerBuilder();
 

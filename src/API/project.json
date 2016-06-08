@@ -20,7 +20,7 @@
       ]
     },
     "copyToOutput": {
-      "includeFiles": [ "appsettings.json", "hosting.json", "project.json" ]
+      "includeFiles": [ "appsettings.json", "bower.json", "hosting.json", "project.json" ]
     }
   },
 
@@ -125,7 +125,7 @@
 
   "publishOptions": {
     "include": [ "wwwroot", "Views" ],
-    "includeFiles": [ "appsettings.json", "hosting.json", "project.json" ]
+    "includeFiles": [ "appsettings.json", "bower.json", "hosting.json", "project.json" ]
   },
 
   "scripts": {
