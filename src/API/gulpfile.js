@@ -24,10 +24,11 @@ var paths = {
     js: scripts + "js/**/*.js",
     jsDest: webroot + "js",
     minJs: webroot + "js/**/*.min.js",
+    minJsDest: webroot + "js/site.min.js",
     testsJs: "js/**/*.spec.js",
     css: styles + "css/**/*.css",
     minCss: webroot + "css/**/*.min.css",
-    concatJsDest: webroot + "js/site.min.js",
+    concatJsDest: webroot + "js/site.js",
     concatCssDest: webroot + "css/site.min.css",
     less: styles + "/less/site.less",
     lessDest: webroot + "css",
@@ -90,10 +91,11 @@ gulp.task("lint:sass", function () {
 gulp.task("lint", ["lint:js", "lint:less", "lint:sass", "lint:css"]);
 
 gulp.task("min:js", function () {
-    return gulp.src([paths.js, "!" + paths.minJs])
-        .pipe(gulp.dest(paths.jsDest))
+    return gulp.src([paths.js])
         .pipe(concat(paths.concatJsDest))
+        .pipe(gulp.dest("."))
         .pipe(uglify())
+        .pipe(rename(paths.minJsDest))
         .pipe(gulp.dest("."));
 });
 
