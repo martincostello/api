@@ -69,11 +69,11 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     </environment>
     <environment names="Staging,Production">
-    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-@(BowerVersions["jquery"]).min.js"
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/@BowerVersions["jquery"]/jquery.min.js"
             asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
             asp-fallback-test="window.jQuery">
     </script>
-    <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/@BowerVersions["bootstrap"]/bootstrap.min.js"
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/@BowerVersions["bootstrap"]/js/bootstrap.min.js"
             asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
             asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal">
     </script>
