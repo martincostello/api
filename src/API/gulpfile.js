@@ -2,7 +2,7 @@
 "use strict";
 
 var gulp = require("gulp"),
-    rimraf = require("rimraf"),
+    del = require("del"),
     concat = require("gulp-concat"),
     cssmin = require("gulp-cssmin"),
     uglify = require("gulp-uglify"),
@@ -33,15 +33,17 @@ var paths = {
     less: styles + "/less/site.less",
     lessDest: webroot + "css",
     sass: styles + "/sass/site.scss",
-    sassDest: webroot + "css"
+    sassDest: webroot + "css",
+    cssClean: webroot + "css/**/*.css",
+    jsClean: webroot + "js/**/*.js"
 };
 
 gulp.task("clean:js", function (cb) {
-    rimraf(paths.concatJsDest, cb);
+    return del([paths.jsClean]);
 });
 
 gulp.task("clean:css", function (cb) {
-    rimraf(paths.concatCssDest, cb);
+    return del([paths.cssClean]);
 });
 
 gulp.task("clean", ["clean:js", "clean:css"]);
@@ -49,6 +51,7 @@ gulp.task("clean", ["clean:js", "clean:css"]);
 gulp.task("css:less", function () {
     return gulp.src(paths.less)
       .pipe(less())
+      .pipe(rename("less.css"))
       .pipe(gulp.dest(paths.lessDest));
 });
 
