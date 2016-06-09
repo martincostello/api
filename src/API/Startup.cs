@@ -121,6 +121,15 @@ namespace MartinCostello.Api
         /// </returns>
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            services.AddAntiforgery(
+                (p) =>
+                {
+                    p.CookieName = "_anti-forgery";
+                    p.FormFieldName = "_anti-forgery";
+                    p.HeaderName = "x-anti-forgery";
+                    p.RequireSsl = !HostingEnvironment.IsDevelopment();
+                });
+
             services.AddMvc(ConfigureMvc);
 
             services.AddRouting(
