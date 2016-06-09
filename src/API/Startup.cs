@@ -16,6 +16,7 @@ namespace MartinCostello.Api
     using Autofac.Extensions.DependencyInjection;
     using Extensions;
     using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.CookiePolicy;
     using Microsoft.AspNetCore.Diagnostics;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
@@ -110,6 +111,8 @@ namespace MartinCostello.Api
                 });
 
             app.UseSwagger(Configuration);
+
+            app.UseCookiePolicy(CreateCookiePolicy());
         }
 
         /// <summary>
@@ -192,6 +195,21 @@ namespace MartinCostello.Api
 
             options.OutputFormatters.Clear();
             options.OutputFormatters.Add(formatter);
+        }
+
+        /// <summary>
+        /// Creates the <see cref="CookiePolicyOptions"/> to use.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="CookiePolicyOptions"/> to use for the application.
+        /// </returns>
+        private CookiePolicyOptions CreateCookiePolicy()
+        {
+            return new CookiePolicyOptions()
+            {
+                HttpOnly = HttpOnlyPolicy.Always,
+                Secure = HostingEnvironment.IsDevelopment() ? SecurePolicy.SameAsRequest : SecurePolicy.Always,
+            };
         }
 
         /// <summary>
