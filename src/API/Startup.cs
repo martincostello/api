@@ -130,6 +130,9 @@ namespace MartinCostello.Api
                     p.RequireSsl = !HostingEnvironment.IsDevelopment();
                 });
 
+            services.AddMemoryCache();
+            services.AddDistributedMemoryCache();
+
             services.AddMvc(ConfigureMvc);
 
             services.AddRouting(
