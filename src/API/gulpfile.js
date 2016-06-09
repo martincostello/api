@@ -103,7 +103,12 @@ gulp.task("min:js", function () {
 });
 
 gulp.task("min:css", ["css"], function () {
-    return gulp.src([paths.lessDest + "/less.css", paths.sassDest + "/sass.css", "!" + paths.minCss, "!" + paths.concatCssDest])
+    return gulp.src([
+            paths.lessDest + "/less.css",
+            paths.sassDest + "/sass.css",
+            paths.css,
+            "!" + paths.minCss,
+            "!" + paths.concatCssDest])
         .pipe(concat(paths.concatCssDest))
         .pipe(gulp.dest("."))
         .pipe(cssmin())
