@@ -15,7 +15,7 @@ var gulp = require("gulp"),
     sass = require("gulp-sass"),
     sassLint = require("gulp-sass-lint");
 
-var webroot = "./wwwroot/";
+var webroot = "./wwwroot/Assets/";
 var assets = "./Assets/";
 var scripts = assets + "Scripts/";
 var styles = assets + "Styles/";

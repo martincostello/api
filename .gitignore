@@ -14,8 +14,7 @@ node_modules
 obj
 packages
 project.lock.json
-src/API/wwwroot/css/*.css
-src/API/wwwroot/js/*.js
+src/API/wwwroot/assets
 src/API/wwwroot/lib/*
 TestResults
 UpgradeLog*.htm
