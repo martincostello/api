@@ -11,6 +11,7 @@ namespace MartinCostello.Api.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
     using Models;
+    using Shouldly;
     using Xunit;
 
     /// <summary>
@@ -34,17 +35,19 @@ namespace MartinCostello.Api.Controllers
             }
 
             // Assert
-            Assert.NotNull(result);
-            var objectResult = Assert.IsType<ObjectResult>(result);
+            result.ShouldNotBeNull();
 
-            Assert.NotNull(objectResult.Value);
-            var model = Assert.IsType<TimeResponse>(objectResult.Value);
+            var objectResult = result.ShouldBeOfType<ObjectResult>();
 
-            Assert.Equal(initial.ToDateTimeOffset(), model.Timestamp);
-            Assert.Equal("Tue, 24 May 2016 12:34:56 GMT", model.Rfc1123);
-            Assert.Equal("Tuesday, 24 May 2016 12:34:56", model.UniversalFull);
-            Assert.Equal("2016-05-24 12:34:56Z", model.UniversalSortable);
-            Assert.Equal(1464093296, model.Unix);
+            objectResult.Value.ShouldNotBeNull();
+
+            var model = objectResult.Value.ShouldBeOfType<TimeResponse>();
+
+            model.Timestamp.ShouldBe(initial.ToDateTimeOffset());
+            model.Rfc1123.ShouldBe("Tue, 24 May 2016 12:34:56 GMT");
+            model.UniversalFull.ShouldBe("Tuesday, 24 May 2016 12:34:56");
+            model.UniversalSortable.ShouldBe("2016-05-24 12:34:56Z");
+            model.Unix.ShouldBe(1464093296);
         }
     }
 }
