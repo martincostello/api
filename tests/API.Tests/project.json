@@ -20,7 +20,7 @@
     "dotnet-test-xunit": "1.0.0-rc2-build10015",
     "NodaTime": "2.0.0-alpha20160523",
     "NodaTime.Testing": "2.0.0-alpha20160523",
-    "Shouldly": "2.7.0",
+    "Shouldly": "2.8.0",
     "StyleCop.Analyzers": {
       "version": "1.0.0",
       "type": "build"
