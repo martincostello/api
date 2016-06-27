@@ -10,7 +10,7 @@
     "copyToOutput": {
       "include": [ "xunit.runner.json" ]
     },
-    "keyFile": null,
+    "keyFile": "",
     "warningsAsErrors": true,
     "xmlDoc": false
   },
@@ -33,7 +33,7 @@
       "dependencies": {
         "Microsoft.NETCore.App": {
           "type": "platform",
-          "version": "1.0.0-rc2-3002702"
+          "version": "1.0.0"
         }
       },
       "imports": [

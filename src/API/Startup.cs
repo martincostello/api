@@ -22,12 +22,10 @@ namespace MartinCostello.Api
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.HttpOverrides;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Mvc.Formatters;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
-    using Newtonsoft.Json.Serialization;
     using NodaTime;
 
     /// <summary>
@@ -82,8 +80,7 @@ namespace MartinCostello.Api
             {
                 loggerFactory.AddDebug();
 
-                app.UseDeveloperExceptionPage()
-                   .UseRuntimeInfoPage();
+                app.UseDeveloperExceptionPage();
             }
             else
             {
@@ -110,7 +107,8 @@ namespace MartinCostello.Api
                         template: "{controller=Home}/{action=Index}/{id?}");
                 });
 
-            app.UseSwagger(Configuration);
+            // TODO Swagger is not supported in 1.0.0 yet
+            ////app.UseSwagger(Configuration);
 
             app.UseCookiePolicy(CreateCookiePolicy());
         }
@@ -136,7 +134,9 @@ namespace MartinCostello.Api
             services.AddMemoryCache();
             services.AddDistributedMemoryCache();
 
-            services.AddMvc(ConfigureMvc);
+            services
+                .AddMvc(ConfigureMvc)
+                .AddJsonOptions((p) => services.AddSingleton(ConfigureJsonFormatter(p)));
 
             services.AddRouting(
                 (p) =>
@@ -145,7 +145,8 @@ namespace MartinCostello.Api
                     p.LowercaseUrls = true;
                 });
 
-            services.AddSwagger(Configuration);
+            // TODO Not supported in .NET Core 1.0.0 yet
+            ////services.AddSwagger(Configuration);
 
             services.AddSingleton<IConfiguration>((_) => Configuration);
             services.AddSingleton<IClock>((_) => SystemClock.Instance);
@@ -160,22 +161,24 @@ namespace MartinCostello.Api
         }
 
         /// <summary>
-        /// Configures the JSON output formatter for MVC.
+        /// Configures the JSON serializer for MVC.
         /// </summary>
-        /// <param name="formatter">The <see cref="JsonOutputFormatter"/> to configure.</param>
-        private static void ConfigureJsonFormatter(JsonOutputFormatter formatter)
+        /// <param name="options">The <see cref="MvcJsonOptions"/> to configure.</param>
+        /// <returns>
+        /// The <see cref="JsonSerializerSettings"/> to use.
+        /// </returns>
+        private static JsonSerializerSettings ConfigureJsonFormatter(MvcJsonOptions options)
         {
-            // Serialize and deserialize JSON as "myProperty" => "MyProperty" -> "myProperty"
-            formatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-
             // Make JSON easier to read for debugging at the expense of larger payloads
-            formatter.SerializerSettings.Formatting = Formatting.Indented;
+            options.SerializerSettings.Formatting = Formatting.Indented;
 
             // Omit nulls to reduce payload size
-            formatter.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+            options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
 
             // Explicitly define behavior when serializing DateTime values
-            formatter.SerializerSettings.DateFormatString = "yyyy'-'MM'-'dd'T'HH':'mm':'ssK";   // Only return DateTimes to a 1 second precision
+            options.SerializerSettings.DateFormatString = "yyyy'-'MM'-'dd'T'HH':'mm':'ssK";   // Only return DateTimes to a 1 second precision
+
+            return options.SerializerSettings;
         }
 
         /// <summary>
@@ -188,13 +191,6 @@ namespace MartinCostello.Api
             {
                 options.Filters.Add(new RequireHttpsAttribute());
             }
-
-            JsonOutputFormatter formatter = new JsonOutputFormatter();
-
-            ConfigureJsonFormatter(formatter);
-
-            options.OutputFormatters.Clear();
-            options.OutputFormatters.Add(formatter);
         }
 
         /// <summary>
@@ -208,7 +204,7 @@ namespace MartinCostello.Api
             return new CookiePolicyOptions()
             {
                 HttpOnly = HttpOnlyPolicy.Always,
-                Secure = HostingEnvironment.IsDevelopment() ? SecurePolicy.SameAsRequest : SecurePolicy.Always,
+                Secure = HostingEnvironment.IsDevelopment() ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.Always,
             };
         }
 

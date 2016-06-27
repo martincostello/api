@@ -10,9 +10,9 @@
 namespace MartinCostello.Api.Extensions
 {
     using System;
-    using Microsoft.AspNetCore.Mvc.Formatters;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Newtonsoft.Json;
     using Swagger;
     using Swashbuckle.SwaggerGen.Generator;
 
@@ -41,9 +41,7 @@ namespace MartinCostello.Api.Extensions
                     p.IgnoreObsoleteProperties();
 
                     // Get the JSON formatter used by the API to use for formatting JSON in examples
-                    var jsonFormatter = value.BuildServiceProvider().GetService<JsonOutputFormatter>();
-
-                    p.OperationFilter<ExampleFilter>(jsonFormatter.SerializerSettings);
+                    p.OperationFilter<ExampleFilter>(value.BuildServiceProvider().GetService<JsonSerializerSettings>());
                     p.OperationFilter<RemoveStyleCopPrefixesFilter>();
 
                     p.SingleApiVersion(
