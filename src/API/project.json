@@ -10,7 +10,6 @@
   "buildOptions": {
     "additionalArguments": [ "/ruleset:../../API.ruleset", "/additionalfile:../../stylecop.json" ],
     "emitEntryPoint": true,
-    "keyFile": "",
     "preserveCompilationContext": true,
     "warningsAsErrors": true,
     "xmlDoc": false,

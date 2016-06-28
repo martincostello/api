@@ -10,7 +10,6 @@
     "copyToOutput": {
       "include": [ "xunit.runner.json" ]
     },
-    "keyFile": "",
     "warningsAsErrors": true,
     "xmlDoc": false
   },
