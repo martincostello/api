@@ -43,15 +43,15 @@
       "version": "1.0.0",
       "type": "platform"
     },
-    "Autofac": "4.0.0-rc2-240",
-    "Autofac.Extensions.DependencyInjection": "4.0.0-rc2-240",
+    "Autofac": "4.0.0-rc3-280",
+    "Autofac.Extensions.DependencyInjection": "4.0.0-rc3-280",
     "Microsoft.AspNetCore.CookiePolicy": "1.0.0",
     "Microsoft.AspNetCore.Diagnostics": "1.0.0",
     "Microsoft.AspNetCore.HttpOverrides": "1.0.0",
     "Microsoft.AspNetCore.Mvc": "1.0.0",
     "Microsoft.AspNetCore.Routing": "1.0.0",
     "Microsoft.AspNetCore.Razor.Tools": {
-      "version": "1.0.0-preview1-final",
+      "version": "1.0.0-preview2-final",
       "type": "build"
     },
     "Microsoft.AspNetCore.Server.IISIntegration": "1.0.0",
