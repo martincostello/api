@@ -8,7 +8,7 @@ namespace MartinCostello.Api.Swagger
     /// <summary>
     /// Defines an example response for an API method. This class cannot be inherited.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
     internal sealed class SwaggerResponseExampleAttribute : Attribute
     {
         /// <summary>
