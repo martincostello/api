@@ -47,7 +47,7 @@ namespace MartinCostello.Api.Extensions
         public static IApplicationBuilder UseSwagger(this IApplicationBuilder value, IConfiguration config)
         {
             return value
-                .UseSwaggerGen()
+                .UseSwagger()
                 .UseSwaggerUi(baseRoute: config["Site:Api:Documentation:Location"]);
         }
     }

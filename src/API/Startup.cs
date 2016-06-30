@@ -107,8 +107,7 @@ namespace MartinCostello.Api
                         template: "{controller=Home}/{action=Index}/{id?}");
                 });
 
-            // TODO Swagger is not supported in 1.0.0 yet
-            ////app.UseSwagger(Configuration);
+            app.UseSwagger(Configuration);
 
             app.UseCookiePolicy(CreateCookiePolicy());
         }
@@ -145,8 +144,7 @@ namespace MartinCostello.Api
                     p.LowercaseUrls = true;
                 });
 
-            // TODO Not supported in .NET Core 1.0.0 yet
-            ////services.AddSwagger(Configuration);
+            services.AddSwagger(Configuration);
 
             services.AddSingleton<IConfiguration>((_) => Configuration);
             services.AddSingleton<IClock>((_) => SystemClock.Instance);

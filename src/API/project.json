@@ -73,8 +73,8 @@
       "version": "1.0.0",
       "type": "build"
     },
-    "Swashbuckle.SwaggerGen": "6.0.0-beta9",
-    "Swashbuckle.SwaggerUi": "6.0.0-beta9"
+    "Swashbuckle.SwaggerGen": "6.0.0-beta901",
+    "Swashbuckle.SwaggerUi": "6.0.0-beta901"
   },
 
   "packOptions": {

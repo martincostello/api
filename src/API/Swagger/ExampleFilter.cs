@@ -13,6 +13,7 @@ namespace MartinCostello.Api.Swagger
     using System.Collections.Generic;
     using System.Linq;
     using Newtonsoft.Json;
+    using Swashbuckle.Swagger.Model;
     using Swashbuckle.SwaggerGen.Generator;
 
     /// <summary>

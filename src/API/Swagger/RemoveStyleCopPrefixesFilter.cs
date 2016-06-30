@@ -10,6 +10,7 @@
 namespace MartinCostello.Api.Swagger
 {
     using System;
+    using Swashbuckle.Swagger.Model;
     using Swashbuckle.SwaggerGen.Generator;
 
     /// <summary>

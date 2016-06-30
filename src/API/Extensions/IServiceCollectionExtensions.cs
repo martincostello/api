@@ -14,7 +14,7 @@ namespace MartinCostello.Api.Extensions
     using Microsoft.Extensions.DependencyInjection;
     using Newtonsoft.Json;
     using Swagger;
-    using Swashbuckle.SwaggerGen.Generator;
+    using Swashbuckle.Swagger.Model;
 
     /// <summary>
     /// A class containing extension methods for the <see cref="IServiceCollection"/> interface. This class cannot be inherited.
