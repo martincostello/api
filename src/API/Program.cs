@@ -47,7 +47,7 @@ namespace MartinCostello.Api
                     .Build();
 
                 var builder = new WebHostBuilder()
-                    .UseKestrel()
+                    .UseKestrel((p) => p.AddServerHeader = false)
                     .UseConfiguration(configuration)
                     .UseContentRoot(Directory.GetCurrentDirectory())
                     .UseIISIntegration()
