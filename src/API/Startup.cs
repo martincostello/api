@@ -18,6 +18,7 @@ namespace MartinCostello.Api
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
     using NodaTime;
+    using Options;
 
     /// <summary>
     /// A class representing the startup logic for the application.
@@ -111,6 +112,9 @@ namespace MartinCostello.Api
         /// </returns>
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            services.AddOptions();
+            services.Configure<SiteOptions>(Configuration.GetSection("Site"));
+
             services.AddAntiforgery(
                 (p) =>
                 {
