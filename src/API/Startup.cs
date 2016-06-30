@@ -93,8 +93,7 @@ namespace MartinCostello.Api
             app.UseForwardedHeaders(
                 new ForwardedHeadersOptions()
                 {
-                    // Workaround for https://github.com/aspnet/IISIntegration/issues/140 in RC2
-                    ForwardedHeaders = /*ForwardedHeaders.XForwardedFor |*/ ForwardedHeaders.XForwardedProto
+                    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
                 });
 
             app.UseHttpMethodOverride();
