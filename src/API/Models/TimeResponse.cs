@@ -8,7 +8,7 @@ namespace MartinCostello.Api.Models
     using Newtonsoft.Json;
 
     /// <summary>
-    /// A class representing the response from the <c>/api/time</c> API resource. This class cannot be inherited.
+    /// A class representing the response from the <c>/time</c> API resource. This class cannot be inherited.
     /// </summary>
     public sealed class TimeResponse
     {
