@@ -41,10 +41,10 @@ namespace MartinCostello.Api.Swagger
                     var schema = context.SchemaRegistry.GetOrRegister(attribute.ResponseType);
 
                     var response = operation.Responses
-                        .Where((p) => p.Value.Schema.Type == schema.Type)
-                        .Where((p) => p.Value.Schema.Ref == schema.Ref)
-                        .First()
-                        .Value;
+                        .Where((p) => p.Value.Schema?.Type == schema.Type)
+                        .Where((p) => p.Value.Schema?.Ref == schema.Ref)
+                        .Select((p) => p.Value)
+                        .FirstOrDefault();
 
                     if (response != null)
                     {
