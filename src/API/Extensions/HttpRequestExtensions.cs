@@ -1,11 +1,5 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="HttpRequestExtensions.cs" company="https://martincostello.com/">
-//   Martin Costello (c) 2016
-// </copyright>
-// <summary>
-//   HttpRequestExtensions.cs
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
+// Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 namespace MartinCostello.Api.Extensions
 {

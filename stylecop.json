@@ -3,15 +3,17 @@
   "settings": {
     "documentationRules": {
       "companyName": "https://martincostello.com/",
-      "copyrightText": "{ownerName} (c) {year}",
+      "copyrightText": "Copyright (c) {ownerName}, {year}. All rights reserved.\nLicensed under the {licenseName} license. See the {licenseFile} file in the project root for full license information.",
       "documentExposedElements": true,
       "documentInterfaces": true,
       "documentInternalElements": true,
       "documentPrivateElements": true,
       "documentPrivateFields": true,
       "fileNamingConvention": "metadata",
-      "xmlHeader": true,
+      "xmlHeader": false,
       "variables": {
+        "licenseFile": "LICENSE",
+        "licenseName": "MIT",
         "ownerName": "Martin Costello",
         "year": "2016"
       }
