@@ -119,7 +119,7 @@
 
   "publishOptions": {
     "include": [ "wwwroot", "Views" ],
-    "includeFiles": [ "appsettings.json", "bower.json", "hosting.json", "project.json" ]
+    "includeFiles": [ "appsettings.json", "bower.json", "hosting.json", "project.json", "web.config" ]
   },
 
   "scripts": {
