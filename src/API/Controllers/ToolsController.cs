@@ -11,6 +11,7 @@ namespace MartinCostello.Api.Controllers
     using System.Net;
     using System.Security.Cryptography;
     using System.Text;
+    using Microsoft.AspNetCore.Cors;
     using Microsoft.AspNetCore.Mvc;
     using Models;
     using Swagger;
@@ -19,8 +20,9 @@ namespace MartinCostello.Api.Controllers
     /// <summary>
     /// A class representing the controller for the <c>/tools</c> resource.
     /// </summary>
-    [Route("tools")]
+    [EnableCors(Startup.DefaultCorsPolicyName)]
     [Produces("application/json")]
+    [Route("tools")]
     public class ToolsController : Controller
     {
         /// <summary>

@@ -9,6 +9,7 @@ namespace MartinCostello.Api
     using Extensions;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.CookiePolicy;
+    using Microsoft.AspNetCore.Cors.Infrastructure;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.HttpOverrides;
@@ -16,6 +17,7 @@ namespace MartinCostello.Api
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Options;
     using Newtonsoft.Json;
     using NodaTime;
     using Options;
@@ -25,6 +27,11 @@ namespace MartinCostello.Api
     /// </summary>
     public class Startup
     {
+        /// <summary>
+        /// The name of the default CORS policy.
+        /// </summary>
+        internal const string DefaultCorsPolicyName = "DefaultCorsPolicy";
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class.
         /// </summary>
@@ -55,6 +62,11 @@ namespace MartinCostello.Api
         /// Gets or sets the current hosting environment.
         /// </summary>
         public IHostingEnvironment HostingEnvironment { get; set; }
+
+        /// <summary>
+        /// Gets or sets the service provider.
+        /// </summary>
+        public IServiceProvider ServiceProvider { get; set; }
 
         /// <summary>
         /// Configures the application.
@@ -127,6 +139,8 @@ namespace MartinCostello.Api
             services.AddMemoryCache();
             services.AddDistributedMemoryCache();
 
+            services.AddCors(ConfigureCors);
+
             services
                 .AddMvc(ConfigureMvc)
                 .AddJsonOptions((p) => services.AddSingleton(ConfigureJsonFormatter(p)));
@@ -149,7 +163,9 @@ namespace MartinCostello.Api
             builder.Populate(services);
 
             var container = builder.Build();
-            return container.Resolve<IServiceProvider>();
+            ServiceProvider = container.Resolve<IServiceProvider>();
+
+            return ServiceProvider;
         }
 
         /// <summary>
@@ -171,6 +187,25 @@ namespace MartinCostello.Api
             options.SerializerSettings.DateFormatString = "yyyy'-'MM'-'dd'T'HH':'mm':'ssK";   // Only return DateTimes to a 1 second precision
 
             return options.SerializerSettings;
+        }
+
+        /// <summary>
+        /// Configures CORS.
+        /// </summary>
+        /// <param name="corsOptions">The <see cref="CorsOptions"/> to configure.</param>
+        private void ConfigureCors(CorsOptions corsOptions)
+        {
+            var siteOptions = ServiceProvider.GetService<IOptions<SiteOptions>>().Value;
+
+            corsOptions.AddPolicy(
+                DefaultCorsPolicyName,
+                (builder) =>
+                {
+                    builder
+                        .WithExposedHeaders(siteOptions.Api.Cors.ExposedHeaders)
+                        .WithMethods(siteOptions.Api.Cors.Methods)
+                        .WithOrigins(siteOptions.Api.Cors.Origins);
+                });
         }
 
         /// <summary>

@@ -9,6 +9,11 @@ namespace MartinCostello.Api.Options
     public sealed class ApiOptions
     {
         /// <summary>
+        /// Gets or sets the CORS options for the API.
+        /// </summary>
+        public ApiCorsOptions Cors { get; set; }
+
+        /// <summary>
         /// Gets or sets the documentation options for the API.
         /// </summary>
         public DocumentationOptions Documentation { get; set; }

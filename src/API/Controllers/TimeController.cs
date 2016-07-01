@@ -5,6 +5,7 @@ namespace MartinCostello.Api.Controllers
 {
     using System.Globalization;
     using System.Net;
+    using Microsoft.AspNetCore.Cors;
     using Microsoft.AspNetCore.Mvc;
     using Models;
     using NodaTime;
@@ -38,6 +39,7 @@ namespace MartinCostello.Api.Controllers
         /// <returns>
         /// An <see cref="IActionResult"/> containing the current time.
         /// </returns>
+        [EnableCors(Startup.DefaultCorsPolicyName)]
         [HttpGet]
         [Produces("application/json", Type = typeof(TimeResponse))]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(TimeResponse))]
