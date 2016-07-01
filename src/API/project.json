@@ -15,8 +15,8 @@
     "xmlDoc": false,
     "compile": {
       "exclude": [ "wwwroot", "node_modules" ],
-      "excludeFiles": [
-      ]
+      "excludeFiles": [],
+      "includeFiles": [ "../../AssemblyVersion.cs", "../../CommonAssemblyInfo.cs" ]
     },
     "copyToOutput": {
       "includeFiles": [ "appsettings.json", "bower.json", "hosting.json", "project.json" ]

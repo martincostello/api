@@ -7,6 +7,9 @@
 
   "buildOptions": {
     "additionalArguments": [ "/ruleset:../../API.ruleset", "/additionalfile:../../stylecop.json" ],
+    "compile": {
+      "includeFiles": [ "../../AssemblyVersion.cs", "../../CommonAssemblyInfo.cs" ]
+    },
     "copyToOutput": {
       "include": [ "xunit.runner.json" ]
     },
