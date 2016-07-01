@@ -88,7 +88,7 @@ namespace MartinCostello.Api
         {
             return typeof(Program).GetTypeInfo().Assembly
                 .GetCustomAttributes<AssemblyMetadataAttribute>()
-                .Where((p) => string.Equals(p.Key, "CommitSha", StringComparison.Ordinal))
+                .Where((p) => string.Equals(p.Key, "CommitHash", StringComparison.Ordinal))
                 .Select((p) => p.Value)
                 .DefaultIfEmpty("Local")
                 .FirstOrDefault();
