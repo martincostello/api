@@ -91,6 +91,10 @@ namespace MartinCostello.Api.Middleware
 
                     context.Response.Headers.Add("X-Datacenter", _datacenter);
 
+#if DEBUG
+                    context.Response.Headers.Add("X-Debug", "true");
+#endif
+
                     if (_environmentName != null)
                     {
                         context.Response.Headers.Add("X-Environment", _environmentName);
