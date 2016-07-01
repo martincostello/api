@@ -7,6 +7,7 @@ namespace MartinCostello.Api.Extensions
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Middleware;
+    using Options;
 
     /// <summary>
     /// A class containing extension methods for the <see cref="IApplicationBuilder"/> interface. This class cannot be inherited.
@@ -34,15 +35,15 @@ namespace MartinCostello.Api.Extensions
         /// Adds Swagger to the pipeline.
         /// </summary>
         /// <param name="value">The <see cref="IApplicationBuilder"/> to add the middleware to.</param>
-        /// <param name="config">The current configuration.</param>
+        /// <param name="options">The site options.</param>
         /// <returns>
         /// The value specified by <paramref name="value"/>.
         /// </returns>
-        public static IApplicationBuilder UseSwagger(this IApplicationBuilder value, IConfiguration config)
+        public static IApplicationBuilder UseSwagger(this IApplicationBuilder value, SiteOptions options)
         {
             return value
                 .UseSwagger()
-                .UseSwaggerUi(baseRoute: config["Site:Api:Documentation:Location"]);
+                .UseSwaggerUi(baseRoute: options.Api.Documentation.Location);
         }
     }
 }

@@ -3,7 +3,7 @@
 
 namespace MartinCostello.Api.Models
 {
-    using Microsoft.Extensions.Configuration;
+    using Options;
 
     /// <summary>
     /// A class representing the view model for page metadata. This class cannot be inherited.
@@ -83,7 +83,7 @@ namespace MartinCostello.Api.Models
         /// <summary>
         /// Creates a new instance of <see cref="MetaModel"/>.
         /// </summary>
-        /// <param name="config">The configuration to use.</param>
+        /// <param name="options">The options to use.</param>
         /// <param name="canonicalUri">The optional canonical URI of the page.</param>
         /// <param name="hostName">The optional host name.</param>
         /// <param name="description">The optional page description.</param>
@@ -95,7 +95,7 @@ namespace MartinCostello.Api.Models
         /// The created instance of <see cref="MetaModel"/>.
         /// </returns>
         public static MetaModel Create(
-            IConfiguration config,
+            MetadataOptions options,
             string canonicalUri = null,
             string hostName = null,
             string description = null,
@@ -106,20 +106,20 @@ namespace MartinCostello.Api.Models
         {
             return new MetaModel()
             {
-                Author = config["Site:Metadata:Author:Name"],
+                Author = options.Author.Name,
                 CanonicalUri = canonicalUri ?? string.Empty,
-                Description = description ?? config["Site:Metadata:Description"],
-                Facebook = config["Site:Metadata:Author:SocialMedia:Facebook"],
-                HostName = config["Site:Metadata:Domain"],
+                Description = description ?? options.Description,
+                Facebook = options.Author.SocialMedia.Facebook,
+                HostName = options.Domain,
                 ImageUri = imageUri ?? string.Empty,
                 ImageAltText = imageAltText ?? string.Empty,
-                Keywords = config["Site:Metadata:Keywords"] ?? "martin,costello,api",
-                Robots = robots ?? config["Site:Metadata:Robots"],
-                SiteName = config["Site:Metadata:Name"] ?? "api.martincostello.com",
-                SiteType = config["Site:Metadata:Type"] ?? "website",
-                Title = title + " - " + config["Site:Metadata:Name"],
+                Keywords = options.Keywords ?? "martin,costello,api",
+                Robots = robots ?? options.Robots,
+                SiteName = options.Name ?? "api.martincostello.com",
+                SiteType = options.Type ?? "website",
+                Title = title + " - " + options.Name,
                 TwitterCard = "summary",
-                TwitterHandle = config["Site:Metadata:Author:SocialMedia:Twitter"],
+                TwitterHandle = options.Author.SocialMedia.Twitter,
             };
         }
     }

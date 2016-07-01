@@ -4,9 +4,9 @@
 namespace MartinCostello.Api.Extensions
 {
     using System;
-    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Newtonsoft.Json;
+    using Options;
     using Swagger;
     using Swashbuckle.Swagger.Model;
 
@@ -19,8 +19,7 @@ namespace MartinCostello.Api.Extensions
         /// Adds Swagger to the services.
         /// </summary>
         /// <param name="value">The <see cref="IServiceCollection"/> to add the service to.</param>
-        /// <param name="config">The current configuration.</param>
-        public static void AddSwagger(this IServiceCollection value, IConfiguration config)
+        public static void AddSwagger(this IServiceCollection value)
         {
             value.AddSwaggerGen(
                 (p) =>
@@ -34,27 +33,31 @@ namespace MartinCostello.Api.Extensions
                     p.IgnoreObsoleteActions();
                     p.IgnoreObsoleteProperties();
 
+                    var provider = value.BuildServiceProvider();
+
                     // Get the JSON formatter used by the API to use for formatting JSON in examples
-                    p.OperationFilter<ExampleFilter>(value.BuildServiceProvider().GetService<JsonSerializerSettings>());
+                    p.OperationFilter<ExampleFilter>(provider.GetService<JsonSerializerSettings>());
                     p.OperationFilter<RemoveStyleCopPrefixesFilter>();
+
+                    var options = provider.GetService<SiteOptions>();
 
                     p.SingleApiVersion(
                         new Info()
                         {
                             Contact = new Contact()
                             {
-                                Email = config["Site:Metadata:Author:Email"],
-                                Name = config["Site:Metadata:Author:Name"],
-                                Url = config["Site:Metadata:Author:Website"],
+                                Email = options.Metadata.Author.Email,
+                                Name = options.Metadata.Author.Name,
+                                Url = options.Metadata.Author.Website,
                             },
-                            Description = config["Site:Metadata:Description"],
+                            Description = options.Metadata.Description,
                             License = new License()
                             {
-                                Name = config["Site:Api:License:Name"],
-                                Url = config["Site:Api:License:Url"],
+                                Name = options.Api.License.Name,
+                                Url = options.Api.License.Url,
                             },
                             TermsOfService = "https://github.com/martincostello/api/blob/master/LICENSE",
-                            Title = config["Site:Metadata:Name"],
+                            Title = options.Metadata.Name,
                             Version = "v1",
                         });
                 });

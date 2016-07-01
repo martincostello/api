@@ -110,7 +110,7 @@ namespace MartinCostello.Api
                         template: "{controller=Home}/{action=Index}/{id?}");
                 });
 
-            app.UseSwagger(Configuration);
+            app.UseSwagger(ServiceProvider.GetRequiredService<SiteOptions>());
 
             app.UseCookiePolicy(CreateCookiePolicy());
         }
@@ -152,10 +152,11 @@ namespace MartinCostello.Api
                     p.LowercaseUrls = true;
                 });
 
-            services.AddSwagger(Configuration);
+            services.AddSwagger();
 
             services.AddSingleton<IConfiguration>((_) => Configuration);
             services.AddSingleton<IClock>((_) => SystemClock.Instance);
+            services.AddSingleton((p) => p.GetRequiredService<IOptions<SiteOptions>>().Value);
             services.AddSingleton((p) => new BowerVersions(p.GetRequiredService<IHostingEnvironment>()));
 
             var builder = new ContainerBuilder();
@@ -195,7 +196,7 @@ namespace MartinCostello.Api
         /// <param name="corsOptions">The <see cref="CorsOptions"/> to configure.</param>
         private void ConfigureCors(CorsOptions corsOptions)
         {
-            var siteOptions = ServiceProvider.GetService<IOptions<SiteOptions>>().Value;
+            var siteOptions = ServiceProvider.GetService<SiteOptions>();
 
             corsOptions.AddPolicy(
                 DefaultCorsPolicyName,
