@@ -60,7 +60,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @Options.Metadata.Author.Name @DateTimeOffset.UtcNow.Year | <a href="http://status.martincostello.com/" target="_blank">Site Status &amp; Uptime</a></p>
+            <p>&copy; @Options.Metadata.Author.Name @DateTimeOffset.UtcNow.Year | <a href="http://status.martincostello.com/" target="_blank">Site Status &amp; Uptime</a> | Built from <a href="https://github.com/martincostello/api/commit/@Program.Revision">@Program.Revision</a></p>
         </footer>
     </div><environment names="Development">
     <script src="~/lib/jquery/dist/jquery.js"></script>
@@ -81,5 +81,6 @@
 <!--
     Datacenter: @Config["Azure:Datacenter"]
     Instance:   @Environment.MachineName
+    Commit:     @Program.Revision
 -->
 </html>
