@@ -1,4 +1,5 @@
 ﻿@using System.Reflection
+@inject SiteOptions Options
 @{
     ViewBag.Title = "Home Page";
     string mvcVersion = typeof(Controller).GetTypeInfo().Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
@@ -12,7 +13,7 @@
 <div>
     <p>
         This website is hosted in <a href="https://azure.microsoft.com" target="_blank" title="Microsoft Azure">Microsoft Azure</a>
-        and the source code can be found on <a href="https://github.com/martincostello/api" target="_blank" title="This application's GitHub repository">GitHub</a>.
+        and the source code can be found on <a href="@Options.Metadata.Repository" target="_blank" title="This application's GitHub repository">GitHub</a>.
     </p>
     <p>
         It is currently running <a href="https://github.com/aspnet/Mvc" target="_blank" title="ASP.NET MVC on GitHub">ASP.NET MVC @mvcVersion</a>.

@@ -56,7 +56,7 @@ namespace MartinCostello.Api.Extensions
                                 Name = options.Api.License.Name,
                                 Url = options.Api.License.Url,
                             },
-                            TermsOfService = "https://github.com/martincostello/api/blob/master/LICENSE",
+                            TermsOfService = options.Metadata.Repository + "/blob/master/LICENSE",
                             Title = options.Metadata.Name,
                             Version = "v1",
                         });

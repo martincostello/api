@@ -102,7 +102,7 @@ namespace MartinCostello.Api.Middleware
 
                     context.Response.Headers.Add("X-Instance", Environment.MachineName);
                     context.Response.Headers.Add("X-Request-Id", context.TraceIdentifier);
-                    context.Response.Headers.Add("X-Revision", Program.Revision);
+                    context.Response.Headers.Add("X-Revision", GitMetadata.Commit);
 
                     stopwatch.Stop();
 

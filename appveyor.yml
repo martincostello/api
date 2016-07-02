@@ -22,8 +22,9 @@ install:
 build_script:
   - ps: dotnet --info
   - ps: $gitRevision = (git rev-parse HEAD | Out-String)
-  - ps: '$gitRevision = "using System.Reflection;`r`n`r`n[assembly: AssemblyMetadata(""CommitHash"", ""{0}"")]" -f $gitRevision.Trim()'
-  - ps: $gitRevision | Out-File -FilePath .\AssemblyVersion.cs -Append -Encoding utf8 -Force
+  - ps: $gitBranch = (git rev-parse --abbrev-ref HEAD | Out-String)
+  - ps: '$metadata = "using System.Reflection;`r`n`r`n[assembly: AssemblyMetadata(""CommitHash"", ""{0}"")]`r`n[assembly: AssemblyMetadata(""CommitBranch"", ""{1}"")]" -f $gitRevision.Trim(), $gitBranch.Trim()'
+  - ps: $metadata | Out-File -FilePath .\AssemblyVersion.cs -Append -Encoding utf8 -Force
   - ps: .\Build.cmd
 
 nuget:

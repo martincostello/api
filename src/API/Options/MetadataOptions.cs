@@ -34,6 +34,11 @@ namespace MartinCostello.Api.Options
         public string Name { get; set; }
 
         /// <summary>
+        /// Gets or sets the URL of the site's repository.
+        /// </summary>
+        public string Repository { get; set; }
+
+        /// <summary>
         /// Gets or sets the robots value.
         /// </summary>
         public string Robots { get; set; }
