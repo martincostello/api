@@ -6,6 +6,11 @@ dist: trusty
 env:
   - CLI_VERSION=latest
 
+branches:
+  except:
+    - deploy
+    - gh-pages
+
 addons:
   apt:
     packages:

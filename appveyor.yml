@@ -4,6 +4,11 @@ version: 1.0.{build}
 environment:
   CLI_VERSION: latest
 
+branches:
+  except:
+    - deploy
+    - gh-pages
+
 install:
   - ps: mkdir -Force ".\.dotnetcli\" | Out-Null
   - ps: Invoke-WebRequest "https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scripts/obtain/dotnet-install.ps1" -OutFile ".\.dotnetcli\install.ps1"
