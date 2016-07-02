@@ -66,15 +66,18 @@ SET MSBUILD_PATH=%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe
 
 echo Handling ASP.NET Core Web Application deployment with MSBuild.
 
-:: 1. Restore nuget packages
+:: 1. Update assembly metadata
+Powershell.exe -executionpolicy remotesigned -File .\AppendAssemblyVersion.ps1
+
+:: 2. Restore nuget packages
 call :ExecuteCmd nuget.exe restore "%DEPLOYMENT_SOURCE%\API.sln" -packagesavemode nuspec
 IF !ERRORLEVEL! NEQ 0 goto error
 
-:: 2. Build and publish
+:: 3. Build and publish
 call :ExecuteCmd "%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\API.sln" /nologo /verbosity:m /p:deployOnBuild=True;AutoParameterizationWebConfigConnectionStrings=false;Configuration=Release;UseSharedCompilation=false;publishUrl="%DEPLOYMENT_TEMP%" %SCM_BUILD_ARGS%
 IF !ERRORLEVEL! NEQ 0 goto error
 
-:: 3. KuduSync
+:: 4. KuduSync
 call :ExecuteCmd "%KUDU_SYNC_CMD%" -v 50 -f "%DEPLOYMENT_TEMP%" -t "%DEPLOYMENT_TARGET%" -n "%NEXT_MANIFEST_PATH%" -p "%PREVIOUS_MANIFEST_PATH%" -i ".git;.hg;.deployment;deploy.cmd"
 IF !ERRORLEVEL! NEQ 0 goto error
 
