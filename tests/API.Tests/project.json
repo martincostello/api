@@ -24,6 +24,7 @@
     },
     "API": "1.0.0-*",
     "dotnet-test-xunit": "2.2.0-preview2-build1029",
+    "MyTested.AspNetCore.Mvc": "1.0.0-preview-final",
     "NodaTime": "2.0.0-alpha20160523",
     "NodaTime.Testing": "2.0.0-alpha20160523",
     "Shouldly": "2.8.0",
