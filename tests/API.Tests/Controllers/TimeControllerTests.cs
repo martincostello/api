@@ -14,12 +14,25 @@ namespace MartinCostello.Api.Controllers
     public static class TimeControllerTests
     {
         [Fact]
+        public static void Time_Get_Routes_Correctly()
+        {
+            MyMvc.IsUsingDefaultConfiguration()
+                 .WithServices((p) => TestStartup.AddFakeClock(p));
+
+            MyMvc.Routes()
+                 .ShouldMap((p) => p.WithLocation("/time").WithMethod(HttpMethod.Get))
+                 .To<TimeController>((p) => p.Get());
+        }
+
+        [Fact]
         public static void Time_Get_Returns_Correct_Response()
         {
             var initial = NodaTime.Instant.FromUtc(2016, 05, 24, 12, 34, 56);
-            var clock = new NodaTime.Testing.FakeClock(initial);
 
-            MyMvc.Controller(() => new TimeController(clock))
+            MyMvc.IsUsingDefaultConfiguration()
+                 .WithServices((p) => TestStartup.AddFakeClock(p, initial));
+
+            MyMvc.Controller<TimeController>()
                  .Calling((p) => p.Get())
                  .ShouldReturn()
                  .Ok()
