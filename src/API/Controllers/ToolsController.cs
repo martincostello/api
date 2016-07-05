@@ -81,7 +81,7 @@ namespace MartinCostello.Api.Controllers
                 Guid = guid,
             };
 
-            return Json(value);
+            return new OkObjectResult(value);
         }
 
         /// <summary>
@@ -166,7 +166,7 @@ namespace MartinCostello.Api.Controllers
                 Hash = formatAsBase64 ? Convert.ToBase64String(hash) : BytesToHexString(hash),
             };
 
-            return Json(value);
+            return new OkObjectResult(value);
         }
 
         /// <summary>
@@ -235,7 +235,7 @@ namespace MartinCostello.Api.Controllers
                 Array.Clear(validationKeyBytes, 0, validationKeyBytes.Length);
             }
 
-            return Json(value);
+            return new OkObjectResult(value);
         }
 
         /// <summary>

@@ -58,7 +58,7 @@ namespace MartinCostello.Api.Controllers
                 Unix = now.ToUnixTimeSeconds(),
             };
 
-            return new ObjectResult(value);
+            return new OkObjectResult(value);
         }
     }
 }
