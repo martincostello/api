@@ -204,8 +204,17 @@ namespace MartinCostello.Api
                 {
                     builder
                         .WithExposedHeaders(siteOptions.Api.Cors.ExposedHeaders)
-                        .WithMethods(siteOptions.Api.Cors.Methods)
-                        .WithOrigins(siteOptions.Api.Cors.Origins);
+                        .WithHeaders(siteOptions.Api.Cors.Headers)
+                        .WithMethods(siteOptions.Api.Cors.Methods);
+
+                    if (HostingEnvironment.IsDevelopment())
+                    {
+                        builder.AllowAnyOrigin();
+                    }
+                    else
+                    {
+                        builder.WithOrigins(siteOptions.Api.Cors.Origins);
+                    }
                 });
         }
 
