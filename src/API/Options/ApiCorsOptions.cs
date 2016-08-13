@@ -14,6 +14,11 @@ namespace MartinCostello.Api.Options
         public string[] ExposedHeaders { get; set; }
 
         /// <summary>
+        /// Gets or sets the names of the allowed HTTP request headers.
+        /// </summary>
+        public string[] Headers { get; set; }
+
+        /// <summary>
         /// Gets or sets the allowed HTTP methods.
         /// </summary>
         public string[] Methods { get; set; }
