@@ -15,7 +15,6 @@ install:
   - ps: '& .\.dotnetcli\install.ps1 -version "$env:CLI_VERSION" -InstallDir "$env:DOTNET_INSTALL_DIR" -NoPath'
   - ps: $env:Path = "$env:DOTNET_INSTALL_DIR;$env:Path"
   - ps: npm install npm -g
-  - ps: npm cache clean --loglevel=error
   - ps: npm install -g bower --loglevel=error
   - ps: npm install -g gulp --loglevel=error
 
