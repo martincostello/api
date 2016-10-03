@@ -43,6 +43,7 @@
       "version": "1.0.0",
       "type": "platform"
     },
+    "AspNetCoreRateLimit": "1.0.1",
     "Autofac": "4.0.0-rc3-280",
     "Autofac.Extensions.DependencyInjection": "4.0.0-rc3-280",
     "Microsoft.AspNetCore.CookiePolicy": "1.0.0",
