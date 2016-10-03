@@ -4,6 +4,7 @@
 namespace MartinCostello.Api
 {
     using System;
+    using AspNetCoreRateLimit;
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
     using Extensions;
@@ -18,6 +19,7 @@ namespace MartinCostello.Api
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
+    using Middleware;
     using Newtonsoft.Json;
     using NodaTime;
     using Options;
@@ -79,6 +81,7 @@ namespace MartinCostello.Api
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
 
             app.UseCustomHttpHeaders(environment, Configuration);
+            app.UseMiddleware<CustomIpRateLimitMiddleware>();
 
             if (environment.IsDevelopment())
             {
@@ -126,6 +129,8 @@ namespace MartinCostello.Api
         {
             services.AddOptions();
             services.Configure<SiteOptions>(Configuration.GetSection("Site"));
+            services.Configure<IpRateLimitOptions>(Configuration.GetSection("IpRateLimiting"));
+            services.Configure<IpRateLimitPolicies>(Configuration.GetSection("IpRateLimitPolicies"));
 
             services.AddAntiforgery(
                 (p) =>
@@ -136,8 +141,8 @@ namespace MartinCostello.Api
                     p.RequireSsl = !HostingEnvironment.IsDevelopment();
                 });
 
-            services.AddMemoryCache();
-            services.AddDistributedMemoryCache();
+            services.AddMemoryCache()
+                    .AddDistributedMemoryCache();
 
             services.AddCors(ConfigureCors);
 
@@ -156,6 +161,8 @@ namespace MartinCostello.Api
 
             services.AddSingleton<IConfiguration>((_) => Configuration);
             services.AddSingleton<IClock>((_) => SystemClock.Instance);
+            services.AddSingleton<IIpPolicyStore, DistributedCacheIpPolicyStore>();
+            services.AddSingleton<IRateLimitCounterStore, DistributedCacheRateLimitCounterStore>();
             services.AddSingleton((p) => p.GetRequiredService<IOptions<SiteOptions>>().Value);
             services.AddSingleton((p) => new BowerVersions(p.GetRequiredService<IHostingEnvironment>()));
 
