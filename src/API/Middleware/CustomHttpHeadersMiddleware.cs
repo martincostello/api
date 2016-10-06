@@ -130,7 +130,7 @@ namespace MartinCostello.Api.Middleware
         private static string BuildContentSecurityPolicy(bool isProduction, SiteOptions options)
         {
             const string BasePolicy = @"
-default-src 'self';
+default-src 'self' maxcdn.bootstrapcdn.com;
 script-src 'self' ajax.googleapis.com maxcdn.bootstrapcdn.com www.google-analytics.com 'unsafe-inline';
 style-src 'self' ajax.googleapis.com fonts.googleapis.com maxcdn.bootstrapcdn.com 'unsafe-inline';
 img-src 'self' online.swagger.io www.google-analytics.com;
