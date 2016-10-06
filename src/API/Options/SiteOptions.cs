@@ -27,5 +27,10 @@ namespace MartinCostello.Api.Options
         /// Gets or sets the metadata options for the site.
         /// </summary>
         public MetadataOptions Metadata { get; set; }
+
+        /// <summary>
+        /// Gets or sets the options for the public key pins to use.
+        /// </summary>
+        public PublicKeyPinsOptions PublicKeyPins { get; set; }
     }
 }
