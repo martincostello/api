@@ -80,7 +80,7 @@ namespace MartinCostello.Api
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
 
-            app.UseCustomHttpHeaders(environment, Configuration);
+            app.UseCustomHttpHeaders(environment, Configuration, ServiceProvider.GetRequiredService<SiteOptions>());
             app.UseMiddleware<CustomIpRateLimitMiddleware>();
 
             if (environment.IsDevelopment())

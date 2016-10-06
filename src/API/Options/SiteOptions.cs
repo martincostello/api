@@ -19,6 +19,11 @@ namespace MartinCostello.Api.Options
         public ApiOptions Api { get; set; }
 
         /// <summary>
+        /// Gets or sets the external link options for the site.
+        /// </summary>
+        public ExternalLinksOptions ExternalLinks { get; set; }
+
+        /// <summary>
         /// Gets or sets the metadata options for the site.
         /// </summary>
         public MetadataOptions Metadata { get; set; }
