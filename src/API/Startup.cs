@@ -81,7 +81,8 @@ namespace MartinCostello.Api
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
 
             app.UseCustomHttpHeaders(environment, Configuration, ServiceProvider.GetRequiredService<SiteOptions>());
-            app.UseMiddleware<CustomIpRateLimitMiddleware>();
+
+            ////app.UseMiddleware<CustomIpRateLimitMiddleware>();
 
             if (environment.IsDevelopment())
             {
@@ -129,8 +130,9 @@ namespace MartinCostello.Api
         {
             services.AddOptions();
             services.Configure<SiteOptions>(Configuration.GetSection("Site"));
-            services.Configure<IpRateLimitOptions>(Configuration.GetSection("IpRateLimiting"));
-            services.Configure<IpRateLimitPolicies>(Configuration.GetSection("IpRateLimitPolicies"));
+
+            ////services.Configure<IpRateLimitOptions>(Configuration.GetSection("IpRateLimiting"));
+            ////services.Configure<IpRateLimitPolicies>(Configuration.GetSection("IpRateLimitPolicies"));
 
             services.AddAntiforgery(
                 (p) =>
