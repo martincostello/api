@@ -9,6 +9,7 @@ var gulp = require("gulp"),
     csslint = require("gulp-csslint"),
     jasmine = require("gulp-jasmine"),
     jshint = require("gulp-jshint"),
+    karmaServer = require("karma").Server,
     less = require("gulp-less"),
     lesshint = require("gulp-lesshint"),
     rename = require("gulp-rename"),
@@ -25,7 +26,7 @@ var paths = {
     jsDest: webroot + "js",
     minJs: webroot + "js/**/*.min.js",
     minJsDest: webroot + "js/site.min.js",
-    testsJs: "js/**/*.spec.js",
+    testsJs: scripts + "js/**/*.spec.js",
     css: styles + "css/**/*.css",
     minCssDest: webroot + "css/**/site.min.css",
     concatJsDest: webroot + "js/site.js",
@@ -118,11 +119,21 @@ gulp.task("min:css", ["css"], function () {
 
 gulp.task("min", ["min:js", "min:css"]);
 
-gulp.task("test:js", function () {
-    return gulp.src(paths.testsJs)
-      .pipe(jasmine());
+gulp.task("test:js:karma", function (done) {
+    new karmaServer({
+        configFile: __dirname + "/karma.conf.js",
+        singleRun: true
+    }, done).start();
 });
 
+gulp.task("test:js:chrome", function (done) {
+    new karmaServer({
+        configFile: __dirname + "/karma.conf.js",
+        browsers: ["Chrome"]
+    }, done).start();
+});
+
+gulp.task("test:js", ["test:js:karma"]);
 gulp.task("test", ["test:js"]);
 
 gulp.task("build", ["lint", "min"]);
