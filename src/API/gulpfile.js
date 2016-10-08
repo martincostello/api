@@ -95,7 +95,7 @@ gulp.task("lint:sass", function () {
 gulp.task("lint", ["lint:js", "lint:less", "lint:sass", "lint:css"]);
 
 gulp.task("min:js", function () {
-    return gulp.src([paths.js, "!" + paths.minJs, "!" + paths.concatJsDest])
+    return gulp.src([paths.js, "!" + paths.minJs, "!" + paths.concatJsDest, "!" + paths.testsJs])
         .pipe(concat(paths.concatJsDest))
         .pipe(gulp.dest("."))
         .pipe(uglify())
