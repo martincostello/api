@@ -25,7 +25,7 @@ var paths = {
     jsDest: webroot + "js",
     minJs: webroot + "js/**/*.min.js",
     minJsDest: webroot + "js/site.min.js",
-    testsJs: "js/**/*.spec.js",
+    testsJs: scripts + "js/**/*.spec.js",
     css: styles + "css/**/*.css",
     minCssDest: webroot + "css/**/site.min.css",
     concatJsDest: webroot + "js/site.js",
