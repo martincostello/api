@@ -142,7 +142,7 @@ namespace MartinCostello.Api.Middleware
         {
             const string BasePolicy = @"
 default-src 'self' maxcdn.bootstrapcdn.com;
-script-src 'self' ajax.googleapis.com maxcdn.bootstrapcdn.com www.google-analytics.com 'unsafe-inline';
+script-src 'self' ajax.googleapis.com cdnjs.cloudflare.com maxcdn.bootstrapcdn.com www.google-analytics.com 'unsafe-inline';
 style-src 'self' ajax.googleapis.com fonts.googleapis.com maxcdn.bootstrapcdn.com 'unsafe-inline';
 img-src 'self' online.swagger.io www.google-analytics.com;
 font-src 'self' ajax.googleapis.com fonts.googleapis.com fonts.gstatic.com maxcdn.bootstrapcdn.com;
