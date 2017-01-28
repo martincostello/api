@@ -48,7 +48,7 @@ namespace MartinCostello.Api.Controllers
                  .Ok()
                  .WithStatusCode(HttpStatusCode.OK)
                  .AndAlso()
-                 .WithResponseModelOfType<HashResponse>()
+                 .WithModelOfType<HashResponse>()
                  .Passing((p) => p.Hash.ShouldBe(expected));
         }
     }

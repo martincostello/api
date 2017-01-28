@@ -5,6 +5,7 @@ namespace MartinCostello.Api.Controllers
 {
     using Models;
     using MyTested.AspNetCore.Mvc;
+    using NodaTime.Testing;
     using Shouldly;
     using Xunit;
 
@@ -16,10 +17,7 @@ namespace MartinCostello.Api.Controllers
         [Fact]
         public static void Time_Get_Routes_Correctly()
         {
-            MyMvc.IsUsingDefaultConfiguration()
-                 .WithServices((p) => TestStartup.AddFakeClock(p));
-
-            MyMvc.Routes()
+            MyMvc.Routing()
                  .ShouldMap((p) => p.WithLocation("/time").WithMethod(HttpMethod.Get))
                  .To<TimeController>((p) => p.Get());
         }
@@ -28,17 +26,16 @@ namespace MartinCostello.Api.Controllers
         public static void Time_Get_Returns_Correct_Response()
         {
             var initial = NodaTime.Instant.FromUtc(2016, 05, 24, 12, 34, 56);
-
-            MyMvc.IsUsingDefaultConfiguration()
-                 .WithServices((p) => TestStartup.AddFakeClock(p, initial));
+            var clock = new FakeClock(initial);
 
             MyMvc.Controller<TimeController>()
-                 .Calling((p) => p.Get())
+                 .WithServices(clock)
+                 .Calling(p => p.Get())
                  .ShouldReturn()
                  .Ok()
                  .WithStatusCode(HttpStatusCode.OK)
                  .AndAlso()
-                 .WithResponseModelOfType<TimeResponse>()
+                 .WithModelOfType<TimeResponse>()
                  .Passing((p) =>
                      {
                          p.Timestamp.ShouldBe(initial.ToDateTimeOffset());
