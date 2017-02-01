@@ -140,11 +140,11 @@ namespace MartinCostello.Api.Middleware
         /// </returns>
         private static string BuildContentSecurityPolicy(bool isProduction, SiteOptions options)
         {
-            const string BasePolicy = @"
+            string basePolicy = $@"
 default-src 'self' maxcdn.bootstrapcdn.com;
 script-src 'self' ajax.googleapis.com cdnjs.cloudflare.com maxcdn.bootstrapcdn.com www.google-analytics.com 'unsafe-inline';
 style-src 'self' ajax.googleapis.com fonts.googleapis.com maxcdn.bootstrapcdn.com 'unsafe-inline';
-img-src 'self' online.swagger.io www.google-analytics.com;
+img-src 'self' online.swagger.io www.google-analytics.com {GetCdnOriginForContentSecurityPolicy(options)};
 font-src 'self' ajax.googleapis.com fonts.googleapis.com fonts.gstatic.com maxcdn.bootstrapcdn.com;
 connect-src 'self';
 media-src 'none';
@@ -157,7 +157,7 @@ reflected-xss block;
 base-uri https://api.martincostello.com;
 manifest-src 'self';";
 
-            var builder = new StringBuilder(BasePolicy.Replace(Environment.NewLine, string.Empty));
+            var builder = new StringBuilder(basePolicy.Replace(Environment.NewLine, string.Empty));
 
             if (isProduction)
             {
@@ -201,6 +201,42 @@ manifest-src 'self';";
                 {
                     builder.Append($" report-uri=\"{options.ExternalLinks.Reports.PublicKeyPinsReportOnly}\";");
                 }
+            }
+
+            return builder.ToString();
+        }
+
+        /// <summary>
+        /// Gets the CDN origin to use for the Content Security Policy.
+        /// </summary>
+        /// <param name="options">The current site options.</param>
+        /// <returns>
+        /// The origin to use for the CDN, if any.
+        /// </returns>
+        private static string GetCdnOriginForContentSecurityPolicy(SiteOptions options)
+        {
+            return GetOriginForContentSecurityPolicy(options?.ExternalLinks?.Cdn);
+        }
+
+        /// <summary>
+        /// Gets the origin to use for the Content Security Policy from the specified URI.
+        /// </summary>
+        /// <param name="baseUri">The base URI to get the origin for.</param>
+        /// <returns>
+        /// The origin to use for the URI, if any.
+        /// </returns>
+        private static string GetOriginForContentSecurityPolicy(Uri baseUri)
+        {
+            if (baseUri == null)
+            {
+                return string.Empty;
+            }
+
+            var builder = new StringBuilder($"{baseUri.Host}");
+
+            if (!baseUri.IsDefaultPort)
+            {
+                builder.Append($":{baseUri.Port}");
             }
 
             return builder.ToString();
