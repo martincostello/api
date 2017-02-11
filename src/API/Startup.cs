@@ -20,7 +20,6 @@ namespace MartinCostello.Api
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Microsoft.Net.Http.Headers;
-    using Middleware;
     using Newtonsoft.Json;
     using NodaTime;
     using Options;
