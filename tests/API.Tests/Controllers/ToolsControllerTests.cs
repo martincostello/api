@@ -5,7 +5,6 @@ namespace MartinCostello.Api.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
     using Models;
-    using MyTested.AspNetCore.Mvc;
     using Shouldly;
     using Xunit;
 
@@ -32,6 +31,7 @@ namespace MartinCostello.Api.Controllers
         [InlineData("sha512", "hexadecimal", "martincostello.com", "3be0167275455dcf1e34f8818d48b7ae4a61fb8549153f42d0d035464fdccee97022d663549eb249d4796956e4016ad83d5e64ba766fb751c8fb2c03b2b4eb9a")]
         public static void Tools_Post_Hash_Returns_Correct_Response(string algorithm, string format, string plaintext, string expected)
         {
+            // Arrange
             var request = new HashRequest()
             {
                 Algorithm = algorithm,
@@ -39,17 +39,20 @@ namespace MartinCostello.Api.Controllers
                 Plaintext = plaintext,
             };
 
-            MyMvc.Controller<ToolsController>()
-                 .Calling((p) => p.Hash(request))
-                 .ShouldHave()
-                 .ActionAttributes((p) => p.RestrictingForHttpMethod<HttpPostAttribute>())
-                 .AndAlso()
-                 .ShouldReturn()
-                 .Ok()
-                 .WithStatusCode(HttpStatusCode.OK)
-                 .AndAlso()
-                 .WithResponseModelOfType<HashResponse>()
-                 .Passing((p) => p.Hash.ShouldBe(expected));
+            IActionResult result;
+
+            using (var target = new ToolsController())
+            {
+                // Act
+                result = target.Hash(request);
+            }
+
+            // Assert
+            result.ShouldNotBeNull();
+
+            var actual = result.ShouldBeOfType<OkObjectResult>();
+            var model = actual.Value.ShouldBeOfType<HashResponse>();
+            model.Hash.ShouldBe(expected);
         }
     }
 }

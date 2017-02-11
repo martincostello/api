@@ -3,8 +3,9 @@
 
 namespace MartinCostello.Api.Controllers
 {
+    using Microsoft.AspNetCore.Mvc;
     using Models;
-    using MyTested.AspNetCore.Mvc;
+    using NodaTime.Testing;
     using Shouldly;
     using Xunit;
 
@@ -14,39 +15,32 @@ namespace MartinCostello.Api.Controllers
     public static class TimeControllerTests
     {
         [Fact]
-        public static void Time_Get_Routes_Correctly()
-        {
-            MyMvc.IsUsingDefaultConfiguration()
-                 .WithServices((p) => TestStartup.AddFakeClock(p));
-
-            MyMvc.Routes()
-                 .ShouldMap((p) => p.WithLocation("/time").WithMethod(HttpMethod.Get))
-                 .To<TimeController>((p) => p.Get());
-        }
-
-        [Fact]
         public static void Time_Get_Returns_Correct_Response()
         {
+            // Arrange
             var initial = NodaTime.Instant.FromUtc(2016, 05, 24, 12, 34, 56);
+            var clock = new FakeClock(initial);
 
-            MyMvc.IsUsingDefaultConfiguration()
-                 .WithServices((p) => TestStartup.AddFakeClock(p, initial));
+            IActionResult result;
 
-            MyMvc.Controller<TimeController>()
-                 .Calling((p) => p.Get())
-                 .ShouldReturn()
-                 .Ok()
-                 .WithStatusCode(HttpStatusCode.OK)
-                 .AndAlso()
-                 .WithResponseModelOfType<TimeResponse>()
-                 .Passing((p) =>
-                     {
-                         p.Timestamp.ShouldBe(initial.ToDateTimeOffset());
-                         p.Rfc1123.ShouldBe("Tue, 24 May 2016 12:34:56 GMT");
-                         p.UniversalFull.ShouldBe("Tuesday, 24 May 2016 12:34:56");
-                         p.UniversalSortable.ShouldBe("2016-05-24 12:34:56Z");
-                         p.Unix.ShouldBe(1464093296);
-                     });
+            using (var target = new TimeController(clock))
+            {
+                // Act
+                result = target.Get();
+            }
+
+            // Assert
+            result.ShouldNotBeNull();
+
+            var actual = result
+                .ShouldBeOfType<OkObjectResult>()
+                .Value.ShouldBeOfType<TimeResponse>();
+
+            actual.Timestamp.ShouldBe(initial.ToDateTimeOffset());
+            actual.Rfc1123.ShouldBe("Tue, 24 May 2016 12:34:56 GMT");
+            actual.UniversalFull.ShouldBe("Tuesday, 24 May 2016 12:34:56");
+            actual.UniversalSortable.ShouldBe("2016-05-24 12:34:56Z");
+            actual.Unix.ShouldBe(1464093296);
         }
     }
 }
