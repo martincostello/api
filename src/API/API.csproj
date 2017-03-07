@@ -1,11 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <Import Project="..\..\API.Common.props" />
   <PropertyGroup>
-    <AssemblyName>API</AssemblyName>
-    <AssemblyTitle>api.martincostello.com</AssemblyTitle>
     <Description>https://api.martincostello.com/</Description>
     <OutputType>Exe</OutputType>
-    <PackageId>MartinCostello.API</PackageId>
     <PackageTargetFallback>$(PackageTargetFallback);dotnet5.6;portable-net45+win8</PackageTargetFallback>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <Summary>Martin Costello's API</Summary>
@@ -17,7 +14,7 @@
     <Content Update="wwwroot\**\*;Views\**\*" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
   <ItemGroup>
-    <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="1.0.0-msbuild3-final" />
+    <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AspNetCoreRateLimit" Version="1.0.5" />

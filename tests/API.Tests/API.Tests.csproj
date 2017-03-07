@@ -1,10 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\..\API.Common.props" />
   <PropertyGroup>
-    <AssemblyName>API.Tests</AssemblyName>
-    <AssemblyTitle>api.martincostello.com.Tests</AssemblyTitle>
     <Description>Tests for https://api.martincostello.com/</Description>
-    <PackageId>MartinCostello.Api.Tests</PackageId>
     <Summary>Tests for Martin Costello's API</Summary>
   </PropertyGroup>
   <ItemGroup>
@@ -15,12 +12,12 @@
     <ProjectReference Include="..\..\src\API\API.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0-preview-20170106-08" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
     <PackageReference Include="NodaTime" Version="2.0.0-beta20170123" />
     <PackageReference Include="NodaTime.Testing" Version="2.0.0-beta20170123" />
     <PackageReference Include="Shouldly" Version="2.8.2" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.0.0" PrivateAssets="All" />
-    <PackageReference Include="xunit" Version="2.2.0-beta6-build3495" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0-beta6-build1242" />
+    <PackageReference Include="xunit" Version="2.2.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
   </ItemGroup>
 </Project>
