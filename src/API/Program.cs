@@ -58,7 +58,7 @@ namespace MartinCostello.Api
                             e.Cancel = true;
                         };
 
-                        host.Run(tokenSource.Token);
+                        host.RunAsync(tokenSource.Token).GetAwaiter().GetResult();
                     }
                 }
 
