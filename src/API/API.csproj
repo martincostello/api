@@ -5,7 +5,7 @@
     <OutputType>Exe</OutputType>
     <PackageTargetFallback>$(PackageTargetFallback);dotnet5.6;portable-net45+win8</PackageTargetFallback>
     <PreserveCompilationContext>true</PreserveCompilationContext>
-    <TargetFramework>netcoreapp1.1</TargetFramework>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
     <Summary>Martin Costello's API</Summary>
     <UserSecretsId>api.martincostello.com</UserSecretsId>
   </PropertyGroup>
@@ -41,7 +41,7 @@
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="1.1.2" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink.Loader" Version="14.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
-    <PackageReference Include="NodaTime" Version="2.0.1" />
+    <PackageReference Include="NodaTime" Version="2.0.2" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.0.0" PrivateAssets="All" />
     <PackageReference Include="Swashbuckle.Swagger" Version="6.0.0-beta901" />
     <PackageReference Include="Swashbuckle.SwaggerGen" Version="6.0.0-beta901" />
