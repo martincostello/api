@@ -24,4 +24,7 @@
     <VersionSuffix></VersionSuffix>
     <WarningsAsErrors>true</WarningsAsErrors>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(CI)' != '' or '$(TF_BUILD)' != '' ">
+    <InstallWebPackages>true</InstallWebPackages>
+  </PropertyGroup>
 </Project>
