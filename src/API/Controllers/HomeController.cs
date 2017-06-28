@@ -57,8 +57,8 @@ namespace MartinCostello.Api.Controllers
         /// </returns>
         private bool IsJsonRequest()
         {
-            var mediaType = Request.GetTypedHeaders().Accept?.FirstOrDefault()?.MediaType ?? StringSegment.Empty;
-            return StringSegment.Equals(mediaType, "application/json", StringComparison.OrdinalIgnoreCase);
+            var mediaType = Request.GetTypedHeaders().Accept?.FirstOrDefault()?.MediaType ?? string.Empty;
+            return mediaType.Equals("application/json", StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>
