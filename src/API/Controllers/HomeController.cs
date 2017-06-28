@@ -1,4 +1,4 @@
-﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
+// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 namespace MartinCostello.Api.Controllers
@@ -8,6 +8,7 @@ namespace MartinCostello.Api.Controllers
     using Extensions;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Primitives;
 
     /// <summary>
     /// A class representing the controller for the <c>/</c> resource.
@@ -56,8 +57,8 @@ namespace MartinCostello.Api.Controllers
         /// </returns>
         private bool IsJsonRequest()
         {
-            string mediaType = Request.GetTypedHeaders().Accept?.FirstOrDefault()?.MediaType;
-            return string.Equals(mediaType, "application/json", StringComparison.OrdinalIgnoreCase);
+            var mediaType = Request.GetTypedHeaders().Accept?.FirstOrDefault()?.MediaType ?? StringSegment.Empty;
+            return StringSegment.Equals(mediaType, "application/json", StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>
