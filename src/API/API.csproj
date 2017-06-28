@@ -3,7 +3,6 @@
   <PropertyGroup>
     <Description>https://api.martincostello.com/</Description>
     <OutputType>Exe</OutputType>
-    <PackageTargetFallback>$(PackageTargetFallback);dotnet5.6;portable-net45+win8</PackageTargetFallback>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <Summary>Martin Costello's API</Summary>
@@ -15,24 +14,24 @@
     <Content Update="wwwroot\**\*;Views\**\*" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
   <ItemGroup>
-    <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="2.0.0-preview1-final" />
+    <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="2.0.0-preview2-final" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AspNetCoreRateLimit" Version="1.0.5" />
     <PackageReference Include="Autofac" Version="4.5.0" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore" Version="2.0.0-preview1-final" />
-    <PackageReference Include="Microsoft.AspNetCore.CookiePolicy" Version="2.0.0-preview1-final" />
-    <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.0.0-preview1-final" />
-    <PackageReference Include="Microsoft.AspNetCore.HttpOverrides" Version="2.0.0-preview1-final" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.0-preview1-final" />
-    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.0.0-preview1-final" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="2.0.0-preview1-final" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="2.0.0-preview1-final" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.0.0-preview1-final" />
-    <PackageReference Include="Microsoft.Extensions.Logging.TraceSource" Version="2.0.0-preview1-final" />
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.0.0-preview2-final" />
+    <PackageReference Include="Microsoft.AspNetCore.CookiePolicy" Version="2.0.0-preview2-final" />
+    <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.0.0-preview2-final" />
+    <PackageReference Include="Microsoft.AspNetCore.HttpOverrides" Version="2.0.0-preview2-final" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.0-preview2-final" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.0.0-preview2-final" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="2.0.0-preview2-final" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="2.0.0-preview2-final" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.0.0-preview2-final" />
+    <PackageReference Include="Microsoft.Extensions.Logging.TraceSource" Version="2.0.0-preview2-final" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink.Loader" Version="14.1.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
     <PackageReference Include="NodaTime" Version="2.0.2" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.0.0" PrivateAssets="All" />
     <PackageReference Include="Swashbuckle.Swagger" Version="6.0.0-beta901" />
