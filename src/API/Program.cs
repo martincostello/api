@@ -1,4 +1,4 @@
-﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
+// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 namespace MartinCostello.Api
@@ -8,6 +8,7 @@ namespace MartinCostello.Api
     using System.Threading;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Logging;
 
     /// <summary>
     /// A class representing the entry-point to the application. This class cannot be inherited.
@@ -45,6 +46,14 @@ namespace MartinCostello.Api
                     .UseConfiguration(configuration)
                     .UseContentRoot(Directory.GetCurrentDirectory())
                     .UseIISIntegration()
+                    .ConfigureLogging(
+                        (hostingContext, factory) =>
+                        {
+                            if (hostingContext.HostingEnvironment.IsDevelopment())
+                            {
+                                factory.AddDebug();
+                            }
+                        })
                     .UseStartup<Startup>()
                     .CaptureStartupErrors(true);
 
@@ -58,7 +67,7 @@ namespace MartinCostello.Api
                             e.Cancel = true;
                         };
 
-                        host.Run(tokenSource.Token);
+                        host.RunAsync(tokenSource.Token).GetAwaiter().GetResult();
                     }
                 }
 

@@ -1,21 +1,20 @@
 param(
-    [Parameter(Mandatory=$false)][bool]   $RestorePackages  = $false,
-    [Parameter(Mandatory=$false)][string] $Configuration    = "Release",
-    [Parameter(Mandatory=$false)][string] $VersionSuffix    = "",
-    [Parameter(Mandatory=$false)][string] $OutputPath       = "",
-    [Parameter(Mandatory=$false)][bool]   $PatchVersion     = $false,
-    [Parameter(Mandatory=$false)][bool]   $RunTests         = $true,
-    [Parameter(Mandatory=$false)][bool]   $PublishWebsite   = $true
+    [Parameter(Mandatory = $false)][switch] $RestorePackages,
+    [Parameter(Mandatory = $false)][string] $Configuration = "Release",
+    [Parameter(Mandatory = $false)][string] $VersionSuffix = "",
+    [Parameter(Mandatory = $false)][string] $OutputPath = "",
+    [Parameter(Mandatory = $false)][switch] $PatchVersion,
+    [Parameter(Mandatory = $false)][switch] $SkipTests
 )
 
 $ErrorActionPreference = "Stop"
 
-$solutionPath  = Split-Path $MyInvocation.MyCommand.Definition
-$framework     = "netcoreapp1.1"
-$dotnetVersion = "1.0.4"
+$solutionPath = Split-Path $MyInvocation.MyCommand.Definition
+$solutionFile = Join-Path $solutionPath "API.sln"
+$dotnetVersion = "2.0.0"
 
 if ($OutputPath -eq "") {
-    $OutputPath = "$(Convert-Path "$PSScriptRoot")\artifacts"
+    $OutputPath = Join-Path "$(Convert-Path "$PSScriptRoot")" "artifacts"
 }
 
 if ($env:CI -ne $null -Or $env:TF_BUILD -ne $null) {
@@ -25,7 +24,7 @@ if ($env:CI -ne $null -Or $env:TF_BUILD -ne $null) {
 
 $installDotNetSdk = $false;
 
-if ((Get-Command "dotnet.exe" -ErrorAction SilentlyContinue) -eq $null)  {
+if (((Get-Command "dotnet.exe" -ErrorAction SilentlyContinue) -eq $null) -and ((Get-Command "dotnet" -ErrorAction SilentlyContinue) -eq $null)) {
     Write-Host "The .NET Core SDK is not installed."
     $installDotNetSdk = $true
 }
@@ -38,19 +37,21 @@ else {
 }
 
 if ($installDotNetSdk -eq $true) {
-    $env:DOTNET_INSTALL_DIR = "$(Convert-Path "$PSScriptRoot")\.dotnetcli"
+    $env:DOTNET_INSTALL_DIR = Join-Path "$(Convert-Path "$PSScriptRoot")" ".dotnetcli"
 
     if (!(Test-Path $env:DOTNET_INSTALL_DIR)) {
         mkdir $env:DOTNET_INSTALL_DIR | Out-Null
-        $installScript = Join-Path $env:DOTNET_INSTALL_DIR "install.ps1"
-        Invoke-WebRequest "https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scripts/obtain/dotnet-install.ps1" -OutFile $installScript
-        & $installScript -Version "$dotnetVersion" -InstallDir "$env:DOTNET_INSTALL_DIR" -NoPath
     }
 
+    $installScript = Join-Path $env:DOTNET_INSTALL_DIR "install.ps1"
+    Invoke-WebRequest "https://raw.githubusercontent.com/dotnet/cli/release/2.0.0/scripts/obtain/dotnet-install.ps1" -OutFile $installScript
+    & $installScript -Version "$dotnetVersion" -InstallDir "$env:DOTNET_INSTALL_DIR" -NoPath
+
     $env:PATH = "$env:DOTNET_INSTALL_DIR;$env:PATH"
-    $dotnet   = "$env:DOTNET_INSTALL_DIR\dotnet"
-} else {
-    $dotnet   = "dotnet"
+    $dotnet = Join-Path "$env:DOTNET_INSTALL_DIR" "dotnet"
+}
+else {
+    $dotnet = "dotnet"
 }
 
 function DotNetRestore {
@@ -61,21 +62,9 @@ function DotNetRestore {
     }
 }
 
-function DotNetBuild {
-    param([string]$Project, [string]$Configuration, [string]$VersionSuffix)
-    if ($VersionSuffix) {
-        & $dotnet build $Project --output $OutputPath --framework $framework --configuration $Configuration --version-suffix "$VersionSuffix"
-    } else {
-        & $dotnet build $Project --output $OutputPath --framework $framework --configuration $Configuration
-    }
-    if ($LASTEXITCODE -ne 0) {
-        throw "dotnet build failed with exit code $LASTEXITCODE"
-    }
-}
-
 function DotNetTest {
     param([string]$Project)
-    & $dotnet test $Project --output $OutputPath --framework $framework --no-build
+    & $dotnet test $Project --output $OutputPath
     if ($LASTEXITCODE -ne 0) {
         throw "dotnet test failed with exit code $LASTEXITCODE"
     }
@@ -85,9 +74,10 @@ function DotNetPublish {
     param([string]$Project)
     $publishPath = (Join-Path $OutputPath "publish")
     if ($VersionSuffix) {
-        & $dotnet publish $Project --output $publishPath --framework $framework --configuration $Configuration --version-suffix "$VersionSuffix"
-    } else {
-        & $dotnet publish $Project --output $publishPath --framework $framework --configuration $Configuration
+        & $dotnet publish $Project --output $publishPath --configuration $Configuration --version-suffix "$VersionSuffix"
+    }
+    else {
+        & $dotnet publish $Project --output $publishPath --configuration $Configuration
     }
     if ($LASTEXITCODE -ne 0) {
         throw "dotnet publish failed with exit code $LASTEXITCODE"
@@ -103,18 +93,13 @@ if ($PatchVersion -eq $true) {
     }
 
     $gitRevision = (git rev-parse HEAD | Out-String).Trim()
-    $timestamp   = [DateTime]::UtcNow.ToString("yyyy-MM-ddTHH:mm:ssK")
+    $timestamp = [DateTime]::UtcNow.ToString("yyyy-MM-ddTHH:mm:ssK")
 
     $assemblyVersion = Get-Content ".\AssemblyVersion.cs" -Raw
     $assemblyVersionWithMetadata = "{0}using System.Reflection;`r`n`r`n[assembly: AssemblyMetadata(""CommitHash"", ""{1}"")]`r`n[assembly: AssemblyMetadata(""CommitBranch"", ""{2}"")]`r`n[assembly: AssemblyMetadata(""BuildTimestamp"", ""{3}"")]" -f $assemblyVersion, $gitRevision, $gitBranch, $timestamp
 
     Set-Content ".\AssemblyVersion.cs" $assemblyVersionWithMetadata -Encoding utf8
 }
-
-$projects = @(
-    (Join-Path $solutionPath "src\API\API.csproj"),
-    (Join-Path $solutionPath "tests\API.Tests\API.Tests.csproj")
-)
 
 $testProjects = @(
     (Join-Path $solutionPath "tests\API.Tests\API.Tests.csproj")
@@ -125,28 +110,19 @@ $publishProjects = @(
 )
 
 if ($RestorePackages -eq $true) {
-    Write-Host "Restoring NuGet packages for $($projects.Count) projects..." -ForegroundColor Green
-    ForEach ($project in $projects) {
-        DotNetRestore $project
-    }
+    Write-Host "Restoring NuGet packages for solution..." -ForegroundColor Green
+    DotNetRestore $solutionFile
 }
 
-Write-Host "Building $($projects.Count) projects..." -ForegroundColor Green
-ForEach ($project in $projects) {
-    DotNetBuild $project $Configuration $PrereleaseSuffix
+Write-Host "Publishing solution..." -ForegroundColor Green
+ForEach ($project in $publishProjects) {
+    DotNetPublish $project $Configuration $PrereleaseSuffix
 }
 
-if ($RunTests -eq $true) {
+if ($SkipTests -eq $false) {
     Write-Host "Testing $($testProjects.Count) project(s)..." -ForegroundColor Green
     ForEach ($project in $testProjects) {
         DotNetTest $project
-    }
-}
-
-if ($PublishWebsite -eq $true) {
-    Write-Host "Publishing $($publishProjects.Count) projects..." -ForegroundColor Green
-    ForEach ($project in $publishProjects) {
-        DotNetPublish $project $Configuration $PrereleaseSuffix
     }
 }
 

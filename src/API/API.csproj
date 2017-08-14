@@ -3,9 +3,8 @@
   <PropertyGroup>
     <Description>https://api.martincostello.com/</Description>
     <OutputType>Exe</OutputType>
-    <PackageTargetFallback>$(PackageTargetFallback);dotnet5.6;portable-net45+win8</PackageTargetFallback>
     <PreserveCompilationContext>true</PreserveCompilationContext>
-    <TargetFramework>netcoreapp1.1</TargetFramework>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
     <Summary>Martin Costello's API</Summary>
     <UserSecretsId>api.martincostello.com</UserSecretsId>
   </PropertyGroup>
@@ -15,46 +14,28 @@
     <Content Update="wwwroot\**\*;Views\**\*" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
   <ItemGroup>
-    <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="1.0.0" />
+    <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="2.0.0" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AspNetCoreRateLimit" Version="1.0.5" />
     <PackageReference Include="Autofac" Version="4.5.0" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.CookiePolicy" Version="1.1.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Cors" Version="1.1.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="1.1.2" />
-    <PackageReference Include="Microsoft.AspNetCore.HttpOverrides" Version="1.1.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Server.IISIntegration" Version="1.1.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="1.1.2" />
-    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="1.1.2" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="1.1.2" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="1.1.2" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="1.1.2" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="1.1.2" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="1.1.2" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="1.1.2" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.2" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.1.2" />
-    <PackageReference Include="Microsoft.Extensions.Logging.TraceSource" Version="1.1.2" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="1.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.TraceSource" Version="2.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink.Loader" Version="14.1.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
-    <PackageReference Include="NodaTime" Version="2.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="NodaTime" Version="2.0.2" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.0.0" PrivateAssets="All" />
     <PackageReference Include="Swashbuckle.Swagger" Version="6.0.0-beta901" />
     <PackageReference Include="Swashbuckle.SwaggerGen" Version="6.0.0-beta901" />
     <PackageReference Include="Swashbuckle.SwaggerUi" Version="6.0.0-beta901" />
   </ItemGroup>
   <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">
-    <Exec Command="npm install --loglevel=error" />
-    <Exec Command="bower install --loglevel=error" />
+    <Exec Command="npm install --loglevel=error" Condition=" '$(InstallWebPackages)' == 'true' " />
+    <Exec Command="bower install --loglevel=error" Condition=" '$(InstallWebPackages)' == 'true' " />
     <Exec Command="gulp publish" />
-  </Target>
-  <Target Name="AddGeneratedContentItems" BeforeTargets="AssignTargetPaths" DependsOnTargets="PrepareForPublish">
-    <ItemGroup>
-      <Content Include="wwwroot/**" CopyToPublishDirectory="PreserveNewest" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder);@(Content)" />
-    </ItemGroup>
   </Target>
 </Project>
