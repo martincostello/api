@@ -1,4 +1,4 @@
-﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
+// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 namespace MartinCostello.Api
@@ -75,8 +75,8 @@ namespace MartinCostello.Api
         /// </summary>
         /// <param name="app">The <see cref="IApplicationBuilder"/> to use.</param>
         /// <param name="environment">The <see cref="IHostingEnvironment"/> to use.</param>
-        /// <param name="loggerFactory">The <see cref="LoggerFactory"/> to use.</param>
-        public void Configure(IApplicationBuilder app, IHostingEnvironment environment, LoggerFactory loggerFactory)
+        /// <param name="loggerFactory">The <see cref="ILoggerFactory"/> to use.</param>
+        public void Configure(IApplicationBuilder app, IHostingEnvironment environment, ILoggerFactory loggerFactory)
         {
             app.UseCustomHttpHeaders(environment, Configuration, ServiceProvider.GetRequiredService<SiteOptions>());
 
@@ -84,9 +84,6 @@ namespace MartinCostello.Api
 
             if (environment.IsDevelopment())
             {
-                loggerFactory.AddConsole();
-                loggerFactory.AddDebug();
-
                 app.UseDeveloperExceptionPage();
             }
             else
@@ -147,10 +144,11 @@ namespace MartinCostello.Api
             services.AddAntiforgery(
                 (p) =>
                 {
-                    p.CookieName = "_anti-forgery";
+                    p.Cookie.HttpOnly = true;
+                    p.Cookie.Name = "_anti-forgery";
+                    p.Cookie.SecurePolicy = CreateCookieSecurePolicy();
                     p.FormFieldName = "_anti-forgery";
                     p.HeaderName = "x-anti-forgery";
-                    p.RequireSsl = !HostingEnvironment.IsDevelopment();
                 });
 
             services.AddMemoryCache()
@@ -260,8 +258,22 @@ namespace MartinCostello.Api
             return new CookiePolicyOptions()
             {
                 HttpOnly = HttpOnlyPolicy.Always,
-                Secure = HostingEnvironment.IsDevelopment() ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.Always,
+                Secure = CreateCookieSecurePolicy(),
             };
+        }
+
+        /// <summary>
+        /// Creates the <see cref="CookieSecurePolicy"/> to use.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="CookieSecurePolicy"/> to use for the application.
+        /// </returns>
+        private CookieSecurePolicy CreateCookieSecurePolicy()
+        {
+            return
+                HostingEnvironment.IsDevelopment() ?
+                CookieSecurePolicy.SameAsRequest :
+                CookieSecurePolicy.Always;
         }
     }
 }

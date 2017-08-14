@@ -14,22 +14,17 @@
     <Content Update="wwwroot\**\*;Views\**\*" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
   <ItemGroup>
-    <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="2.0.0-preview2-final" />
+    <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="2.0.0" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AspNetCoreRateLimit" Version="1.0.5" />
     <PackageReference Include="Autofac" Version="4.5.0" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore" Version="2.0.0-preview2-final" />
-    <PackageReference Include="Microsoft.AspNetCore.CookiePolicy" Version="2.0.0-preview2-final" />
-    <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.0.0-preview2-final" />
-    <PackageReference Include="Microsoft.AspNetCore.HttpOverrides" Version="2.0.0-preview2-final" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.0-preview2-final" />
-    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.0.0-preview2-final" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="2.0.0-preview2-final" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="2.0.0-preview2-final" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.0.0-preview2-final" />
-    <PackageReference Include="Microsoft.Extensions.Logging.TraceSource" Version="2.0.0-preview2-final" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.TraceSource" Version="2.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink.Loader" Version="14.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
     <PackageReference Include="NodaTime" Version="2.0.2" />
@@ -42,10 +37,5 @@
     <Exec Command="npm install --loglevel=error" Condition=" '$(InstallWebPackages)' == 'true' " />
     <Exec Command="bower install --loglevel=error" Condition=" '$(InstallWebPackages)' == 'true' " />
     <Exec Command="gulp publish" />
-  </Target>
-  <Target Name="AddGeneratedContentItems" BeforeTargets="AssignTargetPaths" DependsOnTargets="PrepareForPublish">
-    <ItemGroup>
-      <Content Include="wwwroot/**" CopyToPublishDirectory="PreserveNewest" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder);@(Content)" />
-    </ItemGroup>
   </Target>
 </Project>
