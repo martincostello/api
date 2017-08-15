@@ -4,7 +4,6 @@
 namespace MartinCostello.Api
 {
     using System;
-    using AspNetCoreRateLimit;
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
     using Extensions;
@@ -80,8 +79,6 @@ namespace MartinCostello.Api
         {
             app.UseCustomHttpHeaders(environment, Configuration, ServiceProvider.GetRequiredService<SiteOptions>());
 
-            ////app.UseMiddleware<CustomIpRateLimitMiddleware>();
-
             if (environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -138,9 +135,6 @@ namespace MartinCostello.Api
             services.AddOptions();
             services.Configure<SiteOptions>(Configuration.GetSection("Site"));
 
-            ////services.Configure<IpRateLimitOptions>(Configuration.GetSection("IpRateLimiting"));
-            ////services.Configure<IpRateLimitPolicies>(Configuration.GetSection("IpRateLimitPolicies"));
-
             services.AddAntiforgery(
                 (p) =>
                 {
@@ -171,8 +165,6 @@ namespace MartinCostello.Api
 
             services.AddSingleton<IConfiguration>((_) => Configuration);
             services.AddSingleton<IClock>((_) => SystemClock.Instance);
-            services.AddSingleton<IIpPolicyStore, DistributedCacheIpPolicyStore>();
-            services.AddSingleton<IRateLimitCounterStore, DistributedCacheRateLimitCounterStore>();
             services.AddSingleton((p) => p.GetRequiredService<IOptions<SiteOptions>>().Value);
             services.AddSingleton((p) => new BowerVersions(p.GetRequiredService<IHostingEnvironment>()));
 
