@@ -2,6 +2,7 @@
   <Import Project="..\..\API.Common.props" />
   <PropertyGroup>
     <Description>https://api.martincostello.com/</Description>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <OutputType>Exe</OutputType>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <TargetFramework>netcoreapp2.0</TargetFramework>
@@ -17,21 +18,13 @@
     <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="2.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AspNetCoreRateLimit" Version="1.0.5" />
-    <PackageReference Include="Autofac" Version="4.5.0" />
-    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.1.0" />
+    <PackageReference Include="Autofac" Version="4.6.1" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="2.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="2.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.TraceSource" Version="2.0.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink.Loader" Version="14.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
-    <PackageReference Include="NodaTime" Version="2.0.2" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.0.0" PrivateAssets="All" />
-    <PackageReference Include="Swashbuckle.Swagger" Version="6.0.0-beta901" />
-    <PackageReference Include="Swashbuckle.SwaggerGen" Version="6.0.0-beta901" />
-    <PackageReference Include="Swashbuckle.SwaggerUi" Version="6.0.0-beta901" />
+    <PackageReference Include="NodaTime" Version="2.2.0" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" PrivateAssets="All" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="1.0.0" />
   </ItemGroup>
   <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">
     <Exec Command="npm install --loglevel=error" Condition=" '$(InstallWebPackages)' == 'true' " />

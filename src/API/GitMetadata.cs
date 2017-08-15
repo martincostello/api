@@ -1,4 +1,4 @@
-﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
+// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 namespace MartinCostello.Api
@@ -29,8 +29,10 @@ namespace MartinCostello.Api
         public static DateTime Timestamp { get; } = DateTime.Parse(GetMetadataValue("BuildTimestamp", DateTime.UtcNow.ToString("o", CultureInfo.InvariantCulture)), CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal);
 
         /// <summary>
-        /// Gets the Git commit SHA associated with this revision of the application.
+        /// Gets the specified metadata value.
         /// </summary>
+        /// <param name="name">The name of the metadata value to retrieve.</param>
+        /// <param name="defaultValue">The default value if the metadata is not found.</param>
         /// <returns>
         /// A <see cref="string"/> containing the Git SHA-1 for the revision of the application.
         /// </returns>

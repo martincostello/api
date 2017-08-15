@@ -4,7 +4,6 @@
 namespace MartinCostello.Api
 {
     using System;
-    using AspNetCoreRateLimit;
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
     using Extensions;
@@ -80,8 +79,6 @@ namespace MartinCostello.Api
         {
             app.UseCustomHttpHeaders(environment, Configuration, ServiceProvider.GetRequiredService<SiteOptions>());
 
-            ////app.UseMiddleware<CustomIpRateLimitMiddleware>();
-
             if (environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -113,13 +110,7 @@ namespace MartinCostello.Api
 
             app.UseHttpMethodOverride();
 
-            app.UseMvc(
-                (routes) =>
-                {
-                    routes.MapRoute(
-                        name: "default",
-                        template: "{controller=Home}/{action=Index}/{id?}");
-                });
+            app.UseMvcWithDefaultRoute();
 
             app.UseSwagger(ServiceProvider.GetRequiredService<SiteOptions>());
 
@@ -137,9 +128,6 @@ namespace MartinCostello.Api
         {
             services.AddOptions();
             services.Configure<SiteOptions>(Configuration.GetSection("Site"));
-
-            ////services.Configure<IpRateLimitOptions>(Configuration.GetSection("IpRateLimiting"));
-            ////services.Configure<IpRateLimitPolicies>(Configuration.GetSection("IpRateLimitPolicies"));
 
             services.AddAntiforgery(
                 (p) =>
@@ -167,14 +155,13 @@ namespace MartinCostello.Api
                     p.LowercaseUrls = true;
                 });
 
-            services.AddSwagger();
+            services.AddSwagger(HostingEnvironment);
 
             services.AddSingleton<IConfiguration>((_) => Configuration);
             services.AddSingleton<IClock>((_) => SystemClock.Instance);
-            services.AddSingleton<IIpPolicyStore, DistributedCacheIpPolicyStore>();
-            services.AddSingleton<IRateLimitCounterStore, DistributedCacheRateLimitCounterStore>();
             services.AddSingleton((p) => p.GetRequiredService<IOptions<SiteOptions>>().Value);
             services.AddSingleton((p) => new BowerVersions(p.GetRequiredService<IHostingEnvironment>()));
+            services.AddSingleton((_) => ConfigureJsonFormatter(new JsonSerializerSettings()));
 
             var builder = new ContainerBuilder();
 
@@ -195,16 +182,28 @@ namespace MartinCostello.Api
         /// </returns>
         private static JsonSerializerSettings ConfigureJsonFormatter(MvcJsonOptions options)
         {
-            // Make JSON easier to read for debugging at the expense of larger payloads
-            options.SerializerSettings.Formatting = Formatting.Indented;
+            return ConfigureJsonFormatter(options.SerializerSettings);
+        }
 
-            // Omit nulls to reduce payload size
-            options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+        /// <summary>
+        /// Configures the JSON serializer.
+        /// </summary>
+        /// <param name="settings">The <see cref="JsonSerializerSettings"/> to configure.</param>
+        /// <returns>
+        /// The <see cref="JsonSerializerSettings"/> to use.
+        /// </returns>
+        private static JsonSerializerSettings ConfigureJsonFormatter(JsonSerializerSettings settings)
+        {
+            // Make JSON easier to read for debugging at the expense of larger payloads
+            settings.Formatting = Formatting.Indented;
 
             // Explicitly define behavior when serializing DateTime values
-            options.SerializerSettings.DateFormatString = "yyyy'-'MM'-'dd'T'HH':'mm':'ssK";   // Only return DateTimes to a 1 second precision
+            settings.DateFormatString = "yyyy'-'MM'-'dd'T'HH':'mm':'ssK";   // Only return DateTimes to a 1 second precision
 
-            return options.SerializerSettings;
+            settings.ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver();
+            settings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
+
+            return settings;
         }
 
         /// <summary>

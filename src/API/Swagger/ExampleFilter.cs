@@ -1,14 +1,13 @@
-﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
+// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 namespace MartinCostello.Api.Swagger
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using Newtonsoft.Json;
-    using Swashbuckle.Swagger.Model;
-    using Swashbuckle.SwaggerGen.Generator;
+    using Swashbuckle.AspNetCore.Swagger;
+    using Swashbuckle.AspNetCore.SwaggerGen;
 
     /// <summary>
     /// A class representing an operation filter that adds the example to use for display in Swagger documentation. This class cannot be inherited.
@@ -34,7 +33,9 @@ namespace MartinCostello.Api.Swagger
         {
             if (operation != null && context?.ApiDescription != null && context.SchemaRegistry != null)
             {
-                var responseAttributes = context.ApiDescription.GetActionAttributes().OfType<SwaggerResponseExampleAttribute>();
+                var responseAttributes = context.ApiDescription.ActionAttributes()
+                    .OfType<SwaggerResponseExampleAttribute>()
+                    .ToList();
 
                 foreach (var attribute in responseAttributes)
                 {
@@ -67,28 +68,8 @@ namespace MartinCostello.Api.Swagger
         /// </exception>
         private object FormatAsJson(IExampleProvider provider)
         {
-            if (provider == null)
-            {
-                throw new ArgumentNullException(nameof(provider));
-            }
+            var examples = provider.GetExample();
 
-            var examples = new Dictionary<string, object>()
-            {
-                { "application/json", provider.GetExample() },
-            };
-
-            return ApplyJsonFormatting(examples);
-        }
-
-        /// <summary>
-        /// Applies the appropriate JSON formatting to the specified example.
-        /// </summary>
-        /// <param name="examples">The examples to format.</param>
-        /// <returns>
-        /// An <see cref="object"/> representing the formatted example.
-        /// </returns>
-        private object ApplyJsonFormatting(Dictionary<string, object> examples)
-        {
             // Apply any formatting rules configured for the API (e.g. camel casing)
             var json = JsonConvert.SerializeObject(examples, _settings);
             return JsonConvert.DeserializeObject(json);
