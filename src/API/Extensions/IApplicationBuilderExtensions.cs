@@ -1,4 +1,4 @@
-﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
+// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 namespace MartinCostello.Api.Extensions
@@ -45,7 +45,14 @@ namespace MartinCostello.Api.Extensions
         {
             return value
                 .UseSwagger()
-                .UseSwaggerUi(baseRoute: options.Api.Documentation.Location);
+                .UseSwaggerUI(
+                    (p) =>
+                    {
+                        p.RoutePrefix = options.Api.Documentation.Location;
+                        p.ShowJsonEditor();
+                        p.ShowRequestHeaders();
+                        p.SwaggerEndpoint($"/swagger/api/swagger.json", options.Metadata.Name);
+                    });
         }
     }
 }

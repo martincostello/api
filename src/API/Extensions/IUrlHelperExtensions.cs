@@ -1,4 +1,4 @@
-﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
+// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 namespace MartinCostello.Api.Extensions
@@ -46,6 +46,7 @@ namespace MartinCostello.Api.Extensions
         /// Converts a virtual (relative) path to an absolute URI.
         /// </summary>
         /// <param name="value">The <see cref="IUrlHelper"/>.</param>
+        /// <param name="host">The current host name.</param>
         /// <param name="contentPath">The virtual path of the content.</param>
         /// <returns>The application absolute URI.</returns>
         private static string ToAbsolute(this IUrlHelper value, string host, string contentPath)

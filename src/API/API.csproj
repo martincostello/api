@@ -2,6 +2,7 @@
   <Import Project="..\..\API.Common.props" />
   <PropertyGroup>
     <Description>https://api.martincostello.com/</Description>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <OutputType>Exe</OutputType>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <TargetFramework>netcoreapp2.0</TargetFramework>
@@ -23,9 +24,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
     <PackageReference Include="NodaTime" Version="2.2.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" PrivateAssets="All" />
-    <PackageReference Include="Swashbuckle.Swagger" Version="6.0.0-beta901" />
-    <PackageReference Include="Swashbuckle.SwaggerGen" Version="6.0.0-beta901" />
-    <PackageReference Include="Swashbuckle.SwaggerUi" Version="6.0.0-beta901" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="1.0.0" />
   </ItemGroup>
   <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">
     <Exec Command="npm install --loglevel=error" Condition=" '$(InstallWebPackages)' == 'true' " />

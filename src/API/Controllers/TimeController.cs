@@ -1,4 +1,4 @@
-﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
+// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 namespace MartinCostello.Api.Controllers
@@ -10,7 +10,7 @@ namespace MartinCostello.Api.Controllers
     using Models;
     using NodaTime;
     using Swagger;
-    using Swashbuckle.SwaggerGen.Annotations;
+    using Swashbuckle.AspNetCore.SwaggerGen;
 
     /// <summary>
     /// A class representing the controller for the <c>/time</c> resource.
@@ -42,7 +42,7 @@ namespace MartinCostello.Api.Controllers
         [EnableCors(Startup.DefaultCorsPolicyName)]
         [HttpGet]
         [Produces("application/json", Type = typeof(TimeResponse))]
-        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(TimeResponse))]
+        [SwaggerResponse((int)HttpStatusCode.OK, Type = typeof(TimeResponse))]
         [SwaggerResponseExample(typeof(TimeResponse), typeof(TimeResponseExampleProvider))]
         public IActionResult Get()
         {

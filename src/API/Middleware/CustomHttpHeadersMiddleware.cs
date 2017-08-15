@@ -1,4 +1,4 @@
-﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
+// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 namespace MartinCostello.Api.Middleware
@@ -153,7 +153,6 @@ child-src 'none';
 frame-ancestors 'none';
 form-action 'self';
 block-all-mixed-content;
-reflected-xss block;
 base-uri https://api.martincostello.com;
 manifest-src 'self';";
 

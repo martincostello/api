@@ -1,4 +1,4 @@
-﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
+// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 namespace MartinCostello.Api.Controllers
@@ -15,7 +15,7 @@ namespace MartinCostello.Api.Controllers
     using Microsoft.AspNetCore.Mvc;
     using Models;
     using Swagger;
-    using Swashbuckle.SwaggerGen.Annotations;
+    using Swashbuckle.AspNetCore.SwaggerGen;
 
     /// <summary>
     /// A class representing the controller for the <c>/tools</c> resource.
@@ -48,14 +48,15 @@ namespace MartinCostello.Api.Controllers
         /// Generates a GUID.
         /// </summary>
         /// <param name="format">The format for which to generate a GUID.</param>
+        /// <param name="uppercase">Whether to return the GUID in uppercase.</param>
         /// <returns>
         /// An <see cref="IActionResult"/> containing the generated GUID.
         /// </returns>
         [HttpGet]
         [Produces("application/json", Type = typeof(GuidResponse))]
         [Route("guid")]
-        [SwaggerResponse(HttpStatusCode.OK, "A GUID was generated successfully.", Type = typeof(GuidResponse))]
-        [SwaggerResponse(HttpStatusCode.BadRequest, "The specified format is invalid.", Type = typeof(ErrorResponse))]
+        [SwaggerResponse((int)HttpStatusCode.OK, description: "A GUID was generated successfully.", Type = typeof(GuidResponse))]
+        [SwaggerResponse((int)HttpStatusCode.BadRequest, description: "The specified format is invalid.", Type = typeof(ErrorResponse))]
         [SwaggerResponseExample(typeof(ErrorResponse), typeof(ErrorResponseExampleProvider))]
         [SwaggerResponseExample(typeof(GuidResponse), typeof(GuidResponseExampleProvider))]
         public IActionResult Guid([FromQuery]string format = null, [FromQuery]bool? uppercase = null)
@@ -94,8 +95,8 @@ namespace MartinCostello.Api.Controllers
         [HttpPost]
         [Produces("application/json", Type = typeof(HashResponse))]
         [Route("hash")]
-        [SwaggerResponse(HttpStatusCode.OK, "The hash was generated successfully.", Type = typeof(HashResponse))]
-        [SwaggerResponse(HttpStatusCode.BadRequest, "The specified hash algorithm or output format is invalid.", Type = typeof(ErrorResponse))]
+        [SwaggerResponse((int)HttpStatusCode.OK, description: "The hash was generated successfully.", Type = typeof(HashResponse))]
+        [SwaggerResponse((int)HttpStatusCode.BadRequest, description: "The specified hash algorithm or output format is invalid.", Type = typeof(ErrorResponse))]
         [SwaggerResponseExample(typeof(ErrorResponse), typeof(ErrorResponseExampleProvider))]
         [SwaggerResponseExample(typeof(HashResponse), typeof(HashResponseExampleProvider))]
         public IActionResult Hash([FromBody]HashRequest request)
@@ -180,23 +181,20 @@ namespace MartinCostello.Api.Controllers
         [HttpGet]
         [Produces("application/json", Type = typeof(MachineKeyResponse))]
         [Route("machinekey")]
-        [SwaggerResponse(HttpStatusCode.OK, "The machine key was generated successfully.")]
-        [SwaggerResponse(HttpStatusCode.BadRequest, "The specified decryption or validation algorithm is invalid.", Type = typeof(ErrorResponse))]
+        [SwaggerResponse((int)HttpStatusCode.OK, description: "The machine key was generated successfully.")]
+        [SwaggerResponse((int)HttpStatusCode.BadRequest, description: "The specified decryption or validation algorithm is invalid.", Type = typeof(ErrorResponse))]
         [SwaggerResponseExample(typeof(ErrorResponse), typeof(ErrorResponseExampleProvider))]
         [SwaggerResponseExample(typeof(MachineKeyResponse), typeof(MachineKeyResponseExampleProvider))]
         public IActionResult MachineKey([FromQuery]string decryptionAlgorithm, [FromQuery]string validationAlgorithm)
         {
-            int decryptionKeyLength;
-            int validationKeyLength;
-
             if (string.IsNullOrEmpty(decryptionAlgorithm) ||
-                !HashSizes.TryGetValue(decryptionAlgorithm + "-D", out decryptionKeyLength))
+                !HashSizes.TryGetValue(decryptionAlgorithm + "-D", out int decryptionKeyLength))
             {
                 return BadRequest($"The specified decryption algorithm '{decryptionAlgorithm}' is invalid.");
             }
 
             if (string.IsNullOrEmpty(validationAlgorithm) ||
-                !HashSizes.TryGetValue(validationAlgorithm + "-V", out validationKeyLength))
+                !HashSizes.TryGetValue(validationAlgorithm + "-V", out int validationKeyLength))
             {
                 return BadRequest($"The specified validation algorithm '{validationAlgorithm}' is invalid.");
             }
