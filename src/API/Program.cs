@@ -4,11 +4,10 @@
 namespace MartinCostello.Api
 {
     using System;
-    using System.IO;
-    using System.Threading;
+    using System.Threading.Tasks;
+    using Extensions;
+    using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.Logging;
 
     /// <summary>
     /// A class representing the entry-point to the application. This class cannot be inherited.
@@ -20,55 +19,15 @@ namespace MartinCostello.Api
         /// </summary>
         /// <param name="args">The arguments to the application.</param>
         /// <returns>
-        /// The exit code from the application.
+        /// A <see cref="Task{TResult}"/> that returns the exit code from the application.
         /// </returns>
-        public static int Main(string[] args) => Run(args);
-
-        /// <summary>
-        /// Runs ths application.
-        /// </summary>
-        /// <param name="args">The arguments to the application.</param>
-        /// <param name="cancellationToken">The optional cancellation token to use.</param>
-        /// <returns>
-        /// The exit code from the application.
-        /// </returns>
-        public static int Run(string[] args, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task<int> Main(string[] args)
         {
             try
             {
-                var configuration = new ConfigurationBuilder()
-                    .AddEnvironmentVariables()
-                    .AddCommandLine(args)
-                    .Build();
-
-                var builder = new WebHostBuilder()
-                    .UseKestrel((p) => p.AddServerHeader = false)
-                    .UseConfiguration(configuration)
-                    .UseContentRoot(Directory.GetCurrentDirectory())
-                    .UseIISIntegration()
-                    .ConfigureLogging(
-                        (hostingContext, factory) =>
-                        {
-                            if (hostingContext.HostingEnvironment.IsDevelopment())
-                            {
-                                factory.AddDebug();
-                            }
-                        })
-                    .UseStartup<Startup>()
-                    .CaptureStartupErrors(true);
-
-                using (var host = builder.Build())
+                using (var host = BuildWebHost(args))
                 {
-                    using (var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken))
-                    {
-                        Console.CancelKeyPress += (_, e) =>
-                        {
-                            tokenSource.Cancel();
-                            e.Cancel = true;
-                        };
-
-                        host.RunAsync(tokenSource.Token).GetAwaiter().GetResult();
-                    }
+                    await host.RunAsync();
                 }
 
                 return 0;
@@ -78,6 +37,23 @@ namespace MartinCostello.Api
                 Console.Error.WriteLine($"Unhandled exception: {ex}");
                 return -1;
             }
+        }
+
+        /// <summary>
+        /// Creates the web host to use for the application.
+        /// </summary>
+        /// <param name="args">The arguments to the application.</param>
+        /// <returns>
+        /// A <see cref="IWebHost"/> to use.
+        /// </returns>
+        private static IWebHost BuildWebHost(string[] args)
+        {
+            return WebHost.CreateDefaultBuilder(args)
+                .UseKestrel((p) => p.AddServerHeader = false)
+                .UseAzureAppServices()
+                .UseStartup<Startup>()
+                .CaptureStartupErrors(true)
+                .Build();
         }
     }
 }
