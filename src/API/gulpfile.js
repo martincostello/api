@@ -1,4 +1,4 @@
-﻿/// <binding Clean='clean' />
+/// <binding Clean='clean' />
 "use strict";
 
 var gulp = require("gulp"),
@@ -87,9 +87,9 @@ gulp.task("lint:less", function () {
 
 gulp.task("lint:sass", function () {
     gulp.src(paths.sass)
-      .pipe(sassLint())
-      .pipe(sassLint.format())
-      .pipe(sassLint.failOnError())
+        .pipe(sassLint())
+        .pipe(sassLint.format())
+        .pipe(sassLint.failOnError());
 });
 
 gulp.task("lint", ["lint:js", "lint:less", "lint:sass", "lint:css"]);
