@@ -1,4 +1,4 @@
-﻿@inject BowerVersions BowerVersions
+@inject BowerVersions BowerVersions
 @inject IConfiguration Config
 @inject SiteOptions Options
 <!DOCTYPE html>
@@ -24,6 +24,7 @@
     }
     @await Html.PartialAsync("_Meta", model)
     @await Html.PartialAsync("_Links", Tuple.Create(canonicalUri, Options))
+    @await RenderSectionAsync("links", required: false)
     @await RenderSectionAsync("styles", required: false)
     <script type="text/javascript">
         if (self == top) {

@@ -5,6 +5,7 @@ namespace MartinCostello.Api.Swagger
 {
     using System;
     using System.Linq;
+    using System.Reflection;
     using Newtonsoft.Json;
     using Swashbuckle.AspNetCore.Swagger;
     using Swashbuckle.AspNetCore.SwaggerGen;
@@ -12,7 +13,7 @@ namespace MartinCostello.Api.Swagger
     /// <summary>
     /// A class representing an operation filter that adds the example to use for display in Swagger documentation. This class cannot be inherited.
     /// </summary>
-    internal sealed class ExampleFilter : IOperationFilter
+    internal sealed class ExampleFilter : IOperationFilter, ISchemaFilter
     {
         /// <summary>
         /// The <see cref="JsonSerializerSettings"/> to use for formatting example responses. This field is read-only.
@@ -49,11 +50,37 @@ namespace MartinCostello.Api.Swagger
 
                     if (response != null)
                     {
-                        var provider = (IExampleProvider)Activator.CreateInstance(attribute.ExampleType);
-                        response.Examples = FormatAsJson(provider);
+                        response.Examples = CreateExample(attribute.ExampleType);
                     }
                 }
             }
+        }
+
+        /// <inheritdoc />
+        public void Apply(Schema model, SchemaFilterContext context)
+        {
+            if (context.JsonContract != null)
+            {
+                var attribute = context.SystemType.GetCustomAttribute<SwaggerTypeExampleAttribute>();
+
+                if (attribute != null)
+                {
+                    model.Example = CreateExample(attribute.ExampleType);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Creates an example from the specified type.
+        /// </summary>
+        /// <param name="exampleType">The type to create the example from.</param>
+        /// <returns>
+        /// The example value.
+        /// </returns>
+        private object CreateExample(Type exampleType)
+        {
+            var provider = (IExampleProvider)Activator.CreateInstance(exampleType);
+            return FormatAsJson(provider);
         }
 
         /// <summary>

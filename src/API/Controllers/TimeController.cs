@@ -42,7 +42,8 @@ namespace MartinCostello.Api.Controllers
         [EnableCors(Startup.DefaultCorsPolicyName)]
         [HttpGet]
         [Produces("application/json", Type = typeof(TimeResponse))]
-        [SwaggerResponse((int)HttpStatusCode.OK, Type = typeof(TimeResponse))]
+        [ProducesResponseType(typeof(TimeResponse), 200)]
+        [SwaggerResponse((int)HttpStatusCode.OK, Type = typeof(TimeResponse), Description = "The current UTC date and time.")]
         [SwaggerResponseExample(typeof(TimeResponse), typeof(TimeResponseExampleProvider))]
         public IActionResult Get()
         {
@@ -58,7 +59,7 @@ namespace MartinCostello.Api.Controllers
                 Unix = now.ToUnixTimeSeconds(),
             };
 
-            return new OkObjectResult(value);
+            return Json(value);
         }
     }
 }

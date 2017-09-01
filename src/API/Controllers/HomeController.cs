@@ -8,7 +8,6 @@ namespace MartinCostello.Api.Controllers
     using Extensions;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Extensions.Primitives;
 
     /// <summary>
     /// A class representing the controller for the <c>/</c> resource.

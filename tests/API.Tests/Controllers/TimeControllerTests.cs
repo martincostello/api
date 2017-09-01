@@ -1,4 +1,4 @@
-﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
+// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 namespace MartinCostello.Api.Controllers
@@ -33,7 +33,7 @@ namespace MartinCostello.Api.Controllers
             result.ShouldNotBeNull();
 
             var actual = result
-                .ShouldBeOfType<OkObjectResult>()
+                .ShouldBeOfType<JsonResult>()
                 .Value.ShouldBeOfType<TimeResponse>();
 
             actual.Timestamp.ShouldBe(initial.ToDateTimeOffset());

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
+// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 namespace MartinCostello.Api.Models
@@ -7,7 +7,7 @@ namespace MartinCostello.Api.Models
     using Newtonsoft.Json;
 
     /// <summary>
-    /// A class representing a request for the <c>/tools/hash</c> API resource. This class cannot be inherited.
+    /// Represents a request to the <c>/tools/hash</c> API resource.
     /// </summary>
     public sealed class HashRequest
     {
