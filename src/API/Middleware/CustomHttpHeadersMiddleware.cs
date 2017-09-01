@@ -143,8 +143,8 @@ namespace MartinCostello.Api.Middleware
             string basePolicy = $@"
 default-src 'self' maxcdn.bootstrapcdn.com;
 script-src 'self' ajax.googleapis.com cdnjs.cloudflare.com maxcdn.bootstrapcdn.com www.google-analytics.com 'unsafe-inline';
-style-src 'self' ajax.googleapis.com fonts.googleapis.com maxcdn.bootstrapcdn.com 'unsafe-inline';
-img-src 'self' online.swagger.io www.google-analytics.com {GetCdnOriginForContentSecurityPolicy(options)};
+style-src 'self' ajax.googleapis.com cdnjs.cloudflare.com fonts.googleapis.com maxcdn.bootstrapcdn.com 'unsafe-inline';
+img-src 'self' data: online.swagger.io www.google-analytics.com {GetCdnOriginForContentSecurityPolicy(options)};
 font-src 'self' ajax.googleapis.com fonts.googleapis.com fonts.gstatic.com maxcdn.bootstrapcdn.com;
 connect-src 'self';
 media-src 'none';

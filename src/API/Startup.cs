@@ -112,7 +112,7 @@ namespace MartinCostello.Api
 
             app.UseMvcWithDefaultRoute();
 
-            app.UseSwagger(ServiceProvider.GetRequiredService<SiteOptions>());
+            app.UseSwagger();
 
             app.UseCookiePolicy(CreateCookiePolicy());
         }

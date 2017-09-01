@@ -36,7 +36,6 @@ namespace MartinCostello.Api.Extensions
                     {
                         Contact = new Contact()
                         {
-                            Email = options.Metadata.Author.Email,
                             Name = options.Metadata.Author.Name,
                             Url = options.Metadata.Author.Website,
                         },
@@ -46,7 +45,6 @@ namespace MartinCostello.Api.Extensions
                             Name = options.Api.License.Name,
                             Url = options.Api.License.Url,
                         },
-                        TermsOfService = options.Metadata.Repository + "/blob/master/LICENSE",
                         Title = options.Metadata.Name,
                         Version = string.Empty,
                     };
@@ -61,6 +59,7 @@ namespace MartinCostello.Api.Extensions
 
                     p.SwaggerDoc("api", info);
 
+                    p.SchemaFilter<ExampleFilter>();
                     p.OperationFilter<ExampleFilter>();
                     p.OperationFilter<RemoveStyleCopPrefixesFilter>();
                 });

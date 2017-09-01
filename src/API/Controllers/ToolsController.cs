@@ -54,10 +54,11 @@ namespace MartinCostello.Api.Controllers
         /// </returns>
         [HttpGet]
         [Produces("application/json", Type = typeof(GuidResponse))]
+        [ProducesResponseType(typeof(GuidResponse), 200)]
+        [ProducesResponseType(typeof(ErrorResponse), 400)]
         [Route("guid")]
         [SwaggerResponse((int)HttpStatusCode.OK, description: "A GUID was generated successfully.", Type = typeof(GuidResponse))]
         [SwaggerResponse((int)HttpStatusCode.BadRequest, description: "The specified format is invalid.", Type = typeof(ErrorResponse))]
-        [SwaggerResponseExample(typeof(ErrorResponse), typeof(ErrorResponseExampleProvider))]
         [SwaggerResponseExample(typeof(GuidResponse), typeof(GuidResponseExampleProvider))]
         public IActionResult Guid([FromQuery]string format = null, [FromQuery]bool? uppercase = null)
         {
@@ -92,12 +93,14 @@ namespace MartinCostello.Api.Controllers
         /// <returns>
         /// An <see cref="IActionResult"/> containing the generated hash value.
         /// </returns>
+        [Consumes("application/json", "text/json")]
         [HttpPost]
         [Produces("application/json", Type = typeof(HashResponse))]
+        [ProducesResponseType(typeof(HashResponse), 200)]
+        [ProducesResponseType(typeof(ErrorResponse), 400)]
         [Route("hash")]
         [SwaggerResponse((int)HttpStatusCode.OK, description: "The hash was generated successfully.", Type = typeof(HashResponse))]
         [SwaggerResponse((int)HttpStatusCode.BadRequest, description: "The specified hash algorithm or output format is invalid.", Type = typeof(ErrorResponse))]
-        [SwaggerResponseExample(typeof(ErrorResponse), typeof(ErrorResponseExampleProvider))]
         [SwaggerResponseExample(typeof(HashResponse), typeof(HashResponseExampleProvider))]
         public IActionResult Hash([FromBody]HashRequest request)
         {
@@ -180,10 +183,11 @@ namespace MartinCostello.Api.Controllers
         /// </returns>
         [HttpGet]
         [Produces("application/json", Type = typeof(MachineKeyResponse))]
+        [ProducesResponseType(typeof(MachineKeyResponse), 200)]
+        [ProducesResponseType(typeof(ErrorResponse), 400)]
         [Route("machinekey")]
         [SwaggerResponse((int)HttpStatusCode.OK, description: "The machine key was generated successfully.")]
         [SwaggerResponse((int)HttpStatusCode.BadRequest, description: "The specified decryption or validation algorithm is invalid.", Type = typeof(ErrorResponse))]
-        [SwaggerResponseExample(typeof(ErrorResponse), typeof(ErrorResponseExampleProvider))]
         [SwaggerResponseExample(typeof(MachineKeyResponse), typeof(MachineKeyResponseExampleProvider))]
         public IActionResult MachineKey([FromQuery]string decryptionAlgorithm, [FromQuery]string validationAlgorithm)
         {

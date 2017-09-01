@@ -1,3 +1,13 @@
-﻿body {
+body {
     padding-top: 50px;
+}
+
+.scheme-container {
+    display: none;
+}
+
+.swagger-ui-svg {
+    height: 0;
+    position: absolute;
+    width: 0;
 }
