@@ -156,7 +156,7 @@ block-all-mixed-content;
 base-uri https://api.martincostello.com;
 manifest-src 'self';";
 
-            var builder = new StringBuilder(basePolicy.Replace(Environment.NewLine, string.Empty));
+            var builder = new StringBuilder(basePolicy.Replace(Environment.NewLine, string.Empty).Replace("\n", string.Empty));
 
             if (isProduction)
             {
