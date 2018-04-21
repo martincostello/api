@@ -27,7 +27,6 @@ addons:
 
 install:
   - npm install -g npm@4.5.0
-  - npm install -g bower@1.8.0
   - npm install -g gulp@3.9.1
 
 script:

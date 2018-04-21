@@ -1,9 +1,0 @@
-{
-  "name": "api.martincostello.com",
-  "private": true,
-  "dependencies": {
-    "bootstrap": "3.3.7",
-    "moment": "2.15.1",
-    "jquery": "2.2.3"
-  }
-}
