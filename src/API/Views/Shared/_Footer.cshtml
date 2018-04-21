@@ -1,9 +1,9 @@
-﻿@inject SiteOptions Options
+@inject SiteOptions Options
 <hr />
 <footer>
     <p>
         &copy; @Options.Metadata.Author.Name @DateTimeOffset.UtcNow.Year |
-        <a href="@Options.ExternalLinks.Status.AbsoluteUri" target="_blank" title="View site uptime information">
+        <a href="@Options.ExternalLinks.Status.AbsoluteUri" rel="noopener" target="_blank" title="View site uptime information">
             Site Status &amp; Uptime
         </a>
         | Built from
