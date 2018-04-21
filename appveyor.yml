@@ -16,7 +16,6 @@ cache:
 
 install:
   - ps: npm install -g npm@4.5.0 --loglevel=error
-  - ps: npm install -g bower@1.8.0 --loglevel=error
   - ps: npm install -g gulp@3.9.1 --loglevel=error
 
 build_script:
