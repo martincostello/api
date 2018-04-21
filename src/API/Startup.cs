@@ -40,7 +40,6 @@ namespace MartinCostello.Api
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
-                .AddJsonFile("hosting.json")
                 .AddJsonFile("appsettings.json")
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
@@ -160,7 +159,6 @@ namespace MartinCostello.Api
             services.AddSingleton<IConfiguration>((_) => Configuration);
             services.AddSingleton<IClock>((_) => SystemClock.Instance);
             services.AddSingleton((p) => p.GetRequiredService<IOptions<SiteOptions>>().Value);
-            services.AddSingleton((p) => new BowerVersions(p.GetRequiredService<IHostingEnvironment>()));
             services.AddSingleton((_) => ConfigureJsonFormatter(new JsonSerializerSettings()));
 
             var builder = new ContainerBuilder();
