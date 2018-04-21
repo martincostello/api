@@ -1,4 +1,4 @@
-﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
+// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 module.exports = function (config) {
@@ -11,7 +11,6 @@ module.exports = function (config) {
         frameworks: ["jasmine"],
 
         files: [
-            "wwwroot/lib/**/dist/*.js",
             "Assets/Scripts/js/site.js",
             "Assets/Scripts/**/*.spec.js"
         ],
