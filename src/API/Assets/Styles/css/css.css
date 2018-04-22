@@ -2,6 +2,10 @@
     padding-top: 10px;
 }
 
+.response-col_status {
+    width: unset;
+}
+
 .scheme-container {
     display: none;
 }
