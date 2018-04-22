@@ -35,10 +35,10 @@
 </head>
 <body>
     @await Html.PartialAsync("_Navbar")
-    <div class="container body-content">
+    <main class="container body-content">
         @RenderBody()
         @await Html.PartialAsync("_Footer")
-    </div>
+    </main>
     @await Html.PartialAsync("_Styles")
     @await Html.PartialAsync("_Scripts")
     @await RenderSectionAsync("scripts", required: false)
