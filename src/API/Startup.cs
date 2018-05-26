@@ -14,7 +14,6 @@ namespace MartinCostello.Api
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Microsoft.Net.Http.Headers;
     using Newtonsoft.Json;
@@ -34,23 +33,23 @@ namespace MartinCostello.Api
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class.
         /// </summary>
-        /// <param name="config">The <see cref="IConfiguration"/> to use.</param>
-        /// <param name="env">The <see cref="IHostingEnvironment"/> to use.</param>
-        public Startup(IConfiguration config, IHostingEnvironment env)
+        /// <param name="configuration">The <see cref="IConfiguration"/> to use.</param>
+        /// <param name="hostingEnvironment">The <see cref="IHostingEnvironment"/> to use.</param>
+        public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
         {
-            Configuration = config;
-            HostingEnvironment = env;
+            Configuration = configuration;
+            HostingEnvironment = hostingEnvironment;
         }
 
         /// <summary>
-        /// Gets or sets the current configuration.
+        /// Gets the current configuration.
         /// </summary>
-        public IConfiguration Configuration { get; set; }
+        public IConfiguration Configuration { get; }
 
         /// <summary>
-        /// Gets or sets the current hosting environment.
+        /// Gets the current hosting environment.
         /// </summary>
-        public IHostingEnvironment HostingEnvironment { get; set; }
+        public IHostingEnvironment HostingEnvironment { get; }
 
         /// <summary>
         /// Gets or sets the service provider.
@@ -61,13 +60,12 @@ namespace MartinCostello.Api
         /// Configures the application.
         /// </summary>
         /// <param name="app">The <see cref="IApplicationBuilder"/> to use.</param>
-        /// <param name="environment">The <see cref="IHostingEnvironment"/> to use.</param>
-        /// <param name="loggerFactory">The <see cref="ILoggerFactory"/> to use.</param>
-        public void Configure(IApplicationBuilder app, IHostingEnvironment environment, ILoggerFactory loggerFactory)
+        /// <param name="options">The <see cref="SiteOptions"/> to use.</param>
+        public void Configure(IApplicationBuilder app, SiteOptions options)
         {
-            app.UseCustomHttpHeaders(environment, Configuration, ServiceProvider.GetRequiredService<SiteOptions>());
+            app.UseCustomHttpHeaders(HostingEnvironment, Configuration, options);
 
-            if (environment.IsDevelopment())
+            if (HostingEnvironment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
