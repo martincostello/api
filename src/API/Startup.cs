@@ -4,8 +4,6 @@
 namespace MartinCostello.Api
 {
     using System;
-    using Autofac;
-    using Autofac.Extensions.DependencyInjection;
     using Extensions;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.CookiePolicy;
@@ -36,27 +34,18 @@ namespace MartinCostello.Api
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class.
         /// </summary>
+        /// <param name="config">The <see cref="IConfiguration"/> to use.</param>
         /// <param name="env">The <see cref="IHostingEnvironment"/> to use.</param>
-        public Startup(IHostingEnvironment env)
+        public Startup(IConfiguration config, IHostingEnvironment env)
         {
-            var builder = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables();
-
-            if (env.IsDevelopment())
-            {
-                builder.AddUserSecrets<Startup>();
-            }
-
-            Configuration = builder.Build();
+            Configuration = config;
             HostingEnvironment = env;
         }
 
         /// <summary>
         /// Gets or sets the current configuration.
         /// </summary>
-        public IConfigurationRoot Configuration { get; set; }
+        public IConfiguration Configuration { get; set; }
 
         /// <summary>
         /// Gets or sets the current hosting environment.
@@ -87,6 +76,9 @@ namespace MartinCostello.Api
                 app.UseExceptionHandler("/error")
                    .UseStatusCodePagesWithReExecute("/error", "?id={0}");
             }
+
+            app.UseHsts()
+                .UseHttpsRedirection();
 
             app.UseStaticFiles(
                 new StaticFileOptions()
@@ -120,10 +112,7 @@ namespace MartinCostello.Api
         /// Configures the services for the application.
         /// </summary>
         /// <param name="services">The <see cref="IServiceCollection"/> to use.</param>
-        /// <returns>
-        /// The <see cref="IServiceProvider"/> to use.
-        /// </returns>
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
             services.AddOptions();
             services.Configure<SiteOptions>(Configuration.GetSection("Site"));
@@ -145,6 +134,7 @@ namespace MartinCostello.Api
 
             services
                 .AddMvc(ConfigureMvc)
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
                 .AddJsonOptions((p) => services.AddSingleton(ConfigureJsonFormatter(p)));
 
             services.AddRouting(
@@ -154,21 +144,18 @@ namespace MartinCostello.Api
                     p.LowercaseUrls = true;
                 });
 
-            services.AddSwagger(HostingEnvironment);
+            services.AddHsts(
+                (p) =>
+                {
+                    p.MaxAge = TimeSpan.FromDays(365);
+                    p.IncludeSubDomains = false;
+                    p.Preload = false;
+                });
 
-            services.AddSingleton<IConfiguration>((_) => Configuration);
+            services.AddSwagger(HostingEnvironment);
             services.AddSingleton<IClock>((_) => SystemClock.Instance);
             services.AddSingleton((p) => p.GetRequiredService<IOptions<SiteOptions>>().Value);
             services.AddSingleton((_) => ConfigureJsonFormatter(new JsonSerializerSettings()));
-
-            var builder = new ContainerBuilder();
-
-            builder.Populate(services);
-
-            var container = builder.Build();
-            ServiceProvider = container.Resolve<IServiceProvider>();
-
-            return ServiceProvider;
         }
 
         /// <summary>
