@@ -1,6 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-    <AspNetCoreModuleHostingModel>inprocess</AspNetCoreModuleHostingModel>
     <Description>https://api.martincostello.com/</Description>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <OutputType>Exe</OutputType>
