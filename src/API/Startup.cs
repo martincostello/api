@@ -76,7 +76,7 @@ namespace MartinCostello.Api
             }
 
             app.UseHsts()
-                .UseHttpsRedirection();
+               .UseHttpsRedirection();
 
             app.UseStaticFiles(
                 new StaticFileOptions()

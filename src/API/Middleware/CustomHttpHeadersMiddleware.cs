@@ -93,8 +93,6 @@ namespace MartinCostello.Api.Middleware
 
                     if (context.Request.IsHttps)
                     {
-                        context.Response.Headers.Add("Strict-Transport-Security", "max-age=31536000");
-
                         if (!string.IsNullOrWhiteSpace(_publicKeyPins))
                         {
                             context.Response.Headers.Add("Public-Key-Pins-Report-Only", _publicKeyPins);
