@@ -110,7 +110,10 @@ namespace MartinCostello.Api
         /// Configures the services for the application.
         /// </summary>
         /// <param name="services">The <see cref="IServiceCollection"/> to use.</param>
-        public void ConfigureServices(IServiceCollection services)
+        /// <returns>
+        /// The <see cref="IServiceProvider"/> to use.
+        /// </returns>
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddOptions();
             services.Configure<SiteOptions>(Configuration.GetSection("Site"));
@@ -154,6 +157,8 @@ namespace MartinCostello.Api
             services.AddSingleton<IClock>((_) => SystemClock.Instance);
             services.AddSingleton((p) => p.GetRequiredService<IOptions<SiteOptions>>().Value);
             services.AddSingleton((_) => ConfigureJsonFormatter(new JsonSerializerSettings()));
+
+            return ServiceProvider = services.BuildServiceProvider();
         }
 
         /// <summary>
