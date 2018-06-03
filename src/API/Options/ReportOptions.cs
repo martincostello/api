@@ -1,4 +1,4 @@
-﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
+// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 namespace MartinCostello.Api.Options
@@ -19,15 +19,5 @@ namespace MartinCostello.Api.Options
         /// Gets or sets the URI to use for <c>Content-Security-Policy-Report-Only</c>.
         /// </summary>
         public Uri ContentSecurityPolicyReportOnly { get; set; }
-
-        /// <summary>
-        /// Gets or sets the URI to use for <c>Public-Key-Pins</c>.
-        /// </summary>
-        public Uri PublicKeyPins { get; set; }
-
-        /// <summary>
-        /// Gets or sets the URI to use for <c>Public-Key-Pins-Report-Only</c>.
-        /// </summary>
-        public Uri PublicKeyPinsReportOnly { get; set; }
     }
 }
