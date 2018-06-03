@@ -86,6 +86,7 @@ namespace MartinCostello.Api.Middleware
                     context.Response.Headers.Remove("X-Powered-By");
 
                     context.Response.Headers.Add("Content-Security-Policy", _contentSecurityPolicy);
+                    context.Response.Headers.Add("Referrer-Policy", "no-referrer-when-downgrade");
                     context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
                     context.Response.Headers.Add("X-Download-Options", "noopen");
                     context.Response.Headers.Add("X-Frame-Options", "DENY");
