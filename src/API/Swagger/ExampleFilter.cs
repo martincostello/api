@@ -34,7 +34,7 @@ namespace MartinCostello.Api.Swagger
         {
             if (operation != null && context?.ApiDescription != null && context.SchemaRegistry != null)
             {
-                var responseAttributes = context.ApiDescription.ActionAttributes()
+                var responseAttributes = context.ControllerActionDescriptor.GetControllerAndActionAttributes(true)
                     .OfType<SwaggerResponseExampleAttribute>()
                     .ToList();
 
