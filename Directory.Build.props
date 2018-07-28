@@ -5,7 +5,7 @@
   </ItemGroup>
   <PropertyGroup>
     <Authors>Martin Costello</Authors>
-    <CodeAnalysisRuleSet>../../API.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)API.ruleset</CodeAnalysisRuleSet>
     <Company>https://github.com/martincostello/api</Company>
     <Copyright>Martin Costello (c) 2016-$([System.DateTime]::Now.ToString(yyyy))</Copyright>
     <DefineConstants>$(DefineConstants)</DefineConstants>
