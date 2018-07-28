@@ -10,6 +10,7 @@ namespace MartinCostello.Api.Controllers
     using Models;
     using NodaTime;
     using Swagger;
+    using Swashbuckle.AspNetCore.Annotations;
     using Swashbuckle.AspNetCore.SwaggerGen;
 
     /// <summary>

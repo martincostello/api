@@ -34,11 +34,16 @@ namespace MartinCostello.Api.Swagger
         {
             if (operation != null && context?.ApiDescription != null && context.SchemaRegistry != null)
             {
-                var responseAttributes = context.ControllerActionDescriptor.GetControllerAndActionAttributes(true)
-                    .OfType<SwaggerResponseExampleAttribute>()
+                if (!context.ApiDescription.TryGetMethodInfo(out MethodInfo methodInfo))
+                {
+                    return;
+                }
+
+                var examples = methodInfo
+                    .GetCustomAttributes<SwaggerResponseExampleAttribute>(inherit: true)
                     .ToList();
 
-                foreach (var attribute in responseAttributes)
+                foreach (var attribute in examples)
                 {
                     var schema = context.SchemaRegistry.GetOrRegister(attribute.ResponseType);
 

@@ -38,3 +38,7 @@ a, .url, .swagger-ui .info a {
     position: absolute;
     width: 0;
 }
+
+.parameters-col_name {
+    width: 20%;
+}

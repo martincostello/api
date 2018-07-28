@@ -15,7 +15,7 @@ namespace MartinCostello.Api.Controllers
     using Microsoft.AspNetCore.Mvc;
     using Models;
     using Swagger;
-    using Swashbuckle.AspNetCore.SwaggerGen;
+    using Swashbuckle.AspNetCore.Annotations;
 
     /// <summary>
     /// A class representing the controller for the <c>/tools</c> resource.
@@ -186,7 +186,7 @@ namespace MartinCostello.Api.Controllers
         [ProducesResponseType(typeof(MachineKeyResponse), 200)]
         [ProducesResponseType(typeof(ErrorResponse), 400)]
         [Route("machinekey")]
-        [SwaggerResponse((int)HttpStatusCode.OK, description: "The machine key was generated successfully.")]
+        [SwaggerResponse((int)HttpStatusCode.OK, description: "The machine key was generated successfully.", Type = typeof(MachineKeyResponse))]
         [SwaggerResponse((int)HttpStatusCode.BadRequest, description: "The specified decryption or validation algorithm is invalid.", Type = typeof(ErrorResponse))]
         [SwaggerResponseExample(typeof(MachineKeyResponse), typeof(MachineKeyResponseExampleProvider))]
         public IActionResult MachineKey([FromQuery]string decryptionAlgorithm, [FromQuery]string validationAlgorithm)
