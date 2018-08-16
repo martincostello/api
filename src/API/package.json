@@ -25,6 +25,8 @@
     "karma-chrome-launcher": "2.2.0",
     "karma-html-detailed-reporter": "1.1.21",
     "karma-jasmine": "1.1.2",
+    "lodash": "4.17.10",
+    "mime": "2.3.1",
     "puppeteer": "1.6.1",
     "superagent": "3.8.3"
   }
