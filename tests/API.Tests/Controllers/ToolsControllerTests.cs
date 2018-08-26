@@ -1,9 +1,8 @@
-﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
+// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 namespace MartinCostello.Api.Controllers
 {
-    using Microsoft.AspNetCore.Mvc;
     using Models;
     using Shouldly;
     using Xunit;
@@ -39,20 +38,15 @@ namespace MartinCostello.Api.Controllers
                 Plaintext = plaintext,
             };
 
-            IActionResult result;
+            var target = new ToolsController();
 
-            using (var target = new ToolsController())
-            {
-                // Act
-                result = target.Hash(request);
-            }
+            // Act
+            var result = target.Hash(request);
 
             // Assert
             result.ShouldNotBeNull();
-
-            var actual = result.ShouldBeOfType<OkObjectResult>();
-            var model = actual.Value.ShouldBeOfType<HashResponse>();
-            model.Hash.ShouldBe(expected);
+            result.Value.ShouldNotBeNull();
+            result.Value.Hash.ShouldBe(expected);
         }
     }
 }
