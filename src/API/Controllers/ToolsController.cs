@@ -4,14 +4,14 @@
 namespace MartinCostello.Api.Controllers
 {
     using System;
+    using System.Buffers;
     using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
-    using System.Linq;
-    using System.Net;
     using System.Security.Cryptography;
     using System.Text;
     using Microsoft.AspNetCore.Cors;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Models;
     using Swagger;
@@ -20,10 +20,11 @@ namespace MartinCostello.Api.Controllers
     /// <summary>
     /// A class representing the controller for the <c>/tools</c> resource.
     /// </summary>
+    [ApiController]
     [EnableCors(Startup.DefaultCorsPolicyName)]
     [Produces("application/json")]
     [Route("tools")]
-    public class ToolsController : Controller
+    public class ToolsController : ControllerBase
     {
         /// <summary>
         /// An <see cref="IDictionary{K, V}"/> containing the sizes of the decryption and validation hashes for machine keys.
@@ -54,13 +55,13 @@ namespace MartinCostello.Api.Controllers
         /// </returns>
         [HttpGet]
         [Produces("application/json", Type = typeof(GuidResponse))]
-        [ProducesResponseType(typeof(GuidResponse), 200)]
-        [ProducesResponseType(typeof(ErrorResponse), 400)]
+        [ProducesResponseType(typeof(GuidResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [Route("guid")]
-        [SwaggerResponse((int)HttpStatusCode.OK, description: "A GUID was generated successfully.", Type = typeof(GuidResponse))]
-        [SwaggerResponse((int)HttpStatusCode.BadRequest, description: "The specified format is invalid.", Type = typeof(ErrorResponse))]
+        [SwaggerResponse(StatusCodes.Status200OK, description: "A GUID was generated successfully.", Type = typeof(GuidResponse))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, description: "The specified format is invalid.", Type = typeof(ErrorResponse))]
         [SwaggerResponseExample(typeof(GuidResponse), typeof(GuidResponseExampleProvider))]
-        public IActionResult Guid([FromQuery]string format = null, [FromQuery]bool? uppercase = null)
+        public ActionResult<GuidResponse> Guid([FromQuery]string format = null, [FromQuery]bool? uppercase = null)
         {
             string guid;
 
@@ -78,12 +79,10 @@ namespace MartinCostello.Api.Controllers
                 guid = guid.ToUpperInvariant();
             }
 
-            var value = new GuidResponse()
+            return new GuidResponse()
             {
                 Guid = guid,
             };
-
-            return new OkObjectResult(value);
         }
 
         /// <summary>
@@ -96,13 +95,13 @@ namespace MartinCostello.Api.Controllers
         [Consumes("application/json", "text/json")]
         [HttpPost]
         [Produces("application/json", Type = typeof(HashResponse))]
-        [ProducesResponseType(typeof(HashResponse), 200)]
-        [ProducesResponseType(typeof(ErrorResponse), 400)]
+        [ProducesResponseType(typeof(HashResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [Route("hash")]
-        [SwaggerResponse((int)HttpStatusCode.OK, description: "The hash was generated successfully.", Type = typeof(HashResponse))]
-        [SwaggerResponse((int)HttpStatusCode.BadRequest, description: "The specified hash algorithm or output format is invalid.", Type = typeof(ErrorResponse))]
+        [SwaggerResponse(StatusCodes.Status200OK, description: "The hash was generated successfully.", Type = typeof(HashResponse))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, description: "The specified hash algorithm or output format is invalid.", Type = typeof(ErrorResponse))]
         [SwaggerResponseExample(typeof(HashResponse), typeof(HashResponseExampleProvider))]
-        public IActionResult Hash([FromBody]HashRequest request)
+        public ActionResult<HashResponse> Hash([FromBody]HashRequest request)
         {
             if (request == null)
             {
@@ -165,12 +164,10 @@ namespace MartinCostello.Api.Controllers
                 }
             }
 
-            var value = new HashResponse()
+            return new HashResponse()
             {
                 Hash = formatAsBase64 ? Convert.ToBase64String(hash) : BytesToHexString(hash),
             };
-
-            return new OkObjectResult(value);
         }
 
         /// <summary>
@@ -183,13 +180,13 @@ namespace MartinCostello.Api.Controllers
         /// </returns>
         [HttpGet]
         [Produces("application/json", Type = typeof(MachineKeyResponse))]
-        [ProducesResponseType(typeof(MachineKeyResponse), 200)]
-        [ProducesResponseType(typeof(ErrorResponse), 400)]
+        [ProducesResponseType(typeof(MachineKeyResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [Route("machinekey")]
-        [SwaggerResponse((int)HttpStatusCode.OK, description: "The machine key was generated successfully.", Type = typeof(MachineKeyResponse))]
-        [SwaggerResponse((int)HttpStatusCode.BadRequest, description: "The specified decryption or validation algorithm is invalid.", Type = typeof(ErrorResponse))]
+        [SwaggerResponse(StatusCodes.Status200OK, description: "The machine key was generated successfully.", Type = typeof(MachineKeyResponse))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, description: "The specified decryption or validation algorithm is invalid.", Type = typeof(ErrorResponse))]
         [SwaggerResponseExample(typeof(MachineKeyResponse), typeof(MachineKeyResponseExampleProvider))]
-        public IActionResult MachineKey([FromQuery]string decryptionAlgorithm, [FromQuery]string validationAlgorithm)
+        public ActionResult<MachineKeyResponse> MachineKey([FromQuery]string decryptionAlgorithm, [FromQuery]string validationAlgorithm)
         {
             if (string.IsNullOrEmpty(decryptionAlgorithm) ||
                 !HashSizes.TryGetValue(decryptionAlgorithm + "-D", out int decryptionKeyLength))
@@ -203,25 +200,29 @@ namespace MartinCostello.Api.Controllers
                 return BadRequest($"The specified validation algorithm '{validationAlgorithm}' is invalid.");
             }
 
-            byte[] decryptionKeyBytes = new byte[decryptionKeyLength];
-            byte[] validationKeyBytes = new byte[validationKeyLength];
-
-            var value = new MachineKeyResponse();
+            var pool = ArrayPool<byte>.Shared;
+            var decryptionKeyBytes = pool.Rent(decryptionKeyLength);
+            var validationKeyBytes = pool.Rent(validationKeyLength);
 
             try
             {
+                var decryptionKey = decryptionKeyBytes.AsSpan(0, decryptionKeyLength);
+                var validationKey = decryptionKeyBytes.AsSpan(0, validationKeyLength);
+
+                var value = new MachineKeyResponse();
+
                 using (RandomNumberGenerator random = RandomNumberGenerator.Create())
                 {
-                    random.GetBytes(decryptionKeyBytes);
+                    random.GetBytes(decryptionKey);
                 }
 
                 using (RandomNumberGenerator random = RandomNumberGenerator.Create())
                 {
-                    random.GetBytes(validationKeyBytes);
+                    random.GetBytes(validationKey);
                 }
 
-                value.DecryptionKey = BytesToHexString(decryptionKeyBytes).ToUpperInvariant();
-                value.ValidationKey = BytesToHexString(validationKeyBytes).ToUpperInvariant();
+                value.DecryptionKey = BytesToHexString(decryptionKey).ToUpperInvariant();
+                value.ValidationKey = BytesToHexString(validationKey).ToUpperInvariant();
 
                 value.MachineKeyXml = string.Format(
                     CultureInfo.InvariantCulture,
@@ -230,14 +231,14 @@ namespace MartinCostello.Api.Controllers
                     value.DecryptionKey,
                     validationAlgorithm,
                     decryptionAlgorithm);
+
+                return value;
             }
             finally
             {
-                Array.Clear(decryptionKeyBytes, 0, decryptionKeyBytes.Length);
-                Array.Clear(validationKeyBytes, 0, validationKeyBytes.Length);
+                pool.Return(decryptionKeyBytes, true);
+                pool.Return(validationKeyBytes, true);
             }
-
-            return new OkObjectResult(value);
         }
 
         /// <summary>
@@ -247,9 +248,16 @@ namespace MartinCostello.Api.Controllers
         /// <returns>
         /// A <see cref="string"/> containing the hexadecimal representation of <paramref name="buffer"/>.
         /// </returns>
-        private static string BytesToHexString(byte[] buffer)
+        private static string BytesToHexString(ReadOnlySpan<byte> buffer)
         {
-            return string.Concat(buffer.Select((p) => p.ToString("x2", CultureInfo.InvariantCulture)));
+            var format = new StringBuilder(buffer.Length);
+
+            foreach (var b in buffer)
+            {
+                format.Append(b.ToString("x2"));
+            }
+
+            return format.ToString();
         }
 
         /// <summary>
@@ -293,15 +301,15 @@ namespace MartinCostello.Api.Controllers
         /// </summary>
         /// <param name="message">The error message.</param>
         /// <returns>
-        /// An <see cref="IActionResult"/> that represents an invalid API request.
+        /// An <see cref="BadRequestObjectResult"/> that represents an invalid API request.
         /// </returns>
-        private IActionResult BadRequest(string message)
+        private BadRequestObjectResult BadRequest(string message)
         {
             var error = new ErrorResponse()
             {
                 Message = message,
                 RequestId = HttpContext.TraceIdentifier,
-                StatusCode = (int)HttpStatusCode.BadRequest,
+                StatusCode = StatusCodes.Status400BadRequest,
             };
 
             return new BadRequestObjectResult(error);

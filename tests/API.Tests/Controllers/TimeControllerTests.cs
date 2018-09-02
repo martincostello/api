@@ -3,8 +3,6 @@
 
 namespace MartinCostello.Api.Controllers
 {
-    using Microsoft.AspNetCore.Mvc;
-    using Models;
     using NodaTime.Testing;
     using Shouldly;
     using Xunit;
@@ -21,20 +19,15 @@ namespace MartinCostello.Api.Controllers
             var initial = NodaTime.Instant.FromUtc(2016, 05, 24, 12, 34, 56);
             var clock = new FakeClock(initial);
 
-            IActionResult result;
+            var target = new TimeController(clock);
 
-            using (var target = new TimeController(clock))
-            {
-                // Act
-                result = target.Get();
-            }
+            // Act
+            var result = target.Get();
 
             // Assert
             result.ShouldNotBeNull();
 
-            var actual = result
-                .ShouldBeOfType<JsonResult>()
-                .Value.ShouldBeOfType<TimeResponse>();
+            var actual = result.Value;
 
             actual.Timestamp.ShouldBe(initial.ToDateTimeOffset());
             actual.Rfc1123.ShouldBe("Tue, 24 May 2016 12:34:56 GMT");

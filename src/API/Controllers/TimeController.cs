@@ -4,21 +4,21 @@
 namespace MartinCostello.Api.Controllers
 {
     using System.Globalization;
-    using System.Net;
     using Microsoft.AspNetCore.Cors;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Models;
     using NodaTime;
     using Swagger;
     using Swashbuckle.AspNetCore.Annotations;
-    using Swashbuckle.AspNetCore.SwaggerGen;
 
     /// <summary>
     /// A class representing the controller for the <c>/time</c> resource.
     /// </summary>
+    [ApiController]
     [Route("time")]
     [Produces("application/json")]
-    public class TimeController : Controller
+    public class TimeController : ControllerBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TimeController"/> class.
@@ -43,15 +43,15 @@ namespace MartinCostello.Api.Controllers
         [EnableCors(Startup.DefaultCorsPolicyName)]
         [HttpGet]
         [Produces("application/json", Type = typeof(TimeResponse))]
-        [ProducesResponseType(typeof(TimeResponse), 200)]
-        [SwaggerResponse((int)HttpStatusCode.OK, Type = typeof(TimeResponse), Description = "The current UTC date and time.")]
+        [ProducesResponseType(typeof(TimeResponse), StatusCodes.Status200OK)]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(TimeResponse), Description = "The current UTC date and time.")]
         [SwaggerResponseExample(typeof(TimeResponse), typeof(TimeResponseExampleProvider))]
-        public IActionResult Get()
+        public ActionResult<TimeResponse> Get()
         {
             var formatProvider = CultureInfo.InvariantCulture;
             var now = Clock.GetCurrentInstant().ToDateTimeOffset();
 
-            var value = new TimeResponse()
+            return new TimeResponse()
             {
                 Timestamp = now,
                 Rfc1123 = now.ToString("r", formatProvider),
@@ -59,8 +59,6 @@ namespace MartinCostello.Api.Controllers
                 UniversalSortable = now.UtcDateTime.ToString("u", formatProvider),
                 Unix = now.ToUnixTimeSeconds(),
             };
-
-            return Json(value);
         }
     }
 }
