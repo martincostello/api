@@ -207,32 +207,29 @@ namespace MartinCostello.Api.Controllers
             try
             {
                 var decryptionKey = decryptionKeyBytes.AsSpan(0, decryptionKeyLength);
-                var validationKey = decryptionKeyBytes.AsSpan(0, validationKeyLength);
+                var validationKey = validationKeyBytes.AsSpan(0, validationKeyLength);
 
-                var value = new MachineKeyResponse();
-
-                using (RandomNumberGenerator random = RandomNumberGenerator.Create())
+                using (var random = RandomNumberGenerator.Create())
                 {
                     random.GetBytes(decryptionKey);
-                }
-
-                using (RandomNumberGenerator random = RandomNumberGenerator.Create())
-                {
                     random.GetBytes(validationKey);
                 }
 
-                value.DecryptionKey = BytesToHexString(decryptionKey).ToUpperInvariant();
-                value.ValidationKey = BytesToHexString(validationKey).ToUpperInvariant();
+                var result = new MachineKeyResponse()
+                {
+                    DecryptionKey = BytesToHexString(decryptionKey).ToUpperInvariant(),
+                    ValidationKey = BytesToHexString(validationKey).ToUpperInvariant(),
+                };
 
-                value.MachineKeyXml = string.Format(
+                result.MachineKeyXml = string.Format(
                     CultureInfo.InvariantCulture,
                     @"<machineKey validationKey=""{0}"" decryptionKey=""{1}"" validation=""{2}"" decryption=""{3}"" />",
-                    value.ValidationKey,
-                    value.DecryptionKey,
+                    result.ValidationKey,
+                    result.DecryptionKey,
                     validationAlgorithm,
                     decryptionAlgorithm);
 
-                return value;
+                return result;
             }
             finally
             {
@@ -254,7 +251,7 @@ namespace MartinCostello.Api.Controllers
 
             foreach (var b in buffer)
             {
-                format.Append(b.ToString("x2"));
+                format.Append(b.ToString("x2", CultureInfo.InvariantCulture));
             }
 
             return format.ToString();
@@ -308,7 +305,7 @@ namespace MartinCostello.Api.Controllers
             var error = new ErrorResponse()
             {
                 Message = message,
-                RequestId = HttpContext.TraceIdentifier,
+                RequestId = HttpContext?.TraceIdentifier,
                 StatusCode = StatusCodes.Status400BadRequest,
             };
 
