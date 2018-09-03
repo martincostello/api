@@ -48,5 +48,25 @@ namespace MartinCostello.Api.Controllers
             result.Value.ShouldNotBeNull();
             result.Value.Hash.ShouldBe(expected);
         }
+
+        [Fact]
+        public static void Tools_Get_Machine_Key_Returns_Correct_Response()
+        {
+            // Arrange
+            string decryptionAlgorithm = "AES-256";
+            string validationAlgorithm = "SHA1";
+
+            var target = new ToolsController();
+
+            // Act
+            var result = target.MachineKey(decryptionAlgorithm, validationAlgorithm);
+
+            // Assert
+            result.ShouldNotBeNull();
+            result.Value.ShouldNotBeNull();
+            result.Value.DecryptionKey.ShouldNotBeNullOrWhiteSpace();
+            result.Value.MachineKeyXml.ShouldNotBeNullOrWhiteSpace();
+            result.Value.ValidationKey.ShouldNotBeNullOrWhiteSpace();
+        }
     }
 }
