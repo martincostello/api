@@ -29,6 +29,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{E50CFF7D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API.Tests", "tests\API.Tests\API.Tests.csproj", "{67917CF1-BCF9-4808-8965-FD1A7334C3BC}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".vscode", ".vscode", "{C9381C1E-F8B9-4A77-B314-6DD8F370AF0E}"
+	ProjectSection(SolutionItems) = preProject
+		.vscode\launch.json = .vscode\launch.json
+		.vscode\tasks.json = .vscode\tasks.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".azure-pipelines", ".azure-pipelines", "{9188A7AC-CBA0-438E-A636-4BD568D4A561}"
+	ProjectSection(SolutionItems) = preProject
+		.azure-pipelines\build-template.yml = .azure-pipelines\build-template.yml
+		.azure-pipelines\build.yml = .azure-pipelines\build.yml
+		.azure-pipelines\deploy.yml = .azure-pipelines\deploy.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,6 +63,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{1CCAD84E-2E62-43AB-8158-45DD93249875} = {FBF500AA-F3F9-457B-818B-05D53AE9C901}
 		{67917CF1-BCF9-4808-8965-FD1A7334C3BC} = {E50CFF7D-C9F2-44ED-B596-593F614B5ED6}
+		{C9381C1E-F8B9-4A77-B314-6DD8F370AF0E} = {94A0E905-8142-4667-A244-EBFE3CE20B1A}
+		{9188A7AC-CBA0-438E-A636-4BD568D4A561} = {94A0E905-8142-4667-A244-EBFE3CE20B1A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DBF2FAD3-39E4-4077-AE0B-5C0AE27673B8}
