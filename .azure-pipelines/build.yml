@@ -1,0 +1,21 @@
+name: CI_$(Date:yyyyMMdd)$(Rev:.r)
+
+trigger:
+  batch: true
+
+phases:
+- template: build-template.yml
+  parameters:
+    agentOS: Linux
+    artifacts:
+      archiveName: api.zip
+- template: build-template.yml
+  parameters:
+    agentOS: macOS
+    artifacts:
+      archiveName: api.zip
+- template: build-template.yml
+  parameters:
+    agentOS: Windows
+    artifacts:
+      archiveName: api.zip

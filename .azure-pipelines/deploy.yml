@@ -1,0 +1,30 @@
+name: Release-$(Build.BuildId)
+
+trigger: none
+
+phases:
+  - phase: Production
+    displayName: Deploy to Production
+    queue: Hosted VS2017
+    steps:
+      - checkout: none
+      - task: DownloadBuildArtifacts@0
+        name: DownloadDeploymentPackage
+        displayName: Download deployment package
+        inputs:
+          buildType: specific
+          project: '00000000-0000-0000-0000-000000000000' # TODO
+          pipeline: 0 # TODO
+          artifactName: 'DeploymentPackage'
+      - task: AzureRmWebAppDeployment@3
+        name: Deploy
+        displayName: Deploy to Azure App Service
+        inputs:
+          azureSubscription: 'CHANGE_ME' # TODO
+          WebAppName: 'apimartincostello-eastus'
+          Package: '$(System.ArtifactsDirectory)/DeploymentPackage/api.zip'
+          ExcludeFilesFromAppDataFlag: true
+          RemoveAdditionalFilesFlag: true
+          RenameFilesFlag: true
+          TakeAppOfflineFlag: true
+          UseWebDeploy: true

@@ -63,7 +63,14 @@ else {
 
 function DotNetTest {
     param([string]$Project)
-    & $dotnet test $Project --output $OutputPath
+
+    if ($null -ne $env:TF_BUILD) {
+        & $dotnet test $Project --output $OutputPath --logger trx --collect:"Code Coverage"
+    }
+    else {
+        & $dotnet test $Project --output $OutputPath
+    }
+
     if ($LASTEXITCODE -ne 0) {
         throw "dotnet test failed with exit code $LASTEXITCODE"
     }
