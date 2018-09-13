@@ -22,7 +22,7 @@
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="3.0.0" />
   </ItemGroup>
   <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">
-    <Exec Command="npm install --loglevel=error" Condition=" '$(InstallWebPackages)' == 'true' " />
+    <Exec Command="npm ci" Condition=" '$(InstallWebPackages)' == 'true' " />
     <Exec Command="gulp publish" />
   </Target>
   <Target Name="AddGeneratedContentItems" BeforeTargets="AssignTargetPaths">
