@@ -2,23 +2,18 @@ param(
     [Parameter(Mandatory = $false)][string] $Configuration = "Release",
     [Parameter(Mandatory = $false)][string] $VersionSuffix = "",
     [Parameter(Mandatory = $false)][string] $OutputPath = "",
-    [Parameter(Mandatory = $false)][switch] $PatchVersion,
     [Parameter(Mandatory = $false)][switch] $SkipTests
 )
 
 $ErrorActionPreference = "Stop"
 
 $solutionPath = Split-Path $MyInvocation.MyCommand.Definition
-$sdkFile      = Join-Path $solutionPath "global.json"
+$sdkFile = Join-Path $solutionPath "global.json"
 
 $dotnetVersion = (Get-Content $sdkFile | Out-String | ConvertFrom-Json).sdk.version
 
 if ($OutputPath -eq "") {
     $OutputPath = Join-Path "$(Convert-Path "$PSScriptRoot")" "artifacts"
-}
-
-if ($null -ne $env:CI -Or $null -ne $env:TF_BUILD) {
-    $PatchVersion = $true
 }
 
 $installDotNetSdk = $false;
@@ -64,15 +59,73 @@ else {
 function DotNetTest {
     param([string]$Project)
 
-    if ($null -ne $env:TF_BUILD) {
-        & $dotnet test $Project --output $OutputPath --logger trx --collect:"Code Coverage"
+    if ($DisableCodeCoverage -eq $true) {
+        if ($null -ne $env:TF_BUILD) {
+            & $dotnet test $Project --output $OutputPath --logger trx
+        }
+        else {
+            & $dotnet test $Project --output $OutputPath
+        }
     }
     else {
-        & $dotnet test $Project --output $OutputPath
+
+        if ($installDotNetSdk -eq $true) {
+            $dotnetPath = $dotnet
+        }
+        else {
+            $dotnetPath = (Get-Command "dotnet.exe").Source
+        }
+
+        $nugetPath = Join-Path $env:USERPROFILE ".nuget\packages"
+
+        $openCoverVersion = "4.6.519"
+        $openCoverPath = Join-Path $nugetPath "OpenCover\$openCoverVersion\tools\OpenCover.Console.exe"
+
+        $reportGeneratorVersion = "4.0.0-rc4"
+        $reportGeneratorPath = Join-Path $nugetPath "ReportGenerator\$reportGeneratorVersion\tools\netcoreapp2.0\ReportGenerator.dll"
+
+        $coverageOutput = Join-Path $OutputPath "code-coverage.xml"
+        $reportOutput = Join-Path $OutputPath "coverage"
+
+        if ($null -ne $env:TF_BUILD) {
+            & $openCoverPath `
+                `"-target:$dotnetPath`" `
+                `"-targetargs:test $Project --output $OutputPath --logger trx`" `
+                -output:$coverageOutput `
+                `"-excludebyattribute:System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage*`" `
+                -hideskipped:All `
+                -mergebyhash `
+                -oldstyle `
+                -register:user `
+                -skipautoprops `
+                `"-filter:+[API]* +[API.Views]* -[API.Tests]*`"
+        }
+        else {
+            & $openCoverPath `
+                `"-target:$dotnetPath`" `
+                `"-targetargs:test $Project --output $OutputPath`" `
+                -output:$coverageOutput `
+                `"-excludebyattribute:System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage*`" `
+                -hideskipped:All `
+                -mergebyhash `
+                -oldstyle `
+                -register:user `
+                -skipautoprops `
+                `"-filter:+[API]* +[API.Views]* -[API.Tests]*`"
+        }
+
+        $dotNetTestExitCode = $LASTEXITCODE
+
+        & $dotnet `
+            $reportGeneratorPath `
+            `"-reports:$coverageOutput`" `
+            `"-targetdir:$reportOutput`" `
+            -reporttypes:HTML`;Cobertura `
+            -verbosity:Warning
     }
 
-    if ($LASTEXITCODE -ne 0) {
-        throw "dotnet test failed with exit code $LASTEXITCODE"
+    if ($dotNetTestExitCode -ne 0) {
+        throw "dotnet test failed with exit code $dotNetTestExitCode"
     }
 }
 
@@ -88,23 +141,6 @@ function DotNetPublish {
     if ($LASTEXITCODE -ne 0) {
         throw "dotnet publish failed with exit code $LASTEXITCODE"
     }
-}
-
-if ($PatchVersion -eq $true) {
-
-    $gitBranch = $env:BUILD_SOURCEBRANCHNAME
-
-    if ([string]::IsNullOrEmpty($gitBranch)) {
-        $gitBranch = (git rev-parse --abbrev-ref HEAD | Out-String).Trim()
-    }
-
-    $gitRevision = (git rev-parse HEAD | Out-String).Trim()
-    $timestamp = [DateTime]::UtcNow.ToString("yyyy-MM-ddTHH:mm:ssK")
-
-    $assemblyVersion = Get-Content ".\AssemblyVersion.cs" -Raw
-    $assemblyVersionWithMetadata = "{0}using System.Reflection;`r`n`r`n[assembly: AssemblyMetadata(""CommitHash"", ""{1}"")]`r`n[assembly: AssemblyMetadata(""CommitBranch"", ""{2}"")]`r`n[assembly: AssemblyMetadata(""BuildTimestamp"", ""{3}"")]" -f $assemblyVersion, $gitRevision, $gitBranch, $timestamp
-
-    Set-Content ".\AssemblyVersion.cs" $assemblyVersionWithMetadata -Encoding utf8
 }
 
 $testProjects = @(
@@ -125,8 +161,4 @@ if ($SkipTests -eq $false) {
     ForEach ($project in $testProjects) {
         DotNetTest $project
     }
-}
-
-if ($PatchVersion -eq $true) {
-    Set-Content ".\AssemblyVersion.cs" $assemblyVersion -Encoding utf8
 }
