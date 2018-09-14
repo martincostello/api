@@ -2,7 +2,7 @@
 
 | | Linux | Windows |
 |:-:|:-:|:-:|
-| **Build Status** | [![Build status](https://img.shields.io/travis/martincostello/api/master.svg)](https://travis-ci.org/martincostello/api) | [![Build status](https://img.shields.io/appveyor/ci/martincostello/api/master.svg)](https://ci.appveyor.com/project/martincostello/api) |
+| **Build Status** | [![Build status](https://img.shields.io/travis/martincostello/api/master.svg)](https://travis-ci.org/martincostello/api) | [![Build status](https://img.shields.io/appveyor/ci/martincostello/api/master.svg)](https://ci.appveyor.com/project/martincostello/api) [![codecov](https://codecov.io/gh/martincostello/api/branch/master/graph/badge.svg)](https://codecov.io/gh/martincostello/api) |
 | **Build History** | [![Build history](https://buildstats.info/travisci/chart/martincostello/api?branch=master&includeBuildsFromPullRequest=false)](https://travis-ci.org/martincostello/api) |  [![Build history](https://buildstats.info/appveyor/chart/martincostello/api?branch=master&includeBuildsFromPullRequest=false)](https://ci.appveyor.com/project/martincostello/api) |
 
 ## Overview
