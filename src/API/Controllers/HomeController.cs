@@ -26,6 +26,7 @@ namespace MartinCostello.Api.Controllers
         /// The view for the home page.
         /// </returns>
         [HttpGet]
+        [HttpHead]
         public IActionResult Index()
         {
             if (IsJsonRequest())
