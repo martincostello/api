@@ -28,8 +28,10 @@
     "karma-html-detailed-reporter": "1.1.21",
     "karma-jasmine": "1.1.2",
     "lodash": "4.17.10",
+    "merge": ">=1.2.1",
     "mime": "2.3.1",
     "puppeteer": "1.6.1",
+    "randomatic": ">=3.0.0",
     "superagent": "3.8.3"
   }
 }
