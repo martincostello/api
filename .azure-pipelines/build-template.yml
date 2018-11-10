@@ -38,7 +38,7 @@ phases:
           name: InstallDotNetCoreDeps
           displayName: Install .NET Core pre-requisites
       - script: |
-          npm install -g npm
+          sudo npm install -g npm
         name: UpdateNpm
         displayName: Update to latest npm
       - ${{ if eq(parameters.agentOS, 'macOS') }}:
