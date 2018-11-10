@@ -69,6 +69,7 @@ namespace MartinCostello.Api.Controllers
         /// <returns>
         /// The result for the action.
         /// </returns>
+        [ApiExplorerSettings(IgnoreApi = true)]
         [HttpGet]
         [HttpHead]
         [HttpPost]
