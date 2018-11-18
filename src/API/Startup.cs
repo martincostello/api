@@ -135,7 +135,7 @@ namespace MartinCostello.Api
 
             services
                 .AddMvc(ConfigureMvc)
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddJsonOptions((p) => services.AddSingleton(ConfigureJsonFormatter(p)));
 
             services.AddRouting(

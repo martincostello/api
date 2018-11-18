@@ -43,7 +43,6 @@ namespace MartinCostello.Api
         private static IWebHostBuilder CreateWebHostBuilder(string[] args)
         {
             return WebHost.CreateDefaultBuilder(args)
-                .UseKestrel((p) => p.AddServerHeader = false)
                 .UseAzureAppServices()
                 .UseApplicationInsights()
                 .UseStartup<Startup>()

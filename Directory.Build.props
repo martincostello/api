@@ -4,7 +4,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)CommonAssemblyInfo.cs" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-63127-02" PrivateAssets="All" />
     <PackageReference Include="OpenCover" Version="4.6.519" PrivateAssets="All" />
-    <PackageReference Include="ReportGenerator" Version="4.0.3" PrivateAssets="All" />
+    <PackageReference Include="ReportGenerator" Version="4.0.4" PrivateAssets="All" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" PrivateAssets="All" />
   </ItemGroup>
   <PropertyGroup>
@@ -33,10 +33,10 @@
     <RepositoryUrl>$(PackageProjectUrl).git</RepositoryUrl>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <TypeScriptToolsVersion>latest</TypeScriptToolsVersion>
-    <VersionPrefix>2.1.0</VersionPrefix>
+    <VersionPrefix>2.2.0</VersionPrefix>
     <VersionSuffix></VersionSuffix>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(CI)' != '' or '$(TF_BUILD)' != '' ">
+  <PropertyGroup Condition=" '$(CI)' != '' or '$(TF_BUILD)' != '' or !Exists('$(MSBuildThisFileDirectory)\src\LondonTravel.Site\node_modules') ">
     <InstallWebPackages>true</InstallWebPackages>
   </PropertyGroup>
 </Project>
