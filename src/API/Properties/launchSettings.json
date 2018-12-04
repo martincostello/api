@@ -1,27 +1,29 @@
 {
   "iisSettings": {
-    "anonymousAuthentication": true,
     "windowsAuthentication": false,
+    "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:30910/",
-      "sslPort": 44351
+      "applicationUrl": "http://localhost:61103/",
+      "sslPort": 44340
     }
   },
   "profiles": {
     "IIS Express": {
       "commandName": "IISExpress",
+      "ancmHostingModel": "InProcess",
       "launchBrowser": true,
-      "launchUrl": "https://localhost:44351/",
+      "launchUrl": "https://localhost:44340/",
       "environmentVariables": {
         "Azure:Datacenter": "Local",
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "ASPNETCORE_HTTPS_PORT": "44351"
+        "ASPNETCORE_HTTPS_PORT": "44340"
       }
     },
-    "Kestrel": {
+    "API": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "https://localhost:5001/",
+      "applicationUrl": "http://localhost:5000",
       "environmentVariables": {
         "Azure:Datacenter": "Local",
         "ASPNETCORE_ENVIRONMENT": "Development",
