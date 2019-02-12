@@ -7,14 +7,13 @@ namespace MartinCostello.Api.Integration
     using MartinCostello.Logging.XUnit;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc.Testing;
-    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Xunit.Abstractions;
 
     /// <summary>
     /// A class representing a factory for creating instances of the application.
     /// </summary>
-    public class TestServerFixture : WebApplicationFactory<Startup>
+    public class TestServerFixture : WebApplicationFactory<Startup>, ITestOutputHelperAccessor
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TestServerFixture"/> class.
@@ -24,28 +23,13 @@ namespace MartinCostello.Api.Integration
         {
             ClientOptions.AllowAutoRedirect = false;
             ClientOptions.BaseAddress = new Uri("https://localhost");
-
-            // HACK Force HTTP server startup
-            using (CreateDefaultClient())
-            {
-            }
         }
 
-        /// <summary>
-        /// Clears the current <see cref="ITestOutputHelper"/>.
-        /// </summary>
-        public virtual void ClearOutputHelper()
-            => Server.Host.Services.GetRequiredService<ITestOutputHelperAccessor>().OutputHelper = null;
-
-        /// <summary>
-        /// Sets the <see cref="ITestOutputHelper"/> to use.
-        /// </summary>
-        /// <param name="value">The <see cref="ITestOutputHelper"/> to use.</param>
-        public virtual void SetOutputHelper(ITestOutputHelper value)
-            => Server.Host.Services.GetRequiredService<ITestOutputHelperAccessor>().OutputHelper = value;
+        /// <inheritdoc />
+        public ITestOutputHelper OutputHelper { get; set; }
 
         /// <inheritdoc />
         protected override void ConfigureWebHost(IWebHostBuilder builder)
-            => builder.ConfigureLogging((loggingBuilder) => loggingBuilder.ClearProviders().AddXUnit());
+            => builder.ConfigureLogging((loggingBuilder) => loggingBuilder.AddXUnit(this));
     }
 }
