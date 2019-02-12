@@ -60,10 +60,20 @@ namespace MartinCostello.Api
         /// Configures the application.
         /// </summary>
         /// <param name="app">The <see cref="IApplicationBuilder"/> to use.</param>
-        /// <param name="options">The <see cref="SiteOptions"/> to use.</param>
-        public void Configure(IApplicationBuilder app, SiteOptions options)
+        /// <param name="applicationLifetime">The <see cref="IApplicationLifetime"/> to use.</param>
+        /// <param name="serviceProvider">The <see cref="IServiceProvider"/> to use.</param>
+        /// <param name="options">The <see cref="IOptions{SiteOptions}"/> to use.</param>
+        public void Configure(
+            IApplicationBuilder app,
+            IApplicationLifetime applicationLifetime,
+            IServiceProvider serviceProvider,
+            IOptions<SiteOptions> options)
         {
-            app.UseCustomHttpHeaders(HostingEnvironment, Configuration, options);
+            applicationLifetime.ApplicationStopped.Register(OnApplicationStopped);
+
+            ServiceProvider = serviceProvider.CreateScope().ServiceProvider;
+
+            app.UseCustomHttpHeaders(HostingEnvironment, Configuration, options.Value);
 
             if (HostingEnvironment.IsDevelopment())
             {
@@ -110,10 +120,7 @@ namespace MartinCostello.Api
         /// Configures the services for the application.
         /// </summary>
         /// <param name="services">The <see cref="IServiceCollection"/> to use.</param>
-        /// <returns>
-        /// The <see cref="IServiceProvider"/> to use.
-        /// </returns>
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
             services.AddOptions();
             services.Configure<SiteOptions>(Configuration.GetSection("Site"));
@@ -157,8 +164,6 @@ namespace MartinCostello.Api
             services.AddSingleton<IClock>((_) => SystemClock.Instance);
             services.AddSingleton((p) => p.GetRequiredService<IOptions<SiteOptions>>().Value);
             services.AddSingleton((_) => ConfigureJsonFormatter(new JsonSerializerSettings()));
-
-            return ServiceProvider = services.BuildServiceProvider();
         }
 
         /// <summary>
@@ -169,9 +174,7 @@ namespace MartinCostello.Api
         /// The <see cref="JsonSerializerSettings"/> to use.
         /// </returns>
         private static JsonSerializerSettings ConfigureJsonFormatter(MvcJsonOptions options)
-        {
-            return ConfigureJsonFormatter(options.SerializerSettings);
-        }
+            => ConfigureJsonFormatter(options.SerializerSettings);
 
         /// <summary>
         /// Configures the JSON serializer.
@@ -256,11 +259,17 @@ namespace MartinCostello.Api
         /// The <see cref="CookieSecurePolicy"/> to use for the application.
         /// </returns>
         private CookieSecurePolicy CreateCookieSecurePolicy()
+            => HostingEnvironment.IsDevelopment() ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.Always;
+
+        /// <summary>
+        /// Handles the application being stopped.
+        /// </summary>
+        private void OnApplicationStopped()
         {
-            return
-                HostingEnvironment.IsDevelopment() ?
-                CookieSecurePolicy.SameAsRequest :
-                CookieSecurePolicy.Always;
+            if (ServiceProvider is IDisposable disposable)
+            {
+                disposable.Dispose();
+            }
         }
     }
 }
