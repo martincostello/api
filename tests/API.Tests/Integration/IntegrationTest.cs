@@ -23,7 +23,7 @@ namespace MartinCostello.Api.Integration
         protected IntegrationTest(TestServerFixture fixture, ITestOutputHelper outputHelper)
         {
             Fixture = fixture;
-            Fixture.SetOutputHelper(outputHelper);
+            Fixture.OutputHelper = outputHelper;
         }
 
         /// <summary>
@@ -59,7 +59,10 @@ namespace MartinCostello.Api.Integration
             {
                 if (disposing)
                 {
-                    Fixture?.ClearOutputHelper();
+                    if (Fixture != null)
+                    {
+                        Fixture.OutputHelper = null;
+                    }
                 }
 
                 _disposed = true;

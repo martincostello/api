@@ -37,11 +37,6 @@ phases:
             sudo apt-get install -y --no-install-recommends gettext libcurl4-openssl-dev libicu-dev libssl-dev libunwind8
           name: InstallDotNetCoreDeps
           displayName: Install .NET Core pre-requisites
-      - ${{ if eq(parameters.agentOS, 'Linux') }}:
-        - script: |
-            sudo npm install -g npm
-          name: UpdateNpm
-          displayName: Update to latest npm
       - ${{ if ne(parameters.agentOS, 'Linux') }}:
         - script: |
             npm install -g npm
@@ -82,6 +77,7 @@ phases:
         displayName: Publish test results
         condition: always()
         inputs:
+          failTaskOnFailedTests: true
           testRunner: VSTest
           testRunTitle: Unit and integration tests ($(AgentOSName))
           testResultsFiles: $(Build.SourcesDirectory)/**/*.trx
