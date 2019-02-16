@@ -4,6 +4,7 @@
 namespace MartinCostello.Api
 {
     using System;
+    using System.IO;
     using Extensions;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.CookiePolicy;
@@ -12,6 +13,7 @@ namespace MartinCostello.Api
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.HttpOverrides;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.StaticFiles;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Options;
@@ -88,18 +90,7 @@ namespace MartinCostello.Api
             app.UseHsts()
                .UseHttpsRedirection();
 
-            app.UseStaticFiles(
-                new StaticFileOptions()
-                {
-                    OnPrepareResponse = (context) =>
-                    {
-                        var headers = context.Context.Response.GetTypedHeaders();
-                        headers.CacheControl = new CacheControlHeaderValue()
-                        {
-                            MaxAge = TimeSpan.FromDays(7)
-                        };
-                    }
-                });
+            app.UseStaticFiles(CreateStaticFileOptions());
 
             app.UseForwardedHeaders(
                 new ForwardedHeadersOptions()
@@ -260,6 +251,56 @@ namespace MartinCostello.Api
         /// </returns>
         private CookieSecurePolicy CreateCookieSecurePolicy()
             => HostingEnvironment.IsDevelopment() ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.Always;
+
+        /// <summary>
+        /// Configures the options for serving static content.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="StaticFileOptions"/> to use.
+        /// </returns>
+        private StaticFileOptions CreateStaticFileOptions()
+        {
+            var provider = new FileExtensionContentTypeProvider();
+            provider.Mappings[".webmanifest"] = "application/manifest+json";
+
+            return new StaticFileOptions()
+            {
+                ContentTypeProvider = provider,
+                DefaultContentType = "application/json",
+                OnPrepareResponse = SetCacheHeaders,
+                ServeUnknownFileTypes = true,
+            };
+        }
+
+        /// <summary>
+        /// Sets the cache headers for static files.
+        /// </summary>
+        /// <param name="context">The static file response context to set the headers for.</param>
+        private void SetCacheHeaders(StaticFileResponseContext context)
+        {
+            var maxAge = TimeSpan.FromDays(7);
+
+            if (context.File.Exists && HostingEnvironment.IsProduction())
+            {
+                string extension = Path.GetExtension(context.File.PhysicalPath);
+
+                // These files are served with a content hash in the URL so can be cached for longer
+                bool isScriptOrStyle =
+                    string.Equals(extension, ".css", StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(extension, ".js", StringComparison.OrdinalIgnoreCase);
+
+                if (isScriptOrStyle)
+                {
+                    maxAge = TimeSpan.FromDays(365);
+                }
+            }
+
+            var headers = context.Context.Response.GetTypedHeaders();
+            headers.CacheControl = new CacheControlHeaderValue()
+            {
+                MaxAge = maxAge,
+            };
+        }
 
         /// <summary>
         /// Handles the application being stopped.
