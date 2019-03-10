@@ -3,10 +3,7 @@
 <footer>
     <p>
         &copy; @Options.Metadata.Author.Name @DateTimeOffset.UtcNow.Year |
-        <a href="@Options.ExternalLinks.Status.AbsoluteUri" rel="noopener" target="_blank" title="View site uptime information">
-            Site Status &amp; Uptime
-        </a>
-        | Built from
+        Built from
         <a href="@Options.Metadata.Repository/commit/@GitMetadata.Commit" title="View commit @GitMetadata.Commit on GitHub">
             @string.Join(string.Empty, GitMetadata.Commit.Take(7))
         </a>
