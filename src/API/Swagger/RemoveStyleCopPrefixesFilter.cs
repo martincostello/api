@@ -4,7 +4,7 @@
 namespace MartinCostello.Api.Swagger
 {
     using System;
-    using Swashbuckle.AspNetCore.Swagger;
+    using Microsoft.OpenApi.Models;
     using Swashbuckle.AspNetCore.SwaggerGen;
 
     /// <summary>
@@ -19,11 +19,11 @@ namespace MartinCostello.Api.Swagger
         private const string Prefix = "Gets or sets ";
 
         /// <inheritdoc />
-        public void Apply(Operation operation, OperationFilterContext context)
+        public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
-            if (context?.SchemaRegistry?.Definitions != null)
+            if (context?.SchemaRepository?.Schemas != null)
             {
-                foreach (var definition in context.SchemaRegistry.Definitions.Values)
+                foreach (var definition in context.SchemaRepository.Schemas.Values)
                 {
                     if (definition.Properties != null)
                     {
@@ -34,7 +34,7 @@ namespace MartinCostello.Api.Swagger
                                 if (property.Description.StartsWith(Prefix, StringComparison.Ordinal))
                                 {
                                     // Remove the StyleCop property prefix
-                                    property.Description = property.Description.Replace(Prefix, string.Empty);
+                                    property.Description = property.Description.Replace(Prefix, string.Empty, StringComparison.Ordinal);
 
                                     // Capitalize the first letter that's left over
                                     property.Description = char.ToUpperInvariant(property.Description[0]) + property.Description.Substring(1);
