@@ -3,13 +3,14 @@
 
 namespace MartinCostello.Api.Extensions
 {
+    using System;
     using System.IO;
     using System.Reflection;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.OpenApi.Models;
     using Options;
     using Swagger;
-    using Swashbuckle.AspNetCore.Swagger;
     using Swashbuckle.AspNetCore.SwaggerGen;
 
     /// <summary>
@@ -32,18 +33,18 @@ namespace MartinCostello.Api.Extensions
                     var provider = value.BuildServiceProvider();
                     var options = provider.GetRequiredService<SiteOptions>();
 
-                    var info = new Info()
+                    var info = new OpenApiInfo()
                     {
-                        Contact = new Contact()
+                        Contact = new OpenApiContact()
                         {
                             Name = options.Metadata.Author.Name,
-                            Url = options.Metadata.Author.Website,
+                            Url = new Uri(options.Metadata.Author.Website),
                         },
                         Description = options.Metadata.Description,
-                        License = new License()
+                        License = new OpenApiLicense()
                         {
                             Name = options.Api.License.Name,
-                            Url = options.Api.License.Url,
+                            Url = new Uri(options.Api.License.Url),
                         },
                         Title = options.Metadata.Name,
                         Version = string.Empty,
@@ -51,6 +52,8 @@ namespace MartinCostello.Api.Extensions
 
                     p.DescribeAllEnumsAsStrings();
                     p.DescribeStringEnumsInCamelCase();
+
+                    p.EnableAnnotations();
 
                     p.IgnoreObsoleteActions();
                     p.IgnoreObsoleteProperties();
