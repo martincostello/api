@@ -85,12 +85,10 @@ namespace MartinCostello.Api
             {
                 app.UseExceptionHandler("/error")
                    .UseStatusCodePagesWithReExecute("/error", "?id={0}");
+
+                app.UseHsts()
+                   .UseHttpsRedirection();
             }
-
-            app.UseHsts()
-               .UseHttpsRedirection();
-
-            app.UseStaticFiles(CreateStaticFileOptions());
 
             app.UseForwardedHeaders(
                 new ForwardedHeadersOptions()
@@ -99,6 +97,8 @@ namespace MartinCostello.Api
                 });
 
             app.UseHttpMethodOverride();
+
+            app.UseStaticFiles(CreateStaticFileOptions());
 
             app.UseMvcWithDefaultRoute();
 
