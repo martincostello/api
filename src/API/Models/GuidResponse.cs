@@ -14,6 +14,8 @@ namespace MartinCostello.Api.Models
         /// Gets or sets the generated GUID value.
         /// </summary>
         [JsonProperty("guid")]
+#pragma warning disable CA1720
         public string Guid { get; set; }
+#pragma warning restore CA1720
     }
 }

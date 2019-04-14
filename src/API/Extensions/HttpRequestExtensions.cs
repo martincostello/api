@@ -1,4 +1,4 @@
-﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
+// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 namespace MartinCostello.Api.Extensions
@@ -39,7 +39,7 @@ namespace MartinCostello.Api.Extensions
 
             string canonicalUri = builder.Uri.AbsoluteUri.ToLowerInvariant();
 
-            if (!canonicalUri.EndsWith("/"))
+            if (!canonicalUri.EndsWith("/", StringComparison.Ordinal))
             {
                 canonicalUri += "/";
             }

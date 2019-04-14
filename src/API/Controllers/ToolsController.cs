@@ -61,13 +61,13 @@ namespace MartinCostello.Api.Controllers
         [SwaggerResponse(StatusCodes.Status200OK, description: "A GUID was generated successfully.", Type = typeof(GuidResponse))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, description: "The specified format is invalid.", Type = typeof(ErrorResponse))]
         [SwaggerResponseExample(typeof(GuidResponse), typeof(GuidResponseExampleProvider))]
-        public ActionResult<GuidResponse> Guid([FromQuery]string format = null, [FromQuery]bool? uppercase = null)
+        public ActionResult<GuidResponse> GenerateGuid([FromQuery]string format = null, [FromQuery]bool? uppercase = null)
         {
             string guid;
 
             try
             {
-                guid = System.Guid.NewGuid().ToString(format ?? "D");
+                guid = System.Guid.NewGuid().ToString(format ?? "D", CultureInfo.InvariantCulture);
             }
             catch (FormatException)
             {
@@ -269,11 +269,15 @@ namespace MartinCostello.Api.Controllers
         {
             if (string.Equals(name, HashAlgorithmName.MD5.Name, StringComparison.OrdinalIgnoreCase))
             {
+#pragma warning disable CA5351
                 return MD5.Create();
+#pragma warning restore CA5351
             }
             else if (string.Equals(name, HashAlgorithmName.SHA1.Name, StringComparison.OrdinalIgnoreCase))
             {
+#pragma warning disable CA5350
                 return SHA1.Create();
+#pragma warning restore CA5350
             }
             else if (string.Equals(name, HashAlgorithmName.SHA256.Name, StringComparison.OrdinalIgnoreCase))
             {

@@ -112,7 +112,7 @@ namespace MartinCostello.Api.Middleware
                     return Task.CompletedTask;
                 });
 
-            await _next(context);
+            await _next(context).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -141,7 +141,7 @@ block-all-mixed-content;
 base-uri https://api.martincostello.com;
 manifest-src 'self';";
 
-            var builder = new StringBuilder(basePolicy.Replace(Environment.NewLine, string.Empty).Replace("\n", string.Empty));
+            var builder = new StringBuilder(basePolicy.Replace(Environment.NewLine, string.Empty, StringComparison.Ordinal).Replace("\n", string.Empty, StringComparison.Ordinal));
 
             if (isProduction)
             {
