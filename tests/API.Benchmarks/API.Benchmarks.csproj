@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Description>Benchmarks for the API.</Description>
-    <NoWarn>$(NoWarn);CA1034;CA1056;CA2007</NoWarn>
+    <NoWarn>$(NoWarn);CA2007;CA2234</NoWarn>
     <OutputType>Exe</OutputType>
     <RootNamespace>MartinCostello.API.Benchmarks</RootNamespace>
     <Summary>$(Description)</Summary>
@@ -13,6 +13,7 @@
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.11.5" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Antiforgery" Version="2.2.0" />

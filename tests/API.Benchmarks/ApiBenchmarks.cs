@@ -13,14 +13,13 @@ namespace MartinCostello.Api.Benchmarks
     using Microsoft.Extensions.Logging;
 
     [MemoryDiagnoser]
-    public class TimeBenchmarks : IDisposable
+    public class ApiBenchmarks : IDisposable
     {
         private readonly IWebHost _host;
         private readonly HttpClient _client;
-        private readonly Uri _uri;
         private bool _disposed;
 
-        public TimeBenchmarks()
+        public ApiBenchmarks()
         {
             _host = WebHost.CreateDefaultBuilder()
                 .UseEnvironment("Development")
@@ -29,11 +28,13 @@ namespace MartinCostello.Api.Benchmarks
                 .ConfigureLogging((builder) => builder.ClearProviders().SetMinimumLevel(LogLevel.Error))
                 .Build();
 
-            _client = new HttpClient();
-            _uri = new Uri("http://localhost:5002/time", UriKind.Absolute);
+            _client = new HttpClient()
+            {
+                BaseAddress = new Uri("http://localhost:5002", UriKind.Absolute)
+            };
         }
 
-        ~TimeBenchmarks()
+        ~ApiBenchmarks()
         {
             Dispose(false);
         }
@@ -45,9 +46,18 @@ namespace MartinCostello.Api.Benchmarks
         }
 
         [Benchmark]
+        public async Task<byte[]> Hash()
+        {
+            var body = new { algorithm = "sha1", Format = "base64", plaintext = "Hello, world!" };
+
+            var response = await _client.PostAsJsonAsync("/hash", body);
+            return await response.Content.ReadAsByteArrayAsync();
+        }
+
+        [Benchmark]
         public async Task<byte[]> Time()
         {
-            return await _client.GetByteArrayAsync(_uri);
+            return await _client.GetByteArrayAsync("/time");
         }
 
         public void Dispose()
