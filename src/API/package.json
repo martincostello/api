@@ -21,7 +21,7 @@
     "gulp-sass-lint": "1.4.0",
     "gulp-uglify": "3.0.1",
     "hoek": "5.0.3",
-    "jquery": "3.3.1",
+    "jquery": "3.4.1",
     "jshint": "2.9.6",
     "karma": "2.0.5",
     "karma-appveyor-reporter": "0.4.1",
