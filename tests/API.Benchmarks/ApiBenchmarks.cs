@@ -30,7 +30,7 @@ namespace MartinCostello.Api.Benchmarks
 
             _client = new HttpClient()
             {
-                BaseAddress = new Uri("http://localhost:5002", UriKind.Absolute)
+                BaseAddress = new Uri("http://localhost:5002", UriKind.Absolute),
             };
         }
 
