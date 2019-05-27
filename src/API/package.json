@@ -30,7 +30,7 @@
     "karma-jasmine": "1.1.2",
     "lodash": ">=4.17.11",
     "merge": ">=1.2.1",
-    "mime": "2.3.1",
+    "mime": "2.4.3",
     "natives": "^1.1.6",
     "puppeteer": "1.6.1",
     "randomatic": ">=3.0.0",
