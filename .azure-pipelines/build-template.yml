@@ -46,8 +46,8 @@ phases:
         - task: NodeTool@0
           inputs:
             versionSpec: '8.x'
-          name: Install node 8.x
-          displayName: Update to latest version of node 8.x
+          name: InstallNode
+          displayName: Update node
         - script: |
             npm install -g gulp@3.9.1
           name: InstallGulp
