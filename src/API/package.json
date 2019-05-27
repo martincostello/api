@@ -32,7 +32,7 @@
     "merge": ">=1.2.1",
     "mime": "2.4.3",
     "natives": "^1.1.6",
-    "puppeteer": "1.6.1",
+    "puppeteer": "1.17.0",
     "randomatic": ">=3.0.0",
     "superagent": "3.8.3"
   }
