@@ -17,7 +17,7 @@ namespace MartinCostello.Api.Swagger
         {
             return new GuidResponse()
             {
-                Guid = Guid.NewGuid().ToString()
+                Guid = Guid.NewGuid().ToString(),
             };
         }
     }
