@@ -17,7 +17,7 @@
     "gulp-less": "3.3.0",
     "gulp-lesshint": "3.0.0",
     "gulp-rename": "1.4.0",
-    "gulp-sass": "3.1.0",
+    "gulp-sass": "4.0.2",
     "gulp-sass-lint": "1.4.0",
     "gulp-uglify": "3.0.2",
     "hoek": "6.1.3",
