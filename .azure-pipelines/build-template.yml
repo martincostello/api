@@ -43,6 +43,11 @@ phases:
           name: UpdateNpm
           displayName: Update to latest npm
       - ${{ if eq(parameters.agentOS, 'macOS') }}:
+        - task: NodeTool@0
+          inputs:
+            versionSpec: '8.x'
+          name: InstallNode
+          displayName: Update node
         - script: |
             npm install -g gulp@3.9.1
           name: InstallGulp
