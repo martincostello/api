@@ -9,5 +9,5 @@ indent_style = space
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-[*.{config,csproj,json,props,xml}]
+[*.{config,csproj,json,props,ruleset,xml}]
 indent_size = 2

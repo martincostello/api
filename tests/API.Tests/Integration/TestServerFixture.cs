@@ -30,6 +30,6 @@ namespace MartinCostello.Api.Integration
 
         /// <inheritdoc />
         protected override void ConfigureWebHost(IWebHostBuilder builder)
-            => builder.ConfigureLogging((loggingBuilder) => loggingBuilder.AddXUnit(this));
+            => builder.ConfigureLogging((loggingBuilder) => loggingBuilder.ClearProviders().AddXUnit(this));
     }
 }
