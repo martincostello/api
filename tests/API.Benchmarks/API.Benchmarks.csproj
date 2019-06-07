@@ -1,7 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Description>Benchmarks for the API.</Description>
-    <NoWarn>$(NoWarn);CA2007;CA2234</NoWarn>
+    <NoWarn>$(NoWarn);CA2007;CA2234;SA1600</NoWarn>
     <OutputType>Exe</OutputType>
     <RootNamespace>MartinCostello.API.Benchmarks</RootNamespace>
     <Summary>$(Description)</Summary>

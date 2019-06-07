@@ -50,8 +50,10 @@ namespace MartinCostello.Api.Benchmarks
         {
             var body = new { algorithm = "sha1", Format = "base64", plaintext = "Hello, world!" };
 
-            var response = await _client.PostAsJsonAsync("/hash", body);
-            return await response.Content.ReadAsByteArrayAsync();
+            using (var response = await _client.PostAsJsonAsync("/hash", body))
+            {
+                return await response.Content.ReadAsByteArrayAsync();
+            }
         }
 
         [Benchmark]

@@ -54,9 +54,9 @@ namespace MartinCostello.Api
         public IHostingEnvironment HostingEnvironment { get; }
 
         /// <summary>
-        /// Gets or sets the service provider.
+        /// Gets or sets the service provider's scope.
         /// </summary>
-        public IServiceProvider ServiceProvider { get; set; }
+        public IServiceScope ServiceScope { get; set; }
 
         /// <summary>
         /// Configures the application.
@@ -73,7 +73,7 @@ namespace MartinCostello.Api
         {
             applicationLifetime.ApplicationStopped.Register(OnApplicationStopped);
 
-            ServiceProvider = serviceProvider.CreateScope().ServiceProvider;
+            ServiceScope = serviceProvider.CreateScope();
 
             app.UseCustomHttpHeaders(HostingEnvironment, Configuration, options.Value);
 
@@ -194,7 +194,7 @@ namespace MartinCostello.Api
         /// <param name="corsOptions">The <see cref="CorsOptions"/> to configure.</param>
         private void ConfigureCors(CorsOptions corsOptions)
         {
-            var siteOptions = ServiceProvider.GetService<SiteOptions>();
+            var siteOptions = ServiceScope.ServiceProvider.GetService<SiteOptions>();
 
             corsOptions.AddPolicy(
                 DefaultCorsPolicyName,
@@ -307,10 +307,7 @@ namespace MartinCostello.Api
         /// </summary>
         private void OnApplicationStopped()
         {
-            if (ServiceProvider is IDisposable disposable)
-            {
-                disposable.Dispose();
-            }
+            ServiceScope?.Dispose();
         }
     }
 }
