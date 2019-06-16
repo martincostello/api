@@ -94,7 +94,7 @@ phases:
           inputs:
             codeCoverageTool: cobertura
             reportDirectory: $(Build.StagingDirectory)/**/coverage
-            summaryFileLocation: $(Build.StagingDirectory)/**/Cobertura.xml
+            summaryFileLocation: $(Build.StagingDirectory)/coverage.cobertura.xml
       - task: PublishBuildArtifacts@1
         displayName: Publish build artifacts
         condition: eq(variables['System.PullRequest.IsFork'], false)

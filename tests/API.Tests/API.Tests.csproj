@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Description>Tests for https://api.martincostello.com/</Description>
+    <IsTestProject>true</IsTestProject>
     <NoWarn>$(NoWarn);CA1707;CA2007;CA2234</NoWarn>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <RootNamespace>MartinCostello.Api</RootNamespace>
