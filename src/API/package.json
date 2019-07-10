@@ -30,7 +30,7 @@
     "karma-chrome-launcher": "2.2.0",
     "karma-html-detailed-reporter": "2.1.0",
     "karma-jasmine": "2.0.1",
-    "lodash": ">=4.17.11",
+    "lodash": ">=4.17.13",
     "merge": ">=1.2.1",
     "mime": "2.4.4",
     "natives": "^1.1.6",
