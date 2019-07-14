@@ -7,7 +7,6 @@ var gulp = require("gulp"),
     cssmin = require("gulp-cssmin"),
     uglify = require("gulp-uglify"),
     csslint = require("gulp-csslint"),
-    jasmine = require("gulp-jasmine"),
     jshint = require("gulp-jshint"),
     karmaServer = require("karma").Server,
     less = require("gulp-less"),
@@ -39,15 +38,15 @@ var paths = {
     jsClean: webroot + "js/**/*.js"
 };
 
-gulp.task("clean:js", function (cb) {
+gulp.task("clean:js", function () {
     return del([paths.jsClean]);
 });
 
-gulp.task("clean:css", function (cb) {
+gulp.task("clean:css", function () {
     return del([paths.cssClean]);
 });
 
-gulp.task("clean", ["clean:js", "clean:css"]);
+gulp.task("clean", gulp.parallel("clean:js", "clean:css"));
 
 gulp.task("css:less", function () {
     return gulp.src(paths.less)
@@ -63,7 +62,7 @@ gulp.task("css:sass", function () {
       .pipe(gulp.dest(paths.sassDest));
 });
 
-gulp.task("css", ["css:less", "css:sass"]);
+gulp.task("css", gulp.series("css:less", "css:sass"));
 
 gulp.task("lint:css", function () {
     return gulp.src(styles)
@@ -86,13 +85,13 @@ gulp.task("lint:less", function () {
 });
 
 gulp.task("lint:sass", function () {
-    gulp.src(paths.sass)
+    return gulp.src(paths.sass)
         .pipe(sassLint())
         .pipe(sassLint.format())
         .pipe(sassLint.failOnError());
 });
 
-gulp.task("lint", ["lint:js", "lint:less", "lint:sass", "lint:css"]);
+gulp.task("lint", gulp.parallel("lint:js", "lint:less", "lint:sass", "lint:css"));
 
 gulp.task("min:js", function () {
     return gulp.src([paths.js, "!" + paths.minJs, "!" + paths.concatJsDest, "!" + paths.testsJs])
@@ -103,7 +102,7 @@ gulp.task("min:js", function () {
         .pipe(gulp.dest("."));
 });
 
-gulp.task("min:css", ["css"], function () {
+gulp.task("min:css", function () {
     return gulp.src([
             paths.lessDest + "/less.css",
             paths.sassDest + "/sass.css",
@@ -117,7 +116,7 @@ gulp.task("min:css", ["css"], function () {
         .pipe(gulp.dest("."));
 });
 
-gulp.task("min", ["min:js", "min:css"]);
+gulp.task("min", gulp.parallel("min:js", "min:css"));
 
 gulp.task("test:js:karma", function (done) {
     new karmaServer({
@@ -133,8 +132,10 @@ gulp.task("test:js:chrome", function (done) {
     }, done).start();
 });
 
-gulp.task("test:js", ["test:js:karma"]);
-gulp.task("test", ["test:js"]);
+gulp.task("test:js", gulp.series("test:js:karma"));
+gulp.task("test", gulp.series("test:js"));
 
-gulp.task("build", ["lint", "min"]);
-gulp.task("publish", ["build", "test"]);
+gulp.task("build", gulp.series("lint", "min"));
+gulp.task("publish", gulp.series("build", "test"));
+
+gulp.task("default", gulp.series("build"));
