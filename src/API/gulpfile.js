@@ -9,11 +9,7 @@ var gulp = require("gulp"),
     csslint = require("gulp-csslint"),
     jshint = require("gulp-jshint"),
     karmaServer = require("karma").Server,
-    less = require("gulp-less"),
-    lesshint = require("gulp-lesshint"),
-    rename = require("gulp-rename"),
-    sass = require("gulp-sass"),
-    sassLint = require("gulp-sass-lint");
+    rename = require("gulp-rename");
 
 var webroot = "./wwwroot/Assets/";
 var assets = "./Assets/";
@@ -30,10 +26,6 @@ var paths = {
     minCssDest: webroot + "css/**/site.min.css",
     concatJsDest: webroot + "js/site.js",
     concatCssDest: webroot + "css/site.css",
-    less: styles + "/less/site.less",
-    lessDest: webroot + "css",
-    sass: styles + "/sass/site.scss",
-    sassDest: webroot + "css",
     cssClean: webroot + "css/**/*.css",
     jsClean: webroot + "js/**/*.js"
 };
@@ -47,22 +39,6 @@ gulp.task("clean:css", function () {
 });
 
 gulp.task("clean", gulp.parallel("clean:js", "clean:css"));
-
-gulp.task("css:less", function () {
-    return gulp.src(paths.less, { allowEmpty: true })
-      .pipe(less())
-      .pipe(rename("less.css"))
-      .pipe(gulp.dest(paths.lessDest));
-});
-
-gulp.task("css:sass", function () {
-    return gulp.src(paths.sass, { allowEmpty: true })
-      .pipe(sass().on("error", sass.logError))
-      .pipe(rename("sass.css"))
-      .pipe(gulp.dest(paths.sassDest));
-});
-
-gulp.task("css", gulp.series("css:less", "css:sass"));
 
 gulp.task("lint:css", function () {
     return gulp.src(styles, { allowEmpty: true })
@@ -78,20 +54,7 @@ gulp.task("lint:js", function () {
       .pipe(jshint.reporter("fail"));
 });
 
-gulp.task("lint:less", function () {
-    return gulp.src(paths.less, { allowEmpty: true })
-        .pipe(lesshint())
-        .pipe(lesshint.reporter());
-});
-
-gulp.task("lint:sass", function () {
-    return gulp.src(paths.sass, { allowEmpty: true })
-        .pipe(sassLint())
-        .pipe(sassLint.format())
-        .pipe(sassLint.failOnError());
-});
-
-gulp.task("lint", gulp.parallel("lint:js", "lint:less", "lint:sass", "lint:css"));
+gulp.task("lint", gulp.parallel("lint:js", "lint:css"));
 
 gulp.task("min:js", function () {
     return gulp.src([paths.js, "!" + paths.minJs, "!" + paths.concatJsDest, "!" + paths.testsJs])
@@ -104,8 +67,6 @@ gulp.task("min:js", function () {
 
 gulp.task("min:css", function () {
     return gulp.src([
-            paths.lessDest + "/less.css",
-            paths.sassDest + "/sass.css",
             paths.css,
             "!" + paths.minCss,
             "!" + paths.concatCssDest])
