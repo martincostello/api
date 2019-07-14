@@ -49,14 +49,14 @@ gulp.task("clean:css", function () {
 gulp.task("clean", gulp.parallel("clean:js", "clean:css"));
 
 gulp.task("css:less", function () {
-    return gulp.src(paths.less)
+    return gulp.src(paths.less, { allowEmpty: true })
       .pipe(less())
       .pipe(rename("less.css"))
       .pipe(gulp.dest(paths.lessDest));
 });
 
 gulp.task("css:sass", function () {
-    return gulp.src(paths.sass)
+    return gulp.src(paths.sass, { allowEmpty: true })
       .pipe(sass().on("error", sass.logError))
       .pipe(rename("sass.css"))
       .pipe(gulp.dest(paths.sassDest));
@@ -65,27 +65,27 @@ gulp.task("css:sass", function () {
 gulp.task("css", gulp.series("css:less", "css:sass"));
 
 gulp.task("lint:css", function () {
-    return gulp.src(styles)
+    return gulp.src(styles, { allowEmpty: true })
       .pipe(csslint())
       .pipe(csslint.formatter())
       .pipe(csslint.formatter('fail'));
 });
 
 gulp.task("lint:js", function () {
-    return gulp.src(paths.js)
+    return gulp.src(paths.js, { allowEmpty: true })
       .pipe(jshint())
       .pipe(jshint.reporter("default"))
       .pipe(jshint.reporter("fail"));
 });
 
 gulp.task("lint:less", function () {
-    return gulp.src(paths.less)
+    return gulp.src(paths.less, { allowEmpty: true })
         .pipe(lesshint())
         .pipe(lesshint.reporter());
 });
 
 gulp.task("lint:sass", function () {
-    return gulp.src(paths.sass)
+    return gulp.src(paths.sass, { allowEmpty: true })
         .pipe(sassLint())
         .pipe(sassLint.format())
         .pipe(sassLint.failOnError());
