@@ -37,5 +37,8 @@
     "puppeteer": "1.18.1",
     "randomatic": ">=3.0.0",
     "superagent": "5.1.0"
+  },
+  "scripts": {
+    "publish": "gulp publish"
   }
 }

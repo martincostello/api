@@ -39,7 +39,7 @@ phases:
           displayName: Install .NET Core pre-requisites
       - ${{ if ne(parameters.agentOS, 'Linux') }}:
         - script: |
-            npm install -g npm
+            npm install --global npm
           name: UpdateNpm
           displayName: Update to latest npm
       - ${{ if eq(parameters.agentOS, 'macOS') }}:
@@ -48,10 +48,6 @@ phases:
             versionSpec: '8.x'
           name: InstallNode
           displayName: Update node
-        - script: |
-            npm install -g gulp@3.9.1
-          name: InstallGulp
-          displayName: Install gulp
       - ${{ if eq(parameters.agentOS, 'Windows') }}:
         - powershell: |
             .\Build.ps1 -OutputPath $(Build.StagingDirectory) $(BuildArgs)
