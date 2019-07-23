@@ -2,11 +2,11 @@
   <PropertyGroup>
     <Description>Tests for https://api.martincostello.com/</Description>
     <IsTestProject>true</IsTestProject>
-    <NoWarn>$(NoWarn);CA1707;CA2007;CA2234</NoWarn>
+    <NoWarn>$(NoWarn);CA1707;CA2007;CA2234;SA1600</NoWarn>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <RootNamespace>MartinCostello.Api</RootNamespace>
     <Summary>Tests for Martin Costello's API</Summary>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
@@ -15,9 +15,9 @@
     <ProjectReference Include="..\..\src\API\API.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="MartinCostello.Logging.XUnit" Version="0.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="3.0.0-preview7.19365.7" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
     <PackageReference Include="NodaTime.Testing" Version="2.4.6" />
     <PackageReference Include="Shouldly" Version="3.0.2" />

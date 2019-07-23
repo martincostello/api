@@ -7,7 +7,6 @@ namespace MartinCostello.Api.Benchmarks
     using System.Net.Http;
     using System.Threading.Tasks;
     using BenchmarkDotNet.Attributes;
-    using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
@@ -15,16 +14,20 @@ namespace MartinCostello.Api.Benchmarks
     [MemoryDiagnoser]
     public class ApiBenchmarks : IDisposable
     {
-        private readonly IWebHost _host;
+        private readonly IHost _host;
         private readonly HttpClient _client;
         private bool _disposed;
 
         public ApiBenchmarks()
         {
-            _host = WebHost.CreateDefaultBuilder()
+            _host = Host.CreateDefaultBuilder()
                 .UseEnvironment("Development")
-                .UseStartup<Startup>()
-                .UseUrls("http://localhost:5002")
+                .ConfigureWebHost(
+                    (builder) =>
+                    {
+                        builder.UseStartup<Startup>()
+                               .UseUrls("http://localhost:5002");
+                    })
                 .ConfigureLogging((builder) => builder.ClearProviders().SetMinimumLevel(LogLevel.Error))
                 .Build();
 
@@ -41,26 +44,20 @@ namespace MartinCostello.Api.Benchmarks
 
         [GlobalSetup]
         public async Task StartServer()
-        {
-            await _host.StartAsync();
-        }
+            => await _host.StartAsync();
 
         [Benchmark]
         public async Task<byte[]> Hash()
         {
             var body = new { algorithm = "sha1", Format = "base64", plaintext = "Hello, world!" };
 
-            using (var response = await _client.PostAsJsonAsync("/hash", body))
-            {
-                return await response.Content.ReadAsByteArrayAsync();
-            }
+            using var response = await _client.PostAsJsonAsync("/hash", body);
+            return await response.Content.ReadAsByteArrayAsync();
         }
 
         [Benchmark]
         public async Task<byte[]> Time()
-        {
-            return await _client.GetByteArrayAsync("/time");
-        }
+            => await _client.GetByteArrayAsync("/time");
 
         public void Dispose()
         {

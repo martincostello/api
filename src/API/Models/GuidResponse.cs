@@ -3,7 +3,7 @@
 
 namespace MartinCostello.Api.Models
 {
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// Represents the response from the <c>/tools/guid</c> API resource.
@@ -13,7 +13,7 @@ namespace MartinCostello.Api.Models
         /// <summary>
         /// Gets or sets the generated GUID value.
         /// </summary>
-        [JsonProperty("guid")]
+        [JsonPropertyName("guid")]
 #pragma warning disable CA1720
         public string Guid { get; set; }
 #pragma warning restore CA1720

@@ -4,7 +4,7 @@
 namespace MartinCostello.Api.Models
 {
     using System.ComponentModel.DataAnnotations;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// Represents a request to the <c>/tools/hash</c> API resource.
@@ -14,21 +14,21 @@ namespace MartinCostello.Api.Models
         /// <summary>
         /// Gets or sets the name of the hash algorithm to use.
         /// </summary>
-        [JsonProperty("algorithm")]
+        [JsonPropertyName("algorithm")]
         [Required]
         public string Algorithm { get; set; }
 
         /// <summary>
         /// Gets or sets the format in which to return the hash.
         /// </summary>
-        [JsonProperty("format")]
+        [JsonPropertyName("format")]
         [Required]
         public string Format { get; set; }
 
         /// <summary>
         /// Gets or sets the plaintext value to generate the hash from.
         /// </summary>
-        [JsonProperty("plaintext")]
+        [JsonPropertyName("plaintext")]
         [Required]
         public string Plaintext { get; set; }
     }
