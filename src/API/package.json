@@ -31,7 +31,7 @@
     "mime": "2.4.4",
     "natives": "^1.1.6",
     "popper.js": "^1.14.7",
-    "puppeteer": "1.18.1",
+    "puppeteer": "1.19.0",
     "randomatic": ">=3.0.0",
     "superagent": "5.1.0"
   },
