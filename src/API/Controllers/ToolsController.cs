@@ -226,8 +226,8 @@ namespace MartinCostello.Api.Controllers
                     @"<machineKey validationKey=""{0}"" decryptionKey=""{1}"" validation=""{2}"" decryption=""{3}"" />",
                     result.ValidationKey,
                     result.DecryptionKey,
-                    validationAlgorithm,
-                    decryptionAlgorithm);
+                    validationAlgorithm.Split('-', StringSplitOptions.RemoveEmptyEntries)[0].ToUpperInvariant(),
+                    decryptionAlgorithm.Split('-', StringSplitOptions.RemoveEmptyEntries)[0].ToUpperInvariant());
 
                 return result;
             }
