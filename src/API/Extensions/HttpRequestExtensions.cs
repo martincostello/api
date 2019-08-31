@@ -25,8 +25,10 @@ namespace MartinCostello.Api.Extensions
             string host = request.Host.ToString();
             string[] hostSplit = host.Split(':');
 
-            UriBuilder builder = new UriBuilder();
-            builder.Host = hostSplit[0];
+            var builder = new UriBuilder()
+            {
+                Host = hostSplit[0],
+            };
 
             if (hostSplit.Length > 1)
             {

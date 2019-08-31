@@ -8,6 +8,7 @@ namespace MartinCostello.Api.Controllers
     using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
+    using System.Net.Mime;
     using System.Security.Cryptography;
     using System.Text;
     using Microsoft.AspNetCore.Cors;
@@ -22,7 +23,7 @@ namespace MartinCostello.Api.Controllers
     /// </summary>
     [ApiController]
     [EnableCors(Startup.DefaultCorsPolicyName)]
-    [Produces("application/json")]
+    [Produces(MediaTypeNames.Application.Json)]
     [Route("tools")]
     public class ToolsController : ControllerBase
     {
@@ -31,18 +32,18 @@ namespace MartinCostello.Api.Controllers
         /// </summary>
         private static readonly IDictionary<string, int> HashSizes = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
         {
-            { "3DES-D", 24 },
-            { "3DES-V", 24 },
-            { "AES-128-D", 16 },
-            { "AES-192-D", 24 },
-            { "AES-256-D", 32 },
-            { "AES-V", 32 },
-            { "DES-D", 32 },
-            { "MD5-V", 16 },
-            { "HMACSHA256-V", 32 },
-            { "HMACSHA384-V", 48 },
-            { "HMACSHA512-V", 64 },
-            { "SHA1-V", 64 },
+            ["3DES-D"] = 24,
+            ["3DES-V"] = 24,
+            ["AES-128-D"] = 16,
+            ["AES-192-D"] = 24,
+            ["AES-256-D"] = 32,
+            ["AES-V"] = 32,
+            ["DES-D"] = 32,
+            ["MD5-V"] = 16,
+            ["HMACSHA256-V"] = 32,
+            ["HMACSHA384-V"] = 48,
+            ["HMACSHA512-V"] = 64,
+            ["SHA1-V"] = 64,
         };
 
         /// <summary>
@@ -54,7 +55,7 @@ namespace MartinCostello.Api.Controllers
         /// An <see cref="IActionResult"/> containing the generated GUID.
         /// </returns>
         [HttpGet]
-        [Produces("application/json", Type = typeof(GuidResponse))]
+        [Produces(MediaTypeNames.Application.Json, Type = typeof(GuidResponse))]
         [ProducesResponseType(typeof(GuidResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [Route("guid")]
@@ -67,7 +68,7 @@ namespace MartinCostello.Api.Controllers
 
             try
             {
-                guid = System.Guid.NewGuid().ToString(format ?? "D", CultureInfo.InvariantCulture);
+                guid = Guid.NewGuid().ToString(format ?? "D", CultureInfo.InvariantCulture);
             }
             catch (FormatException)
             {
@@ -92,9 +93,9 @@ namespace MartinCostello.Api.Controllers
         /// <returns>
         /// An <see cref="IActionResult"/> containing the generated hash value.
         /// </returns>
-        [Consumes("application/json", "text/json")]
+        [Consumes(MediaTypeNames.Application.Json, "text/json")]
         [HttpPost]
-        [Produces("application/json", Type = typeof(HashResponse))]
+        [Produces(MediaTypeNames.Application.Json, Type = typeof(HashResponse))]
         [ProducesResponseType(typeof(HashResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [Route("hash")]
@@ -153,15 +154,14 @@ namespace MartinCostello.Api.Controllers
 
                 stream.Seek(0, SeekOrigin.Begin);
 
-                using (var hasher = CreateHashAlgorithm(request.Algorithm))
-                {
-                    if (hasher == null)
-                    {
-                        return BadRequest($"The specified hash algorithm '{request.Algorithm}' is not supported.");
-                    }
+                using var hasher = CreateHashAlgorithm(request.Algorithm);
 
-                    hash = hasher.ComputeHash(stream);
+                if (hasher == null)
+                {
+                    return BadRequest($"The specified hash algorithm '{request.Algorithm}' is not supported.");
                 }
+
+                hash = hasher.ComputeHash(stream);
             }
 
             return new HashResponse()
@@ -179,7 +179,7 @@ namespace MartinCostello.Api.Controllers
         /// An <see cref="IActionResult"/> containing the generated machine key.
         /// </returns>
         [HttpGet]
-        [Produces("application/json", Type = typeof(MachineKeyResponse))]
+        [Produces(MediaTypeNames.Application.Json, Type = typeof(MachineKeyResponse))]
         [ProducesResponseType(typeof(MachineKeyResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [Route("machinekey")]

@@ -4,6 +4,7 @@
 namespace MartinCostello.Api.Controllers
 {
     using System.Globalization;
+    using System.Net.Mime;
     using Microsoft.AspNetCore.Cors;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
@@ -17,7 +18,7 @@ namespace MartinCostello.Api.Controllers
     /// </summary>
     [ApiController]
     [Route("time")]
-    [Produces("application/json")]
+    [Produces(MediaTypeNames.Application.Json)]
     public class TimeController : ControllerBase
     {
         /// <summary>
@@ -42,7 +43,7 @@ namespace MartinCostello.Api.Controllers
         /// </returns>
         [EnableCors(Startup.DefaultCorsPolicyName)]
         [HttpGet]
-        [Produces("application/json", Type = typeof(TimeResponse))]
+        [Produces(MediaTypeNames.Application.Json, Type = typeof(TimeResponse))]
         [ProducesResponseType(typeof(TimeResponse), StatusCodes.Status200OK)]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(TimeResponse), Description = "The current UTC date and time.")]
         [SwaggerResponseExample(typeof(TimeResponse), typeof(TimeResponseExampleProvider))]

@@ -5,6 +5,7 @@ namespace MartinCostello.Api
 {
     using System;
     using System.IO;
+    using System.Net.Mime;
     using Extensions;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.CookiePolicy;
@@ -13,7 +14,6 @@ namespace MartinCostello.Api
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.HttpOverrides;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Mvc.Infrastructure;
     using Microsoft.AspNetCore.StaticFiles;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -255,7 +255,7 @@ namespace MartinCostello.Api
             return new StaticFileOptions()
             {
                 ContentTypeProvider = provider,
-                DefaultContentType = "application/json",
+                DefaultContentType = MediaTypeNames.Application.Json,
                 OnPrepareResponse = SetCacheHeaders,
                 ServeUnknownFileTypes = true,
             };
