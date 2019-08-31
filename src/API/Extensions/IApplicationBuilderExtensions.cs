@@ -26,7 +26,7 @@ namespace MartinCostello.Api.Extensions
         /// </returns>
         public static IApplicationBuilder UseCustomHttpHeaders(
             this IApplicationBuilder value,
-            IHostingEnvironment environment,
+            IWebHostEnvironment environment,
             IConfiguration config,
             SiteOptions options)
         {

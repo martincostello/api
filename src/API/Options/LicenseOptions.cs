@@ -11,11 +11,11 @@ namespace MartinCostello.Api.Options
         /// <summary>
         /// Gets or sets the license name.
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the license URL.
         /// </summary>
-        public string Url { get; set; }
+        public string Url { get; set; } = string.Empty;
     }
 }

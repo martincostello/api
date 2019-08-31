@@ -13,16 +13,16 @@ namespace MartinCostello.Api.Options
         /// <summary>
         /// Gets or sets the URI of the blog.
         /// </summary>
-        public Uri Blog { get; set; }
+        public Uri? Blog { get; set; }
 
         /// <summary>
         /// Gets or sets the URI of the CDN.
         /// </summary>
-        public Uri Cdn { get; set; }
+        public Uri? Cdn { get; set; }
 
         /// <summary>
         /// Gets or sets the options for the URIs to use for reports.
         /// </summary>
-        public ReportOptions Reports { get; set; }
+        public ReportOptions? Reports { get; set; }
     }
 }

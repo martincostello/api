@@ -4,8 +4,8 @@
 namespace MartinCostello.Api
 {
     using System;
-    using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.Extensions.Hosting;
 
     /// <summary>
     /// A class representing the entry-point to the application. This class cannot be inherited.
@@ -23,7 +23,7 @@ namespace MartinCostello.Api
         {
             try
             {
-                CreateWebHostBuilder(args).Build().Run();
+                CreateHostBuilder(args).Build().Run();
                 return 0;
             }
             catch (Exception ex)
@@ -34,19 +34,23 @@ namespace MartinCostello.Api
         }
 
         /// <summary>
-        /// Creates the web host to use for the application.
+        /// Creates the host builder to use for the application.
         /// </summary>
         /// <param name="args">The arguments to the application.</param>
         /// <returns>
-        /// A <see cref="IWebHost"/> to use.
+        /// A <see cref="IHostBuilder"/> to use.
         /// </returns>
-        private static IWebHostBuilder CreateWebHostBuilder(string[] args)
+        public static IHostBuilder CreateHostBuilder(string[] args)
         {
-            return WebHost.CreateDefaultBuilder(args)
-                .UseAzureAppServices()
-                .UseApplicationInsights()
-                .UseStartup<Startup>()
-                .CaptureStartupErrors(true);
+            return Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(
+                    (webBuilder) =>
+                    {
+                        webBuilder.CaptureStartupErrors(true)
+                                  .UseApplicationInsights()
+                                  .UseAzureAppServices()
+                                  .UseStartup<Startup>();
+                    });
         }
     }
 }

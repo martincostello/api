@@ -8,6 +8,7 @@ namespace MartinCostello.Api.Controllers
     using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
+    using System.Net.Mime;
     using System.Security.Cryptography;
     using System.Text;
     using Microsoft.AspNetCore.Cors;
@@ -22,7 +23,7 @@ namespace MartinCostello.Api.Controllers
     /// </summary>
     [ApiController]
     [EnableCors(Startup.DefaultCorsPolicyName)]
-    [Produces("application/json")]
+    [Produces(MediaTypeNames.Application.Json)]
     [Route("tools")]
     public class ToolsController : ControllerBase
     {
@@ -31,18 +32,18 @@ namespace MartinCostello.Api.Controllers
         /// </summary>
         private static readonly IDictionary<string, int> HashSizes = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
         {
-            { "3DES-D", 24 },
-            { "3DES-V", 24 },
-            { "AES-128-D", 16 },
-            { "AES-192-D", 24 },
-            { "AES-256-D", 32 },
-            { "AES-V", 32 },
-            { "DES-D", 32 },
-            { "MD5-V", 16 },
-            { "HMACSHA256-V", 32 },
-            { "HMACSHA384-V", 48 },
-            { "HMACSHA512-V", 64 },
-            { "SHA1-V", 64 },
+            ["3DES-D"] = 24,
+            ["3DES-V"] = 24,
+            ["AES-128-D"] = 16,
+            ["AES-192-D"] = 24,
+            ["AES-256-D"] = 32,
+            ["AES-V"] = 32,
+            ["DES-D"] = 32,
+            ["MD5-V"] = 16,
+            ["HMACSHA256-V"] = 32,
+            ["HMACSHA384-V"] = 48,
+            ["HMACSHA512-V"] = 64,
+            ["SHA1-V"] = 64,
         };
 
         /// <summary>
@@ -54,20 +55,20 @@ namespace MartinCostello.Api.Controllers
         /// An <see cref="IActionResult"/> containing the generated GUID.
         /// </returns>
         [HttpGet]
-        [Produces("application/json", Type = typeof(GuidResponse))]
+        [Produces(MediaTypeNames.Application.Json, Type = typeof(GuidResponse))]
         [ProducesResponseType(typeof(GuidResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [Route("guid")]
         [SwaggerResponse(StatusCodes.Status200OK, description: "A GUID was generated successfully.", Type = typeof(GuidResponse))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, description: "The specified format is invalid.", Type = typeof(ErrorResponse))]
         [SwaggerResponseExample(typeof(GuidResponse), typeof(GuidResponseExampleProvider))]
-        public ActionResult<GuidResponse> GenerateGuid([FromQuery]string format = null, [FromQuery]bool? uppercase = null)
+        public ActionResult<GuidResponse> GenerateGuid([FromQuery]string? format = null, [FromQuery]bool? uppercase = null)
         {
             string guid;
 
             try
             {
-                guid = System.Guid.NewGuid().ToString(format ?? "D", CultureInfo.InvariantCulture);
+                guid = Guid.NewGuid().ToString(format ?? "D", CultureInfo.InvariantCulture);
             }
             catch (FormatException)
             {
@@ -92,9 +93,9 @@ namespace MartinCostello.Api.Controllers
         /// <returns>
         /// An <see cref="IActionResult"/> containing the generated hash value.
         /// </returns>
-        [Consumes("application/json", "text/json")]
+        [Consumes(MediaTypeNames.Application.Json, "text/json")]
         [HttpPost]
-        [Produces("application/json", Type = typeof(HashResponse))]
+        [Produces(MediaTypeNames.Application.Json, Type = typeof(HashResponse))]
         [ProducesResponseType(typeof(HashResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [Route("hash")]
@@ -153,15 +154,14 @@ namespace MartinCostello.Api.Controllers
 
                 stream.Seek(0, SeekOrigin.Begin);
 
-                using (var hasher = CreateHashAlgorithm(request.Algorithm))
-                {
-                    if (hasher == null)
-                    {
-                        return BadRequest($"The specified hash algorithm '{request.Algorithm}' is not supported.");
-                    }
+                using var hasher = CreateHashAlgorithm(request.Algorithm);
 
-                    hash = hasher.ComputeHash(stream);
+                if (hasher == null)
+                {
+                    return BadRequest($"The specified hash algorithm '{request.Algorithm}' is not supported.");
                 }
+
+                hash = hasher.ComputeHash(stream);
             }
 
             return new HashResponse()
@@ -179,14 +179,14 @@ namespace MartinCostello.Api.Controllers
         /// An <see cref="IActionResult"/> containing the generated machine key.
         /// </returns>
         [HttpGet]
-        [Produces("application/json", Type = typeof(MachineKeyResponse))]
+        [Produces(MediaTypeNames.Application.Json, Type = typeof(MachineKeyResponse))]
         [ProducesResponseType(typeof(MachineKeyResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [Route("machinekey")]
         [SwaggerResponse(StatusCodes.Status200OK, description: "The machine key was generated successfully.", Type = typeof(MachineKeyResponse))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, description: "The specified decryption or validation algorithm is invalid.", Type = typeof(ErrorResponse))]
         [SwaggerResponseExample(typeof(MachineKeyResponse), typeof(MachineKeyResponseExampleProvider))]
-        public ActionResult<MachineKeyResponse> MachineKey([FromQuery]string decryptionAlgorithm, [FromQuery]string validationAlgorithm)
+        public ActionResult<MachineKeyResponse> MachineKey([FromQuery]string? decryptionAlgorithm, [FromQuery]string? validationAlgorithm)
         {
             if (string.IsNullOrEmpty(decryptionAlgorithm) ||
                 !HashSizes.TryGetValue(decryptionAlgorithm + "-D", out int decryptionKeyLength))
@@ -226,8 +226,8 @@ namespace MartinCostello.Api.Controllers
                     @"<machineKey validationKey=""{0}"" decryptionKey=""{1}"" validation=""{2}"" decryption=""{3}"" />",
                     result.ValidationKey,
                     result.DecryptionKey,
-                    validationAlgorithm,
-                    decryptionAlgorithm);
+                    validationAlgorithm.Split('-', StringSplitOptions.RemoveEmptyEntries)[0].ToUpperInvariant(),
+                    decryptionAlgorithm.Split('-', StringSplitOptions.RemoveEmptyEntries)[0].ToUpperInvariant());
 
                 return result;
             }
@@ -265,31 +265,27 @@ namespace MartinCostello.Api.Controllers
         /// The created instance of <see cref="HashAlgorithm"/> if <paramref name="name"/>
         /// is valid; otherwise <see langword="null"/>.
         /// </returns>
-        private static HashAlgorithm CreateHashAlgorithm(string name)
+        private static HashAlgorithm? CreateHashAlgorithm(string name)
         {
             if (string.Equals(name, HashAlgorithmName.MD5.Name, StringComparison.OrdinalIgnoreCase))
             {
-#pragma warning disable CA5351
-                return MD5.Create();
-#pragma warning restore CA5351
+                return HashAlgorithm.Create("MD5");
             }
             else if (string.Equals(name, HashAlgorithmName.SHA1.Name, StringComparison.OrdinalIgnoreCase))
             {
-#pragma warning disable CA5350
-                return SHA1.Create();
-#pragma warning restore CA5350
+                return HashAlgorithm.Create("SHA1");
             }
             else if (string.Equals(name, HashAlgorithmName.SHA256.Name, StringComparison.OrdinalIgnoreCase))
             {
-                return SHA256.Create();
+                return HashAlgorithm.Create("SHA256");
             }
             else if (string.Equals(name, HashAlgorithmName.SHA384.Name, StringComparison.OrdinalIgnoreCase))
             {
-                return SHA384.Create();
+                return HashAlgorithm.Create("SHA384");
             }
             else if (string.Equals(name, HashAlgorithmName.SHA512.Name, StringComparison.OrdinalIgnoreCase))
             {
-                return SHA512.Create();
+                return HashAlgorithm.Create("SHA512");
             }
             else
             {
@@ -309,7 +305,7 @@ namespace MartinCostello.Api.Controllers
             var error = new ErrorResponse()
             {
                 Message = message,
-                RequestId = HttpContext?.TraceIdentifier,
+                RequestId = HttpContext?.TraceIdentifier ?? string.Empty,
                 StatusCode = StatusCodes.Status400BadRequest,
             };
 

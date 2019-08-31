@@ -45,6 +45,7 @@ if ($installDotNetSdk -eq $true) {
             mkdir $env:DOTNET_INSTALL_DIR | Out-Null
         }
         $installScript = Join-Path $env:DOTNET_INSTALL_DIR "install.ps1"
+        [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor "Tls12"
         Invoke-WebRequest "https://dot.net/v1/dotnet-install.ps1" -OutFile $installScript -UseBasicParsing
         & $installScript -Version "$dotnetVersion" -InstallDir "$env:DOTNET_INSTALL_DIR" -NoPath
     }
@@ -111,10 +112,10 @@ function DotNetPublish {
     param([string]$Project)
     $publishPath = (Join-Path $OutputPath "publish")
     if ($VersionSuffix) {
-        & $dotnet publish $Project --output $publishPath --configuration $Configuration --version-suffix "$VersionSuffix"
+        & $dotnet publish $Project --output $publishPath --configuration $Configuration --runtime win-x64 --self-contained --version-suffix "$VersionSuffix"
     }
     else {
-        & $dotnet publish $Project --output $publishPath --configuration $Configuration
+        & $dotnet publish $Project --output $publishPath --configuration $Configuration --runtime win-x64 --self-contained
     }
     if ($LASTEXITCODE -ne 0) {
         throw "dotnet publish failed with exit code $LASTEXITCODE"

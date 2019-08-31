@@ -5,6 +5,7 @@ namespace MartinCostello.Api
 {
     using System;
     using System.IO;
+    using System.Net.Mime;
     using Extensions;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.CookiePolicy;
@@ -16,9 +17,9 @@ namespace MartinCostello.Api
     using Microsoft.AspNetCore.StaticFiles;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Options;
     using Microsoft.Net.Http.Headers;
-    using Newtonsoft.Json;
     using NodaTime;
     using Options;
 
@@ -36,8 +37,8 @@ namespace MartinCostello.Api
         /// Initializes a new instance of the <see cref="Startup"/> class.
         /// </summary>
         /// <param name="configuration">The <see cref="IConfiguration"/> to use.</param>
-        /// <param name="hostingEnvironment">The <see cref="IHostingEnvironment"/> to use.</param>
-        public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
+        /// <param name="hostingEnvironment">The <see cref="IWebHostEnvironment"/> to use.</param>
+        public Startup(IConfiguration configuration, IWebHostEnvironment hostingEnvironment)
         {
             Configuration = configuration;
             HostingEnvironment = hostingEnvironment;
@@ -51,23 +52,23 @@ namespace MartinCostello.Api
         /// <summary>
         /// Gets the current hosting environment.
         /// </summary>
-        public IHostingEnvironment HostingEnvironment { get; }
+        public IWebHostEnvironment HostingEnvironment { get; }
 
         /// <summary>
         /// Gets or sets the service provider's scope.
         /// </summary>
-        public IServiceScope ServiceScope { get; set; }
+        public IServiceScope? ServiceScope { get; set; }
 
         /// <summary>
         /// Configures the application.
         /// </summary>
         /// <param name="app">The <see cref="IApplicationBuilder"/> to use.</param>
-        /// <param name="applicationLifetime">The <see cref="IApplicationLifetime"/> to use.</param>
+        /// <param name="applicationLifetime">The <see cref="IHostApplicationLifetime"/> to use.</param>
         /// <param name="serviceProvider">The <see cref="IServiceProvider"/> to use.</param>
         /// <param name="options">The <see cref="IOptions{SiteOptions}"/> to use.</param>
         public void Configure(
             IApplicationBuilder app,
-            IApplicationLifetime applicationLifetime,
+            IHostApplicationLifetime applicationLifetime,
             IServiceProvider serviceProvider,
             IOptions<SiteOptions> options)
         {
@@ -100,7 +101,15 @@ namespace MartinCostello.Api
 
             app.UseStaticFiles(CreateStaticFileOptions());
 
-            app.UseMvcWithDefaultRoute();
+            app.UseRouting();
+
+            app.UseCors();
+
+            app.UseEndpoints(
+                (endpoints) =>
+                {
+                    endpoints.MapDefaultControllerRoute();
+                });
 
             app.UseSwagger();
 
@@ -126,15 +135,11 @@ namespace MartinCostello.Api
                     p.HeaderName = "x-anti-forgery";
                 });
 
-            services.AddMemoryCache()
-                    .AddDistributedMemoryCache();
-
             services.AddCors(ConfigureCors);
 
-            services
-                .AddMvc(ConfigureMvc)
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                .AddJsonOptions((p) => services.AddSingleton(ConfigureJsonFormatter(p)));
+            services.AddControllersWithViews(ConfigureMvc)
+                    .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+                    .AddJsonOptions(ConfigureJsonFormatter);
 
             services.AddRouting(
                 (p) =>
@@ -143,49 +148,33 @@ namespace MartinCostello.Api
                     p.LowercaseUrls = true;
                 });
 
-            services.AddHsts(
-                (p) =>
-                {
-                    p.MaxAge = TimeSpan.FromDays(365);
-                    p.IncludeSubDomains = false;
-                    p.Preload = false;
-                });
+            if (!HostingEnvironment.IsDevelopment())
+            {
+                services.AddHsts(
+                    (p) =>
+                    {
+                        p.MaxAge = TimeSpan.FromDays(365);
+                        p.IncludeSubDomains = false;
+                        p.Preload = false;
+                    });
+            }
 
             services.AddSwagger(HostingEnvironment);
             services.AddSingleton<IClock>((_) => SystemClock.Instance);
             services.AddSingleton((p) => p.GetRequiredService<IOptions<SiteOptions>>().Value);
-            services.AddSingleton((_) => ConfigureJsonFormatter(new JsonSerializerSettings()));
         }
 
         /// <summary>
         /// Configures the JSON serializer for MVC.
         /// </summary>
-        /// <param name="options">The <see cref="MvcJsonOptions"/> to configure.</param>
-        /// <returns>
-        /// The <see cref="JsonSerializerSettings"/> to use.
-        /// </returns>
-        private static JsonSerializerSettings ConfigureJsonFormatter(MvcJsonOptions options)
-            => ConfigureJsonFormatter(options.SerializerSettings);
-
-        /// <summary>
-        /// Configures the JSON serializer.
-        /// </summary>
-        /// <param name="settings">The <see cref="JsonSerializerSettings"/> to configure.</param>
-        /// <returns>
-        /// The <see cref="JsonSerializerSettings"/> to use.
-        /// </returns>
-        private static JsonSerializerSettings ConfigureJsonFormatter(JsonSerializerSettings settings)
+        /// <param name="options">The <see cref="JsonOptions"/> to configure.</param>
+        private static void ConfigureJsonFormatter(JsonOptions options)
         {
             // Make JSON easier to read for debugging at the expense of larger payloads
-            settings.Formatting = Formatting.Indented;
+            options.JsonSerializerOptions.WriteIndented = true;
 
-            // Explicitly define behavior when serializing DateTime values
-            settings.DateFormatString = "yyyy'-'MM'-'dd'T'HH':'mm':'ssK";   // Only return DateTimes to a 1 second precision
-
-            settings.ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver();
-            settings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
-
-            return settings;
+            // Opt-out of case insensitivity on property names
+            options.JsonSerializerOptions.PropertyNameCaseInsensitive = false;
         }
 
         /// <summary>
@@ -194,16 +183,16 @@ namespace MartinCostello.Api
         /// <param name="corsOptions">The <see cref="CorsOptions"/> to configure.</param>
         private void ConfigureCors(CorsOptions corsOptions)
         {
-            var siteOptions = ServiceScope.ServiceProvider.GetService<SiteOptions>();
+            var siteOptions = ServiceScope!.ServiceProvider.GetService<SiteOptions>();
 
             corsOptions.AddPolicy(
                 DefaultCorsPolicyName,
                 (builder) =>
                 {
                     builder
-                        .WithExposedHeaders(siteOptions.Api.Cors.ExposedHeaders)
-                        .WithHeaders(siteOptions.Api.Cors.Headers)
-                        .WithMethods(siteOptions.Api.Cors.Methods);
+                        .WithExposedHeaders(siteOptions.Api?.Cors?.ExposedHeaders)
+                        .WithHeaders(siteOptions.Api?.Cors?.Headers)
+                        .WithMethods(siteOptions.Api?.Cors?.Methods);
 
                     if (HostingEnvironment.IsDevelopment())
                     {
@@ -211,7 +200,7 @@ namespace MartinCostello.Api
                     }
                     else
                     {
-                        builder.WithOrigins(siteOptions.Api.Cors.Origins);
+                        builder.WithOrigins(siteOptions.Api?.Cors?.Origins);
                     }
                 });
         }
@@ -266,7 +255,7 @@ namespace MartinCostello.Api
             return new StaticFileOptions()
             {
                 ContentTypeProvider = provider,
-                DefaultContentType = "application/json",
+                DefaultContentType = MediaTypeNames.Application.Json,
                 OnPrepareResponse = SetCacheHeaders,
                 ServeUnknownFileTypes = true,
             };
@@ -282,7 +271,7 @@ namespace MartinCostello.Api
 
             if (context.File.Exists && HostingEnvironment.IsProduction())
             {
-                string extension = Path.GetExtension(context.File.PhysicalPath);
+                string? extension = Path.GetExtension(context.File.PhysicalPath);
 
                 // These files are served with a content hash in the URL so can be cached for longer
                 bool isScriptOrStyle =

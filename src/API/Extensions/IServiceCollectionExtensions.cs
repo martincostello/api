@@ -8,6 +8,7 @@ namespace MartinCostello.Api.Extensions
     using System.Reflection;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
     using Microsoft.OpenApi.Models;
     using Options;
     using Swagger;
@@ -26,7 +27,7 @@ namespace MartinCostello.Api.Extensions
         /// <returns>
         /// The value specified by <paramref name="value"/>.
         /// </returns>
-        public static IServiceCollection AddSwagger(this IServiceCollection value, IHostingEnvironment environment)
+        public static IServiceCollection AddSwagger(this IServiceCollection value, IWebHostEnvironment environment)
         {
             value.AddSwaggerGen((p) =>
                 {
@@ -37,16 +38,16 @@ namespace MartinCostello.Api.Extensions
                     {
                         Contact = new OpenApiContact()
                         {
-                            Name = options.Metadata.Author.Name,
-                            Url = new Uri(options.Metadata.Author.Website),
+                            Name = options.Metadata?.Author?.Name,
+                            Url = new Uri(options.Metadata?.Author?.Website ?? string.Empty),
                         },
-                        Description = options.Metadata.Description,
+                        Description = options.Metadata?.Description,
                         License = new OpenApiLicense()
                         {
-                            Name = options.Api.License.Name,
-                            Url = new Uri(options.Api.License.Url),
+                            Name = options.Api?.License?.Name,
+                            Url = new Uri(options.Api?.License?.Url ?? string.Empty),
                         },
-                        Title = options.Metadata.Name,
+                        Title = options.Metadata?.Name,
                         Version = string.Empty,
                     };
 
@@ -76,14 +77,14 @@ namespace MartinCostello.Api.Extensions
         /// <param name="options">The Swagger options.</param>
         /// <param name="environment">The current hosting environment.</param>
         /// <param name="fileName">The XML comments file name to try to add.</param>
-        private static void AddXmlCommentsIfExists(SwaggerGenOptions options, IHostingEnvironment environment, string fileName)
+        private static void AddXmlCommentsIfExists(SwaggerGenOptions options, IWebHostEnvironment environment, string fileName)
         {
             var modelType = typeof(Startup).GetTypeInfo();
             string applicationPath;
 
             if (environment.IsDevelopment())
             {
-                applicationPath = Path.GetDirectoryName(modelType.Assembly.Location);
+                applicationPath = Path.GetDirectoryName(modelType.Assembly.Location) ?? ".";
             }
             else
             {

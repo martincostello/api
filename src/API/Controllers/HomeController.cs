@@ -15,11 +15,6 @@ namespace MartinCostello.Api.Controllers
     public class HomeController : Controller
     {
         /// <summary>
-        /// An array containing a single forward-slash character. This field is read-only.
-        /// </summary>
-        private static readonly char[] Slash = new[] { '/' };
-
-        /// <summary>
         /// Gets the view for the home page.
         /// </summary>
         /// <returns>
@@ -58,7 +53,7 @@ namespace MartinCostello.Api.Controllers
         private bool IsJsonRequest()
         {
             var mediaType = Request.GetTypedHeaders().Accept?.FirstOrDefault()?.MediaType ?? string.Empty;
-            return mediaType.Equals("application/json", StringComparison.OrdinalIgnoreCase);
+            return mediaType.Equals(System.Net.Mime.MediaTypeNames.Application.Json, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>
@@ -71,8 +66,6 @@ namespace MartinCostello.Api.Controllers
         /// The absolute URI of the specified API resource.
         /// </returns>
         private string ApiUrl(string controller, string action, Uri rootUri)
-        {
-            return new Uri(rootUri, Url.Action(action, controller)).AbsoluteUri.TrimEnd(Slash);
-        }
+            => new Uri(rootUri, Url.Action(action, controller)).AbsoluteUri.TrimEnd('/');
     }
 }

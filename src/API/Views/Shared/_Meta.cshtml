@@ -1,6 +1,6 @@
 @using Microsoft.AspNetCore.Hosting
 @model MetaModel
-@inject IHostingEnvironment Hosting
+@inject IWebHostEnvironment Hosting
 @inject SiteOptions Options
     <title>@Model.Title</title>
     <meta charset="utf-8" />
@@ -38,7 +38,7 @@
     <meta name="twitter:title" content="@Model.Title" />
     <meta name="twitter:url" content="@Model.CanonicalUri" />
     <meta name="application-name" content="@Model.SiteName" />
-    <meta name="google-analytics" content="@(Hosting.IsProduction() ? Options.Analytics.Google : string.Empty)" />
+    <meta name="google-analytics" content="@(Hosting.IsProduction() ? Options.Analytics?.Google : string.Empty)" />
     <meta name="msapplication-config" content="browserconfig.xml" />
     <meta name="msapplication-navbutton-color" content="#0095DA" />
     <meta name="msapplication-starturl" content="/" />

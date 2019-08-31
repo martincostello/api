@@ -11,6 +11,7 @@ namespace MartinCostello.Api.Middleware
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Hosting;
     using Options;
 
     /// <summary>
@@ -52,13 +53,13 @@ namespace MartinCostello.Api.Middleware
         /// <param name="options">The current site configuration options.</param>
         public CustomHttpHeadersMiddleware(
             RequestDelegate next,
-            IHostingEnvironment environment,
+            IWebHostEnvironment environment,
             IConfiguration config,
             SiteOptions options)
         {
             _next = next;
             _isProduction = environment.IsProduction();
-            _environmentName = _isProduction ? null : environment.EnvironmentName;
+            _environmentName = (_isProduction ? null : environment.EnvironmentName) ?? string.Empty;
             _datacenter = config["Azure:Datacenter"] ?? "Local";
             _contentSecurityPolicy = BuildContentSecurityPolicy(_isProduction, options);
         }
@@ -175,7 +176,7 @@ manifest-src 'self';";
         /// <returns>
         /// The origin to use for the URI, if any.
         /// </returns>
-        private static string GetOriginForContentSecurityPolicy(Uri baseUri)
+        private static string GetOriginForContentSecurityPolicy(Uri? baseUri)
         {
             if (baseUri == null)
             {

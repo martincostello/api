@@ -3,7 +3,7 @@
 
 namespace MartinCostello.Api.Models
 {
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// Represents the response from the <c>/tools/machinekey</c> API resource.
@@ -13,19 +13,19 @@ namespace MartinCostello.Api.Models
         /// <summary>
         /// Gets or sets a string containing the decryption key.
         /// </summary>
-        [JsonProperty("decryptionKey")]
-        public string DecryptionKey { get; set; }
+        [JsonPropertyName("decryptionKey")]
+        public string DecryptionKey { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets a string containing the validation key.
         /// </summary>
-        [JsonProperty("validationKey")]
-        public string ValidationKey { get; set; }
+        [JsonPropertyName("validationKey")]
+        public string ValidationKey { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets a string containing the <c>&lt;machineKey&gt;</c> XML configuration element.
         /// </summary>
-        [JsonProperty("machineKeyXml")]
-        public string MachineKeyXml { get; set; }
+        [JsonPropertyName("machineKeyXml")]
+        public string MachineKeyXml { get; set; } = string.Empty;
     }
 }

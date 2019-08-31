@@ -3,8 +3,8 @@
 
 namespace MartinCostello.Api.Models
 {
+    using System.Text.Json.Serialization;
     using MartinCostello.Api.Swagger;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// Represents an error response from an API resource.
@@ -15,19 +15,19 @@ namespace MartinCostello.Api.Models
         /// <summary>
         /// Gets or sets the HTTP status code.
         /// </summary>
-        [JsonProperty("statusCode")]
+        [JsonPropertyName("statusCode")]
         public int StatusCode { get; set; }
 
         /// <summary>
         /// Gets or sets the error message.
         /// </summary>
-        [JsonProperty("message")]
-        public string Message { get; set; }
+        [JsonPropertyName("message")]
+        public string Message { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the request Id.
         /// </summary>
-        [JsonProperty("requestId")]
-        public string RequestId { get; set; }
+        [JsonPropertyName("requestId")]
+        public string RequestId { get; set; } = string.Empty;
     }
 }

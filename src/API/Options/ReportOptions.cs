@@ -13,11 +13,11 @@ namespace MartinCostello.Api.Options
         /// <summary>
         /// Gets or sets the URI to use for <c>Content-Security-Policy</c>.
         /// </summary>
-        public Uri ContentSecurityPolicy { get; set; }
+        public Uri? ContentSecurityPolicy { get; set; }
 
         /// <summary>
         /// Gets or sets the URI to use for <c>Content-Security-Policy-Report-Only</c>.
         /// </summary>
-        public Uri ContentSecurityPolicyReportOnly { get; set; }
+        public Uri? ContentSecurityPolicyReportOnly { get; set; }
     }
 }
