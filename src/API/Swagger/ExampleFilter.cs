@@ -91,8 +91,8 @@ namespace MartinCostello.Api.Swagger
         /// </returns>
         private IOpenApiAny CreateExample(Type exampleType)
         {
-            var provider = (IExampleProvider)Activator.CreateInstance(exampleType);
-            return FormatAsJson(provider);
+            var provider = Activator.CreateInstance(exampleType) as IExampleProvider;
+            return FormatAsJson(provider!);
         }
 
         /// <summary>
@@ -135,7 +135,7 @@ namespace MartinCostello.Api.Swagger
         /// <returns>
         /// <see langword="true"/> if parsed successfully; otherwise <see langword="false"/>.
         /// </returns>
-        private bool TryParse(JsonElement token, out IOpenApiAny any)
+        private bool TryParse(JsonElement token, out IOpenApiAny? any)
         {
             any = null;
 

@@ -11,21 +11,21 @@ namespace MartinCostello.Api.Options
         /// <summary>
         /// Gets or sets the analytics options for the site.
         /// </summary>
-        public AnalyticsOptions Analytics { get; set; }
+        public AnalyticsOptions? Analytics { get; set; }
 
         /// <summary>
         /// Gets or sets the API options for the site.
         /// </summary>
-        public ApiOptions Api { get; set; }
+        public ApiOptions? Api { get; set; }
 
         /// <summary>
         /// Gets or sets the external link options for the site.
         /// </summary>
-        public ExternalLinksOptions ExternalLinks { get; set; }
+        public ExternalLinksOptions? ExternalLinks { get; set; }
 
         /// <summary>
         /// Gets or sets the metadata options for the site.
         /// </summary>
-        public MetadataOptions Metadata { get; set; }
+        public MetadataOptions? Metadata { get; set; }
     }
 }

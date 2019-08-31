@@ -57,7 +57,7 @@ namespace MartinCostello.Api
         /// <summary>
         /// Gets or sets the service provider's scope.
         /// </summary>
-        public IServiceScope ServiceScope { get; set; }
+        public IServiceScope? ServiceScope { get; set; }
 
         /// <summary>
         /// Configures the application.
@@ -183,16 +183,16 @@ namespace MartinCostello.Api
         /// <param name="corsOptions">The <see cref="CorsOptions"/> to configure.</param>
         private void ConfigureCors(CorsOptions corsOptions)
         {
-            var siteOptions = ServiceScope.ServiceProvider.GetService<SiteOptions>();
+            var siteOptions = ServiceScope!.ServiceProvider.GetService<SiteOptions>();
 
             corsOptions.AddPolicy(
                 DefaultCorsPolicyName,
                 (builder) =>
                 {
                     builder
-                        .WithExposedHeaders(siteOptions.Api.Cors.ExposedHeaders)
-                        .WithHeaders(siteOptions.Api.Cors.Headers)
-                        .WithMethods(siteOptions.Api.Cors.Methods);
+                        .WithExposedHeaders(siteOptions.Api?.Cors?.ExposedHeaders)
+                        .WithHeaders(siteOptions.Api?.Cors?.Headers)
+                        .WithMethods(siteOptions.Api?.Cors?.Methods);
 
                     if (HostingEnvironment.IsDevelopment())
                     {
@@ -200,7 +200,7 @@ namespace MartinCostello.Api
                     }
                     else
                     {
-                        builder.WithOrigins(siteOptions.Api.Cors.Origins);
+                        builder.WithOrigins(siteOptions.Api?.Cors?.Origins);
                     }
                 });
         }
@@ -271,7 +271,7 @@ namespace MartinCostello.Api
 
             if (context.File.Exists && HostingEnvironment.IsProduction())
             {
-                string extension = Path.GetExtension(context.File.PhysicalPath);
+                string? extension = Path.GetExtension(context.File.PhysicalPath);
 
                 // These files are served with a content hash in the URL so can be cached for longer
                 bool isScriptOrStyle =

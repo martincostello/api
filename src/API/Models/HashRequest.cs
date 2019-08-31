@@ -16,20 +16,20 @@ namespace MartinCostello.Api.Models
         /// </summary>
         [JsonPropertyName("algorithm")]
         [Required]
-        public string Algorithm { get; set; }
+        public string Algorithm { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the format in which to return the hash.
         /// </summary>
         [JsonPropertyName("format")]
         [Required]
-        public string Format { get; set; }
+        public string Format { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the plaintext value to generate the hash from.
         /// </summary>
         [JsonPropertyName("plaintext")]
         [Required]
-        public string Plaintext { get; set; }
+        public string Plaintext { get; set; } = string.Empty;
     }
 }

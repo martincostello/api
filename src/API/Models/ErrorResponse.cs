@@ -22,12 +22,12 @@ namespace MartinCostello.Api.Models
         /// Gets or sets the error message.
         /// </summary>
         [JsonPropertyName("message")]
-        public string Message { get; set; }
+        public string Message { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the request Id.
         /// </summary>
         [JsonPropertyName("requestId")]
-        public string RequestId { get; set; }
+        public string RequestId { get; set; } = string.Empty;
     }
 }

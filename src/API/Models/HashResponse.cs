@@ -14,6 +14,6 @@ namespace MartinCostello.Api.Models
         /// Gets or sets a string containing the generated hash value in the requested format.
         /// </summary>
         [JsonPropertyName("hash")]
-        public string Hash { get; set; }
+        public string Hash { get; set; } = string.Empty;
     }
 }

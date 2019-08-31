@@ -62,7 +62,7 @@ namespace MartinCostello.Api.Controllers
         [SwaggerResponse(StatusCodes.Status200OK, description: "A GUID was generated successfully.", Type = typeof(GuidResponse))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, description: "The specified format is invalid.", Type = typeof(ErrorResponse))]
         [SwaggerResponseExample(typeof(GuidResponse), typeof(GuidResponseExampleProvider))]
-        public ActionResult<GuidResponse> GenerateGuid([FromQuery]string format = null, [FromQuery]bool? uppercase = null)
+        public ActionResult<GuidResponse> GenerateGuid([FromQuery]string? format = null, [FromQuery]bool? uppercase = null)
         {
             string guid;
 
@@ -186,7 +186,7 @@ namespace MartinCostello.Api.Controllers
         [SwaggerResponse(StatusCodes.Status200OK, description: "The machine key was generated successfully.", Type = typeof(MachineKeyResponse))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, description: "The specified decryption or validation algorithm is invalid.", Type = typeof(ErrorResponse))]
         [SwaggerResponseExample(typeof(MachineKeyResponse), typeof(MachineKeyResponseExampleProvider))]
-        public ActionResult<MachineKeyResponse> MachineKey([FromQuery]string decryptionAlgorithm, [FromQuery]string validationAlgorithm)
+        public ActionResult<MachineKeyResponse> MachineKey([FromQuery]string? decryptionAlgorithm, [FromQuery]string? validationAlgorithm)
         {
             if (string.IsNullOrEmpty(decryptionAlgorithm) ||
                 !HashSizes.TryGetValue(decryptionAlgorithm + "-D", out int decryptionKeyLength))
@@ -265,31 +265,27 @@ namespace MartinCostello.Api.Controllers
         /// The created instance of <see cref="HashAlgorithm"/> if <paramref name="name"/>
         /// is valid; otherwise <see langword="null"/>.
         /// </returns>
-        private static HashAlgorithm CreateHashAlgorithm(string name)
+        private static HashAlgorithm? CreateHashAlgorithm(string name)
         {
             if (string.Equals(name, HashAlgorithmName.MD5.Name, StringComparison.OrdinalIgnoreCase))
             {
-#pragma warning disable CA5351
-                return MD5.Create();
-#pragma warning restore CA5351
+                return HashAlgorithm.Create("MD5");
             }
             else if (string.Equals(name, HashAlgorithmName.SHA1.Name, StringComparison.OrdinalIgnoreCase))
             {
-#pragma warning disable CA5350
-                return SHA1.Create();
-#pragma warning restore CA5350
+                return HashAlgorithm.Create("SHA1");
             }
             else if (string.Equals(name, HashAlgorithmName.SHA256.Name, StringComparison.OrdinalIgnoreCase))
             {
-                return SHA256.Create();
+                return HashAlgorithm.Create("SHA256");
             }
             else if (string.Equals(name, HashAlgorithmName.SHA384.Name, StringComparison.OrdinalIgnoreCase))
             {
-                return SHA384.Create();
+                return HashAlgorithm.Create("SHA384");
             }
             else if (string.Equals(name, HashAlgorithmName.SHA512.Name, StringComparison.OrdinalIgnoreCase))
             {
-                return SHA512.Create();
+                return HashAlgorithm.Create("SHA512");
             }
             else
             {
@@ -309,7 +305,7 @@ namespace MartinCostello.Api.Controllers
             var error = new ErrorResponse()
             {
                 Message = message,
-                RequestId = HttpContext?.TraceIdentifier,
+                RequestId = HttpContext?.TraceIdentifier ?? string.Empty,
                 StatusCode = StatusCodes.Status400BadRequest,
             };
 

@@ -11,16 +11,16 @@ namespace MartinCostello.Api.Options
         /// <summary>
         /// Gets or sets the CORS options for the API.
         /// </summary>
-        public ApiCorsOptions Cors { get; set; }
+        public ApiCorsOptions? Cors { get; set; }
 
         /// <summary>
         /// Gets or sets the documentation options for the API.
         /// </summary>
-        public DocumentationOptions Documentation { get; set; }
+        public DocumentationOptions? Documentation { get; set; }
 
         /// <summary>
         /// Gets or sets the license options for the API.
         /// </summary>
-        public LicenseOptions License { get; set; }
+        public LicenseOptions? License { get; set; }
     }
 }

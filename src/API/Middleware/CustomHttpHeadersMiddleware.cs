@@ -59,7 +59,7 @@ namespace MartinCostello.Api.Middleware
         {
             _next = next;
             _isProduction = environment.IsProduction();
-            _environmentName = _isProduction ? null : environment.EnvironmentName;
+            _environmentName = (_isProduction ? null : environment.EnvironmentName) ?? string.Empty;
             _datacenter = config["Azure:Datacenter"] ?? "Local";
             _contentSecurityPolicy = BuildContentSecurityPolicy(_isProduction, options);
         }
@@ -176,7 +176,7 @@ manifest-src 'self';";
         /// <returns>
         /// The origin to use for the URI, if any.
         /// </returns>
-        private static string GetOriginForContentSecurityPolicy(Uri baseUri)
+        private static string GetOriginForContentSecurityPolicy(Uri? baseUri)
         {
             if (baseUri == null)
             {

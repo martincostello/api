@@ -38,16 +38,16 @@ namespace MartinCostello.Api.Extensions
                     {
                         Contact = new OpenApiContact()
                         {
-                            Name = options.Metadata.Author.Name,
-                            Url = new Uri(options.Metadata.Author.Website),
+                            Name = options.Metadata?.Author?.Name,
+                            Url = new Uri(options.Metadata?.Author?.Website ?? string.Empty),
                         },
-                        Description = options.Metadata.Description,
+                        Description = options.Metadata?.Description,
                         License = new OpenApiLicense()
                         {
-                            Name = options.Api.License.Name,
-                            Url = new Uri(options.Api.License.Url),
+                            Name = options.Api?.License?.Name,
+                            Url = new Uri(options.Api?.License?.Url ?? string.Empty),
                         },
-                        Title = options.Metadata.Name,
+                        Title = options.Metadata?.Name,
                         Version = string.Empty,
                     };
 
@@ -84,7 +84,7 @@ namespace MartinCostello.Api.Extensions
 
             if (environment.IsDevelopment())
             {
-                applicationPath = Path.GetDirectoryName(modelType.Assembly.Location);
+                applicationPath = Path.GetDirectoryName(modelType.Assembly.Location) ?? ".";
             }
             else
             {

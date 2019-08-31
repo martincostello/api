@@ -11,6 +11,6 @@ namespace MartinCostello.Api.Options
         /// <summary>
         /// Gets or sets the relative path to the location of the documentation.
         /// </summary>
-        public string Location { get; set; }
+        public string Location { get; set; } = string.Empty;
     }
 }

@@ -15,7 +15,7 @@ namespace MartinCostello.Api.Models
         /// </summary>
         [JsonPropertyName("guid")]
 #pragma warning disable CA1720
-        public string Guid { get; set; }
+        public string Guid { get; set; } = string.Empty;
 #pragma warning restore CA1720
     }
 }

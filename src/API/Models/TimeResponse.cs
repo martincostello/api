@@ -21,7 +21,7 @@ namespace MartinCostello.Api.Models
         /// Gets or sets the current UTC date and time in RFC1123 format.
         /// </summary>
         [JsonPropertyName("rfc1123")]
-        public string Rfc1123 { get; set; }
+        public string Rfc1123 { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the number of seconds since the UNIX epoch.
@@ -33,12 +33,12 @@ namespace MartinCostello.Api.Models
         /// Gets or sets the current UTC date and time in universal sortable format.
         /// </summary>
         [JsonPropertyName("universalSortable")]
-        public string UniversalSortable { get; set; }
+        public string UniversalSortable { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the current UTC date and time in universal full format.
         /// </summary>
         [JsonPropertyName("universalFull")]
-        public string UniversalFull { get; set; }
+        public string UniversalFull { get; set; } = string.Empty;
     }
 }
