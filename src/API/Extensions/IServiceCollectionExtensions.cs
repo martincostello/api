@@ -51,9 +51,6 @@ namespace MartinCostello.Api.Extensions
                         Version = string.Empty,
                     };
 
-                    p.DescribeAllEnumsAsStrings();
-                    p.DescribeStringEnumsInCamelCase();
-
                     p.EnableAnnotations();
 
                     p.IgnoreObsoleteActions();
