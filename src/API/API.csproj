@@ -3,6 +3,7 @@
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <Description>https://api.martincostello.com/</Description>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <OpenApiGenerateDocuments>false</OpenApiGenerateDocuments>
     <OutputType>Exe</OutputType>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <TargetFramework>netcoreapp3.0</TargetFramework>
@@ -17,9 +18,10 @@
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.7.1" />
     <PackageReference Include="Microsoft.ApplicationInsights.DependencyCollector" Version="2.10.0" />
     <PackageReference Include="Microsoft.AspNetCore.AzureAppServicesIntegration" Version="3.0.0-rc1.19457.4" />
+    <PackageReference Include="Microsoft.Extensions.ApiDescription.Server" Version="3.0.0-rc1.19457.4" />
     <PackageReference Include="NodaTime" Version="2.4.7" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0-rc2" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="5.0.0-rc2" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0-rc3" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="5.0.0-rc3" />
   </ItemGroup>
   <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">
     <Exec Command="npm ci" Condition=" '$(InstallWebPackages)' == 'true' " />
