@@ -122,6 +122,8 @@ namespace MartinCostello.Api
         /// <param name="services">The <see cref="IServiceCollection"/> to use.</param>
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddApplicationInsightsTelemetry(Configuration);
+
             services.AddOptions();
             services.Configure<SiteOptions>(Configuration.GetSection("Site"));
 
