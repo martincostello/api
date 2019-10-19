@@ -47,7 +47,6 @@ namespace MartinCostello.Api
                     (webBuilder) =>
                     {
                         webBuilder.CaptureStartupErrors(true)
-                                  .UseAzureAppServices()
                                   .UseStartup<Startup>();
                     });
         }
