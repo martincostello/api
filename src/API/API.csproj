@@ -19,8 +19,8 @@
     <PackageReference Include="Microsoft.AspNetCore.AzureAppServices.HostingStartup" Version="3.1.0" />
     <PackageReference Include="Microsoft.Extensions.ApiDescription.Server" Version="3.1.0" />
     <PackageReference Include="NodaTime" Version="2.4.7" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0-rc5" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="5.0.0-rc5" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="5.0.0" />
   </ItemGroup>
   <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">
     <Exec Command="npm ci" Condition=" '$(InstallWebPackages)' == 'true' " />
