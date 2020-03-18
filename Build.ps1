@@ -96,7 +96,7 @@ function DotNetTest {
 
         $dotNetTestExitCode = $LASTEXITCODE
 
-        & $dotnet `
+        & $dotnetPath `
             $reportGeneratorPath `
             `"-reports:$coverageOutput`" `
             `"-targetdir:$reportOutput`" `
