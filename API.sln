@@ -44,7 +44,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".azure-pipelines", ".azure-
 		.azure-pipelines\deploy.yml = .azure-pipelines\deploy.yml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API.Benchmarks", "tests\API.Benchmarks\API.Benchmarks.csproj", "{CD554D6A-45C2-42EA-9422-D2FAAD5AEF1F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API.Benchmarks", "tests\API.Benchmarks\API.Benchmarks.csproj", "{CD554D6A-45C2-42EA-9422-D2FAAD5AEF1F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{FBD1DEA8-994C-4AA8-A554-876D6D6B7EAA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{F414510B-EBC9-47DF-B561-EFE83A0CCECF}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\build.yml = .github\workflows\build.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -74,6 +81,8 @@ Global
 		{C9381C1E-F8B9-4A77-B314-6DD8F370AF0E} = {94A0E905-8142-4667-A244-EBFE3CE20B1A}
 		{9188A7AC-CBA0-438E-A636-4BD568D4A561} = {94A0E905-8142-4667-A244-EBFE3CE20B1A}
 		{CD554D6A-45C2-42EA-9422-D2FAAD5AEF1F} = {E50CFF7D-C9F2-44ED-B596-593F614B5ED6}
+		{FBD1DEA8-994C-4AA8-A554-876D6D6B7EAA} = {94A0E905-8142-4667-A244-EBFE3CE20B1A}
+		{F414510B-EBC9-47DF-B561-EFE83A0CCECF} = {FBD1DEA8-994C-4AA8-A554-876D6D6B7EAA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DBF2FAD3-39E4-4077-AE0B-5C0AE27673B8}
