@@ -49,7 +49,7 @@ phases:
           name: InstallNode
           displayName: Update node
       - ${{ if eq(parameters.agentOS, 'Windows') }}:
-        - powershell: |
+        - pwsh: |
             .\Build.ps1 -OutputPath $(Build.StagingDirectory) $(BuildArgs)
           name: BuildAndTest
           displayName: Build and test
