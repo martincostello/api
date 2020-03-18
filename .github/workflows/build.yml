@@ -23,4 +23,5 @@ jobs:
         dotnet-version: 3.1.200
 
     - name: Build, Test and Publish
+      shell: pwsh
       run: ./Build.ps1
