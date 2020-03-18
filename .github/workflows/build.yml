@@ -28,7 +28,10 @@ jobs:
       env:
         DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
         NUGET_XMLDOC_MODE: skip
-    - run: codecov_os="$( cut -d '-' -f 1 <<< "${{ matrix.os }}" )"
+    - run: |
+        codecov_os="$( cut -d '-' -f 1 <<< "$build_os" )"
+      env:
+        build_os: ${{ matrix.os }}
     - uses: codecov/codecov-action@v1
       name: Upload coverage to Codecov
       with:
