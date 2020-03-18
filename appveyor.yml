@@ -15,7 +15,7 @@ cache:
   - '%APPDATA%\npm-cache'
 
 install:
-  - ps: iex "& { $(irm https://aka.ms/install-powershell.ps1) } -UseMSI"
+  - ps: dotnet tool install --global PowerShell
   - pwsh: npm install --global npm
 
 build_script:
