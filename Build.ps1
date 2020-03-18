@@ -71,7 +71,16 @@ function DotNetTest {
     }
     else {
 
-        $nugetPath = Join-Path ($env:USERPROFILE ?? "~") ".nuget\packages"
+        $packageRoot = $null
+
+        if ($null -ne $env:USERPROFILE) {
+            $packageRoot = $env:USERPROFILE
+        }
+        else {
+            $packageRoot = "~"
+        }
+
+        $nugetPath = Join-Path $packageRoot ".nuget\packages"
         $propsFile = Join-Path $solutionPath "Directory.Build.props"
 
         $reportGeneratorVersion = (Select-Xml -Path $propsFile -XPath "//PackageReference[@Include='ReportGenerator']/@Version").Node.'#text'
