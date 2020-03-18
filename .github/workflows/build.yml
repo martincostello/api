@@ -32,4 +32,4 @@ jobs:
       name: Upload coverage to Codecov
       with:
         file: ./artifacts/coverage.cobertura.xml
-        flags: ${{ process.platform }}
+        flags: ${{ matrix.os }}
