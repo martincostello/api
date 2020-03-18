@@ -71,13 +71,6 @@ function DotNetTest {
     }
     else {
 
-        if ($installDotNetSdk -eq $true) {
-            $dotnetPath = $dotnet
-        }
-        else {
-            $dotnetPath = (Get-Command "dotnet").Source
-        }
-
         $nugetPath = Join-Path ($env:USERPROFILE ?? "~") ".nuget\packages"
         $propsFile = Join-Path $solutionPath "Directory.Build.props"
 
@@ -88,15 +81,15 @@ function DotNetTest {
         $reportOutput = Join-Path $OutputPath "coverage"
 
         if ($null -ne $env:TF_BUILD) {
-            & $dotnetPath test $Project --output $OutputPath --logger trx -- RunConfiguration.TestSessionTimeout=1200000
+            & $dotnet test $Project --output $OutputPath --logger trx -- RunConfiguration.TestSessionTimeout=1200000
         }
         else {
-            & $dotnetPath test $Project --output $OutputPath -- RunConfiguration.TestSessionTimeout=1200000
+            & $dotnet test $Project --output $OutputPath -- RunConfiguration.TestSessionTimeout=1200000
         }
 
         $dotNetTestExitCode = $LASTEXITCODE
 
-        & $dotnetPath `
+        & $dotnet `
             $reportGeneratorPath `
             `"-reports:$coverageOutput`" `
             `"-targetdir:$reportOutput`" `
