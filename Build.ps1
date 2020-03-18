@@ -75,7 +75,7 @@ function DotNetTest {
         $propsFile = Join-Path $solutionPath "Directory.Build.props"
 
         $reportGeneratorVersion = (Select-Xml -Path $propsFile -XPath "//PackageReference[@Include='ReportGenerator']/@Version").Node.'#text'
-        $reportGeneratorPath = Join-Path $nugetPath "ReportGenerator\$reportGeneratorVersion\tools\netcoreapp3.0\ReportGenerator.exe"
+        $reportGeneratorPath = Join-Path $nugetPath "reportgenerator\$reportGeneratorVersion\tools\netcoreapp3.0\ReportGenerator.exe"
 
         $coverageOutput = Join-Path $OutputPath "coverage.opencover.xml"
         $reportOutput = Join-Path $OutputPath "coverage"
