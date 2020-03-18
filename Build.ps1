@@ -78,7 +78,7 @@ function DotNetTest {
             $dotnetPath = (Get-Command "dotnet").Source
         }
 
-        $nugetPath = Join-Path $env:USERPROFILE ".nuget\packages"
+        $nugetPath = Join-Path ($env:USERPROFILE ?? "~") ".nuget\packages"
         $propsFile = Join-Path $solutionPath "Directory.Build.props"
 
         $reportGeneratorVersion = (Select-Xml -Path $propsFile -XPath "//PackageReference[@Include='ReportGenerator']/@Version").Node.'#text'
