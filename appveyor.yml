@@ -16,7 +16,7 @@ cache:
 
 install:
   - ps: choco install powershell-core -y
-  - pwsh: npm install --global npm
+  - ps: npm install --global npm
 
 build_script:
   - pwsh: .\Build.ps1
