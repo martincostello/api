@@ -15,7 +15,7 @@ cache:
   - '%APPDATA%\npm-cache'
 
 install:
-  - ps: dotnet tool install --global PowerShell
+  - ps: choco install powershell-core -y
   - pwsh: npm install --global npm
 
 build_script:
