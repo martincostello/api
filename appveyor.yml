@@ -15,7 +15,6 @@ cache:
   - '%APPDATA%\npm-cache'
 
 install:
-  - ps: choco install powershell-core -y
   - ps: npm install --global npm
 
 build_script:
