@@ -14,21 +14,33 @@ jobs:
     strategy:
       matrix:
         os: [ macos-latest, ubuntu-latest, windows-latest ]
+        include:
+          - os: macos-latest
+            codecov_os: macos
+          - os: ubuntu-latest
+            codecov_os: ubuntu
+          - os: windows-latest
+            codecov_os: windows
 
     steps:
+
     - name: Checkout code
       uses: actions/checkout@v2
+
     - name: Setup .NET Core SDK
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.200
+
     - name: Build, Test and Publish
       shell: pwsh
       run: ./Build.ps1
       env:
         DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
         NUGET_XMLDOC_MODE: skip
+
     - uses: codecov/codecov-action@v1
       name: Upload coverage to Codecov
       with:
         file: ./artifacts/coverage.cobertura.xml
+        flags: ${{ matrix.codecov_os }}
