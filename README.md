@@ -1,9 +1,6 @@
 # Martin Costello's API
 
-| | Linux/macOS | Windows | Linux/macOS/Windows |
-|:-:|:-:|:-:|:-:|
-| **Build Status** | [![Build status](https://img.shields.io/travis/martincostello/api/master.svg)](https://travis-ci.org/martincostello/api) | [![Build status](https://img.shields.io/appveyor/ci/martincostello/api/master.svg)](https://ci.appveyor.com/project/martincostello/api) [![codecov](https://codecov.io/gh/martincostello/api/branch/master/graph/badge.svg)](https://codecov.io/gh/martincostello/api) | [![Azure Pipelines build status](https://dev.azure.com/martincostello/api/_apis/build/status/CI)](https://dev.azure.com/martincostello/api/_build/latest?definitionId=65) |
-| **Build History** | [![Build history](https://buildstats.info/travisci/chart/martincostello/api?branch=master&includeBuildsFromPullRequest=false)](https://travis-ci.org/martincostello/api) |  [![Build history](https://buildstats.info/appveyor/chart/martincostello/api?branch=master&includeBuildsFromPullRequest=false)](https://ci.appveyor.com/project/martincostello/api) | [![Build history](https://buildstats.info/azurepipelines/chart/martincostello/api/65?branch=master&includeBuildsFromPullRequest=false)](https://dev.azure.com/martincostello/api/_build?definitionId=65) |
+![Build](https://github.com/martincostello/api/workflows/Build/badge.svg)
 
 ## Overview
 
@@ -23,16 +20,8 @@ This project is licensed under the [MIT](https://github.com/martincostello/api/b
 
 ## Building and Testing
 
-To build and test the website run one of the following commands:
-
-**Linux/macOS**
-
-```sh
-./build.sh
-```
-
-**Windows**
+To build and test the website run the following command using PowerShell Core:
 
 ```powershell
-.\Build.ps1
+.\build.ps1
 ```
