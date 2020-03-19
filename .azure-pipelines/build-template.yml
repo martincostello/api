@@ -35,12 +35,6 @@ phases:
         displayName: 'Setup .NET Core SDK'
         inputs:
           useGlobalJson: true
-      - ${{ if eq(parameters.agentOS, 'Linux') }}:
-        - script: |
-            sudo apt-get update
-            sudo apt-get install -y --no-install-recommends gettext libcurl4-openssl-dev libicu-dev libssl-dev libunwind8
-          name: InstallDotNetCoreDeps
-          displayName: Install .NET Core pre-requisites
       - ${{ if ne(parameters.agentOS, 'Linux') }}:
         - script: |
             npm install --global npm
