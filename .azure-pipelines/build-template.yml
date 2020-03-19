@@ -37,7 +37,6 @@ phases:
             sudo apt-get install -y --no-install-recommends gettext libcurl4-openssl-dev libicu-dev libssl-dev libunwind8
           name: InstallDotNetCoreDeps
           displayName: Install .NET Core pre-requisites
-      - ${{ if ne(parameters.agentOS, 'Linux') }}:
         - script: |
             npm install --global npm
           name: UpdateNpm
@@ -48,13 +47,13 @@ phases:
             versionSpec: '8.x'
           name: InstallNode
           displayName: Update node
-        - pwsh: |
-            ./build.ps1 -OutputPath $(Build.StagingDirectory) $(BuildArgs)
-          name: BuildAndTest
-          displayName: Build and test
-          env:
-            DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-            NUGET_XMLDOC_MODE: skip
+      - pwsh: |
+          ./build.ps1 -OutputPath $(Build.StagingDirectory) $(BuildArgs)
+        name: BuildAndTest
+        displayName: Build and test
+        env:
+          DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+          NUGET_XMLDOC_MODE: skip
       - ${{ if eq(parameters.agentOS, 'Windows') }}:
         - task: ArchiveFiles@2
           name: Package
