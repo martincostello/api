@@ -48,17 +48,8 @@ phases:
             versionSpec: '8.x'
           name: InstallNode
           displayName: Update node
-      - ${{ if eq(parameters.agentOS, 'Windows') }}:
         - pwsh: |
-            .\Build.ps1 -OutputPath $(Build.StagingDirectory) $(BuildArgs)
-          name: BuildAndTest
-          displayName: Build and test
-          env:
-            DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-            NUGET_XMLDOC_MODE: skip
-      - ${{ if ne(parameters.agentOS, 'Windows') }}:
-        - script: |
-            ./build.sh --output $(Build.StagingDirectory) $(BuildArgs)
+            ./build.ps1 -OutputPath $(Build.StagingDirectory) $(BuildArgs)
           name: BuildAndTest
           displayName: Build and test
           env:

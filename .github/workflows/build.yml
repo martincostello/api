@@ -34,7 +34,7 @@ jobs:
 
     - name: Build, Test and Publish
       shell: pwsh
-      run: ./Build.ps1
+      run: ./build.ps1
       env:
         DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
         NUGET_XMLDOC_MODE: skip
