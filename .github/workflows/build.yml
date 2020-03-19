@@ -18,7 +18,7 @@ jobs:
           - os: macos-latest
             codecov_os: macos
           - os: ubuntu-latest
-            codecov_os: ubuntu
+            codecov_os: linux
           - os: windows-latest
             codecov_os: windows
 
