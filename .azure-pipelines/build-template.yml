@@ -41,6 +41,7 @@ phases:
             sudo apt-get install -y --no-install-recommends gettext libcurl4-openssl-dev libicu-dev libssl-dev libunwind8
           name: InstallDotNetCoreDeps
           displayName: Install .NET Core pre-requisites
+      - ${{ if ne(parameters.agentOS, 'Linux') }}:
         - script: |
             npm install --global npm
           name: UpdateNpm
