@@ -16,9 +16,9 @@ namespace MartinCostello.Api.Benchmarks
     {
         private const string ServerUrl = "http://localhost:5002";
 
-        private readonly IHost _host;
         private readonly HttpClient _client;
         private bool _disposed;
+        private IHost? _host;
 
         public ApiBenchmarks()
         {
@@ -41,7 +41,23 @@ namespace MartinCostello.Api.Benchmarks
 
         [GlobalSetup]
         public async Task StartServer()
-            => await _host.StartAsync();
+        {
+            if (_host != null)
+            {
+                await _host.StartAsync();
+            }
+        }
+
+        [GlobalCleanup]
+        public async Task StopServer()
+        {
+            if (_host != null)
+            {
+                await _host.StopAsync();
+                _host.Dispose();
+                _host = null;
+            }
+        }
 
         [Benchmark]
         public async Task<byte[]> Hash()
@@ -67,12 +83,7 @@ namespace MartinCostello.Api.Benchmarks
             if (!_disposed)
             {
                 _client?.Dispose();
-
-                if (_host != null)
-                {
-                    _host.StopAsync();
-                    _host.Dispose();
-                }
+                _host?.Dispose();
             }
 
             _disposed = true;

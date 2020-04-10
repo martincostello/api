@@ -32,6 +32,8 @@ namespace MartinCostello.Api.Benchmarks
                 using var benchmark = new ApiBenchmarks();
                 await benchmark.StartServer();
                 await benchmark.Time();
+
+                await benchmark.StopServer();
             }
             else
             {
