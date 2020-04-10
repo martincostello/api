@@ -67,7 +67,12 @@ namespace MartinCostello.Api.Benchmarks
             if (!_disposed)
             {
                 _client?.Dispose();
-                _host?.Dispose();
+
+                if (_host != null)
+                {
+                    _host.StopAsync();
+                    _host.Dispose();
+                }
             }
 
             _disposed = true;
