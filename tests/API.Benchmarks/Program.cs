@@ -3,6 +3,8 @@
 
 namespace MartinCostello.Api.Benchmarks
 {
+    using System;
+    using System.Threading.Tasks;
     using BenchmarkDotNet.Running;
 
     /// <summary>
@@ -14,13 +16,26 @@ namespace MartinCostello.Api.Benchmarks
         /// The main entry-point to the application.
         /// </summary>
         /// <param name="args">The arguments to the application.</param>
-        internal static void Main(string[] args)
+        /// <returns>
+        /// A <see cref="Task"/> representing the asynchronous invocation of the application.
+        /// </returns>
+        internal static async Task Main(string[] args)
         {
             var switcher = BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly);
 
             if (args?.Length == 0)
             {
                 switcher.RunAll();
+            }
+            else if (args?.Length == 1 && string.Equals(args[0], "--test", StringComparison.OrdinalIgnoreCase))
+            {
+                using var benchmark = new ApiBenchmarks();
+                await benchmark.StartServer();
+
+                await benchmark.Hash();
+                await benchmark.Time();
+
+                await benchmark.StopServer();
             }
             else
             {

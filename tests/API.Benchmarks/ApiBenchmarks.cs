@@ -14,26 +14,23 @@ namespace MartinCostello.Api.Benchmarks
     [MemoryDiagnoser]
     public class ApiBenchmarks : IDisposable
     {
-        private readonly IHost _host;
+        private const string ServerUrl = "http://localhost:5002";
+
         private readonly HttpClient _client;
         private bool _disposed;
+        private IHost? _host;
 
         public ApiBenchmarks()
         {
-            _host = Host.CreateDefaultBuilder()
+            _host = Api.Program.CreateHostBuilder(Array.Empty<string>())
                 .UseEnvironment("Development")
-                .ConfigureWebHost(
-                    (builder) =>
-                    {
-                        builder.UseStartup<Startup>()
-                               .UseUrls("http://localhost:5002");
-                    })
                 .ConfigureLogging((builder) => builder.ClearProviders().SetMinimumLevel(LogLevel.Error))
+                .ConfigureWebHostDefaults((builder) => builder.UseUrls(ServerUrl))
                 .Build();
 
             _client = new HttpClient()
             {
-                BaseAddress = new Uri("http://localhost:5002", UriKind.Absolute),
+                BaseAddress = new Uri(ServerUrl, UriKind.Absolute),
             };
         }
 
@@ -44,7 +41,23 @@ namespace MartinCostello.Api.Benchmarks
 
         [GlobalSetup]
         public async Task StartServer()
-            => await _host.StartAsync();
+        {
+            if (_host != null)
+            {
+                await _host.StartAsync();
+            }
+        }
+
+        [GlobalCleanup]
+        public async Task StopServer()
+        {
+            if (_host != null)
+            {
+                await _host.StopAsync();
+                _host.Dispose();
+                _host = null;
+            }
+        }
 
         [Benchmark]
         public async Task<byte[]> Hash()

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "API.Benchmarks": {
+      "commandName": "Project",
+      "commandLineArgs": "--test"
+    }
+  }
+}
