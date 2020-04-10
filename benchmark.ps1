@@ -1,3 +1,4 @@
+#! /usr/bin/pwsh
 param(
     [Parameter(Mandatory = $false)][string] $Configuration = "Release",
     [Parameter(Mandatory = $false)][string] $Framework = "netcoreapp3.1"
@@ -12,7 +13,7 @@ $dotnetVersion = (Get-Content $sdkFile | Out-String | ConvertFrom-Json).sdk.vers
 
 $installDotNetSdk = $false;
 
-if (($null -eq (Get-Command "dotnet.exe" -ErrorAction SilentlyContinue)) -and ($null -eq (Get-Command "dotnet" -ErrorAction SilentlyContinue))) {
+if (($null -eq (Get-Command "dotnet" -ErrorAction SilentlyContinue)) -and ($null -eq (Get-Command "dotnet.exe" -ErrorAction SilentlyContinue))) {
     Write-Host "The .NET Core SDK is not installed."
     $installDotNetSdk = $true
 }
@@ -39,15 +40,16 @@ if ($installDotNetSdk -eq $true) {
             mkdir $env:DOTNET_INSTALL_DIR | Out-Null
         }
         $installScript = Join-Path $env:DOTNET_INSTALL_DIR "install.ps1"
+        [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor "Tls12"
         Invoke-WebRequest "https://dot.net/v1/dotnet-install.ps1" -OutFile $installScript -UseBasicParsing
         & $installScript -Version "$dotnetVersion" -InstallDir "$env:DOTNET_INSTALL_DIR" -NoPath
     }
 
     $env:PATH = "$env:DOTNET_INSTALL_DIR;$env:PATH"
-    $dotnet = Join-Path "$env:DOTNET_INSTALL_DIR" "dotnet.exe"
+    $dotnet = Join-Path "$env:DOTNET_INSTALL_DIR" "dotnet"
 }
 else {
-    $dotnet = "dotnet.exe"
+    $dotnet = "dotnet"
 }
 
 $benchmarks = (Join-Path $solutionPath "tests\API.Benchmarks\API.Benchmarks.csproj")
