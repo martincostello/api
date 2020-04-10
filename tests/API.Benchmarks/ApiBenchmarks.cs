@@ -14,26 +14,23 @@ namespace MartinCostello.Api.Benchmarks
     [MemoryDiagnoser]
     public class ApiBenchmarks : IDisposable
     {
+        private const string ServerUrl = "http://localhost:5002";
+
         private readonly IHost _host;
         private readonly HttpClient _client;
         private bool _disposed;
 
         public ApiBenchmarks()
         {
-            _host = Host.CreateDefaultBuilder()
+            _host = Api.Program.CreateHostBuilder(Array.Empty<string>())
                 .UseEnvironment("Development")
-                .ConfigureWebHost(
-                    (builder) =>
-                    {
-                        builder.UseStartup<Startup>()
-                               .UseUrls("http://localhost:5002");
-                    })
                 .ConfigureLogging((builder) => builder.ClearProviders().SetMinimumLevel(LogLevel.Error))
+                .ConfigureWebHostDefaults((builder) => builder.UseUrls(ServerUrl))
                 .Build();
 
             _client = new HttpClient()
             {
-                BaseAddress = new Uri("http://localhost:5002", UriKind.Absolute),
+                BaseAddress = new Uri(ServerUrl, UriKind.Absolute),
             };
         }
 
