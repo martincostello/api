@@ -7,10 +7,12 @@ namespace MartinCostello.Api.Benchmarks
     using System.Net.Http;
     using System.Threading.Tasks;
     using BenchmarkDotNet.Attributes;
+    using BenchmarkDotNet.Diagnosers;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
 
+    [EventPipeProfiler(EventPipeProfile.CpuSampling)]
     [MemoryDiagnoser]
     public class ApiBenchmarks : IDisposable
     {
