@@ -192,9 +192,9 @@ namespace MartinCostello.Api
                 (builder) =>
                 {
                     builder
-                        .WithExposedHeaders(siteOptions.Api?.Cors?.ExposedHeaders)
-                        .WithHeaders(siteOptions.Api?.Cors?.Headers)
-                        .WithMethods(siteOptions.Api?.Cors?.Methods);
+                        .WithExposedHeaders(siteOptions.Api?.Cors?.ExposedHeaders ?? Array.Empty<string>())
+                        .WithHeaders(siteOptions.Api?.Cors?.Headers ?? Array.Empty<string>())
+                        .WithMethods(siteOptions.Api?.Cors?.Methods ?? Array.Empty<string>());
 
                     if (HostingEnvironment.IsDevelopment())
                     {
@@ -202,7 +202,7 @@ namespace MartinCostello.Api
                     }
                     else
                     {
-                        builder.WithOrigins(siteOptions.Api?.Cors?.Origins);
+                        builder.WithOrigins(siteOptions.Api?.Cors?.Origins ?? Array.Empty<string>());
                     }
                 });
         }
