@@ -12,7 +12,7 @@
             @GitMetadata.Branch
         </a>
         by
-        <a href="@Options.Metadata?.Repository/runs/@GitMetadata.DeployId" title="View deployment on GitHub">
+        <a href="@Options.Metadata?.Repository/actions/runs/@GitMetadata.DeployId" title="View deployment on GitHub">
             GitHub
         </a>
         <span id="build-date" data-format="YYYY-MM-DD HH:mm Z" data-timestamp="@GitMetadata.Timestamp.ToString("u", CultureInfo.InvariantCulture)"></span>
