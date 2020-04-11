@@ -6,7 +6,7 @@ on:
 
 jobs:
   deploy:
-    name: apimartincostello-uksouth
+    name: api.martincostello.com
     runs-on: windows-latest
 
     steps:
