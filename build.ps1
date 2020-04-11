@@ -61,41 +61,25 @@ else {
 function DotNetTest {
     param([string]$Project)
 
-    if ($DisableCodeCoverage -eq $true) {
-        if ($null -ne $env:TF_BUILD) {
-            & $dotnet test $Project --output $OutputPath --logger trx
-        }
-        else {
-            & $dotnet test $Project --output $OutputPath
-        }
-    }
-    else {
+    $nugetPath = Join-Path ($env:USERPROFILE ?? "~") ".nuget\packages"
+    $propsFile = Join-Path $solutionPath "Directory.Build.props"
 
-        $nugetPath = Join-Path ($env:USERPROFILE ?? "~") ".nuget\packages"
-        $propsFile = Join-Path $solutionPath "Directory.Build.props"
+    $reportGeneratorVersion = (Select-Xml -Path $propsFile -XPath "//PackageReference[@Include='ReportGenerator']/@Version").Node.'#text'
+    $reportGeneratorPath = Join-Path $nugetPath "reportgenerator\$reportGeneratorVersion\tools\netcoreapp3.0\ReportGenerator.dll"
 
-        $reportGeneratorVersion = (Select-Xml -Path $propsFile -XPath "//PackageReference[@Include='ReportGenerator']/@Version").Node.'#text'
-        $reportGeneratorPath = Join-Path $nugetPath "reportgenerator\$reportGeneratorVersion\tools\netcoreapp3.0\ReportGenerator.dll"
+    $coverageOutput = Join-Path $OutputPath "coverage.opencover.xml"
+    $reportOutput = Join-Path $OutputPath "coverage"
 
-        $coverageOutput = Join-Path $OutputPath "coverage.opencover.xml"
-        $reportOutput = Join-Path $OutputPath "coverage"
+    & $dotnet test $Project --output $OutputPath -- RunConfiguration.TestSessionTimeout=1200000
 
-        if ($null -ne $env:TF_BUILD) {
-            & $dotnet test $Project --output $OutputPath --logger trx -- RunConfiguration.TestSessionTimeout=1200000
-        }
-        else {
-            & $dotnet test $Project --output $OutputPath -- RunConfiguration.TestSessionTimeout=1200000
-        }
+    $dotNetTestExitCode = $LASTEXITCODE
 
-        $dotNetTestExitCode = $LASTEXITCODE
-
-        & $dotnet `
-            $reportGeneratorPath `
-            `"-reports:$coverageOutput`" `
-            `"-targetdir:$reportOutput`" `
-            -reporttypes:HTML `
-            -verbosity:Warning
-    }
+    & $dotnet `
+        $reportGeneratorPath `
+        `"-reports:$coverageOutput`" `
+        `"-targetdir:$reportOutput`" `
+        -reporttypes:HTML `
+        -verbosity:Warning
 
     if ($dotNetTestExitCode -ne 0) {
         throw "dotnet test failed with exit code $dotNetTestExitCode"
