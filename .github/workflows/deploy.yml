@@ -21,7 +21,7 @@ jobs:
 
     - name: Build and Publish
       shell: pwsh
-      run: ./build.ps1 -OutputPath './artifacts/api'
+      run: ./build.ps1 -SkipTests -OutputPath './artifacts'
       env:
         DOTNET_CLI_TELEMETRY_OPTOUT: true
         DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
@@ -31,5 +31,5 @@ jobs:
       uses: azure/webapps-deploy@v2
       with: 
         app-name: apimartincostello-uksouth
-        package: './artifacts/api'
+        package: './artifacts/publish'
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE  }}
