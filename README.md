@@ -2,6 +2,8 @@
 
 [![Build status](https://github.com/martincostello/api/workflows/Build/badge.svg?branch=master&event=push)](https://github.com/martincostello/api/actions?query=workflow%3ABuild+branch%3Amaster+event%3Apush)
 
+[![Deploy status](https://github.com/martincostello/api/workflows/deploy/badge.svg?branch=deploy&event=push)](https://github.com/martincostello/api/actions?query=workflow%3Adeploy+branch%3Adeploy+event%3Apush)
+
 ## Overview
 
 Source code for building and deploying [api.martincostello.com](https://api.martincostello.com/).
