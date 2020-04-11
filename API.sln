@@ -34,13 +34,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".vscode", ".vscode", "{C938
 		.vscode\tasks.json = .vscode\tasks.json
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".azure-pipelines", ".azure-pipelines", "{9188A7AC-CBA0-438E-A636-4BD568D4A561}"
-	ProjectSection(SolutionItems) = preProject
-		.azure-pipelines\build-template.yml = .azure-pipelines\build-template.yml
-		.azure-pipelines\build.yml = .azure-pipelines\build.yml
-		.azure-pipelines\deploy.yml = .azure-pipelines\deploy.yml
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API.Benchmarks", "tests\API.Benchmarks\API.Benchmarks.csproj", "{CD554D6A-45C2-42EA-9422-D2FAAD5AEF1F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{FBD1DEA8-994C-4AA8-A554-876D6D6B7EAA}"
@@ -77,7 +70,6 @@ Global
 		{1CCAD84E-2E62-43AB-8158-45DD93249875} = {FBF500AA-F3F9-457B-818B-05D53AE9C901}
 		{67917CF1-BCF9-4808-8965-FD1A7334C3BC} = {E50CFF7D-C9F2-44ED-B596-593F614B5ED6}
 		{C9381C1E-F8B9-4A77-B314-6DD8F370AF0E} = {94A0E905-8142-4667-A244-EBFE3CE20B1A}
-		{9188A7AC-CBA0-438E-A636-4BD568D4A561} = {94A0E905-8142-4667-A244-EBFE3CE20B1A}
 		{CD554D6A-45C2-42EA-9422-D2FAAD5AEF1F} = {E50CFF7D-C9F2-44ED-B596-593F614B5ED6}
 		{FBD1DEA8-994C-4AA8-A554-876D6D6B7EAA} = {94A0E905-8142-4667-A244-EBFE3CE20B1A}
 		{F414510B-EBC9-47DF-B561-EFE83A0CCECF} = {FBD1DEA8-994C-4AA8-A554-876D6D6B7EAA}
