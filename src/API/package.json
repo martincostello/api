@@ -27,7 +27,7 @@
     "karma-jasmine": "3.2.0",
     "lodash": ">=4.17.15",
     "merge": ">=1.2.1",
-    "mime": "2.4.5",
+    "mime": "2.4.6",
     "natives": "^1.1.6",
     "popper.js": "^1.16.1",
     "puppeteer": "3.1.0",
