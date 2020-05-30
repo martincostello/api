@@ -3,10 +3,12 @@
 
 namespace MartinCostello.Api.Integration
 {
+    using System;
     using System.Net;
     using System.Net.Http;
     using System.Net.Http.Headers;
     using System.Net.Mime;
+    using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc.Testing;
     using Shouldly;
@@ -147,6 +149,20 @@ namespace MartinCostello.Api.Integration
 
             // Assert
             response.StatusCode.ShouldBe(expected, $"Incorrect status code for {requestUri}");
+        }
+
+        [Fact]
+        public async Task Request_Times_Out()
+        {
+            // Arrange
+            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(1));
+            using var client = Fixture.CreateClient();
+
+            // Act
+            using var response = await client.GetAsync("/time/forever", cts.Token);
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.RequestTimeout);
         }
     }
 }

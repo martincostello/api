@@ -14,6 +14,7 @@ namespace MartinCostello.Api
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.HttpOverrides;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
     using Microsoft.AspNetCore.StaticFiles;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -157,6 +158,20 @@ namespace MartinCostello.Api
 
             services.AddSwagger(HostingEnvironment);
             services.AddSingleton<IClock>((_) => SystemClock.Instance);
+
+            services.AddSingleton<CustomCancellationTokenModelBinderProvider>();
+            services.AddScoped<RequestDeadline>();
+            services.PostConfigureAll<MvcOptions>((options) =>
+            {
+                for (int i = 0; i < options.ModelBinderProviders.Count; i++)
+                {
+                    if (options.ModelBinderProviders[i] is CancellationTokenModelBinderProvider)
+                    {
+                        options.ModelBinderProviders[i] = ServiceProvider!.GetRequiredService<CustomCancellationTokenModelBinderProvider>();
+                        break;
+                    }
+                }
+            });
         }
 
         /// <summary>

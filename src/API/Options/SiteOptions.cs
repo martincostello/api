@@ -3,6 +3,8 @@
 
 namespace MartinCostello.Api.Options
 {
+    using System;
+
     /// <summary>
     /// A class representing the site configuration. This class cannot be inherited.
     /// </summary>
@@ -27,5 +29,10 @@ namespace MartinCostello.Api.Options
         /// Gets or sets the metadata options for the site.
         /// </summary>
         public MetadataOptions? Metadata { get; set; }
+
+        /// <summary>
+        /// Gets or sets the global HTTP request timeout.
+        /// </summary>
+        public TimeSpan RequestTimeout { get; set; } = TimeSpan.FromSeconds(0.5);
     }
 }

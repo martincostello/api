@@ -3,8 +3,11 @@
 
 namespace MartinCostello.Api.Controllers
 {
+    using System;
     using System.Globalization;
     using System.Net.Mime;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Microsoft.AspNetCore.Cors;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
@@ -60,6 +63,30 @@ namespace MartinCostello.Api.Controllers
                 UniversalSortable = now.UtcDateTime.ToString("u", formatProvider),
                 Unix = now.ToUnixTimeSeconds(),
             };
+        }
+
+        /// <summary>
+        /// An operation that never completes.
+        /// </summary>
+        /// <param name="cancellationToken">The optional cancellation token to use.</param>
+        /// <returns>
+        /// An HTTP 408 response.
+        /// </returns>
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [HttpGet]
+        [Route("forever")]
+        public async Task<IActionResult> Forever(CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                await Task.Delay(Timeout.Infinite, cancellationToken);
+            }
+            catch (OperationCanceledException ex) when (ex.CancellationToken == cancellationToken)
+            {
+                return StatusCode(StatusCodes.Status408RequestTimeout);
+            }
+
+            return Ok();
         }
     }
 }
