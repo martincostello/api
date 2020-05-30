@@ -55,28 +55,22 @@ namespace MartinCostello.Api
         public IWebHostEnvironment HostingEnvironment { get; }
 
         /// <summary>
-        /// Gets or sets the service provider's scope.
+        /// Gets or sets the service provider.
         /// </summary>
-        public IServiceScope? ServiceScope { get; set; }
+        public IServiceProvider? ServiceProvider { get; set; }
 
         /// <summary>
         /// Configures the application.
         /// </summary>
         /// <param name="app">The <see cref="IApplicationBuilder"/> to use.</param>
-        /// <param name="applicationLifetime">The <see cref="IHostApplicationLifetime"/> to use.</param>
-        /// <param name="serviceProvider">The <see cref="IServiceProvider"/> to use.</param>
         /// <param name="options">The <see cref="IOptions{SiteOptions}"/> to use.</param>
         public void Configure(
             IApplicationBuilder app,
-            IHostApplicationLifetime applicationLifetime,
-            IServiceProvider serviceProvider,
             IOptions<SiteOptions> options)
         {
-            applicationLifetime.ApplicationStopped.Register(OnApplicationStopped);
+            ServiceProvider = app.ApplicationServices;
 
-            ServiceScope = serviceProvider.CreateScope();
-
-            app.UseCustomHttpHeaders(HostingEnvironment, Configuration, options.Value);
+            app.UseCustomHttpHeaders(HostingEnvironment, Configuration, options);
 
             if (HostingEnvironment.IsDevelopment())
             {
@@ -184,7 +178,7 @@ namespace MartinCostello.Api
         /// <param name="corsOptions">The <see cref="CorsOptions"/> to configure.</param>
         private void ConfigureCors(CorsOptions corsOptions)
         {
-            var siteOptions = ServiceScope!.ServiceProvider.GetService<SiteOptions>();
+            var siteOptions = ServiceProvider!.GetService<IOptions<SiteOptions>>().Value;
 
             corsOptions.AddPolicy(
                 DefaultCorsPolicyName,
@@ -290,14 +284,6 @@ namespace MartinCostello.Api
             {
                 MaxAge = maxAge,
             };
-        }
-
-        /// <summary>
-        /// Handles the application being stopped.
-        /// </summary>
-        private void OnApplicationStopped()
-        {
-            ServiceScope?.Dispose();
         }
     }
 }
