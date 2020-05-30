@@ -6,6 +6,7 @@
     <OpenApiGenerateDocuments>false</OpenApiGenerateDocuments>
     <OutputType>Exe</OutputType>
     <PreserveCompilationContext>true</PreserveCompilationContext>
+    <RootNamespace>MartinCostello.Api</RootNamespace>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Summary>Martin Costello's API</Summary>
     <UserSecretsId>api.martincostello.com</UserSecretsId>
