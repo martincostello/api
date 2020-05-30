@@ -157,20 +157,6 @@ namespace MartinCostello.Api
 
             services.AddSwagger(HostingEnvironment);
             services.AddSingleton<IClock>((_) => SystemClock.Instance);
-
-            services.AddSingleton<CustomCancellationTokenModelBinderProvider>();
-            services.AddScoped<RequestDeadline>();
-            services.PostConfigureAll<MvcOptions>((options) =>
-            {
-                for (int i = 0; i < options.ModelBinderProviders.Count; i++)
-                {
-                    if (options.ModelBinderProviders[i] is Microsoft.AspNetCore.Mvc.ModelBinding.Binders.CancellationTokenModelBinderProvider)
-                    {
-                        options.ModelBinderProviders[i] = new CustomCancellationTokenModelBinderProvider();
-                        break;
-                    }
-                }
-            });
         }
 
         /// <summary>

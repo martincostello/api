@@ -31,6 +31,7 @@ namespace MartinCostello.Api.Extensions
             IConfiguration config,
             IOptions<SiteOptions> options)
         {
+            value.UseMiddleware<RequestDeadlineMiddleware>();
             return value.UseMiddleware<CustomHttpHeadersMiddleware>(environment, config, options);
         }
     }

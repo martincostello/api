@@ -3,7 +3,6 @@
 
 namespace MartinCostello.Api.Controllers
 {
-    using System;
     using System.Globalization;
     using System.Net.Mime;
     using System.Threading;
@@ -68,24 +67,15 @@ namespace MartinCostello.Api.Controllers
         /// <summary>
         /// An operation that never completes.
         /// </summary>
-        /// <param name="cancellationToken">The optional cancellation token to use.</param>
         /// <returns>
         /// An HTTP 408 response.
         /// </returns>
         [ApiExplorerSettings(IgnoreApi = true)]
         [HttpGet]
         [Route("forever")]
-        public async Task<IActionResult> Forever(CancellationToken cancellationToken = default)
+        public async Task<IActionResult> Forever()
         {
-            try
-            {
-                await Task.Delay(Timeout.Infinite, cancellationToken);
-            }
-            catch (OperationCanceledException ex) when (ex.CancellationToken == cancellationToken)
-            {
-                return StatusCode(StatusCodes.Status408RequestTimeout);
-            }
-
+            await Task.Delay(Timeout.Infinite);
             return Ok();
         }
     }
