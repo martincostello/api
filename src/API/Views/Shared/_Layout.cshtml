@@ -12,7 +12,7 @@
         }
 
         var model = MetaModel.Create(
-            Options.Metadata,
+            Options.Value.Metadata,
             canonicalUri: canonicalUri,
             description: ViewBag.MetaDescription as string,
             imageUri: image,
@@ -21,7 +21,7 @@
             title: ViewBag.Title as string);
     }
     @await Html.PartialAsync("_Meta", model)
-    @await Html.PartialAsync("_Links", Tuple.Create(canonicalUri, Options))
+    @await Html.PartialAsync("_Links", canonicalUri)
     @await RenderSectionAsync("links", required: false)
     @await RenderSectionAsync("styles", required: false)
     <script type="text/javascript">
