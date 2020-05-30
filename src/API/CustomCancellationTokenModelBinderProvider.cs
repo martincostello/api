@@ -5,7 +5,6 @@ namespace MartinCostello.Api
 {
     using System;
     using System.Threading;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc.ModelBinding;
 
     /// <summary>
@@ -15,18 +14,9 @@ namespace MartinCostello.Api
     public sealed class CustomCancellationTokenModelBinderProvider : IModelBinderProvider
     {
         /// <summary>
-        /// The <see cref="CustomCancellationTokenModelBinder"/> to use. This field is read-only.
+        /// The <see cref="CustomCancellationTokenModelBinder"/> to use.
         /// </summary>
-        private readonly CustomCancellationTokenModelBinder _modelBinder;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CustomCancellationTokenModelBinderProvider"/> class.
-        /// </summary>
-        /// <param name="httpContextAccessor">The <see cref="IHttpContextAccessor"/> to use.</param>
-        public CustomCancellationTokenModelBinderProvider(IHttpContextAccessor httpContextAccessor)
-        {
-            _modelBinder = new CustomCancellationTokenModelBinder(httpContextAccessor);
-        }
+        private CustomCancellationTokenModelBinder? _modelBinder;
 
         /// <inheritdoc />
         public IModelBinder? GetBinder(ModelBinderProviderContext context)
@@ -38,7 +28,7 @@ namespace MartinCostello.Api
 
             if (context.Metadata.ModelType == typeof(CancellationToken))
             {
-                return _modelBinder;
+                return _modelBinder ??= new CustomCancellationTokenModelBinder();
             }
 
             return null;
