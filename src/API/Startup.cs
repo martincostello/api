@@ -163,7 +163,6 @@ namespace MartinCostello.Api
 
             services.AddSwagger(HostingEnvironment);
             services.AddSingleton<IClock>((_) => SystemClock.Instance);
-            services.AddSingleton((p) => p.GetRequiredService<IOptions<SiteOptions>>().Value);
         }
 
         /// <summary>

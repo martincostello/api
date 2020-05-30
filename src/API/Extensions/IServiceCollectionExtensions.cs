@@ -9,6 +9,7 @@ namespace MartinCostello.Api.Extensions
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
+    using Microsoft.Extensions.Options;
     using Microsoft.OpenApi.Models;
     using Options;
     using Swagger;
@@ -32,7 +33,7 @@ namespace MartinCostello.Api.Extensions
             value.AddSwaggerGen((p) =>
                 {
                     var provider = value.BuildServiceProvider();
-                    var options = provider.GetRequiredService<SiteOptions>();
+                    var options = provider.GetRequiredService<IOptions<SiteOptions>>().Value;
 
                     var info = new OpenApiInfo()
                     {

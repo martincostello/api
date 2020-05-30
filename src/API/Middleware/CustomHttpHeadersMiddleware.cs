@@ -12,6 +12,7 @@ namespace MartinCostello.Api.Middleware
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Hosting;
+    using Microsoft.Extensions.Options;
     using Options;
 
     /// <summary>
@@ -55,13 +56,13 @@ namespace MartinCostello.Api.Middleware
             RequestDelegate next,
             IWebHostEnvironment environment,
             IConfiguration config,
-            SiteOptions options)
+            IOptions<SiteOptions> options)
         {
             _next = next;
             _isProduction = environment.IsProduction();
             _environmentName = (_isProduction ? null : environment.EnvironmentName) ?? string.Empty;
             _datacenter = config["Azure:Datacenter"] ?? "Local";
-            _contentSecurityPolicy = BuildContentSecurityPolicy(_isProduction, options);
+            _contentSecurityPolicy = BuildContentSecurityPolicy(_isProduction, options.Value);
         }
 
         /// <summary>

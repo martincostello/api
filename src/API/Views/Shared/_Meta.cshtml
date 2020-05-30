@@ -1,7 +1,9 @@
 @using Microsoft.AspNetCore.Hosting
 @model MetaModel
 @inject IWebHostEnvironment Hosting
-@inject SiteOptions Options
+@{
+    SiteOptions options = Options.Value;
+}
     <title>@Model.Title</title>
     <meta charset="utf-8" />
     <meta http-equiv="cache-control" content="no-cache, no-store" />
@@ -38,9 +40,9 @@
     <meta name="twitter:title" content="@Model.Title" />
     <meta name="twitter:url" content="@Model.CanonicalUri" />
     <meta name="application-name" content="@Model.SiteName" />
-    <meta name="google-analytics" content="@(Hosting.IsProduction() ? Options.Analytics?.Google : string.Empty)" />
+    <meta name="google-analytics" content="@(Hosting.IsProduction() ? options.Analytics?.Google : string.Empty)" />
     <meta name="msapplication-config" content="browserconfig.xml" />
     <meta name="msapplication-navbutton-color" content="#0095DA" />
     <meta name="msapplication-starturl" content="/" />
     <meta name="msapplication-TileColor" content="#2d89ef" />
-    <meta name="msapplication-TileImage" content="@Url.CdnContent("mstile-144x144.png", Options)" asp-append-version="true" />
+    <meta name="msapplication-TileImage" content="@Url.CdnContent("mstile-144x144.png", options)" asp-append-version="true" />
