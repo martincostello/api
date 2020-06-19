@@ -1,43 +1,43 @@
 // Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
-const puppeteer = require("puppeteer");
+const puppeteer = require('puppeteer');
 process.env.CHROME_BIN = puppeteer.executablePath();
 
 module.exports = function (config) {
-    config.set({
+  config.set({
 
-        autoWatch: false,
-        concurrency: Infinity,
+    autoWatch: false,
+    concurrency: Infinity,
 
-        browsers: ["ChromeHeadlessNoSandbox"],
+    browsers: ['ChromeHeadlessNoSandbox'],
 
-        customLaunchers: {
-            ChromeHeadlessNoSandbox: {
-                base: "ChromeHeadless",
-                flags: ["--no-sandbox"]
-            }
-        },
+    customLaunchers: {
+      ChromeHeadlessNoSandbox: {
+        base: 'ChromeHeadless',
+        flags: ['--no-sandbox']
+      }
+    },
 
-        frameworks: ["jasmine"],
+    frameworks: ['jasmine'],
 
-        files: [
-            "Assets/Scripts/js/site.js",
-            "Assets/Scripts/**/*.spec.js"
-        ],
+    files: [
+      'Assets/Scripts/js/site.js',
+      'Assets/Scripts/**/*.spec.js'
+    ],
 
-        htmlDetailed: {
-            splitResults: false
-        },
+    htmlDetailed: {
+      splitResults: false
+    },
 
-        plugins: [
-            "karma-chrome-launcher",
-            "karma-html-detailed-reporter",
-            "karma-jasmine"
-        ],
+    plugins: [
+      'karma-chrome-launcher',
+      'karma-html-detailed-reporter',
+      'karma-jasmine'
+    ],
 
-        reporters: [
-            "progress"
-        ]
-    })
-}
+    reporters: [
+      'progress'
+    ]
+  });
+};
