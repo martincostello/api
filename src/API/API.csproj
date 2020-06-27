@@ -3,7 +3,6 @@
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <Description>https://api.martincostello.com/</Description>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <OpenApiGenerateDocuments>false</OpenApiGenerateDocuments>
     <OutputType>Exe</OutputType>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <RootNamespace>MartinCostello.Api</RootNamespace>
@@ -18,7 +17,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" />
     <PackageReference Include="Microsoft.AspNetCore.AzureAppServices.HostingStartup" />
-    <PackageReference Include="Microsoft.Extensions.ApiDescription.Server" />
     <PackageReference Include="NodaTime" />
     <PackageReference Include="Swashbuckle.AspNetCore" />
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" />
