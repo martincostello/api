@@ -3,7 +3,6 @@
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <Description>https://api.martincostello.com/</Description>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <OpenApiGenerateDocuments>false</OpenApiGenerateDocuments>
     <OutputType>Exe</OutputType>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <RootNamespace>MartinCostello.Api</RootNamespace>
@@ -16,12 +15,11 @@
     <Content Update="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.14.0" />
-    <PackageReference Include="Microsoft.AspNetCore.AzureAppServices.HostingStartup" Version="3.1.5" />
-    <PackageReference Include="Microsoft.Extensions.ApiDescription.Server" Version="3.1.5" />
-    <PackageReference Include="NodaTime" Version="3.0.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="5.5.1" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" />
+    <PackageReference Include="Microsoft.AspNetCore.AzureAppServices.HostingStartup" />
+    <PackageReference Include="NodaTime" />
+    <PackageReference Include="Swashbuckle.AspNetCore" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" />
   </ItemGroup>
   <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">
     <Exec Command="npm ci" Condition=" '$(InstallWebPackages)' == 'true' " />
