@@ -1,5 +1,12 @@
 version: 2
 updates:
+- package-ecosystem: "github-actions"
+  directory: "/"
+  schedule:
+    interval: daily
+    timezone: Europe/London
+  reviewers:
+    - "martincostello"
 - package-ecosystem: npm
   directory: "/src/API"
   schedule:
