@@ -47,7 +47,7 @@ jobs:
         flags: ${{ matrix.codecov_os }}
 
     - name: 'Deploy to Azure App Service'
-      uses: azure/webapps-deploy@v2.1
+      uses: azure/webapps-deploy@v2.1.2
       if: ${{ github.ref == 'refs/heads/deploy' && runner.os == 'Windows' }}
       with:
         app-name: apimartincostello-uksouth
