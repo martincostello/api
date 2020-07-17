@@ -32,6 +32,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API.Tests", "tests\API.Test
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".vscode", ".vscode", "{C9381C1E-F8B9-4A77-B314-6DD8F370AF0E}"
 	ProjectSection(SolutionItems) = preProject
+		.vscode\extensions.json = .vscode\extensions.json
 		.vscode\launch.json = .vscode\launch.json
 		.vscode\tasks.json = .vscode\tasks.json
 	EndProjectSection
