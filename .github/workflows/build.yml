@@ -40,7 +40,7 @@ jobs:
         DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
         NUGET_XMLDOC_MODE: skip
 
-    - uses: codecov/codecov-action@v1.0.12
+    - uses: codecov/codecov-action@v1.0.13
       name: Upload coverage to Codecov
       with:
         file: ./artifacts/coverage.cobertura.xml
