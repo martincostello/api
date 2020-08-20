@@ -157,7 +157,7 @@ function Get-Latest-Runtime-Version([string] $FileName, [string] $SdkVersion, [b
             try {
                 foreach ($_ in $JsonContent) {
                     if ($_.sdks.version -eq $SdkVersion) {
-                        $Version = $_.sdks."runtime-version" | Select -First 1
+                        $Version = $_.sdks."runtime-version" | Select-Object -First 1
                         break;
                     }
                 }
@@ -193,7 +193,7 @@ function Get-Json-From-File([string]$FileName) {
 }
 
 function Say([string] $message) {
-    Write-Host "update-dotnet-sdk: $message"
+    Write-Output "update-dotnet-sdk: $message"
 }
 
 function Say-Verbose([string] $message) {
