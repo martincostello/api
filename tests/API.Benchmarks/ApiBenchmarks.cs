@@ -5,6 +5,7 @@ namespace MartinCostello.Api.Benchmarks
 {
     using System;
     using System.Net.Http;
+    using System.Net.Http.Json;
     using System.Threading.Tasks;
     using BenchmarkDotNet.Attributes;
     using BenchmarkDotNet.Diagnosers;
@@ -67,7 +68,7 @@ namespace MartinCostello.Api.Benchmarks
             var body = new { algorithm = "sha1", Format = "base64", plaintext = "Hello, world!" };
 
             using var response = await _client.PostAsJsonAsync("/hash", body);
-            return await response.Content.ReadAsByteArrayAsync();
+            return await response!.Content!.ReadAsByteArrayAsync();
         }
 
         [Benchmark]

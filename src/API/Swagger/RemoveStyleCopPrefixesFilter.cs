@@ -37,7 +37,7 @@ namespace MartinCostello.Api.Swagger
                                     property.Description = property.Description.Replace(Prefix, string.Empty, StringComparison.Ordinal);
 
                                     // Capitalize the first letter that's left over
-                                    property.Description = char.ToUpperInvariant(property.Description[0]) + property.Description.Substring(1);
+                                    property.Description = char.ToUpperInvariant(property.Description[0]) + property.Description[1..];
                                 }
                             }
                         }

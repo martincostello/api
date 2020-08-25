@@ -4,10 +4,8 @@
 namespace MartinCostello.Api.Controllers
 {
     using System;
-    using System.Buffers;
     using System.Collections.Generic;
     using System.Globalization;
-    using System.IO;
     using System.Net.Mime;
     using System.Security.Cryptography;
     using System.Text;
@@ -142,31 +140,29 @@ namespace MartinCostello.Api.Controllers
                 return BadRequest($"The plaintext to hash cannot be more than {MaxPlaintextLength} characters in length.");
             }
 
-            byte[] hash;
-
-            using (var stream = new MemoryStream())
+            byte[] buffer = Encoding.UTF8.GetBytes(request.Plaintext ?? string.Empty);
+            byte[] hash = request.Algorithm.ToUpperInvariant() switch
             {
-                using (var writer = new StreamWriter(stream, Encoding.ASCII, MaxPlaintextLength, true))
-                {
-                    writer.Write(request.Plaintext ?? string.Empty);
-                    writer.Flush();
-                }
+#pragma warning disable CA5350
+#pragma warning disable CA5351
+                "MD5" => MD5.HashData(buffer),
+                "SHA1" => SHA1.HashData(buffer),
+#pragma warning restore CA5350
+#pragma warning restore CA5351
+                "SHA256" => SHA256.HashData(buffer),
+                "SHA384" => SHA384.HashData(buffer),
+                "SHA512" => SHA512.HashData(buffer),
+                _ => Array.Empty<byte>(),
+            };
 
-                stream.Seek(0, SeekOrigin.Begin);
-
-                using var hasher = CreateHashAlgorithm(request.Algorithm);
-
-                if (hasher == null)
-                {
-                    return BadRequest($"The specified hash algorithm '{request.Algorithm}' is not supported.");
-                }
-
-                hash = hasher.ComputeHash(stream);
+            if (hash.Length == 0)
+            {
+                return BadRequest($"The specified hash algorithm '{request.Algorithm}' is not supported.");
             }
 
             return new HashResponse()
             {
-                Hash = formatAsBase64 ? Convert.ToBase64String(hash) : BytesToHexString(hash),
+                Hash = formatAsBase64 ? Convert.ToBase64String(hash) : BytesToHexString(hash).ToLowerInvariant(),
             };
         }
 
@@ -200,98 +196,38 @@ namespace MartinCostello.Api.Controllers
                 return BadRequest($"The specified validation algorithm '{validationAlgorithm}' is invalid.");
             }
 
-            var pool = ArrayPool<byte>.Shared;
-            var decryptionKeyBytes = pool.Rent(decryptionKeyLength);
-            var validationKeyBytes = pool.Rent(validationKeyLength);
+            var decryptionKey = new byte[decryptionKeyLength];
+            var validationKey = new byte[validationKeyLength];
 
-            try
+            RandomNumberGenerator.Fill(decryptionKey);
+            RandomNumberGenerator.Fill(validationKey);
+
+            var result = new MachineKeyResponse()
             {
-                var decryptionKey = decryptionKeyBytes.AsSpan(0, decryptionKeyLength);
-                var validationKey = validationKeyBytes.AsSpan(0, validationKeyLength);
+                DecryptionKey = BytesToHexString(decryptionKey),
+                ValidationKey = BytesToHexString(validationKey),
+            };
 
-                using (var random = RandomNumberGenerator.Create())
-                {
-                    random.GetBytes(decryptionKey);
-                    random.GetBytes(validationKey);
-                }
+            result.MachineKeyXml = string.Format(
+                CultureInfo.InvariantCulture,
+                @"<machineKey validationKey=""{0}"" decryptionKey=""{1}"" validation=""{2}"" decryption=""{3}"" />",
+                result.ValidationKey,
+                result.DecryptionKey,
+                validationAlgorithm.Split('-', StringSplitOptions.RemoveEmptyEntries)[0].ToUpperInvariant(),
+                decryptionAlgorithm.Split('-', StringSplitOptions.RemoveEmptyEntries)[0].ToUpperInvariant());
 
-                var result = new MachineKeyResponse()
-                {
-                    DecryptionKey = BytesToHexString(decryptionKey).ToUpperInvariant(),
-                    ValidationKey = BytesToHexString(validationKey).ToUpperInvariant(),
-                };
-
-                result.MachineKeyXml = string.Format(
-                    CultureInfo.InvariantCulture,
-                    @"<machineKey validationKey=""{0}"" decryptionKey=""{1}"" validation=""{2}"" decryption=""{3}"" />",
-                    result.ValidationKey,
-                    result.DecryptionKey,
-                    validationAlgorithm.Split('-', StringSplitOptions.RemoveEmptyEntries)[0].ToUpperInvariant(),
-                    decryptionAlgorithm.Split('-', StringSplitOptions.RemoveEmptyEntries)[0].ToUpperInvariant());
-
-                return result;
-            }
-            finally
-            {
-                pool.Return(decryptionKeyBytes, true);
-                pool.Return(validationKeyBytes, true);
-            }
+            return result;
         }
 
         /// <summary>
-        /// Returns a <see cref="string"/> containing a hexadecimal representation of the specified <see cref="Array"/> of bytes.
+        /// Returns a <see cref="string"/> containing a hexadecimal representation of the specified <see cref="ReadOnlySpan{T}"/> of bytes.
         /// </summary>
-        /// <param name="buffer">The buffer to generate the hash string for.</param>
+        /// <param name="bytes">The buffer to generate the hash string for.</param>
         /// <returns>
-        /// A <see cref="string"/> containing the hexadecimal representation of <paramref name="buffer"/>.
+        /// A <see cref="string"/> containing the hexadecimal representation of <paramref name="bytes"/>.
         /// </returns>
-        private static string BytesToHexString(ReadOnlySpan<byte> buffer)
-        {
-            var format = new StringBuilder(buffer.Length);
-
-            foreach (var b in buffer)
-            {
-                format.Append(b.ToString("x2", CultureInfo.InvariantCulture));
-            }
-
-            return format.ToString();
-        }
-
-        /// <summary>
-        /// Creates a hash algorithm for the specified algorithm name.
-        /// </summary>
-        /// <param name="name">The name of the hash algorithm to create.</param>
-        /// <returns>
-        /// The created instance of <see cref="HashAlgorithm"/> if <paramref name="name"/>
-        /// is valid; otherwise <see langword="null"/>.
-        /// </returns>
-        private static HashAlgorithm? CreateHashAlgorithm(string name)
-        {
-            if (string.Equals(name, HashAlgorithmName.MD5.Name, StringComparison.OrdinalIgnoreCase))
-            {
-                return HashAlgorithm.Create("MD5");
-            }
-            else if (string.Equals(name, HashAlgorithmName.SHA1.Name, StringComparison.OrdinalIgnoreCase))
-            {
-                return HashAlgorithm.Create("SHA1");
-            }
-            else if (string.Equals(name, HashAlgorithmName.SHA256.Name, StringComparison.OrdinalIgnoreCase))
-            {
-                return HashAlgorithm.Create("SHA256");
-            }
-            else if (string.Equals(name, HashAlgorithmName.SHA384.Name, StringComparison.OrdinalIgnoreCase))
-            {
-                return HashAlgorithm.Create("SHA384");
-            }
-            else if (string.Equals(name, HashAlgorithmName.SHA512.Name, StringComparison.OrdinalIgnoreCase))
-            {
-                return HashAlgorithm.Create("SHA512");
-            }
-            else
-            {
-                return null;
-            }
-        }
+        private static string BytesToHexString(ReadOnlySpan<byte> bytes)
+            => Convert.ToHexString(bytes);
 
         /// <summary>
         /// Returns a result that represents a bad API request.

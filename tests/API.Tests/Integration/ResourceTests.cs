@@ -63,7 +63,8 @@ namespace MartinCostello.Api.Integration
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            response.Content.Headers.ContentType?.MediaType?.ShouldBe(contentType);
+            response.Content.ShouldNotBeNull();
+            response.Content!.Headers.ContentType?.MediaType?.ShouldBe(contentType);
         }
 
         [Theory]
@@ -79,7 +80,8 @@ namespace MartinCostello.Api.Integration
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            response.Content.Headers.ContentType?.MediaType?.ShouldBe(contentType);
+            response.Content.ShouldNotBeNull();
+            response.Content!.Headers.ContentType?.MediaType?.ShouldBe(contentType);
         }
 
         [Theory]
@@ -95,7 +97,8 @@ namespace MartinCostello.Api.Integration
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            response.Content.Headers.ContentType?.MediaType?.ShouldBe(contentType);
+            response.Content.ShouldNotBeNull();
+            response.Content!.Headers.ContentType?.MediaType?.ShouldBe(contentType);
         }
 
         [Fact]
