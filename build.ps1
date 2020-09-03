@@ -1,7 +1,5 @@
 #! /usr/bin/pwsh
 param(
-    [Parameter(Mandatory = $false)][string] $Configuration = "Release",
-    [Parameter(Mandatory = $false)][string] $VersionSuffix = "",
     [Parameter(Mandatory = $false)][string] $OutputPath = "",
     [Parameter(Mandatory = $false)][switch] $SkipTests
 )
@@ -25,7 +23,7 @@ if ($OutputPath -eq "") {
 $installDotNetSdk = $false;
 
 if (($null -eq (Get-Command "dotnet" -ErrorAction SilentlyContinue)) -and ($null -eq (Get-Command "dotnet.exe" -ErrorAction SilentlyContinue))) {
-    Write-Host "The .NET Core SDK is not installed."
+    Write-Output "The .NET Core SDK is not installed."
     $installDotNetSdk = $true
 }
 else {
@@ -37,7 +35,7 @@ else {
     }
 
     if ($installedDotNetVersion -ne $dotnetVersion) {
-        Write-Host "The required version of the .NET Core SDK is not installed. Expected $dotnetVersion."
+        Write-Output "The required version of the .NET Core SDK is not installed. Expected $dotnetVersion."
         $installDotNetSdk = $true
     }
 }
@@ -108,12 +106,7 @@ function DotNetTest {
 function DotNetPublish {
     param([string]$Project)
     $publishPath = (Join-Path $OutputPath "publish")
-    if ($VersionSuffix) {
-        & $dotnet publish $Project --output $publishPath --configuration $Configuration --version-suffix "$VersionSuffix"
-    }
-    else {
-        & $dotnet publish $Project --output $publishPath --configuration $Configuration
-    }
+    & $dotnet publish $Project --output $publishPath --configuration "Release"
     if ($LASTEXITCODE -ne 0) {
         throw "dotnet publish failed with exit code $LASTEXITCODE"
     }
@@ -127,13 +120,13 @@ $publishProjects = @(
     (Join-Path $solutionPath "src\API\API.csproj")
 )
 
-Write-Host "Publishing solution..." -ForegroundColor Green
+Write-Output "Publishing solution..." -ForegroundColor Green
 ForEach ($project in $publishProjects) {
-    DotNetPublish $project $Configuration $PrereleaseSuffix
+    DotNetPublish $project
 }
 
 if ($SkipTests -eq $false) {
-    Write-Host "Testing $($testProjects.Count) project(s)..." -ForegroundColor Green
+    Write-Output "Testing $($testProjects.Count) project(s)..." -ForegroundColor Green
     ForEach ($project in $testProjects) {
         DotNetTest $project
     }

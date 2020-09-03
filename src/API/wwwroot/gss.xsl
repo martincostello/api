@@ -3,19 +3,19 @@
      Project Home: http://sourceforge.net/projects/gstoolbox
      Copyright (c) 2005 Baccou Bonneville SARL (http://www.baccoubonneville.com)
      License http://www.gnu.org/copyleft/lesser.html GNU/LGPL
-     
+
      Created by Serge Baccou
      1.0 / 20 Aug 2005
-       
+
      Changes by Johannes Müller ( http://GSiteCrawler.com/ )
      1.1 / 20 Aug 2005 - sorting by clicking on column headers
-                       - open urls in new window/tab 
-                       - some stylesheet/CSS cleanup 
-     
+                       - open urls in new window/tab
+                       - some stylesheet/CSS cleanup
+
      Changes by Tobias Kluge ( http://enarion.net/ )
      1.2 / 22 Aug 2005 - moved sitemap file and sitemap index file into one file gss.xsl
    1.5 / 27 Aug 2005 - added js and css into xslt stylesheet; only gss.xsl is needed now
-     
+
      Changes by Serge Baccou
      1.3 / 23 Aug 2005 - some XSLT cleanup
      1.4 / 24 Aug 2005 - sourceForge and LGPL links and logos
@@ -32,13 +32,13 @@
 
 -->
 <xsl:stylesheet version="2.0" xmlns:html="http://www.w3.org/TR/REC-html40" xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-  
+
   <xsl:output method="html" version="1.0" encoding="iso-8859-1" indent="yes"/>
-  
-  <!-- Root template -->    
+
+  <!-- Root template -->
   <xsl:template match="/">
-    <html>     
-      <head>  
+    <html>
+      <head>
         <title>Google Sitemap File for </title>
     <style type="text/css">
       <![CDATA[
@@ -51,41 +51,41 @@
       body * {
         font-size: 100%;
       }
-      h1 { 
+      h1 {
         font-weight:bold;
         font-size:1.5em;
         margin-bottom:0;
         margin-top:1px; }
-      
-      h2 { 
+
+      h2 {
         font-weight:bold;
         font-size:1.2em;
-        margin-bottom:0; 
+        margin-bottom:0;
         color:#707070;
         margin-top:1px; }
 
-      h3 { 
+      h3 {
         font-weight:bold;
         font-size:1.2em;
-        margin-bottom:0; 
+        margin-bottom:0;
         color:#000;
         margin-top:1px; }
-        
+
       td, th {
         font-family: arial, sans-serif;
         font-size: 0.9em;
-      }			
-      
+      }
+
       .header {
         font-weight: bold;
         font-size: 1.1em;
       }
-      
-      p.sml { 
+
+      p.sml {
         font-size:0.8em;
-        margin-top:0; 
+        margin-top:0;
       }
-      
+
       .data {
         border-collapse:collapse;
         border:1px solid #b0b0b0;
@@ -99,21 +99,21 @@
         text-align:left;
         padding:3px;
       }
-      
+
       .sortup {
         background-position: right center;
         background-image: url(http://www.google.com/webmasters/sitemaps/images/sortup.gif);
         background-repeat: no-repeat;
         font-style:italic;
         white-space:pre; }
-        
+
       .sortdown {
         background-position: right center;
         background-image: url(http://www.google.com/webmasters/sitemaps/images/sortdown.gif);
         background-repeat: no-repeat;
         font-style:italic;
         white-space:pre; }
-      
+
       table.copyright {
         width:100%;
         border-top:1px solid #ddad08;
@@ -121,7 +121,7 @@
         text-align:center;
         padding-top:1em;
         vertical-align:top; }
-        
+
       .copyright {
         color: #6F6F6F;
         font-size: 0.8em;
@@ -138,10 +138,10 @@
       var desc = '..';
       var html = '..';
       var freq = '..';
-      
+
       function initXsl(tabName,fileType) {
         hdrRows = 1;
-      
+
         if(fileType=="sitemap") {
           numeric = ".3.";
           desc = ".1.";
@@ -156,12 +156,12 @@
           initTable(tabName);
           setSort(tabName, 1, 1);
         }
-      
+
         var theURL = document.getElementById("head1");
         theURL.innerHTML += ' ' + location;
         document.title += ': ' + location;
       }
-      
+
       function initTable(tabName) {
         var theTab = document.getElementById(tabName);
         for(r=0;r<hdrRows;r++)
@@ -191,21 +191,21 @@
           }
         }
       }
-      
+
       function setSort(tabName, colNum, sortDir) {
         var theTab = document.getElementById(tabName);
         theTab.rows[0].sCol = colNum;
         theTab.rows[0].sDir = sortDir;
-        if (sortDir) 
+        if (sortDir)
           theTab.rows[0].cells[colNum].className='sortdown'
         else
           theTab.rows[0].cells[colNum].className='sortup';
       }
-      
+
       function setCursor(theCell, mode){
         rTitle = theCell.innerHTML.replace(/<[^>]+>|&nbsp;|\W/g,'');
         if(mode=="selected"){
-          if(theCell.style.color!=selectedColor) 
+          if(theCell.style.color!=selectedColor)
             defaultColor = theCell.style.color;
           theCell.style.color = selectedColor;
           theCell.style.cursor = "hand";
@@ -216,7 +216,7 @@
           window.status = "";
         }
       }
-      
+
       function sortTable(theCell, colNum, hdrRows, sortParams){
         var typnum = !(sortParams & 1);
         sDir = !(sortParams & 2);
@@ -232,9 +232,9 @@
           tBody.rows[0].cells[tBody.rows[0].sCol].className='';
         tBody.rows[0].sCol = colNum;
         tBody.rows[0].sDir = sDir;
-        if (sDir) 
+        if (sDir)
            tBody.rows[0].cells[colNum].className='sortdown'
-        else 
+        else
            tBody.rows[0].cells[colNum].className='sortup';
         for(i=0,r=hdrRows;r<tBody.rows.length;i++,r++){
           colCont = tBody.rows[r].cells[colNum].innerHTML;
@@ -259,10 +259,10 @@
         tabOrd.sort(compRows);
         for(i=0,r=hdrRows;r<tBody.rows.length;i++,r++){
           tBody.insertBefore(tabOrd[i][1],tBody.rows[r]);
-        } 
-        window.status = ""; 
+        }
+        window.status = "";
       }
-      
+
       function compRows(a, b){
         if(sDir){
           if(a[2]>b[2]) return -1;
@@ -276,7 +276,7 @@
 
       ]]>
     </script>
-        
+
       </head>
 
       <!-- Store in $fileType if we are in a sitemap or in a siteindex -->
@@ -284,20 +284,20 @@
         <xsl:choose>
       <xsl:when test="//sitemap:url">sitemap</xsl:when>
       <xsl:otherwise>siteindex</xsl:otherwise>
-        </xsl:choose>      
-      </xsl:variable>            
+        </xsl:choose>
+      </xsl:variable>
 
       <!-- Body -->
-      <body onLoad="initXsl('table0','{$fileType}');">  
-            
+      <body onLoad="initXsl('table0','{$fileType}');">
+
         <!-- Text and table -->
-        <h1 id="head1">Google Sitemap</h1>        
+        <h1 id="head1">Google Sitemap</h1>
         <xsl:choose>
         <xsl:when test="$fileType='sitemap'"><xsl:call-template name="sitemapTable"/></xsl:when>
         <xsl:otherwise><xsl:call-template name="siteindexTable"/></xsl:otherwise>
       </xsl:choose>
-          
-        <!-- Copyright notice -->          
+
+        <!-- Copyright notice -->
         <br/>
         <table class="copyright" id="table_copyright">
           <tr>
@@ -310,12 +310,12 @@
         </table>
       </body>
     </html>
-  </xsl:template>     
+  </xsl:template>
 
   <!-- siteindexTable template -->
   <xsl:template name="siteindexTable">
-    <h3>This sitemap index file was created by <a href="http://gsitecrawler.com/">SOFTplus GSiteCrawler</a>.</h3>          
-    <h2>Number of sitemaps in this Google sitemap index: <xsl:value-of select="count(sitemap:sitemapindex/sitemap:sitemap)"/></h2>          
+    <h3>This sitemap index file was created by <a href="http://gsitecrawler.com/">SOFTplus GSiteCrawler</a>.</h3>
+    <h2>Number of sitemaps in this Google sitemap index: <xsl:value-of select="count(sitemap:sitemapindex/sitemap:sitemap)"/></h2>
     <p class="sml">Click on the table headers to change sorting.</p>
     <table border="1" width="100%" class="data" id="table1">
       <tr class="header">
@@ -323,14 +323,14 @@
         <td>Last modification date</td>
       </tr>
       <xsl:apply-templates select="sitemap:sitemapindex/sitemap:sitemap">
-        <xsl:sort select="sitemap:lastmod" order="descending"/>              
-      </xsl:apply-templates>  
-    </table>            
-  </xsl:template>  
-  
-  <!-- sitemapTable template -->  
+        <xsl:sort select="sitemap:lastmod" order="descending"/>
+      </xsl:apply-templates>
+    </table>
+  </xsl:template>
+
+  <!-- sitemapTable template -->
   <xsl:template name="sitemapTable">
-    <h3>This Google Sitemap file was created by <a href="http://gsitecrawler.com/">SOFTplus GSiteCrawler</a>.</h3>          
+    <h3>This Google Sitemap file was created by <a href="http://gsitecrawler.com/">SOFTplus GSiteCrawler</a>.</h3>
     <h2>Number of URLs in this Google Sitemap: <xsl:value-of select="count(sitemap:urlset/sitemap:url)"/></h2>
     <p class="sml">Click on the table headers to change sorting.</p>
     <table border="1" width="100%" class="data" id="table0">
@@ -341,33 +341,33 @@
     <td>Priority</td>
     </tr>
     <xsl:apply-templates select="sitemap:urlset/sitemap:url">
-      <xsl:sort select="sitemap:priority" order="descending"/>              
+      <xsl:sort select="sitemap:priority" order="descending"/>
     </xsl:apply-templates>
-  </table>  
-  </xsl:template>    
-  
-  <!-- sitemap:url template -->  
+  </table>
+  </xsl:template>
+
+  <!-- sitemap:url template -->
   <xsl:template match="sitemap:url">
-    <tr>  
+    <tr>
       <td>
-        <xsl:variable name="sitemapURL"><xsl:value-of select="sitemap:loc"/></xsl:variable>  
+        <xsl:variable name="sitemapURL"><xsl:value-of select="sitemap:loc"/></xsl:variable>
         <a href="{$sitemapURL}" target="_blank" ref="nofollow"><xsl:value-of select="$sitemapURL"/></a>
       </td>
       <td><xsl:value-of select="sitemap:lastmod"/></td>
       <td><xsl:value-of select="sitemap:changefreq"/></td>
       <td><xsl:value-of select="sitemap:priority"/></td>
-    </tr>  
+    </tr>
   </xsl:template>
-  
+
   <!-- sitemap:sitemap template -->
   <xsl:template match="sitemap:sitemap">
-    <tr>  
-      <td>        
-        <xsl:variable name="sitemapURL"><xsl:value-of select="sitemap:loc"/></xsl:variable>  
+    <tr>
+      <td>
+        <xsl:variable name="sitemapURL"><xsl:value-of select="sitemap:loc"/></xsl:variable>
         <a href="{$sitemapURL}"><xsl:value-of select="$sitemapURL"/></a>
       </td>
       <td><xsl:value-of select="sitemap:lastmod"/></td>
-    </tr>  
-  </xsl:template>  
-  
+    </tr>
+  </xsl:template>
+
 </xsl:stylesheet>

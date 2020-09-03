@@ -1,44 +1,45 @@
 @media (-webkit-min-device-pixel-ratio: 1.25), (min-resolution: 120dpi) {
+  html {
+    font-size: 16px;
+  }
 
-    html {
-        font-size: 16px;
-    }
-
-    body {
-        font-size: 1rem;
-    }
+  body {
+    font-size: 1rem;
+  }
 }
 
-a, .url, .swagger-ui .info a {
-    color: #0F7661;
+a,
+.url,
+.swagger-ui .info a {
+  color: #0f7661;
 }
 
 .body-content {
-    padding-top: 10px;
+  padding-top: 10px;
 }
 
 .response-col_status {
-    width: unset;
+  width: unset;
 }
 
 .scheme-container {
-    display: none;
+  display: none;
 }
 
 .swagger-ui .opblock.opblock-get .opblock-summary-method {
-    background: #0170DF;
+  background: #0170df;
 }
 
 .swagger-ui .opblock.opblock-post .opblock-summary-method {
-    background: #227751;
+  background: #227751;
 }
 
 .swagger-ui-svg {
-    height: 0;
-    position: absolute;
-    width: 0;
+  height: 0;
+  position: absolute;
+  width: 0;
 }
 
 .parameters-col_name {
-    width: 20%;
+  width: 20%;
 }
