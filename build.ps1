@@ -1,7 +1,5 @@
 #! /usr/bin/pwsh
 param(
-    [Parameter(Mandatory = $false)][string] $Configuration = "Release",
-    [Parameter(Mandatory = $false)][string] $VersionSuffix = "",
     [Parameter(Mandatory = $false)][string] $OutputPath = "",
     [Parameter(Mandatory = $false)][switch] $SkipTests
 )
@@ -108,12 +106,7 @@ function DotNetTest {
 function DotNetPublish {
     param([string]$Project)
     $publishPath = (Join-Path $OutputPath "publish")
-    if ($VersionSuffix) {
-        & $dotnet publish $Project --output $publishPath --configuration $Configuration --version-suffix "$VersionSuffix"
-    }
-    else {
-        & $dotnet publish $Project --output $publishPath --configuration $Configuration
-    }
+    & $dotnet publish $Project --output $publishPath --configuration "Release"
     if ($LASTEXITCODE -ne 0) {
         throw "dotnet publish failed with exit code $LASTEXITCODE"
     }
