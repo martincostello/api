@@ -80,11 +80,7 @@ function Get-Global-Json-Version([string] $FileName) {
     return $Version
 }
 
-function Get-Latest-SDK-Version()
-{
-    param([string] $FileName)
-    {
-    }
+function Get-Latest-SDK-Version([string] $FileName) {
 
     if (-Not (Test-Path $FileName)) {
         throw "Unable to find '$FileName'"
