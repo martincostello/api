@@ -27,7 +27,6 @@
     Displays additional diagnostics information.
 #>
 [CmdletBinding()]
-[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingEmptyCatchBlock', '', Scope='Function')]
 param(
     [Parameter(Mandatory = $false)][string] $Channel = "3.1",
     [Parameter(Mandatory = $false)][string] $BranchName = "",
@@ -83,7 +82,6 @@ function Get-Global-Json-Version([string] $FileName) {
 
 function Get-Latest-SDK-Version()
 {
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignment', '')]
     param([string] $FileName)
     {
     }
