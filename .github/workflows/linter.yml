@@ -19,4 +19,5 @@ jobs:
       - name: Lint Code Base
         uses: github/super-linter@v3.7.0
         env:
+          VALIDATE_EDITORCONFIG: false
           VALIDATE_JAVASCRIPT_STANDARD: false
