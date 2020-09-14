@@ -178,7 +178,8 @@ namespace MartinCostello.Api
         /// <param name="corsOptions">The <see cref="CorsOptions"/> to configure.</param>
         private void ConfigureCors(CorsOptions corsOptions)
         {
-            var siteOptions = ServiceProvider!.GetService<IOptions<SiteOptions>>().Value;
+            var options = ServiceProvider!.GetService<IOptions<SiteOptions>>();
+            var siteOptions = options!.Value;
 
             corsOptions.AddPolicy(
                 DefaultCorsPolicyName,

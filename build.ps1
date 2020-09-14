@@ -106,7 +106,7 @@ function DotNetTest {
 function DotNetPublish {
     param([string]$Project)
     $publishPath = (Join-Path $OutputPath "publish")
-    & $dotnet publish $Project --output $publishPath --configuration "Release"
+    & $dotnet publish $Project --output $publishPath --configuration "Release" --runtime win10-x64 --self-contained
     if ($LASTEXITCODE -ne 0) {
         throw "dotnet publish failed with exit code $LASTEXITCODE"
     }
