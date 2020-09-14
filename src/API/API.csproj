@@ -6,7 +6,6 @@
     <OutputType>Exe</OutputType>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <RootNamespace>MartinCostello.Api</RootNamespace>
-    <RuntimeIdentifier>win10-x64</RuntimeIdentifier>
     <TargetFramework>net5.0</TargetFramework>
     <Summary>Martin Costello's API</Summary>
     <UserSecretsId>api.martincostello.com</UserSecretsId>
