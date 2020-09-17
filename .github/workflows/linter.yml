@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Lint Code Base
-        uses: github/super-linter@v3.10.1
+        uses: github/super-linter@v3.10.2
         env:
           VALIDATE_CSHARP: false
           VALIDATE_EDITORCONFIG: false
