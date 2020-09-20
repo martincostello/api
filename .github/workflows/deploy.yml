@@ -10,6 +10,7 @@ jobs:
           ref: 'main'
       - name: Sync main with deploy
         run: |
+          git config pull.ff only
           git fetch origin deploy
           git checkout deploy
           git pull origin main
