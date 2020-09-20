@@ -10,6 +10,6 @@ jobs:
           ref: 'main'
       - name: Sync main with deploy
         run: |
-          git fetch origin deploy
+          git checkout deploy
           git fetch origin main:deploy
           git push origin deploy
