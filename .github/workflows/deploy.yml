@@ -1,7 +1,7 @@
 name: deploy
 on: [workflow_dispatch]
 jobs:
-  automerge:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Sync main with deploy
