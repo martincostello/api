@@ -12,5 +12,5 @@ jobs:
         run: |
           git fetch origin deploy
           git checkout deploy
-          git merge main
+          git pull origin main
           git push origin deploy
