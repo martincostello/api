@@ -1,0 +1,11 @@
+name: deploy
+on:
+  workflow_dispatch:
+jobs:
+  automerge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sync main with deploy
+        run: |
+          git fetch origin main:deploy
+          git push origin deploy
