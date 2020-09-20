@@ -4,6 +4,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          ref: 'main'
       - name: Sync main with deploy
         run: |
           git fetch origin main:deploy
