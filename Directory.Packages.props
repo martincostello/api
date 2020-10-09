@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <AnalyzersVersion>3.3.0</AnalyzersVersion>
-    <NodaTimeVersion>3.0.0</NodaTimeVersion>
+    <NodaTimeVersion>3.0.1</NodaTimeVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="BenchmarkDotNet" Version="0.12.1" />
