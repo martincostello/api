@@ -8,4 +8,10 @@ jobs:
         run: |
           git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git repo
           cd ./repo
-          git fetch origin main:deploy && git push origin deploy
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git fetch origin $DEFAULT_BRANCH:$DEPLOY_BRANCH
+          git push origin $DEPLOY_BRANCH
+        env:
+          DEFAULT_BRANCH: main
+          DEPLOY_BRANCH: deploy
