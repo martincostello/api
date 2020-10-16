@@ -2,7 +2,7 @@
 @{
     ViewBag.Title = "Home Page";
     string? mvcVersion = typeof(Microsoft.Extensions.DependencyInjection.MvcServiceCollectionExtensions)
-        .GetTypeInfo().Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
+        .Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
     SiteOptions options = Options.Value;
 }
 <div class="jumbotron">
