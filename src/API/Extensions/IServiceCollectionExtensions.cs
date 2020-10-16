@@ -77,12 +77,11 @@ namespace MartinCostello.Api.Extensions
         /// <param name="fileName">The XML comments file name to try to add.</param>
         private static void AddXmlCommentsIfExists(SwaggerGenOptions options, IWebHostEnvironment environment, string fileName)
         {
-            var modelType = typeof(Startup).GetTypeInfo();
             string applicationPath;
 
             if (environment.IsDevelopment())
             {
-                applicationPath = Path.GetDirectoryName(modelType.Assembly.Location) ?? ".";
+                applicationPath = Path.GetDirectoryName(typeof(Startup).Assembly.Location) ?? ".";
             }
             else
             {
