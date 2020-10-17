@@ -4,14 +4,16 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          ref: main
       - name: Sync main with deploy
         run: |
-          git clone git@github.com:$GITHUB_REPOSITORY.git repo
-          cd ./repo
-          git config user.name github-actions
-          git config user.email github-actions@github.com
+          git remote set-url origin https://github.com/$GITHUB_REPOSITORY.git
+          git fetch origin
           git fetch origin $DEFAULT_BRANCH:$DEPLOY_BRANCH
-          git push origin $DEPLOY_BRANCH
+          git push -u origin $DEPLOY_BRANCH
         env:
           DEFAULT_BRANCH: main
           DEPLOY_BRANCH: deploy
