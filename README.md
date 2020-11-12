@@ -2,7 +2,7 @@
 
 [![Build status](https://github.com/martincostello/api/workflows/Build/badge.svg?branch=main&event=push)](https://github.com/martincostello/api/actions?query=workflow%3ABuild+branch%3Amain+event%3Apush)
 
-[![Deploy status](https://github.com/martincostello/api/workflows/Build/badge.svg?branch=deploy&event=push)](https://github.com/martincostello/api/actions?query=workflow%3ABuild+branch%3Adeploy+event%3Apush)
+[![Deploy status](https://github.com/martincostello/api/workflows/deploy/badge.svg?branch=deploy&event=push)](https://github.com/martincostello/api/actions?query=workflow%3Adeploy+branch%3Adeploy+event%3Apush)
 
 ## Overview
 
