@@ -18,7 +18,7 @@
     <PackageVersion Include="NodaTime" Version="$(NodaTimeVersion)" />
     <PackageVersion Include="NodaTime.Testing" Version="$(NodaTimeVersion)" />
     <PackageVersion Include="ReportGenerator" Version="4.8.0" />
-    <PackageVersion Include="Shouldly" Version="4.0.0" />
+    <PackageVersion Include="Shouldly" Version="4.0.1" />
     <PackageVersion Include="StyleCop.Analyzers" Version="1.1.118" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="5.6.3" />
     <PackageVersion Include="Swashbuckle.AspNetCore.Annotations" Version="5.6.3" />
