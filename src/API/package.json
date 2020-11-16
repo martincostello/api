@@ -26,7 +26,7 @@
     "karma-html-detailed-reporter": "2.1.0",
     "karma-jasmine": "4.0.1",
     "lodash": ">=4.17.20",
-    "merge": ">=1.2.1",
+    "merge": ">=2.1.0",
     "mime": "2.4.6",
     "natives": "^1.1.6",
     "popper.js": "^1.16.1",
