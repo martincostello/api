@@ -4,6 +4,7 @@
 namespace MartinCostello.Api.Controllers
 {
     using System;
+    using System.Security.Cryptography;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
@@ -104,6 +105,6 @@ namespace MartinCostello.Api.Controllers
         [Route("wp-links-opml.php")]
         [Route("wp-login.php")]
         [Route("xmlrpc.php")]
-        public ActionResult No() => Redirect(Videos[new Random().Next(0, Videos.Length)]);
+        public ActionResult No() => Redirect(Videos[RandomNumberGenerator.GetInt32(0, Videos.Length)]);
     }
 }

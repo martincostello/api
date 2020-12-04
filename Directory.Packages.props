@@ -1,6 +1,5 @@
 <Project>
   <PropertyGroup>
-    <AnalyzersVersion>3.3.2</AnalyzersVersion>
     <NodaTimeVersion>3.0.3</NodaTimeVersion>
   </PropertyGroup>
   <ItemGroup>
@@ -11,8 +10,6 @@
     <PackageVersion Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
     <PackageVersion Include="Microsoft.AspNetCore.AzureAppServices.HostingStartup" Version="5.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="5.0.0" />
-    <PackageVersion Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="$(AnalyzersVersion)" />
-    <PackageVersion Include="Microsoft.CodeQuality.Analyzers" Version="$(AnalyzersVersion)" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.0.0" />
     <PackageVersion Include="NodaTime" Version="$(NodaTimeVersion)" />
@@ -27,8 +24,6 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="coverlet.msbuild" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.CodeQuality.Analyzers" PrivateAssets="All" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
     <PackageReference Include="ReportGenerator" PrivateAssets="All" />
     <PackageReference Include="StyleCop.Analyzers" PrivateAssets="All" />
