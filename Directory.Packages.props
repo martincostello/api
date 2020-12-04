@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <AnalyzersVersion>3.3.1</AnalyzersVersion>
+    <AnalyzersVersion>3.3.2</AnalyzersVersion>
     <NodaTimeVersion>3.0.3</NodaTimeVersion>
   </PropertyGroup>
   <ItemGroup>
