@@ -4,7 +4,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="BenchmarkDotNet" Version="0.12.1" />
-    <PackageVersion Include="coverlet.msbuild" Version="2.9.0" />
+    <PackageVersion Include="coverlet.msbuild" Version="3.0.0" />
     <PackageVersion Include="MartinCostello.Logging.XUnit" Version="0.1.0" />
     <PackageVersion Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.16.0" />
     <PackageVersion Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
