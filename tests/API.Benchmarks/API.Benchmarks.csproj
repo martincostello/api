@@ -6,7 +6,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>MartinCostello.API.Benchmarks</RootNamespace>
     <Summary>$(Description)</Summary>
-    <TargetFrameworks>net5.0</TargetFrameworks>
+    <TargetFrameworks>net6.0</TargetFrameworks>
     <!-- Workaround for https://github.com/dotnet/BenchmarkDotNet/pull/1420 -->
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>

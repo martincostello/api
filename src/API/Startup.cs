@@ -134,7 +134,6 @@ namespace MartinCostello.Api
             services.AddCors(ConfigureCors);
 
             services.AddControllersWithViews(ConfigureMvc)
-                    .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
                     .AddJsonOptions(ConfigureJsonFormatter);
 
             services.AddRouting(
