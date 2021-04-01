@@ -61,6 +61,7 @@ jobs:
 
     - name: Publish artifacts
       uses: actions/upload-artifact@v2
+      if: ${{ runner.os == 'Windows' }}
       with:
         name: webapp
         path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
