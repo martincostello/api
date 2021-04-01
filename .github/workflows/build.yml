@@ -65,7 +65,7 @@ jobs:
 
   deploy:
     if: ${{ github.ref == 'refs/heads/main' }}
-    name: Deploy to production
+    name: deploy-production
     needs: build
     runs-on: windows-latest
     environment:
