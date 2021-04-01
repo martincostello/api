@@ -64,6 +64,7 @@ jobs:
         path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
   deploy:
+    if: ${{ github.ref == 'refs/heads/main' }}
     name: Deploy to production
     needs: build
     runs-on: windows-latest
