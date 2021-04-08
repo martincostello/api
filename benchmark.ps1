@@ -14,7 +14,7 @@ $dotnetVersion = (Get-Content $sdkFile | Out-String | ConvertFrom-Json).sdk.vers
 $installDotNetSdk = $false;
 
 if (($null -eq (Get-Command "dotnet" -ErrorAction SilentlyContinue)) -and ($null -eq (Get-Command "dotnet.exe" -ErrorAction SilentlyContinue))) {
-    Write-Output "The .NET Core SDK is not installed."
+    Write-Host "The .NET Core SDK is not installed."
     $installDotNetSdk = $true
 }
 else {
@@ -26,7 +26,7 @@ else {
     }
 
     if ($installedDotNetVersion -ne $dotnetVersion) {
-        Write-Output "The required version of the .NET Core SDK is not installed. Expected $dotnetVersion."
+        Write-Host "The required version of the .NET Core SDK is not installed. Expected $dotnetVersion."
         $installDotNetSdk = $true
     }
 }
@@ -54,6 +54,6 @@ else {
 
 $benchmarks = (Join-Path $solutionPath "tests\API.Benchmarks\API.Benchmarks.csproj")
 
-Write-Output "Running benchmarks..." -ForegroundColor Green
+Write-Host "Running benchmarks..." -ForegroundColor Green
 
 & $dotnet run --project $benchmarks --configuration $Configuration --framework $Framework
