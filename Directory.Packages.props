@@ -8,8 +8,8 @@
     <PackageVersion Include="MartinCostello.Logging.XUnit" Version="0.1.1" />
     <PackageVersion Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.17.0" />
     <PackageVersion Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
-    <PackageVersion Include="Microsoft.AspNetCore.AzureAppServices.HostingStartup" Version="6.0.0-preview.3.21201.13" />
-    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.0-preview.3.21201.13" />
+    <PackageVersion Include="Microsoft.AspNetCore.AzureAppServices.HostingStartup" Version="6.0.0-preview.4.21210.1" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.0-preview.4.21210.1" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="16.10.0-release-20210330-02" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.0.0" />
     <PackageVersion Include="NodaTime" Version="$(NodaTimeVersion)" />
