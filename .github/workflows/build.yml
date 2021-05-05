@@ -69,7 +69,7 @@ jobs:
     name: deploy-production
     needs: build
     runs-on: windows-latest
-    concurrency: ${{ env.WEBSITE_URL_PROD }}
+    concurrency: production_environment
     environment:
       name: production
       url: ${{ env.WEBSITE_URL_PROD }}
