@@ -93,6 +93,8 @@ namespace MartinCostello.Api
 
             app.UseHttpMethodOverride();
 
+            app.UseResponseCompression();
+
             app.UseStaticFiles(CreateStaticFileOptions());
 
             app.UseRouting();
@@ -136,6 +138,8 @@ namespace MartinCostello.Api
             services.AddControllersWithViews(ConfigureMvc)
                     .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
                     .AddJsonOptions(ConfigureJsonFormatter);
+
+            services.AddResponseCompression();
 
             services.AddRouting(
                 (p) =>
