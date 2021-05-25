@@ -21,13 +21,7 @@ namespace MartinCostello.Api.Benchmarks
         /// </returns>
         internal static async Task Main(string[] args)
         {
-            var switcher = BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly);
-
-            if (args?.Length == 0)
-            {
-                switcher.RunAll();
-            }
-            else if (args?.Length == 1 && string.Equals(args[0], "--test", StringComparison.OrdinalIgnoreCase))
+            if (args?.Length == 1 && string.Equals(args[0], "--test", StringComparison.OrdinalIgnoreCase))
             {
                 using var benchmark = new ApiBenchmarks();
                 await benchmark.StartServer();
@@ -39,7 +33,7 @@ namespace MartinCostello.Api.Benchmarks
             }
             else
             {
-                switcher.Run(args);
+                BenchmarkRunner.Run<ApiBenchmarks>(args: args);
             }
         }
     }

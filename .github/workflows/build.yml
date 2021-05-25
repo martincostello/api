@@ -42,16 +42,16 @@ jobs:
     steps:
 
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v2.3.4
 
     - name: Setup .NET SDK
-      uses: actions/setup-dotnet@v1.7.2
+      uses: actions/setup-dotnet@v1.8.0
 
     - name: Build, test and publish
       shell: pwsh
       run: ./build.ps1
 
-    - uses: codecov/codecov-action@v1.3.2
+    - uses: codecov/codecov-action@v1.5.0
       name: Upload coverage to Codecov
       with:
         file: ./artifacts/coverage.cobertura.xml
@@ -69,6 +69,7 @@ jobs:
     name: deploy-production
     needs: build
     runs-on: windows-latest
+    concurrency: production_environment
     environment:
       name: production
       url: ${{ env.WEBSITE_URL_PROD }}
@@ -81,7 +82,7 @@ jobs:
         name: webapp
 
     - name: Deploy to Azure App Service
-      uses: azure/webapps-deploy@v2
+      uses: azure/webapps-deploy@v2.2.0
       id: deploy_production
       with:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
@@ -95,10 +96,10 @@ jobs:
     steps:
 
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v2.3.4
 
     - name: Setup .NET SDK
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v1.8.0
 
     - name: Run end-to-end tests
       shell: pwsh

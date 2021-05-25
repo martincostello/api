@@ -1,24 +1,24 @@
 <Project>
   <PropertyGroup>
     <NodaTimeVersion>3.0.5</NodaTimeVersion>
+    <SwashbuckleAspNetCoreVersion>6.1.4</SwashbuckleAspNetCoreVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="BenchmarkDotNet" Version="0.12.1" />
+    <PackageVersion Include="BenchmarkDotNet" Version="0.13.0" />
     <PackageVersion Include="coverlet.msbuild" Version="3.0.3" />
     <PackageVersion Include="MartinCostello.Logging.XUnit" Version="0.1.1" />
     <PackageVersion Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.17.0" />
-    <PackageVersion Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
     <PackageVersion Include="Microsoft.AspNetCore.AzureAppServices.HostingStartup" Version="6.0.0-preview.4.21253.5" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.0-preview.4.21253.5" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="16.10.0-release-20210429-01" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.0.0" />
     <PackageVersion Include="NodaTime" Version="$(NodaTimeVersion)" />
     <PackageVersion Include="NodaTime.Testing" Version="$(NodaTimeVersion)" />
-    <PackageVersion Include="ReportGenerator" Version="4.8.7" />
+    <PackageVersion Include="ReportGenerator" Version="4.8.8" />
     <PackageVersion Include="Shouldly" Version="4.0.3" />
     <PackageVersion Include="StyleCop.Analyzers" Version="1.1.118" />
-    <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.1.1" />
-    <PackageVersion Include="Swashbuckle.AspNetCore.Annotations" Version="6.1.1" />
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="$(SwashbuckleAspNetCoreVersion)" />
+    <PackageVersion Include="Swashbuckle.AspNetCore.Annotations" Version="$(SwashbuckleAspNetCoreVersion)" />
     <PackageVersion Include="xunit" Version="2.4.1" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="2.4.3" />
     <PackageVersion Include="Xunit.SkippableFact" Version="1.4.13" />

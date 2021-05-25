@@ -13,10 +13,10 @@ jobs:
     steps:
 
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v2.3.4
 
     - name: Update .NET SDK
-      uses: martincostello/update-dotnet-sdk@v1
+      uses: martincostello/update-dotnet-sdk@v1.1.2
       if: ${{ github.repository_owner == 'martincostello' }}
       with:
         repo-token: ${{ secrets.ACCESS_TOKEN }}
