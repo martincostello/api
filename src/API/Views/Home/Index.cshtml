@@ -17,7 +17,7 @@
         and the source code can be found on <a href="@options.Metadata?.Repository" rel="noopener" target="_blank" title="This application's GitHub repository">GitHub</a>.
     </p>
     <p>
-        It is currently running <a href="https://github.com/dotnet/aspnetcore/tree/@(mvcVersion?.Split('+').ElementAtOrDefault(1) ?? "master")" rel="noopener" target="_blank" title="ASP.NET on GitHub">ASP.NET @(mvcVersion?.Split('+').FirstOrDefault())</a>.
+        It is currently running .NET @(System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription).
     </p>
 </div>
 <div class="row">
