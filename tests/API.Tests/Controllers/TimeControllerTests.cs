@@ -29,7 +29,8 @@ namespace MartinCostello.Api.Controllers
 
             var actual = result.Value;
 
-            actual.Timestamp.ShouldBe(initial.ToDateTimeOffset());
+            actual.ShouldNotBeNull();
+            actual!.Timestamp.ShouldBe(initial.ToDateTimeOffset());
             actual.Rfc1123.ShouldBe("Tue, 24 May 2016 12:34:56 GMT");
             actual.UniversalFull.ShouldBe("Tuesday, 24 May 2016 12:34:56");
             actual.UniversalSortable.ShouldBe("2016-05-24 12:34:56Z");
