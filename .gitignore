@@ -24,6 +24,7 @@ TestResults
 UpgradeLog*.htm
 UpgradeLog*.XML
 PublishProfiles
+*.binlog
 *.coverage
 *.DotSettings
 *.GhostDoc.xml
