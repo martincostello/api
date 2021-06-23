@@ -1,12 +1,12 @@
 // Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
+using System;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
+
 namespace MartinCostello.Api
 {
-    using System;
-    using Microsoft.AspNetCore.Hosting;
-    using Microsoft.Extensions.Hosting;
-
     /// <summary>
     /// A class representing the entry-point to the application. This class cannot be inherited.
     /// </summary>

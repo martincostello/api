@@ -1,10 +1,10 @@
 // Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
+using MartinCostello.Api.Options;
+
 namespace MartinCostello.Api.Models
 {
-    using Options;
-
     /// <summary>
     /// A class representing the view model for page metadata. This class cannot be inherited.
     /// </summary>

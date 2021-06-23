@@ -1,14 +1,14 @@
 ﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
+using System.Net;
+using System.Net.Mime;
+using System.Threading.Tasks;
+using Shouldly;
+using Xunit;
+
 namespace MartinCostello.Api.EndToEnd
 {
-    using System.Net;
-    using System.Net.Mime;
-    using System.Threading.Tasks;
-    using Shouldly;
-    using Xunit;
-
     public class ResourceTests : EndToEndTest
     {
         public ResourceTests(ApiFixture fixture)

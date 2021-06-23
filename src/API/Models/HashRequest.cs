@@ -1,11 +1,11 @@
 // Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+
 namespace MartinCostello.Api.Models
 {
-    using System.ComponentModel.DataAnnotations;
-    using System.Text.Json.Serialization;
-
     /// <summary>
     /// Represents a request to the <c>/tools/hash</c> API resource.
     /// </summary>

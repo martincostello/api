@@ -1,21 +1,21 @@
 // Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Net.Mime;
+using System.Security.Cryptography;
+using System.Text;
+using MartinCostello.Api.Models;
+using MartinCostello.Api.Swagger;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
+
 namespace MartinCostello.Api.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Net.Mime;
-    using System.Security.Cryptography;
-    using System.Text;
-    using Microsoft.AspNetCore.Cors;
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Mvc;
-    using Models;
-    using Swagger;
-    using Swashbuckle.AspNetCore.Annotations;
-
     /// <summary>
     /// A class representing the controller for the <c>/tools</c> resource.
     /// </summary>

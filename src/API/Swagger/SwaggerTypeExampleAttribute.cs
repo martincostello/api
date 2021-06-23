@@ -1,10 +1,10 @@
 // Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
+using System;
+
 namespace MartinCostello.Api.Swagger
 {
-    using System;
-
     /// <summary>
     /// Defines an example response for an API method. This class cannot be inherited.
     /// </summary>

@@ -1,12 +1,12 @@
 // Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
+using System;
+using System.Threading.Tasks;
+using BenchmarkDotNet.Running;
+
 namespace MartinCostello.Api.Benchmarks
 {
-    using System;
-    using System.Threading.Tasks;
-    using BenchmarkDotNet.Running;
-
     /// <summary>
     /// A console application that runs performance benchmarks for the API. This class cannot be inherited.
     /// </summary>

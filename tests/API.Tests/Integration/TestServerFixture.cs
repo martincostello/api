@@ -1,15 +1,15 @@
 // Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
+using System;
+using MartinCostello.Logging.XUnit;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.Logging;
+using Xunit.Abstractions;
+
 namespace MartinCostello.Api.Integration
 {
-    using System;
-    using MartinCostello.Logging.XUnit;
-    using Microsoft.AspNetCore.Hosting;
-    using Microsoft.AspNetCore.Mvc.Testing;
-    using Microsoft.Extensions.Logging;
-    using Xunit.Abstractions;
-
     /// <summary>
     /// A class representing a factory for creating instances of the application.
     /// </summary>

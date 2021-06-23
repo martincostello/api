@@ -1,12 +1,12 @@
 // Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
+using System;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
+
 namespace MartinCostello.Api.Swagger
 {
-    using System;
-    using Microsoft.OpenApi.Models;
-    using Swashbuckle.AspNetCore.SwaggerGen;
-
     /// <summary>
     /// A class representing an operation filter that modifies XML documentation that matches <c>StyleCop</c>
     /// requirements to be more human-readable for display in Swagger documentation. This class cannot be inherited.
