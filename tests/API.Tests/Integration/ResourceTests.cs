@@ -1,18 +1,18 @@
 // Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Net.Mime;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Shouldly;
+using Xunit;
+using Xunit.Abstractions;
+
 namespace MartinCostello.Api.Integration
 {
-    using System.Net;
-    using System.Net.Http;
-    using System.Net.Http.Headers;
-    using System.Net.Mime;
-    using System.Threading.Tasks;
-    using Microsoft.AspNetCore.Mvc.Testing;
-    using Shouldly;
-    using Xunit;
-    using Xunit.Abstractions;
-
     /// <summary>
     /// A class containing tests for loading resources in the website.
     /// </summary>

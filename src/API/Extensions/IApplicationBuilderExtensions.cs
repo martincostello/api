@@ -1,15 +1,15 @@
 // Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
+using MartinCostello.Api.Middleware;
+using MartinCostello.Api.Options;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
+
 namespace MartinCostello.Api.Extensions
 {
-    using Microsoft.AspNetCore.Builder;
-    using Microsoft.AspNetCore.Hosting;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.Options;
-    using Middleware;
-    using Options;
-
     /// <summary>
     /// A class containing extension methods for the <see cref="IApplicationBuilder"/> interface. This class cannot be inherited.
     /// </summary>

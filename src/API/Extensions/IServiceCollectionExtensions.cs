@@ -1,20 +1,19 @@
 // Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
+using System;
+using System.IO;
+using MartinCostello.Api.Options;
+using MartinCostello.Api.Swagger;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
+
 namespace MartinCostello.Api.Extensions
 {
-    using System;
-    using System.IO;
-    using System.Reflection;
-    using Microsoft.AspNetCore.Hosting;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Hosting;
-    using Microsoft.Extensions.Options;
-    using Microsoft.OpenApi.Models;
-    using Options;
-    using Swagger;
-    using Swashbuckle.AspNetCore.SwaggerGen;
-
     /// <summary>
     /// A class containing extension methods for the <see cref="IServiceCollection"/> interface. This class cannot be inherited.
     /// </summary>
