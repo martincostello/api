@@ -2,8 +2,6 @@
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 using MartinCostello.Api.Models;
-using Shouldly;
-using Xunit;
 
 namespace MartinCostello.Api.Controllers
 {
