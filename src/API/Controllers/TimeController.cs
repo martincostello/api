@@ -1,18 +1,18 @@
 // Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
+using System.Globalization;
+using System.Net.Mime;
+using MartinCostello.Api.Models;
+using MartinCostello.Api.Swagger;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using NodaTime;
+using Swashbuckle.AspNetCore.Annotations;
+
 namespace MartinCostello.Api.Controllers
 {
-    using System.Globalization;
-    using System.Net.Mime;
-    using Microsoft.AspNetCore.Cors;
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Mvc;
-    using Models;
-    using NodaTime;
-    using Swagger;
-    using Swashbuckle.AspNetCore.Annotations;
-
     /// <summary>
     /// A class representing the controller for the <c>/time</c> resource.
     /// </summary>

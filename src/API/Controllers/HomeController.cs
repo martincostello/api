@@ -1,14 +1,14 @@
 // Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
+using System;
+using System.Linq;
+using MartinCostello.Api.Extensions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
 namespace MartinCostello.Api.Controllers
 {
-    using System;
-    using System.Linq;
-    using Extensions;
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Mvc;
-
     /// <summary>
     /// A class representing the controller for the <c>/</c> resource.
     /// </summary>

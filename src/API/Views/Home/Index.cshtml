@@ -8,7 +8,7 @@
 <div class="jumbotron">
     <h1>Martin Costello's API</h1>
     <p class="lead">
-        This website is an excercise in the use of ASP.NET @Environment.Version.ToString(2) for a website and REST API.
+        This website is an excercise in the use of ASP.NET Core @Environment.Version.ToString(1) for a website and REST API.
     </p>
 </div>
 <div>
@@ -17,7 +17,7 @@
         and the source code can be found on <a href="@options.Metadata?.Repository" rel="noopener" target="_blank" title="This application's GitHub repository">GitHub</a>.
     </p>
     <p>
-        It is currently running <a href="https://github.com/dotnet/aspnetcore/tree/@(mvcVersion?.Split('+').ElementAtOrDefault(1) ?? "master")" rel="noopener" target="_blank" title="ASP.NET on GitHub">ASP.NET @(mvcVersion?.Split('+').FirstOrDefault())</a>.
+        It is currently running @(System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription).
     </p>
 </div>
 <div class="row">

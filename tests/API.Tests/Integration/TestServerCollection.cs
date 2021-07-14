@@ -1,10 +1,10 @@
 // Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
+using Xunit;
+
 namespace MartinCostello.Api.Integration
 {
-    using Xunit;
-
     /// <summary>
     /// A class representing the collection fixture for a test server. This class cannot be inherited.
     /// </summary>

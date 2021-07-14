@@ -1,20 +1,20 @@
 // Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
+using System;
+using System.Diagnostics;
+using System.Globalization;
+using System.Text;
+using System.Threading.Tasks;
+using MartinCostello.Api.Options;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
+
 namespace MartinCostello.Api.Middleware
 {
-    using System;
-    using System.Diagnostics;
-    using System.Globalization;
-    using System.Text;
-    using System.Threading.Tasks;
-    using Microsoft.AspNetCore.Hosting;
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.Hosting;
-    using Microsoft.Extensions.Options;
-    using Options;
-
     /// <summary>
     /// A class representing middleware for adding custom HTTP response headers. This class cannot be inherited.
     /// </summary>
