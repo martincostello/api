@@ -10,7 +10,6 @@
     <Summary>Martin Costello's API</Summary>
     <UserSecretsId>api.martincostello.com</UserSecretsId>
     <!-- Workaround for https://github.com/dotnet/aspnetcore/issues/31719 -->
-    <_UseRazorSourceGenerator>false</_UseRazorSourceGenerator>
     <UseRazorSourceGenerator>false</UseRazorSourceGenerator>
   </PropertyGroup>
   <ItemGroup>
