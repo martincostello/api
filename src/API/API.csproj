@@ -6,9 +6,11 @@
     <OutputType>Exe</OutputType>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <RootNamespace>MartinCostello.Api</RootNamespace>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Summary>Martin Costello's API</Summary>
     <UserSecretsId>api.martincostello.com</UserSecretsId>
+    <!-- Workaround for https://github.com/dotnet/aspnetcore/issues/31719 -->
+    <UseRazorSourceGenerator>false</UseRazorSourceGenerator>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="parameters.xml" CopyToOutputDirectory="PreserveNewest" />
