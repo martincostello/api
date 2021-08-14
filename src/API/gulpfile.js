@@ -13,8 +13,8 @@ var rename = require('gulp-rename');
 
 var webroot = './wwwroot/assets/';
 var assets = './assets/';
-var scripts = assets + 'Scripts/';
-var styles = assets + 'Styles/';
+var scripts = assets + 'scripts/';
+var styles = assets + 'styles/';
 
 var paths = {
     js: scripts + 'js/**/*.js',
