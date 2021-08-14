@@ -22,8 +22,8 @@ module.exports = function (config) {
     frameworks: ['jasmine'],
 
     files: [
-      'Assets/Scripts/js/site.js',
-      'Assets/Scripts/**/*.spec.js'
+      'assets/scripts/js/site.js',
+      'assets/scripts/**/*.spec.js'
     ],
 
     htmlDetailed: {

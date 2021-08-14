@@ -11,10 +11,10 @@ var jshint = require('gulp-jshint');
 var karmaServer = require('karma').Server;
 var rename = require('gulp-rename');
 
-var webroot = './wwwroot/Assets/';
-var assets = './Assets/';
-var scripts = assets + 'Scripts/';
-var styles = assets + 'Styles/';
+var webroot = './wwwroot/assets/';
+var assets = './assets/';
+var scripts = assets + 'scripts/';
+var styles = assets + 'styles/';
 
 var paths = {
     js: scripts + 'js/**/*.js',
