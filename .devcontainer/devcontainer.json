@@ -1,5 +1,8 @@
 {
   "name": "C# (.NET)",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
   "extensions": [
     "editorconfig.editorconfig",
     "ms-dotnettools.csharp",
