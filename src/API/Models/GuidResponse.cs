@@ -3,19 +3,18 @@
 
 using System.Text.Json.Serialization;
 
-namespace MartinCostello.Api.Models
+namespace MartinCostello.Api.Models;
+
+/// <summary>
+/// Represents the response from the <c>/tools/guid</c> API resource.
+/// </summary>
+public sealed class GuidResponse
 {
     /// <summary>
-    /// Represents the response from the <c>/tools/guid</c> API resource.
+    /// Gets or sets the generated GUID value.
     /// </summary>
-    public sealed class GuidResponse
-    {
-        /// <summary>
-        /// Gets or sets the generated GUID value.
-        /// </summary>
-        [JsonPropertyName("guid")]
+    [JsonPropertyName("guid")]
 #pragma warning disable CA1720
-        public string Guid { get; set; } = string.Empty;
+    public string Guid { get; set; } = string.Empty;
 #pragma warning restore CA1720
-    }
 }

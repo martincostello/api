@@ -4,30 +4,29 @@
 using System.Text.Json.Serialization;
 using MartinCostello.Api.Swagger;
 
-namespace MartinCostello.Api.Models
+namespace MartinCostello.Api.Models;
+
+/// <summary>
+/// Represents an error response from an API resource.
+/// </summary>
+[SwaggerTypeExample(typeof(ErrorResponseExampleProvider))]
+public sealed class ErrorResponse
 {
     /// <summary>
-    /// Represents an error response from an API resource.
+    /// Gets or sets the HTTP status code.
     /// </summary>
-    [SwaggerTypeExample(typeof(ErrorResponseExampleProvider))]
-    public sealed class ErrorResponse
-    {
-        /// <summary>
-        /// Gets or sets the HTTP status code.
-        /// </summary>
-        [JsonPropertyName("statusCode")]
-        public int StatusCode { get; set; }
+    [JsonPropertyName("statusCode")]
+    public int StatusCode { get; set; }
 
-        /// <summary>
-        /// Gets or sets the error message.
-        /// </summary>
-        [JsonPropertyName("message")]
-        public string Message { get; set; } = string.Empty;
+    /// <summary>
+    /// Gets or sets the error message.
+    /// </summary>
+    [JsonPropertyName("message")]
+    public string Message { get; set; } = string.Empty;
 
-        /// <summary>
-        /// Gets or sets the request Id.
-        /// </summary>
-        [JsonPropertyName("requestId")]
-        public string RequestId { get; set; } = string.Empty;
-    }
+    /// <summary>
+    /// Gets or sets the request Id.
+    /// </summary>
+    [JsonPropertyName("requestId")]
+    public string RequestId { get; set; } = string.Empty;
 }

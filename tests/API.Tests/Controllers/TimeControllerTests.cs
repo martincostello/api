@@ -3,36 +3,35 @@
 
 using NodaTime.Testing;
 
-namespace MartinCostello.Api.Controllers
+namespace MartinCostello.Api.Controllers;
+
+/// <summary>
+/// A class containing tests for the <see cref="TimeController"/> class. This class cannot be inherited.
+/// </summary>
+public static class TimeControllerTests
 {
-    /// <summary>
-    /// A class containing tests for the <see cref="TimeController"/> class. This class cannot be inherited.
-    /// </summary>
-    public static class TimeControllerTests
+    [Fact]
+    public static void Time_Get_Returns_Correct_Response()
     {
-        [Fact]
-        public static void Time_Get_Returns_Correct_Response()
-        {
-            // Arrange
-            var initial = NodaTime.Instant.FromUtc(2016, 05, 24, 12, 34, 56);
-            var clock = new FakeClock(initial);
+        // Arrange
+        var initial = NodaTime.Instant.FromUtc(2016, 05, 24, 12, 34, 56);
+        var clock = new FakeClock(initial);
 
-            var target = new TimeController(clock);
+        var target = new TimeController(clock);
 
-            // Act
-            var result = target.Get();
+        // Act
+        var result = target.Get();
 
-            // Assert
-            result.ShouldNotBeNull();
+        // Assert
+        result.ShouldNotBeNull();
 
-            var actual = result.Value;
+        var actual = result.Value;
 
-            actual.ShouldNotBeNull();
-            actual!.Timestamp.ShouldBe(initial.ToDateTimeOffset());
-            actual.Rfc1123.ShouldBe("Tue, 24 May 2016 12:34:56 GMT");
-            actual.UniversalFull.ShouldBe("Tuesday, 24 May 2016 12:34:56");
-            actual.UniversalSortable.ShouldBe("2016-05-24 12:34:56Z");
-            actual.Unix.ShouldBe(1464093296);
-        }
+        actual.ShouldNotBeNull();
+        actual!.Timestamp.ShouldBe(initial.ToDateTimeOffset());
+        actual.Rfc1123.ShouldBe("Tue, 24 May 2016 12:34:56 GMT");
+        actual.UniversalFull.ShouldBe("Tuesday, 24 May 2016 12:34:56");
+        actual.UniversalSortable.ShouldBe("2016-05-24 12:34:56Z");
+        actual.Unix.ShouldBe(1464093296);
     }
 }

@@ -4,40 +4,39 @@
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace MartinCostello.Api.Swagger
+namespace MartinCostello.Api.Swagger;
+
+/// <summary>
+/// A class representing an operation filter that modifies XML documentation that matches <c>StyleCop</c>
+/// requirements to be more human-readable for display in Swagger documentation. This class cannot be inherited.
+/// </summary>
+internal sealed class RemoveStyleCopPrefixesFilter : IOperationFilter
 {
     /// <summary>
-    /// A class representing an operation filter that modifies XML documentation that matches <c>StyleCop</c>
-    /// requirements to be more human-readable for display in Swagger documentation. This class cannot be inherited.
+    /// The documentation prefix to remove.
     /// </summary>
-    internal sealed class RemoveStyleCopPrefixesFilter : IOperationFilter
+    private const string Prefix = "Gets or sets ";
+
+    /// <inheritdoc />
+    public void Apply(OpenApiOperation operation, OperationFilterContext context)
     {
-        /// <summary>
-        /// The documentation prefix to remove.
-        /// </summary>
-        private const string Prefix = "Gets or sets ";
-
-        /// <inheritdoc />
-        public void Apply(OpenApiOperation operation, OperationFilterContext context)
+        if (context?.SchemaRepository?.Schemas != null)
         {
-            if (context?.SchemaRepository?.Schemas != null)
+            foreach (var definition in context.SchemaRepository.Schemas.Values)
             {
-                foreach (var definition in context.SchemaRepository.Schemas.Values)
+                if (definition.Properties != null)
                 {
-                    if (definition.Properties != null)
+                    foreach (var property in definition.Properties.Values)
                     {
-                        foreach (var property in definition.Properties.Values)
+                        if (property.Description != null)
                         {
-                            if (property.Description != null)
+                            if (property.Description.StartsWith(Prefix, StringComparison.Ordinal))
                             {
-                                if (property.Description.StartsWith(Prefix, StringComparison.Ordinal))
-                                {
-                                    // Remove the StyleCop property prefix
-                                    property.Description = property.Description.Replace(Prefix, string.Empty, StringComparison.Ordinal);
+                                // Remove the StyleCop property prefix
+                                property.Description = property.Description.Replace(Prefix, string.Empty, StringComparison.Ordinal);
 
-                                    // Capitalize the first letter that's left over
-                                    property.Description = char.ToUpperInvariant(property.Description[0]) + property.Description[1..];
-                                }
+                                // Capitalize the first letter that's left over
+                                property.Description = char.ToUpperInvariant(property.Description[0]) + property.Description[1..];
                             }
                         }
                     }

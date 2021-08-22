@@ -3,20 +3,19 @@
 
 using Microsoft.AspNetCore.Mvc;
 
-namespace MartinCostello.Api.Controllers
+namespace MartinCostello.Api.Controllers;
+
+/// <summary>
+/// A class representing the controller for the <c>/docs/</c> resource.
+/// </summary>
+public class DocsController : Controller
 {
     /// <summary>
-    /// A class representing the controller for the <c>/docs/</c> resource.
+    /// Gets the view for the documentation page.
     /// </summary>
-    public class DocsController : Controller
-    {
-        /// <summary>
-        /// Gets the view for the documentation page.
-        /// </summary>
-        /// <returns>
-        /// The view for the documentation page.
-        /// </returns>
-        [HttpGet]
-        public IActionResult Index() => View();
-    }
+    /// <returns>
+    /// The view for the documentation page.
+    /// </returns>
+    [HttpGet]
+    public IActionResult Index() => View();
 }

@@ -3,23 +3,22 @@
 
 using MartinCostello.Api.Models;
 
-namespace MartinCostello.Api.Swagger
+namespace MartinCostello.Api.Swagger;
+
+/// <summary>
+/// A class representing an implementation of <see cref="IExampleProvider"/>
+/// for the <see cref="ErrorResponse"/> class. This class cannot be inherited.
+/// </summary>
+public sealed class ErrorResponseExampleProvider : IExampleProvider
 {
-    /// <summary>
-    /// A class representing an implementation of <see cref="IExampleProvider"/>
-    /// for the <see cref="ErrorResponse"/> class. This class cannot be inherited.
-    /// </summary>
-    public sealed class ErrorResponseExampleProvider : IExampleProvider
+    /// <inheritdoc />
+    public object GetExample()
     {
-        /// <inheritdoc />
-        public object GetExample()
+        return new ErrorResponse()
         {
-            return new ErrorResponse()
-            {
-                Message = "The specified value is invalid",
-                RequestId = "0HKT0TM6UJASI",
-                StatusCode = 400,
-            };
-        }
+            Message = "The specified value is invalid",
+            RequestId = "0HKT0TM6UJASI",
+            StatusCode = 400,
+        };
     }
 }

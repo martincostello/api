@@ -3,39 +3,38 @@
 
 using System.Net.Http.Headers;
 
-namespace MartinCostello.Api.EndToEnd
+namespace MartinCostello.Api.EndToEnd;
+
+public sealed class ApiFixture
 {
-    public sealed class ApiFixture
+    private const string WebsiteUrl = "WEBSITE_URL";
+
+    public ApiFixture()
     {
-        private const string WebsiteUrl = "WEBSITE_URL";
+        string url = Environment.GetEnvironmentVariable(WebsiteUrl) ?? string.Empty;
 
-        public ApiFixture()
+        if (Uri.TryCreate(url, UriKind.Absolute, out Uri? address))
         {
-            string url = Environment.GetEnvironmentVariable(WebsiteUrl) ?? string.Empty;
-
-            if (Uri.TryCreate(url, UriKind.Absolute, out Uri? address))
-            {
-                ServerAddress = address;
-            }
+            ServerAddress = address;
         }
+    }
 
-        public Uri? ServerAddress { get; }
+    public Uri? ServerAddress { get; }
 
-        public HttpClient CreateClient()
+    public HttpClient CreateClient()
+    {
+        Skip.If(ServerAddress is null, $"The {WebsiteUrl} environment variable is not set or is not a valid absolute URI.");
+
+        var client = new HttpClient()
         {
-            Skip.If(ServerAddress is null, $"The {WebsiteUrl} environment variable is not set or is not a valid absolute URI.");
+            BaseAddress = ServerAddress,
+        };
 
-            var client = new HttpClient()
-            {
-                BaseAddress = ServerAddress,
-            };
+        client.DefaultRequestHeaders.UserAgent.Add(
+            new ProductInfoHeaderValue(
+                "MartinCostello.Api.Tests",
+                "1.0.0+" + GitMetadata.Commit));
 
-            client.DefaultRequestHeaders.UserAgent.Add(
-                new ProductInfoHeaderValue(
-                    "MartinCostello.Api.Tests",
-                    "1.0.0+" + GitMetadata.Commit));
-
-            return client;
-        }
+        return client;
     }
 }

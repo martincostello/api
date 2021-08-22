@@ -7,87 +7,86 @@ using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace MartinCostello.Api.Extensions
+namespace MartinCostello.Api.Extensions;
+
+/// <summary>
+/// A class containing extension methods for the <see cref="IServiceCollection"/> interface. This class cannot be inherited.
+/// </summary>
+public static class IServiceCollectionExtensions
 {
     /// <summary>
-    /// A class containing extension methods for the <see cref="IServiceCollection"/> interface. This class cannot be inherited.
+    /// Adds Swagger to the services.
     /// </summary>
-    public static class IServiceCollectionExtensions
+    /// <param name="value">The <see cref="IServiceCollection"/> to add the service to.</param>
+    /// <param name="environment">The current hosting environment.</param>
+    /// <returns>
+    /// The value specified by <paramref name="value"/>.
+    /// </returns>
+    public static IServiceCollection AddSwagger(this IServiceCollection value, IWebHostEnvironment environment)
     {
-        /// <summary>
-        /// Adds Swagger to the services.
-        /// </summary>
-        /// <param name="value">The <see cref="IServiceCollection"/> to add the service to.</param>
-        /// <param name="environment">The current hosting environment.</param>
-        /// <returns>
-        /// The value specified by <paramref name="value"/>.
-        /// </returns>
-        public static IServiceCollection AddSwagger(this IServiceCollection value, IWebHostEnvironment environment)
-        {
-            value.AddSwaggerGen((p) =>
+        value.AddSwaggerGen((p) =>
+            {
+                var provider = value.BuildServiceProvider();
+                var options = provider.GetRequiredService<IOptions<SiteOptions>>().Value;
+
+                var info = new OpenApiInfo()
                 {
-                    var provider = value.BuildServiceProvider();
-                    var options = provider.GetRequiredService<IOptions<SiteOptions>>().Value;
-
-                    var info = new OpenApiInfo()
+                    Contact = new OpenApiContact()
                     {
-                        Contact = new OpenApiContact()
-                        {
-                            Name = options.Metadata?.Author?.Name,
-                            Url = new Uri(options.Metadata?.Author?.Website ?? string.Empty),
-                        },
-                        Description = options.Metadata?.Description,
-                        License = new OpenApiLicense()
-                        {
-                            Name = options.Api?.License?.Name,
-                            Url = new Uri(options.Api?.License?.Url ?? string.Empty),
-                        },
-                        Title = options.Metadata?.Name,
-                        Version = string.Empty,
-                    };
+                        Name = options.Metadata?.Author?.Name,
+                        Url = new Uri(options.Metadata?.Author?.Website ?? string.Empty),
+                    },
+                    Description = options.Metadata?.Description,
+                    License = new OpenApiLicense()
+                    {
+                        Name = options.Api?.License?.Name,
+                        Url = new Uri(options.Api?.License?.Url ?? string.Empty),
+                    },
+                    Title = options.Metadata?.Name,
+                    Version = string.Empty,
+                };
 
-                    p.EnableAnnotations();
+                p.EnableAnnotations();
 
-                    p.IgnoreObsoleteActions();
-                    p.IgnoreObsoleteProperties();
+                p.IgnoreObsoleteActions();
+                p.IgnoreObsoleteProperties();
 
-                    AddXmlCommentsIfExists(p, environment, "API.xml");
+                AddXmlCommentsIfExists(p, environment, "API.xml");
 
-                    p.SwaggerDoc("api", info);
+                p.SwaggerDoc("api", info);
 
-                    p.SchemaFilter<ExampleFilter>();
-                    p.OperationFilter<ExampleFilter>();
-                    p.OperationFilter<RemoveStyleCopPrefixesFilter>();
-                });
+                p.SchemaFilter<ExampleFilter>();
+                p.OperationFilter<ExampleFilter>();
+                p.OperationFilter<RemoveStyleCopPrefixesFilter>();
+            });
 
-            return value;
+        return value;
+    }
+
+    /// <summary>
+    /// Adds XML comments to Swagger if the file exists.
+    /// </summary>
+    /// <param name="options">The Swagger options.</param>
+    /// <param name="environment">The current hosting environment.</param>
+    /// <param name="fileName">The XML comments file name to try to add.</param>
+    private static void AddXmlCommentsIfExists(SwaggerGenOptions options, IWebHostEnvironment environment, string fileName)
+    {
+        string applicationPath;
+
+        if (environment.IsDevelopment())
+        {
+            applicationPath = Path.GetDirectoryName(typeof(Startup).Assembly.Location) ?? ".";
+        }
+        else
+        {
+            applicationPath = environment.ContentRootPath;
         }
 
-        /// <summary>
-        /// Adds XML comments to Swagger if the file exists.
-        /// </summary>
-        /// <param name="options">The Swagger options.</param>
-        /// <param name="environment">The current hosting environment.</param>
-        /// <param name="fileName">The XML comments file name to try to add.</param>
-        private static void AddXmlCommentsIfExists(SwaggerGenOptions options, IWebHostEnvironment environment, string fileName)
+        var path = Path.GetFullPath(Path.Combine(applicationPath, fileName));
+
+        if (File.Exists(path))
         {
-            string applicationPath;
-
-            if (environment.IsDevelopment())
-            {
-                applicationPath = Path.GetDirectoryName(typeof(Startup).Assembly.Location) ?? ".";
-            }
-            else
-            {
-                applicationPath = environment.ContentRootPath;
-            }
-
-            var path = Path.GetFullPath(Path.Combine(applicationPath, fileName));
-
-            if (File.Exists(path))
-            {
-                options.IncludeXmlComments(path);
-            }
+            options.IncludeXmlComments(path);
         }
     }
 }
