@@ -11,7 +11,7 @@ namespace MartinCostello.Api.Integration;
 /// <summary>
 /// A class representing a factory for creating instances of the application.
 /// </summary>
-public class TestServerFixture : WebApplicationFactory<Startup>, ITestOutputHelperAccessor
+public class TestServerFixture : WebApplicationFactory<Models.TimeResponse>, ITestOutputHelperAccessor
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="TestServerFixture"/> class.

@@ -39,7 +39,7 @@ public class TimeController : ControllerBase
     /// <returns>
     /// An <see cref="IActionResult"/> containing the current time.
     /// </returns>
-    [EnableCors(Startup.DefaultCorsPolicyName)]
+    [EnableCors("DefaultCorsPolicy")]
     [HttpGet]
     [Produces(MediaTypeNames.Application.Json, Type = typeof(TimeResponse))]
     [ProducesResponseType(typeof(TimeResponse), StatusCodes.Status200OK)]

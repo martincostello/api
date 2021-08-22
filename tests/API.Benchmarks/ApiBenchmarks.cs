@@ -22,7 +22,7 @@ public class ApiBenchmarks : IDisposable
 
     public ApiBenchmarks()
     {
-        _host = Api.Program.CreateHostBuilder(Array.Empty<string>())
+        _host = new HostBuilder()
             .UseEnvironment("Development")
             .ConfigureLogging((builder) => builder.ClearProviders().SetMinimumLevel(LogLevel.Error))
             .ConfigureWebHostDefaults((builder) => builder.UseUrls(ServerUrl))

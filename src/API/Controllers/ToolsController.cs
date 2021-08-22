@@ -16,7 +16,7 @@ namespace MartinCostello.Api.Controllers;
 /// A class representing the controller for the <c>/tools</c> resource.
 /// </summary>
 [ApiController]
-[EnableCors(Startup.DefaultCorsPolicyName)]
+[EnableCors("DefaultCorsPolicy")]
 [Produces(MediaTypeNames.Application.Json)]
 [Route("tools")]
 public class ToolsController : ControllerBase
