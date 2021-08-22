@@ -2,7 +2,6 @@
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 using System.Security.Cryptography;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MartinCostello.Api.Controllers

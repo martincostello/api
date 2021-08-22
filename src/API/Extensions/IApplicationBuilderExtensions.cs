@@ -3,9 +3,6 @@
 
 using MartinCostello.Api.Middleware;
 using MartinCostello.Api.Options;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 
 namespace MartinCostello.Api.Extensions

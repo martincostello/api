@@ -7,7 +7,6 @@ using System.Text;
 using MartinCostello.Api.Models;
 using MartinCostello.Api.Swagger;
 using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 

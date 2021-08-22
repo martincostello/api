@@ -2,7 +2,6 @@
   <ItemGroup>
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json" Link="stylecop.json" />
     <Compile Include="$(MSBuildThisFileDirectory)CommonAssemblyInfo.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)GlobalUsings.cs" />
   </ItemGroup>
   <PropertyGroup>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
@@ -18,6 +17,7 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <GenerateGitMetadata Condition=" '$(CI)' != '' and '$(GenerateGitMetadata)' == '' ">true</GenerateGitMetadata>
+    <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <NeutralLanguage>en-US</NeutralLanguage>
@@ -39,6 +39,14 @@
   <PropertyGroup Condition=" '$(CI)' != '' or !Exists('$(MSBuildThisFileDirectory)\src\API\node_modules') ">
     <InstallWebPackages>true</InstallWebPackages>
   </PropertyGroup>
+  <ItemGroup>
+    <Using Include="System.Globalization" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(IsTestProject)' == 'true' ">
+    <Using Include="Shouldly" />
+    <Using Include="Xunit" />
+    <Using Include="Xunit.Abstractions" />
+  </ItemGroup>
   <PropertyGroup>
     <CollectCoverage>true</CollectCoverage>
     <CoverletOutput Condition=" '$(OutputPath)' != '' ">$(OutputPath)/</CoverletOutput>
