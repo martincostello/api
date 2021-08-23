@@ -3,11 +3,13 @@
 
 #pragma warning disable SA1516
 
+using System.IO.Compression;
 using System.Net.Mime;
 using MartinCostello.Api.Extensions;
 using MartinCostello.Api.Options;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Options;
 using NodaTime;
@@ -71,7 +73,15 @@ builder.Services.AddControllersWithViews(
         options.JsonSerializerOptions.PropertyNameCaseInsensitive = false;
     });
 
-builder.Services.AddResponseCompression();
+builder.Services.Configure<GzipCompressionProviderOptions>((p) => p.Level = CompressionLevel.Fastest);
+builder.Services.Configure<BrotliCompressionProviderOptions>((p) => p.Level = CompressionLevel.Fastest);
+
+builder.Services.AddResponseCompression((p) =>
+{
+    p.EnableForHttps = true;
+    p.Providers.Add<BrotliCompressionProvider>();
+    p.Providers.Add<GzipCompressionProvider>();
+});
 
 builder.Services.AddRouting(
     (p) =>
