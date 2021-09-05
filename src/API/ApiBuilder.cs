@@ -6,9 +6,11 @@ using System.Net.Mime;
 using MartinCostello.Api.Extensions;
 using MartinCostello.Api.Options;
 using Microsoft.AspNetCore.CookiePolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using NodaTime;
 
@@ -43,7 +45,8 @@ public static class ApiBuilder
                 p.HeaderName = "x-anti-forgery";
             });
 
-        builder.Services.AddCors((corsOptions) =>
+        builder.Services.AddCors();
+        builder.Services.Configure<CorsOptions>((corsOptions) =>
         {
             var siteOptions = new SiteOptions();
             builder.Configuration.Bind("Site", siteOptions);
@@ -68,22 +71,16 @@ public static class ApiBuilder
                 });
         });
 
-        builder.Services.AddControllersWithViews(
-            (options) =>
-            {
-                if (!builder.Environment.IsDevelopment())
-                {
-                    options.Filters.Add(new RequireHttpsAttribute());
-                }
-            })
-            .AddJsonOptions((options) =>
-            {
-                options.JsonSerializerOptions.PropertyNameCaseInsensitive = false;
-                options.JsonSerializerOptions.WriteIndented = true;
-            });
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddRazorPages();
 
         builder.Services.Configure<GzipCompressionProviderOptions>((p) => p.Level = CompressionLevel.Fastest);
         builder.Services.Configure<BrotliCompressionProviderOptions>((p) => p.Level = CompressionLevel.Fastest);
+        builder.Services.Configure<JsonOptions>((options) =>
+        {
+            options.SerializerOptions.PropertyNameCaseInsensitive = false;
+            options.SerializerOptions.WriteIndented = true;
+        });
 
         builder.Services.AddResponseCompression((p) =>
         {
@@ -92,12 +89,11 @@ public static class ApiBuilder
             p.Providers.Add<GzipCompressionProvider>();
         });
 
-        builder.Services.AddRouting(
-            (p) =>
-            {
-                p.AppendTrailingSlash = true;
-                p.LowercaseUrls = true;
-            });
+        builder.Services.Configure<RouteOptions>((p) =>
+        {
+            p.AppendTrailingSlash = true;
+            p.LowercaseUrls = true;
+        });
 
         if (!builder.Environment.IsDevelopment())
         {
@@ -111,7 +107,7 @@ public static class ApiBuilder
         }
 
         builder.Services.AddSwagger(builder.Environment);
-        builder.Services.AddSingleton<IClock>((_) => SystemClock.Instance);
+        builder.Services.TryAddSingleton<IClock>((_) => SystemClock.Instance);
 
         builder.WebHost.CaptureStartupErrors(true);
         builder.WebHost.ConfigureKestrel((p) => p.AddServerHeader = false);
@@ -122,9 +118,13 @@ public static class ApiBuilder
 
         if (!app.Environment.IsDevelopment())
         {
-            app.UseExceptionHandler("/error")
-               .UseStatusCodePagesWithReExecute("/error", "?id={0}");
+            app.UseExceptionHandler("/error");
+        }
 
+        app.UseStatusCodePagesWithReExecute("/error", "?id={0}");
+
+        if (!app.Environment.IsDevelopment())
+        {
             app.UseHsts()
                .UseHttpsRedirection();
         }
@@ -146,7 +146,7 @@ public static class ApiBuilder
 
         app.UseCors();
 
-        app.MapDefaultControllerRoute();
+        app.MapRazorPages();
 
         app.UseSwagger();
 
@@ -155,6 +155,8 @@ public static class ApiBuilder
             HttpOnly = HttpOnlyPolicy.Always,
             Secure = app.Environment.IsDevelopment() ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.Always,
         });
+
+        app.MapApiEndpoints();
 
         return app;
     }

@@ -1,4 +1,4 @@
-// Copyright (c) Martin Costello, 2016. All rights reserved.
+﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 using System.Reflection;
@@ -35,14 +35,21 @@ internal sealed class ExampleFilter : IOperationFilter, ISchemaFilter
     {
         if (operation != null && context?.ApiDescription != null && context.SchemaRepository != null)
         {
-            if (!context.ApiDescription.TryGetMethodInfo(out MethodInfo methodInfo))
-            {
-                return;
-            }
+            var examples = Array.Empty<SwaggerResponseExampleAttribute>();
 
-            var examples = methodInfo
-                .GetCustomAttributes<SwaggerResponseExampleAttribute>(inherit: true)
-                .ToList();
+            if (context.ApiDescription.TryGetMethodInfo(out MethodInfo methodInfo))
+            {
+                examples = methodInfo
+                    .GetCustomAttributes<SwaggerResponseExampleAttribute>(inherit: true)
+                    .ToArray();
+            }
+            else if (context.ApiDescription.ActionDescriptor is not null)
+            {
+                examples = context.ApiDescription.ActionDescriptor.EndpointMetadata
+                    .OfType<SwaggerResponseExampleAttribute>()
+                    .Distinct()
+                    .ToArray();
+            }
 
             foreach (var attribute in examples)
             {

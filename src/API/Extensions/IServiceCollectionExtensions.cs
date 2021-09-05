@@ -1,4 +1,4 @@
-// Copyright (c) Martin Costello, 2016. All rights reserved.
+﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 using MartinCostello.Api.Options;
@@ -56,6 +56,7 @@ public static class IServiceCollectionExtensions
                 p.SwaggerDoc("api", info);
 
                 p.SchemaFilter<ExampleFilter>();
+                p.OperationFilter<AnnotationsOperationFilter>();
                 p.OperationFilter<ExampleFilter>();
                 p.OperationFilter<RemoveStyleCopPrefixesFilter>();
             });

@@ -1,15 +1,26 @@
-// Copyright (c) Martin Costello, 2016. All rights reserved.
+﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
+using System.Net.Http.Json;
 using MartinCostello.Api.Models;
 
-namespace MartinCostello.Api.Controllers;
+namespace MartinCostello.Api.Integration;
 
 /// <summary>
-/// A class containing tests for the <see cref="ToolsController"/> class. This class cannot be inherited.
+/// A class containing tests for the <c>/tools/*</c> endpoints.
 /// </summary>
-public static class ToolsControllerTests
+public class ToolsTests : IntegrationTest
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ToolsTests"/> class.
+    /// </summary>
+    /// <param name="fixture">The fixture to use.</param>
+    /// <param name="outputHelper">The test output helper to use.</param>
+    public ToolsTests(TestServerFixture fixture, ITestOutputHelper outputHelper)
+        : base(fixture, outputHelper)
+    {
+    }
+
     [Theory]
     [InlineData("MD5", "Hexadecimal", "", "d41d8cd98f00b204e9800998ecf8427e")]
     [InlineData("SHA1", "Hexadecimal", "", "da39a3ee5e6b4b0d3255bfef95601890afd80709")]
@@ -26,7 +37,7 @@ public static class ToolsControllerTests
     [InlineData("sha256", "hexadecimal", "martincostello.com", "3b8143aa8119eaf0910aef5cade45dd0e6bb7b70e8d1c8c057bf3fc125248642")]
     [InlineData("sha384", "hexadecimal", "martincostello.com", "5c0e892a9348c184df255f46ab7282eb5792d552c896eb6893d90f36c7202540a9942c80ce5812616d29c08331c60510")]
     [InlineData("sha512", "hexadecimal", "martincostello.com", "3be0167275455dcf1e34f8818d48b7ae4a61fb8549153f42d0d035464fdccee97022d663549eb249d4796956e4016ad83d5e64ba766fb751c8fb2c03b2b4eb9a")]
-    public static void Tools_Post_Hash_Returns_Correct_Response(string algorithm, string format, string plaintext, string expected)
+    public async void Tools_Post_Hash_Returns_Correct_Response(string algorithm, string format, string plaintext, string expected)
     {
         // Arrange
         var request = new HashRequest()
@@ -36,34 +47,35 @@ public static class ToolsControllerTests
             Plaintext = plaintext,
         };
 
-        var target = new ToolsController();
+        using var client = Fixture.CreateClient();
 
         // Act
-        var result = target.Hash(request);
+        using var response = await client.PostAsJsonAsync("/tools/hash", request);
 
         // Assert
-        result.ShouldNotBeNull();
-        result.Value.ShouldNotBeNull();
-        result.Value.Hash.ShouldBe(expected);
+        response.EnsureSuccessStatusCode();
+
+        var actual = await response.Content.ReadFromJsonAsync<HashResponse>();
+
+        actual.ShouldNotBeNull();
+        actual.Hash.ShouldBe(expected);
     }
 
     [Fact]
-    public static void Tools_Get_Machine_Key_Returns_Correct_Response()
+    public async void Tools_Get_Machine_Key_Returns_Correct_Response()
     {
         // Arrange
-        string decryptionAlgorithm = "AES-256";
-        string validationAlgorithm = "SHA1";
-
-        var target = new ToolsController();
+        using var client = Fixture.CreateClient();
 
         // Act
-        var result = target.MachineKey(decryptionAlgorithm, validationAlgorithm);
+        var actual = await client.GetFromJsonAsync<MachineKeyResponse>(
+            "/tools/machinekey?decryptionAlgorithm=AES-256&validationAlgorithm=SHA1");
 
         // Assert
-        result.ShouldNotBeNull();
-        result.Value.ShouldNotBeNull();
-        result.Value.DecryptionKey.ShouldNotBeNullOrWhiteSpace();
-        result.Value.MachineKeyXml.ShouldNotBeNullOrWhiteSpace();
-        result.Value.ValidationKey.ShouldNotBeNullOrWhiteSpace();
+        actual.ShouldNotBeNull();
+        actual.ShouldNotBeNull();
+        actual.DecryptionKey.ShouldNotBeNullOrWhiteSpace();
+        actual.MachineKeyXml.ShouldNotBeNullOrWhiteSpace();
+        actual.ValidationKey.ShouldNotBeNullOrWhiteSpace();
     }
 }

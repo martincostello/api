@@ -1,8 +1,7 @@
-// Copyright (c) Martin Costello, 2016. All rights reserved.
+﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 using System.Net;
-using System.Net.Http.Headers;
 using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc.Testing;
 
@@ -37,9 +36,6 @@ public class ResourceTests : IntegrationTest
     [InlineData("/favicon.ico", "image/x-icon")]
     [InlineData("/googled1107923138d0b79.html", MediaTypeNames.Text.Html)]
     [InlineData("/gss.xsl", MediaTypeNames.Text.Xml)]
-    [InlineData("/home/index", MediaTypeNames.Text.Html)]
-    [InlineData("/home/index/", MediaTypeNames.Text.Html)]
-    [InlineData("/HOME/INDEX", MediaTypeNames.Text.Html)]
     [InlineData("/humans.txt", MediaTypeNames.Text.Plain)]
     [InlineData("/keybase.txt", MediaTypeNames.Text.Plain)]
     [InlineData("/robots.txt", MediaTypeNames.Text.Plain)]
@@ -79,23 +75,6 @@ public class ResourceTests : IntegrationTest
         response.Content!.Headers.ContentType?.MediaType?.ShouldBe(contentType);
     }
 
-    [Theory]
-    [InlineData("/", MediaTypeNames.Application.Json)]
-    public async Task Can_Load_Resource_As_Json(string requestUri, string contentType)
-    {
-        // Arrange
-        using var client = Fixture.CreateClient();
-        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(MediaTypeNames.Application.Json));
-
-        // Act
-        using var response = await client.GetAsync(requestUri);
-
-        // Assert
-        response.StatusCode.ShouldBe(HttpStatusCode.OK);
-        response.Content.ShouldNotBeNull();
-        response.Content!.Headers.ContentType?.MediaType?.ShouldBe(contentType);
-    }
-
     [Fact]
     public async Task Response_Headers_Contains_Expected_Headers()
     {
@@ -128,8 +107,6 @@ public class ResourceTests : IntegrationTest
     }
 
     [Theory]
-    [InlineData("/admin.php", HttpStatusCode.Found)]
-    [InlineData("/blog", HttpStatusCode.Found)]
     [InlineData("/foo", HttpStatusCode.NotFound)]
     [InlineData("/error", HttpStatusCode.InternalServerError)]
     [InlineData("/error?id=399", HttpStatusCode.InternalServerError)]
