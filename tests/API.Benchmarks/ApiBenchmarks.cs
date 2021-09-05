@@ -1,12 +1,8 @@
 // Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
-using System.Net.Http.Json;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Diagnosers;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace MartinCostello.Api.Benchmarks;
 
@@ -14,19 +10,20 @@ namespace MartinCostello.Api.Benchmarks;
 [MemoryDiagnoser]
 public class ApiBenchmarks : IDisposable
 {
-    private const string ServerUrl = "http://localhost:5002";
+    private const string ServerUrl = "https://localhost:5001"; // TODO Find dynamically by querying the host
 
     private readonly HttpClient _client;
     private bool _disposed;
-    private IHost? _host;
+    private WebApplication? _app;
 
     public ApiBenchmarks()
     {
-        _host = new HostBuilder()
-            .UseEnvironment("Development")
-            .ConfigureLogging((builder) => builder.ClearProviders().SetMinimumLevel(LogLevel.Error))
-            .ConfigureWebHostDefaults((builder) => builder.UseUrls(ServerUrl))
-            .Build();
+        // TODO Improve the code to find the path for the content root
+        var builder = WebApplication.CreateBuilder(new[] { "--contentRoot=" + Path.Join("..", "..", "..", "..", "..", "src", "API") });
+
+        builder.Logging.ClearProviders();
+
+        _app = ApiBuilder.Configure(builder);
 
         _client = new HttpClient()
         {
@@ -42,20 +39,19 @@ public class ApiBenchmarks : IDisposable
     [GlobalSetup]
     public async Task StartServer()
     {
-        if (_host != null)
+        if (_app != null)
         {
-            await _host.StartAsync();
+            await _app.StartAsync();
         }
     }
 
     [GlobalCleanup]
     public async Task StopServer()
     {
-        if (_host != null)
+        if (_app != null)
         {
-            await _host.StopAsync();
-            _host.Dispose();
-            _host = null;
+            await _app.StopAsync();
+            _app = null;
         }
     }
 
@@ -64,7 +60,7 @@ public class ApiBenchmarks : IDisposable
     {
         var body = new { algorithm = "sha1", Format = "base64", plaintext = "Hello, world!" };
 
-        using var response = await _client.PostAsJsonAsync("/hash", body);
+        using var response = await _client.PostAsJsonAsync("/tools/hash", body);
         return await response!.Content!.ReadAsByteArrayAsync();
     }
 
@@ -83,7 +79,6 @@ public class ApiBenchmarks : IDisposable
         if (!_disposed)
         {
             _client?.Dispose();
-            _host?.Dispose();
         }
 
         _disposed = true;
