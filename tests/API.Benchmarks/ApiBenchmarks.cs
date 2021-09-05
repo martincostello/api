@@ -3,6 +3,8 @@
 
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Diagnosers;
+using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.AspNetCore.Hosting.Server.Features;
 
 namespace MartinCostello.Api.Benchmarks;
 
@@ -10,25 +12,18 @@ namespace MartinCostello.Api.Benchmarks;
 [MemoryDiagnoser]
 public class ApiBenchmarks : IDisposable
 {
-    private const string ServerUrl = "https://localhost:5001"; // TODO Find dynamically by querying the host
-
-    private readonly HttpClient _client;
-    private bool _disposed;
     private WebApplication? _app;
+    private HttpClient? _client;
+    private bool _disposed;
 
     public ApiBenchmarks()
     {
-        // TODO Improve the code to find the path for the content root
-        var builder = WebApplication.CreateBuilder(new[] { "--contentRoot=" + Path.Join("..", "..", "..", "..", "..", "src", "API") });
+        var builder = WebApplication.CreateBuilder(new[] { "--contentRoot=" + GetContentRoot() });
 
         builder.Logging.ClearProviders();
+        builder.WebHost.UseUrls("https://127.0.0.1:0");
 
         _app = ApiBuilder.Configure(builder);
-
-        _client = new HttpClient()
-        {
-            BaseAddress = new Uri(ServerUrl, UriKind.Absolute),
-        };
     }
 
     ~ApiBenchmarks()
@@ -42,6 +37,23 @@ public class ApiBenchmarks : IDisposable
         if (_app != null)
         {
             await _app.StartAsync();
+
+            var server = _app.Services.GetRequiredService<IServer>();
+            var addresses = server.Features.Get<IServerAddressesFeature>();
+
+            var baseAddress = addresses!.Addresses
+                .Select((p) => new Uri(p))
+                .Last();
+
+            var handler = new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
+            };
+
+            _client = new HttpClient(handler, disposeHandler: true)
+            {
+                BaseAddress = baseAddress,
+            };
         }
     }
 
@@ -60,13 +72,16 @@ public class ApiBenchmarks : IDisposable
     {
         var body = new { algorithm = "sha1", Format = "base64", plaintext = "Hello, world!" };
 
-        using var response = await _client.PostAsJsonAsync("/tools/hash", body);
+        using var response = await _client!.PostAsJsonAsync("/tools/hash", body);
+
+        response.EnsureSuccessStatusCode();
+
         return await response!.Content!.ReadAsByteArrayAsync();
     }
 
     [Benchmark]
     public async Task<byte[]> Time()
-        => await _client.GetByteArrayAsync("/time");
+        => await _client!.GetByteArrayAsync("/time");
 
     public void Dispose()
     {
@@ -82,5 +97,27 @@ public class ApiBenchmarks : IDisposable
         }
 
         _disposed = true;
+    }
+
+    private static string GetContentRoot()
+    {
+        string contentRoot = string.Empty;
+        var directoryInfo = new DirectoryInfo(Path.GetDirectoryName(typeof(ApiBenchmarks).Assembly.Location)!);
+
+        do
+        {
+            var solutionPath = Directory.EnumerateFiles(directoryInfo.FullName, "API.sln").FirstOrDefault();
+
+            if (solutionPath != null)
+            {
+                contentRoot = Path.GetFullPath(Path.Combine(directoryInfo.FullName, "src", "API"));
+                break;
+            }
+
+            directoryInfo = directoryInfo.Parent;
+        }
+        while (directoryInfo is not null);
+
+        return contentRoot;
     }
 }
