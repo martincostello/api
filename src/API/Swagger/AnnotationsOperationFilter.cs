@@ -30,15 +30,16 @@ public class AnnotationsOperationFilter : IOperationFilter
         }
 
         // NOTE: When controller and action attributes are applicable, action attributes should take precendence.
-        // Hence why they're at the end of the list (i.e. last one wins)
+        // Hence why they're at the end of the list (i.e. last one wins).
+        // Distinct() is applied due to an ASP.NET Core issue: https://github.com/dotnet/aspnetcore/issues/34199.
         var allAttributes = controllerAttributes
             .Union(actionAttributes)
             .Union(metadataAttributes)
-            .Distinct(); // See https://github.com/dotnet/aspnetcore/issues/34199
+            .Distinct();
 
         var actionAndEndpointAttribtues = actionAttributes
             .Union(metadataAttributes)
-            .Distinct(); // See https://github.com/dotnet/aspnetcore/issues/34199
+            .Distinct();
 
         ApplySwaggerOperationAttribute(operation, actionAndEndpointAttribtues);
         ApplySwaggerOperationFilterAttributes(operation, context, allAttributes);
