@@ -14,7 +14,6 @@
     <ProjectReference Include="..\..\src\API\API.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="BenchmarkDotNet" />
   </ItemGroup>
 </Project>
