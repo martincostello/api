@@ -58,10 +58,9 @@ public static class ApiModule
                 Unix = now.ToUnixTimeSeconds(),
             };
         })
-        .Produces<TimeResponse>("The current UTC date and time.")
+        .Produces<TimeResponse, TimeResponseExampleProvider>("The current UTC date and time.")
         .RequireCors("DefaultCorsPolicy")
         .WithOperationDescription("Gets the current UTC time.")
-        .WithResponseExample<TimeResponse, TimeResponseExampleProvider>()
         .WithName("Time");
 
         builder.MapGet("/tools/guid", (
@@ -86,11 +85,10 @@ public static class ApiModule
 
             return Results.Json(new GuidResponse() { Guid = guid });
         })
-        .Produces<GuidResponse>("A GUID was generated successfully.")
+        .Produces<GuidResponse, GuidResponseExampleProvider>("A GUID was generated successfully.")
         .ProducesProblem("The specified format is invalid.")
         .WithOperationDescription("Generates a GUID.")
         .WithProblemDetailsResponseExample()
-        .WithResponseExample<GuidResponse, GuidResponseExampleProvider>()
         .WithName("Guid");
 
         builder.MapPost("/tools/hash", (HashRequest? request) =>
@@ -160,13 +158,11 @@ public static class ApiModule
 
             return Results.Json(result);
         })
-        .Accepts<HashRequest>("application/json")
-        .Produces<HashResponse>("The hash was generated successfully.")
+        .Accepts<HashRequest, HashRequestExampleProvider>()
+        .Produces<HashResponse, HashResponseExampleProvider>("The hash was generated successfully.")
         .ProducesProblem("The specified hash algorithm or output format is invalid.")
         .WithOperationDescription("Generates a hash of some plaintext for a specified hash algorithm and returns it in the required format.")
         .WithProblemDetailsResponseExample()
-        .WithRequestExample<HashRequest, HashRequestExampleProvider>()
-        .WithResponseExample<HashResponse, HashResponseExampleProvider>()
         .WithName("Hash");
 
         builder.MapGet("/tools/machinekey", (
@@ -204,11 +200,10 @@ public static class ApiModule
 
             return Results.Json(result);
         })
-        .Produces<MachineKeyResponse>("The machine key was generated successfully.")
+        .Produces<MachineKeyResponse, MachineKeyResponseExampleProvider>("The machine key was generated successfully.")
         .ProducesProblem("The specified decryption or validation algorithm is invalid.")
         .WithOperationDescription("Generates a machine key for a Web.config configuration file for ASP.NET.")
         .WithProblemDetailsResponseExample()
-        .WithResponseExample<MachineKeyResponse, MachineKeyResponseExampleProvider>()
         .WithName("MachineKey");
 
         return builder;
