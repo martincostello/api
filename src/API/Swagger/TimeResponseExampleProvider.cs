@@ -9,7 +9,7 @@ namespace MartinCostello.Api.Swagger;
 /// A class representing an implementation of <see cref="IExampleProvider"/>
 /// for the <see cref="TimeResponse"/> class. This class cannot be inherited.
 /// </summary>
-public sealed class TimeResponseExampleProvider : IExampleProvider
+public sealed class TimeResponseExampleProvider : IExampleProvider<TimeResponse>
 {
     /// <inheritdoc />
     public object GetExample()

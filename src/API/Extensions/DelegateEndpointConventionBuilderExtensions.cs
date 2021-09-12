@@ -108,7 +108,7 @@ internal static class DelegateEndpointConventionBuilderExtensions
     /// A <see cref="DelegateEndpointConventionBuilder"/> that can be used to further customize the endpoint.
     /// </returns>
     internal static DelegateEndpointConventionBuilder WithResponseExample<TResponse, TExampleProvider>(this DelegateEndpointConventionBuilder builder)
-        where TExampleProvider : IExampleProvider
+        where TExampleProvider : IExampleProvider<TResponse>
     {
         return builder.WithMetadata(new SwaggerResponseExampleAttribute(typeof(TResponse), typeof(TExampleProvider)));
     }

@@ -9,7 +9,7 @@ namespace MartinCostello.Api.Swagger;
 /// A class representing an implementation of <see cref="IExampleProvider"/>
 /// for the <see cref="HashRequest"/> class. This class cannot be inherited.
 /// </summary>
-public sealed class HashRequestExampleProvider : IExampleProvider
+public sealed class HashRequestExampleProvider : IExampleProvider<HashRequest>
 {
     /// <inheritdoc />
     public object GetExample()
