@@ -64,7 +64,9 @@ public static class ApiModule
         .WithResponseExample<TimeResponse, TimeResponseExampleProvider>()
         .WithName("Time");
 
-        builder.MapGet("/tools/guid", (string? format, bool? uppercase) =>
+        builder.MapGet("/tools/guid", (
+            [SwaggerParameter("The format for which to generate a GUID.")] string? format,
+            [SwaggerParameter("Whether to return the GUID in uppercase.")] bool? uppercase) =>
         {
             string guid;
 
@@ -167,7 +169,9 @@ public static class ApiModule
         .WithResponseExample<ProblemDetails, ProblemDetailsExampleProvider>()
         .WithName("Hash");
 
-        builder.MapGet("/tools/machinekey", (string? decryptionAlgorithm, string? validationAlgorithm) =>
+        builder.MapGet("/tools/machinekey", (
+            [SwaggerParameter("The name of the decryption algorithm.")] string? decryptionAlgorithm,
+            [SwaggerParameter("The name of the validation algorithm.")] string? validationAlgorithm) =>
         {
             if (string.IsNullOrEmpty(decryptionAlgorithm) ||
                 !HashSizes.TryGetValue(decryptionAlgorithm + "-D", out int decryptionKeyLength))
