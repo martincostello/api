@@ -158,6 +158,7 @@ public static class ApiModule
 
             return Results.Json(result);
         })
+        .Accepts<HashRequest>("application/json")
         .Produces<HashResponse>("The hash was generated successfully.")
         .Produces<ProblemDetails>("The specified hash algorithm or output format is invalid.", StatusCodes.Status400BadRequest, "application/problem+json")
         .WithOperationDescription("Generates a hash of some plaintext for a specified hash algorithm and returns it in the required format.")
