@@ -85,7 +85,7 @@ public static class ApiModule
             return Results.Json(new GuidResponse() { Guid = guid });
         })
         .Produces<GuidResponse>("A GUID was generated successfully.")
-        .Produces<ProblemDetails>("The specified format is invalid.", StatusCodes.Status400BadRequest, "application/problem+json")
+        .ProducesProblem("The specified format is invalid.")
         .WithOperationDescription("Generates a GUID.")
         .WithResponseExample<GuidResponse, GuidResponseExampleProvider>()
         .WithResponseExample<ProblemDetails, ProblemDetailsExampleProvider>()
@@ -160,7 +160,7 @@ public static class ApiModule
         })
         .Accepts<HashRequest>("application/json")
         .Produces<HashResponse>("The hash was generated successfully.")
-        .Produces<ProblemDetails>("The specified hash algorithm or output format is invalid.", StatusCodes.Status400BadRequest, "application/problem+json")
+        .ProducesProblem("The specified hash algorithm or output format is invalid.")
         .WithOperationDescription("Generates a hash of some plaintext for a specified hash algorithm and returns it in the required format.")
         .WithResponseExample<HashResponse, HashResponseExampleProvider>()
         .WithResponseExample<ProblemDetails, ProblemDetailsExampleProvider>()
@@ -200,7 +200,7 @@ public static class ApiModule
             return Results.Json(result);
         })
         .Produces<MachineKeyResponse>("The machine key was generated successfully.")
-        .Produces<ProblemDetails>("The specified decryption or validation algorithm is invalid.", StatusCodes.Status400BadRequest, "application/problem+json")
+        .ProducesProblem("The specified decryption or validation algorithm is invalid.")
         .WithOperationDescription("Generates a machine key for a Web.config configuration file for ASP.NET.")
         .WithResponseExample<MachineKeyResponse, MachineKeyResponseExampleProvider>()
         .WithResponseExample<ProblemDetails, ProblemDetailsExampleProvider>()
@@ -210,7 +210,7 @@ public static class ApiModule
     }
 
     /// <summary>
-    /// Adds the <see cref="SwaggerOperationAttribute"/> to The metadata for all builders produced by builder.
+    /// Adds the <see cref="SwaggerOperationAttribute"/> to the metadata for all builders produced by builder.
     /// </summary>
     /// <param name="builder">The <see cref="DelegateEndpointConventionBuilder"/>.</param>
     /// <param name="summary">The operation summary.</param>
@@ -227,7 +227,7 @@ public static class ApiModule
     }
 
     /// <summary>
-    /// Adds the <see cref="SwaggerResponseExampleAttribute"/> to The metadata for all builders produced by builder.
+    /// Adds <see cref="SwaggerResponseAttribute"/> to the metadata for all builders produced by builder.
     /// </summary>
     /// <typeparam name="TResponse">The type of the response.</typeparam>
     /// <param name="builder">The <see cref="DelegateEndpointConventionBuilder"/>.</param>
@@ -249,7 +249,27 @@ public static class ApiModule
     }
 
     /// <summary>
-    /// Adds the <see cref="SwaggerResponseExampleAttribute"/> to The metadata for all builders produced by builder.
+    /// Adds <see cref="SwaggerResponseAttribute"/> to the metadata for all builders produced by builder.
+    /// </summary>
+    /// <param name="builder">The <see cref="DelegateEndpointConventionBuilder"/>.</param>
+    /// <param name="description">The response description.</param>
+    /// <param name="statusCode">The response status code. Defaults to <see cref="StatusCodes.Status400BadRequest"/>.</param>
+    /// <returns>
+    /// A <see cref="DelegateEndpointConventionBuilder"/> that can be used to further customize the endpoint.
+    /// </returns>
+    private static DelegateEndpointConventionBuilder ProducesProblem(
+        this DelegateEndpointConventionBuilder builder,
+        string description,
+        int statusCode = StatusCodes.Status400BadRequest)
+    {
+        return builder.Produces<ProblemDetails>(
+            description,
+            statusCode,
+            "application/problem+json");
+    }
+
+    /// <summary>
+    /// Adds the <see cref="SwaggerResponseExampleAttribute"/> to the metadata for all builders produced by builder.
     /// </summary>
     /// <typeparam name="TResponse">The type of the response.</typeparam>
     /// <typeparam name="TExampleProvider">The type of the example provider.</typeparam>
