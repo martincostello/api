@@ -4,6 +4,7 @@
 using System.Reflection;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
@@ -35,40 +36,8 @@ internal sealed class ExampleFilter : IOperationFilter, ISchemaFilter
     {
         if (operation != null && context?.ApiDescription != null && context.SchemaRepository != null)
         {
-            var examples = Array.Empty<SwaggerResponseExampleAttribute>();
-
-            if (context.ApiDescription.TryGetMethodInfo(out MethodInfo methodInfo))
-            {
-                examples = methodInfo
-                    .GetCustomAttributes<SwaggerResponseExampleAttribute>(inherit: true)
-                    .ToArray();
-            }
-            else if (context.ApiDescription.ActionDescriptor is not null)
-            {
-                examples = context.ApiDescription.ActionDescriptor.EndpointMetadata
-                    .OfType<SwaggerResponseExampleAttribute>()
-                    .Distinct()
-                    .ToArray();
-            }
-
-            foreach (var attribute in examples)
-            {
-                if (!context.SchemaRepository.Schemas.TryGetValue(attribute.ResponseType.Name, out var schema))
-                {
-                    continue;
-                }
-
-                var response = operation.Responses
-                    .SelectMany((p) => p.Value.Content)
-                    .Where((p) => p.Value.Schema.Reference.Id == attribute.ResponseType.Name)
-                    .Select((p) => p)
-                    .FirstOrDefault();
-
-                if (!response.Equals(new KeyValuePair<string, OpenApiMediaType>()))
-                {
-                    response.Value.Example = CreateExample(attribute.ExampleType);
-                }
-            }
+            AddRequestParameterExamples(operation, context);
+            AddResponseExamples(operation, context);
         }
     }
 
@@ -83,6 +52,36 @@ internal sealed class ExampleFilter : IOperationFilter, ISchemaFilter
             {
                 schema.Example = CreateExample(attribute.ExampleType);
             }
+        }
+    }
+
+    /// <summary>
+    /// Gets all the attributes of the specified type associated with the API description.
+    /// </summary>
+    /// <typeparam name="T">The type of the attribute(s) to find.</typeparam>
+    /// <param name="apiDescription">The API description.</param>
+    /// <returns>
+    /// An <see cref="IList{T}"/> containing any found attributes of type <typeparamref name="T"/>.
+    /// </returns>
+    private static IList<T> GetAttributes<T>(ApiDescription apiDescription)
+        where T : Attribute
+    {
+        if (apiDescription.TryGetMethodInfo(out MethodInfo methodInfo))
+        {
+            return methodInfo
+                .GetCustomAttributes<T>(inherit: true)
+                .ToArray();
+        }
+        else if (apiDescription.ActionDescriptor is not null)
+        {
+            return apiDescription.ActionDescriptor.EndpointMetadata
+                .OfType<T>()
+                .Distinct()
+                .ToArray();
+        }
+        else
+        {
+            return Array.Empty<T>();
         }
     }
 
@@ -193,6 +192,61 @@ internal sealed class ExampleFilter : IOperationFilter, ISchemaFilter
             case JsonValueKind.Undefined:
             default:
                 return false;
+        }
+    }
+
+    /// <summary>
+    /// Adds the request parameter examples.
+    /// </summary>
+    /// <param name="operation">The operation to add the examples for.</param>
+    /// <param name="context">The operation context.</param>
+    private void AddRequestParameterExamples(OpenApiOperation operation, OperationFilterContext context)
+    {
+        var examples = GetAttributes<SwaggerRequestExampleAttribute>(context.ApiDescription);
+
+        foreach (var attribute in examples)
+        {
+            if (!context.SchemaRepository.TryLookupByType(attribute.RequestType, out OpenApiSchema schema) ||
+                !context.SchemaRepository.Schemas.TryGetValue(schema.Reference.Id, out OpenApiSchema _))
+            {
+                continue;
+            }
+
+            var request = operation.RequestBody.Content.First();
+
+            if (string.Equals(request.Value.Schema.Reference.Id, schema.Reference.Id, StringComparison.Ordinal))
+            {
+                request.Value.Example = CreateExample(attribute.ExampleType);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Adds the response examples.
+    /// </summary>
+    /// <param name="operation">The operation to add the examples for.</param>
+    /// <param name="context">The operation context.</param>
+    private void AddResponseExamples(OpenApiOperation operation, OperationFilterContext context)
+    {
+        var examples = GetAttributes<SwaggerResponseExampleAttribute>(context.ApiDescription);
+
+        foreach (var attribute in examples)
+        {
+            if (!context.SchemaRepository.Schemas.TryGetValue(attribute.ResponseType.Name, out var schema))
+            {
+                continue;
+            }
+
+            var response = operation.Responses
+                .SelectMany((p) => p.Value.Content)
+                .Where((p) => p.Value.Schema.Reference.Id == attribute.ResponseType.Name)
+                .Select((p) => p)
+                .FirstOrDefault();
+
+            if (!response.Equals(new KeyValuePair<string, OpenApiMediaType>()))
+            {
+                response.Value.Example = CreateExample(attribute.ExampleType);
+            }
         }
     }
 }

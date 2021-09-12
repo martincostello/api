@@ -7,16 +7,18 @@ namespace MartinCostello.Api.Swagger;
 
 /// <summary>
 /// A class representing an implementation of <see cref="IExampleProvider"/>
-/// for the <see cref="HashResponse"/> class. This class cannot be inherited.
+/// for the <see cref="HashRequest"/> class. This class cannot be inherited.
 /// </summary>
-public sealed class HashResponseExampleProvider : IExampleProvider
+public sealed class HashRequestExampleProvider : IExampleProvider
 {
     /// <inheritdoc />
     public object GetExample()
     {
-        return new HashResponse()
+        return new HashRequest()
         {
-            Hash = "fTi1zSWiuvha07tbkxE4PmcaihQuswKzJNSl+6h0jGk=",
+            Algorithm = "sha256",
+            Format = "base64",
+            Plaintext = "The quick brown fox jumped over the lazy dog",
         };
     }
 }

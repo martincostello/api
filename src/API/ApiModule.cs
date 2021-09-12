@@ -162,6 +162,7 @@ public static class ApiModule
         .Produces<HashResponse>("The hash was generated successfully.")
         .ProducesProblem("The specified hash algorithm or output format is invalid.")
         .WithOperationDescription("Generates a hash of some plaintext for a specified hash algorithm and returns it in the required format.")
+        .WithRequestExample<HashRequest, HashRequestExampleProvider>()
         .WithResponseExample<HashResponse, HashResponseExampleProvider>()
         .WithResponseExample<ProblemDetails, ProblemDetailsExampleProvider>()
         .WithName("Hash");
@@ -266,6 +267,21 @@ public static class ApiModule
             description,
             statusCode,
             "application/problem+json");
+    }
+
+    /// <summary>
+    /// Adds the <see cref="SwaggerRequestExampleAttribute"/> to the metadata for all builders produced by builder.
+    /// </summary>
+    /// <typeparam name="TRequest">The type of the request.</typeparam>
+    /// <typeparam name="TExampleProvider">The type of the example provider.</typeparam>
+    /// <param name="builder">The <see cref="DelegateEndpointConventionBuilder"/>.</param>
+    /// <returns>
+    /// A <see cref="DelegateEndpointConventionBuilder"/> that can be used to further customize the endpoint.
+    /// </returns>
+    private static DelegateEndpointConventionBuilder WithRequestExample<TRequest, TExampleProvider>(this DelegateEndpointConventionBuilder builder)
+        where TExampleProvider : IExampleProvider
+    {
+        return builder.WithMetadata(new SwaggerRequestExampleAttribute(typeof(TRequest), typeof(TExampleProvider)));
     }
 
     /// <summary>
