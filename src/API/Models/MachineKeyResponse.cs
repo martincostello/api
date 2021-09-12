@@ -23,7 +23,7 @@ public sealed class MachineKeyResponse
     public string ValidationKey { get; set; } = string.Empty;
 
     /// <summary>
-    /// Gets or sets a string containing the <c>&lt;machineKey&gt;</c> XML configuration element.
+    /// Gets or sets a string containing the <c>machineKey</c> XML configuration element.
     /// </summary>
     [JsonPropertyName("machineKeyXml")]
     public string MachineKeyXml { get; set; } = string.Empty;
