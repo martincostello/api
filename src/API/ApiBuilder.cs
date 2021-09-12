@@ -35,15 +35,14 @@ public static class ApiBuilder
         builder.Services.AddOptions();
         builder.Services.Configure<SiteOptions>(builder.Configuration.GetSection("Site"));
 
-        builder.Services.AddAntiforgery(
-            (p) =>
-            {
-                p.Cookie.HttpOnly = true;
-                p.Cookie.Name = "_anti-forgery";
-                p.Cookie.SecurePolicy = builder.Environment.IsDevelopment() ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.Always;
-                p.FormFieldName = "_anti-forgery";
-                p.HeaderName = "x-anti-forgery";
-            });
+        builder.Services.AddAntiforgery((options) =>
+        {
+            options.Cookie.HttpOnly = true;
+            options.Cookie.Name = "_anti-forgery";
+            options.Cookie.SecurePolicy = builder.Environment.IsDevelopment() ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.Always;
+            options.FormFieldName = "_anti-forgery";
+            options.HeaderName = "x-anti-forgery";
+        });
 
         builder.Services.AddCors();
         builder.Services.Configure<CorsOptions>((corsOptions) =>
@@ -82,28 +81,27 @@ public static class ApiBuilder
             options.SerializerOptions.WriteIndented = true;
         });
 
-        builder.Services.AddResponseCompression((p) =>
+        builder.Services.AddResponseCompression((options) =>
         {
-            p.EnableForHttps = true;
-            p.Providers.Add<BrotliCompressionProvider>();
-            p.Providers.Add<GzipCompressionProvider>();
+            options.EnableForHttps = true;
+            options.Providers.Add<BrotliCompressionProvider>();
+            options.Providers.Add<GzipCompressionProvider>();
         });
 
-        builder.Services.Configure<RouteOptions>((p) =>
+        builder.Services.Configure<RouteOptions>((options) =>
         {
-            p.AppendTrailingSlash = true;
-            p.LowercaseUrls = true;
+            options.AppendTrailingSlash = true;
+            options.LowercaseUrls = true;
         });
 
         if (!builder.Environment.IsDevelopment())
         {
-            builder.Services.AddHsts(
-                (p) =>
-                {
-                    p.MaxAge = TimeSpan.FromDays(365);
-                    p.IncludeSubDomains = false;
-                    p.Preload = false;
-                });
+            builder.Services.AddHsts((options) =>
+            {
+                options.MaxAge = TimeSpan.FromDays(365);
+                options.IncludeSubDomains = false;
+                options.Preload = false;
+            });
         }
 
         builder.Services.AddSwagger(builder.Environment);
