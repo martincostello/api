@@ -3,7 +3,7 @@
 
 using System.Reflection;
 using System.Text.Json;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Any;
@@ -28,7 +28,7 @@ internal sealed class ExampleFilter : IOperationFilter, ISchemaFilter
     /// <param name="options">The <see cref="JsonOptions"/> to use.</param>
     public ExampleFilter(IOptions<JsonOptions> options)
     {
-        _options = options.Value.JsonSerializerOptions;
+        _options = options.Value.SerializerOptions;
     }
 
     /// <inheritdoc />
