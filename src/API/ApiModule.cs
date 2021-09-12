@@ -6,7 +6,6 @@ using System.Text;
 using MartinCostello.Api.Extensions;
 using MartinCostello.Api.Models;
 using MartinCostello.Api.Swagger;
-using Microsoft.AspNetCore.Mvc;
 using NodaTime;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -90,8 +89,8 @@ public static class ApiModule
         .Produces<GuidResponse>("A GUID was generated successfully.")
         .ProducesProblem("The specified format is invalid.")
         .WithOperationDescription("Generates a GUID.")
+        .WithProblemDetailsResponseExample()
         .WithResponseExample<GuidResponse, GuidResponseExampleProvider>()
-        .WithResponseExample<ProblemDetails, ProblemDetailsExampleProvider>()
         .WithName("Guid");
 
         builder.MapPost("/tools/hash", (HashRequest? request) =>
@@ -165,9 +164,9 @@ public static class ApiModule
         .Produces<HashResponse>("The hash was generated successfully.")
         .ProducesProblem("The specified hash algorithm or output format is invalid.")
         .WithOperationDescription("Generates a hash of some plaintext for a specified hash algorithm and returns it in the required format.")
+        .WithProblemDetailsResponseExample()
         .WithRequestExample<HashRequest, HashRequestExampleProvider>()
         .WithResponseExample<HashResponse, HashResponseExampleProvider>()
-        .WithResponseExample<ProblemDetails, ProblemDetailsExampleProvider>()
         .WithName("Hash");
 
         builder.MapGet("/tools/machinekey", (
@@ -208,8 +207,8 @@ public static class ApiModule
         .Produces<MachineKeyResponse>("The machine key was generated successfully.")
         .ProducesProblem("The specified decryption or validation algorithm is invalid.")
         .WithOperationDescription("Generates a machine key for a Web.config configuration file for ASP.NET.")
+        .WithProblemDetailsResponseExample()
         .WithResponseExample<MachineKeyResponse, MachineKeyResponseExampleProvider>()
-        .WithResponseExample<ProblemDetails, ProblemDetailsExampleProvider>()
         .WithName("MachineKey");
 
         return builder;

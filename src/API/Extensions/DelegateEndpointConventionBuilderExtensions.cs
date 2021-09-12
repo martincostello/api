@@ -72,6 +72,18 @@ internal static class DelegateEndpointConventionBuilderExtensions
     }
 
     /// <summary>
+    /// Adds the <see cref="SwaggerResponseExampleAttribute"/> for <see cref="ProblemDetails"/> to the metadata for all builders produced by builder.
+    /// </summary>
+    /// <param name="builder">The <see cref="DelegateEndpointConventionBuilder"/>.</param>
+    /// <returns>
+    /// A <see cref="DelegateEndpointConventionBuilder"/> that can be used to further customize the endpoint.
+    /// </returns>
+    internal static DelegateEndpointConventionBuilder WithProblemDetailsResponseExample(this DelegateEndpointConventionBuilder builder)
+    {
+        return builder.WithResponseExample<ProblemDetails, ProblemDetailsExampleProvider>();
+    }
+
+    /// <summary>
     /// Adds the <see cref="SwaggerRequestExampleAttribute"/> to the metadata for all builders produced by builder.
     /// </summary>
     /// <typeparam name="TRequest">The type of the request.</typeparam>
