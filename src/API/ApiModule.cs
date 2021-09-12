@@ -7,7 +7,6 @@ using MartinCostello.Api.Extensions;
 using MartinCostello.Api.Models;
 using MartinCostello.Api.Swagger;
 using NodaTime;
-using Swashbuckle.AspNetCore.Annotations;
 
 namespace MartinCostello.Api;
 
@@ -64,8 +63,8 @@ public static class ApiModule
         .WithOperationDescription("Gets the current UTC time.");
 
         builder.MapGet("/tools/guid", (
-            [SwaggerParameter("The format for which to generate a GUID.")] string? format,
-            [SwaggerParameter("Whether to return the GUID in uppercase.")] bool? uppercase) =>
+            [SwaggerParameterExample("The format for which to generate a GUID.", "base64")] string? format,
+            [SwaggerParameterExample("Whether to return the GUID in uppercase.")] bool? uppercase) =>
         {
             string guid;
 
@@ -166,8 +165,8 @@ public static class ApiModule
         .WithProblemDetailsResponseExample();
 
         builder.MapGet("/tools/machinekey", (
-            [SwaggerParameter("The name of the decryption algorithm.")] string? decryptionAlgorithm,
-            [SwaggerParameter("The name of the validation algorithm.")] string? validationAlgorithm) =>
+            [SwaggerParameterExample("The name of the decryption algorithm.", "AES-256")] string? decryptionAlgorithm,
+            [SwaggerParameterExample("The name of the validation algorithm.", "SHA1")] string? validationAlgorithm) =>
         {
             if (string.IsNullOrEmpty(decryptionAlgorithm) ||
                 !HashSizes.TryGetValue(decryptionAlgorithm + "-D", out int decryptionKeyLength))

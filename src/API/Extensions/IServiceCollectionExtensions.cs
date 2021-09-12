@@ -24,42 +24,43 @@ public static class IServiceCollectionExtensions
     /// </returns>
     public static IServiceCollection AddSwagger(this IServiceCollection value, IWebHostEnvironment environment)
     {
-        value.AddSwaggerGen((p) =>
+        value.AddSwaggerGen((options) =>
+        {
+            var provider = value.BuildServiceProvider();
+            var siteOptions = provider.GetRequiredService<IOptions<SiteOptions>>().Value;
+
+            var info = new OpenApiInfo()
             {
-                var provider = value.BuildServiceProvider();
-                var options = provider.GetRequiredService<IOptions<SiteOptions>>().Value;
-
-                var info = new OpenApiInfo()
+                Contact = new()
                 {
-                    Contact = new OpenApiContact()
-                    {
-                        Name = options.Metadata?.Author?.Name,
-                        Url = new Uri(options.Metadata?.Author?.Website ?? string.Empty),
-                    },
-                    Description = options.Metadata?.Description,
-                    License = new OpenApiLicense()
-                    {
-                        Name = options.Api?.License?.Name,
-                        Url = new Uri(options.Api?.License?.Url ?? string.Empty),
-                    },
-                    Title = options.Metadata?.Name,
-                    Version = string.Empty,
-                };
+                    Name = siteOptions.Metadata?.Author?.Name,
+                    Url = new Uri(siteOptions.Metadata?.Author?.Website ?? string.Empty),
+                },
+                Description = siteOptions.Metadata?.Description,
+                License = new()
+                {
+                    Name = siteOptions.Api?.License?.Name,
+                    Url = new Uri(siteOptions.Api?.License?.Url ?? string.Empty),
+                },
+                Title = siteOptions.Metadata?.Name,
+                Version = string.Empty,
+            };
 
-                p.EnableAnnotations();
+            options.EnableAnnotations();
 
-                p.IgnoreObsoleteActions();
-                p.IgnoreObsoleteProperties();
+            options.IgnoreObsoleteActions();
+            options.IgnoreObsoleteProperties();
 
-                AddXmlCommentsIfExists(p, environment, "API.xml");
+            AddXmlCommentsIfExists(options, environment, "API.xml");
 
-                p.SwaggerDoc("api", info);
+            options.SwaggerDoc("api", info);
 
-                p.SchemaFilter<ExampleFilter>();
-                p.OperationFilter<AnnotationsOperationFilter>();
-                p.OperationFilter<ExampleFilter>();
-                p.OperationFilter<RemoveStyleCopPrefixesFilter>();
-            });
+            options.SchemaFilter<ExampleFilter>();
+            options.OperationFilter<AnnotationsOperationFilter>();
+            options.OperationFilter<ExampleFilter>();
+            options.OperationFilter<RemoveStyleCopPrefixesFilter>();
+            options.ParameterFilter<AnnotationsParameterFilter>();
+        });
 
         return value;
     }

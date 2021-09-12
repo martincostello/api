@@ -56,6 +56,34 @@ internal sealed class ExampleFilter : IOperationFilter, ISchemaFilter
     }
 
     /// <summary>
+    /// Returns the example from the specified provider formatted as JSON.
+    /// </summary>
+    /// <param name="examples">The examples to format.</param>
+    /// <param name="options">The optional <see cref="JsonSerializerOptions"/> to use.</param>
+    /// <returns>
+    /// An <see cref="object"/> representing the formatted example.
+    /// </returns>
+    internal static IOpenApiAny FormatAsJson(object? examples, JsonSerializerOptions? options = null)
+    {
+        // Apply any formatting rules configured for the API (e.g. camel casing)
+        var json = JsonSerializer.Serialize(examples, options);
+        using var document = JsonDocument.Parse(json);
+
+        var result = new OpenApiObject();
+
+        // Recursively build up the example from the properties of the JObject
+        foreach (var token in document.RootElement.EnumerateObject())
+        {
+            if (TryParse(token.Value, out var any))
+            {
+                result[token.Name] = any;
+            }
+        }
+
+        return result;
+    }
+
+    /// <summary>
     /// Gets all the attributes of the specified type associated with the API description.
     /// </summary>
     /// <typeparam name="T">The type of the attribute(s) to find.</typeparam>
@@ -86,51 +114,6 @@ internal sealed class ExampleFilter : IOperationFilter, ISchemaFilter
     }
 
     /// <summary>
-    /// Creates an example from the specified type.
-    /// </summary>
-    /// <param name="exampleType">The type to create the example from.</param>
-    /// <returns>
-    /// The example value.
-    /// </returns>
-    private IOpenApiAny CreateExample(Type exampleType)
-    {
-        var provider = Activator.CreateInstance(exampleType) as IExampleProvider;
-        return FormatAsJson(provider!);
-    }
-
-    /// <summary>
-    /// Returns the example from the specified provider formatted as JSON.
-    /// </summary>
-    /// <param name="provider">The example provider to format the examples for.</param>
-    /// <returns>
-    /// An <see cref="object"/> representing the formatted example.
-    /// </returns>
-    /// <exception cref="ArgumentNullException">
-    /// <paramref name="provider"/> is <see langword="null"/>.
-    /// </exception>
-    private IOpenApiAny FormatAsJson(IExampleProvider provider)
-    {
-        var examples = provider.GetExample();
-
-        // Apply any formatting rules configured for the API (e.g. camel casing)
-        var json = JsonSerializer.Serialize(examples, _options);
-        using var document = JsonDocument.Parse(json);
-
-        var result = new OpenApiObject();
-
-        // Recursively build up the example from the properties of the JObject
-        foreach (var token in document.RootElement.EnumerateObject())
-        {
-            if (TryParse(token.Value, out var any))
-            {
-                result[token.Name] = any;
-            }
-        }
-
-        return result;
-    }
-
-    /// <summary>
     /// Tries to parse the specified JSON token for an example.
     /// </summary>
     /// <param name="token">The JSON token to parse.</param>
@@ -138,7 +121,7 @@ internal sealed class ExampleFilter : IOperationFilter, ISchemaFilter
     /// <returns>
     /// <see langword="true"/> if parsed successfully; otherwise <see langword="false"/>.
     /// </returns>
-    private bool TryParse(JsonElement token, out IOpenApiAny? any)
+    private static bool TryParse(JsonElement token, out IOpenApiAny? any)
     {
         any = null;
 
@@ -193,6 +176,21 @@ internal sealed class ExampleFilter : IOperationFilter, ISchemaFilter
             default:
                 return false;
         }
+    }
+
+    /// <summary>
+    /// Creates an example from the specified type.
+    /// </summary>
+    /// <param name="exampleType">The type to create the example from.</param>
+    /// <returns>
+    /// The example value.
+    /// </returns>
+    private IOpenApiAny CreateExample(Type exampleType)
+    {
+        var provider = Activator.CreateInstance(exampleType) as IExampleProvider;
+        var examples = provider!.GetExample();
+
+        return FormatAsJson(examples, _options);
     }
 
     /// <summary>
