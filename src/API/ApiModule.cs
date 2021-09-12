@@ -60,8 +60,8 @@ public static class ApiModule
         })
         .Produces<TimeResponse, TimeResponseExampleProvider>("The current UTC date and time.")
         .RequireCors("DefaultCorsPolicy")
-        .WithOperationDescription("Gets the current UTC time.")
-        .WithName("Time");
+        .WithName("Time")
+        .WithOperationDescription("Gets the current UTC time.");
 
         builder.MapGet("/tools/guid", (
             [SwaggerParameter("The format for which to generate a GUID.")] string? format,
@@ -87,9 +87,9 @@ public static class ApiModule
         })
         .Produces<GuidResponse, GuidResponseExampleProvider>("A GUID was generated successfully.")
         .ProducesProblem("The specified format is invalid.")
+        .WithName("Guid")
         .WithOperationDescription("Generates a GUID.")
-        .WithProblemDetailsResponseExample()
-        .WithName("Guid");
+        .WithProblemDetailsResponseExample();
 
         builder.MapPost("/tools/hash", (HashRequest? request) =>
         {
@@ -161,9 +161,9 @@ public static class ApiModule
         .Accepts<HashRequest, HashRequestExampleProvider>()
         .Produces<HashResponse, HashResponseExampleProvider>("The hash was generated successfully.")
         .ProducesProblem("The specified hash algorithm or output format is invalid.")
+        .WithName("Hash")
         .WithOperationDescription("Generates a hash of some plaintext for a specified hash algorithm and returns it in the required format.")
-        .WithProblemDetailsResponseExample()
-        .WithName("Hash");
+        .WithProblemDetailsResponseExample();
 
         builder.MapGet("/tools/machinekey", (
             [SwaggerParameter("The name of the decryption algorithm.")] string? decryptionAlgorithm,
@@ -202,9 +202,9 @@ public static class ApiModule
         })
         .Produces<MachineKeyResponse, MachineKeyResponseExampleProvider>("The machine key was generated successfully.")
         .ProducesProblem("The specified decryption or validation algorithm is invalid.")
+        .WithName("MachineKey")
         .WithOperationDescription("Generates a machine key for a Web.config configuration file for ASP.NET.")
-        .WithProblemDetailsResponseExample()
-        .WithName("MachineKey");
+        .WithProblemDetailsResponseExample();
 
         return builder;
     }
