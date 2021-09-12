@@ -77,7 +77,7 @@ public static class ApiModule
             }
             catch (FormatException)
             {
-                return Results.Problem($"The specified format '{format}' is invalid.", statusCode: StatusCodes.Status400BadRequest);
+                return Results.Extensions.InvalidRequest($"The specified format '{format}' is invalid.");
             }
 
             if (uppercase == true)
@@ -98,17 +98,17 @@ public static class ApiModule
         {
             if (request == null)
             {
-                return Results.Problem("No hash request specified.", statusCode: StatusCodes.Status400BadRequest);
+                return Results.Extensions.InvalidRequest("No hash request specified.");
             }
 
             if (string.IsNullOrWhiteSpace(request.Algorithm))
             {
-                return Results.Problem("No hash algorithm name specified.", statusCode: StatusCodes.Status400BadRequest);
+                return Results.Extensions.InvalidRequest("No hash algorithm name specified.");
             }
 
             if (string.IsNullOrWhiteSpace(request.Format))
             {
-                return Results.Problem("No hash output format specified.", statusCode: StatusCodes.Status400BadRequest);
+                return Results.Extensions.InvalidRequest("No hash output format specified.");
             }
 
             bool formatAsBase64;
@@ -124,14 +124,14 @@ public static class ApiModule
                     break;
 
                 default:
-                    return Results.Problem($"The specified hash format '{request.Format}' is invalid.", statusCode: StatusCodes.Status400BadRequest);
+                    return Results.Extensions.InvalidRequest($"The specified hash format '{request.Format}' is invalid.");
             }
 
             const int MaxPlaintextLength = 4096;
 
             if (request.Plaintext?.Length > MaxPlaintextLength)
             {
-                return Results.Problem($"The plaintext to hash cannot be more than {MaxPlaintextLength} characters in length.", statusCode: StatusCodes.Status400BadRequest);
+                return Results.Extensions.InvalidRequest($"The plaintext to hash cannot be more than {MaxPlaintextLength} characters in length.");
             }
 
             byte[] buffer = Encoding.UTF8.GetBytes(request.Plaintext ?? string.Empty);
@@ -151,7 +151,7 @@ public static class ApiModule
 
             if (hash.Length == 0)
             {
-                return Results.Problem($"The specified hash algorithm '{request.Algorithm}' is not supported.", statusCode: StatusCodes.Status400BadRequest);
+                return Results.Extensions.InvalidRequest($"The specified hash algorithm '{request.Algorithm}' is not supported.");
             }
 
             var result = new HashResponse()
@@ -177,13 +177,13 @@ public static class ApiModule
             if (string.IsNullOrEmpty(decryptionAlgorithm) ||
                 !HashSizes.TryGetValue(decryptionAlgorithm + "-D", out int decryptionKeyLength))
             {
-                return Results.Problem($"The specified decryption algorithm '{decryptionAlgorithm}' is invalid.", statusCode: StatusCodes.Status400BadRequest);
+                return Results.Extensions.InvalidRequest($"The specified decryption algorithm '{decryptionAlgorithm}' is invalid.");
             }
 
             if (string.IsNullOrEmpty(validationAlgorithm) ||
                 !HashSizes.TryGetValue(validationAlgorithm + "-V", out int validationKeyLength))
             {
-                return Results.Problem($"The specified validation algorithm '{validationAlgorithm}' is invalid.", statusCode: StatusCodes.Status400BadRequest);
+                return Results.Extensions.InvalidRequest($"The specified validation algorithm '{validationAlgorithm}' is invalid.");
             }
 
             byte[] decryptionKey = RandomNumberGenerator.GetBytes(decryptionKeyLength);
