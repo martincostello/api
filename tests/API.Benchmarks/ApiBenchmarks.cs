@@ -1,95 +1,123 @@
 // Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
-using System;
-using System.Net.Http;
-using System.Net.Http.Json;
-using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Diagnosers;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.AspNetCore.Hosting.Server.Features;
 
-namespace MartinCostello.Api.Benchmarks
+namespace MartinCostello.Api.Benchmarks;
+
+[EventPipeProfiler(EventPipeProfile.CpuSampling)]
+[MemoryDiagnoser]
+public class ApiBenchmarks : IDisposable
 {
-    [EventPipeProfiler(EventPipeProfile.CpuSampling)]
-    [MemoryDiagnoser]
-    public class ApiBenchmarks : IDisposable
+    private WebApplication? _app;
+    private HttpClient? _client;
+    private bool _disposed;
+
+    public ApiBenchmarks()
     {
-        private const string ServerUrl = "http://localhost:5002";
+        var builder = WebApplication.CreateBuilder(new[] { "--contentRoot=" + GetContentRoot() });
 
-        private readonly HttpClient _client;
-        private bool _disposed;
-        private IHost? _host;
+        builder.Logging.ClearProviders();
+        builder.WebHost.UseUrls("https://127.0.0.1:0");
 
-        public ApiBenchmarks()
+        _app = ApiBuilder.Configure(builder);
+    }
+
+    ~ApiBenchmarks()
+    {
+        Dispose(false);
+    }
+
+    [GlobalSetup]
+    public async Task StartServer()
+    {
+        if (_app != null)
         {
-            _host = Api.Program.CreateHostBuilder(Array.Empty<string>())
-                .UseEnvironment("Development")
-                .ConfigureLogging((builder) => builder.ClearProviders().SetMinimumLevel(LogLevel.Error))
-                .ConfigureWebHostDefaults((builder) => builder.UseUrls(ServerUrl))
-                .Build();
+            await _app.StartAsync();
 
-            _client = new HttpClient()
+            var server = _app.Services.GetRequiredService<IServer>();
+            var addresses = server.Features.Get<IServerAddressesFeature>();
+
+            var baseAddress = addresses!.Addresses
+                .Select((p) => new Uri(p))
+                .Last();
+
+            var handler = new HttpClientHandler
             {
-                BaseAddress = new Uri(ServerUrl, UriKind.Absolute),
+                ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
+            };
+
+            _client = new HttpClient(handler, disposeHandler: true)
+            {
+                BaseAddress = baseAddress,
             };
         }
+    }
 
-        ~ApiBenchmarks()
+    [GlobalCleanup]
+    public async Task StopServer()
+    {
+        if (_app != null)
         {
-            Dispose(false);
+            await _app.StopAsync();
+            _app = null;
+        }
+    }
+
+    [Benchmark]
+    public async Task<byte[]> Hash()
+    {
+        var body = new { algorithm = "sha1", Format = "base64", plaintext = "Hello, world!" };
+
+        using var response = await _client!.PostAsJsonAsync("/tools/hash", body);
+
+        response.EnsureSuccessStatusCode();
+
+        return await response!.Content!.ReadAsByteArrayAsync();
+    }
+
+    [Benchmark]
+    public async Task<byte[]> Time()
+        => await _client!.GetByteArrayAsync("/time");
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            _client?.Dispose();
         }
 
-        [GlobalSetup]
-        public async Task StartServer()
+        _disposed = true;
+    }
+
+    private static string GetContentRoot()
+    {
+        string contentRoot = string.Empty;
+        var directoryInfo = new DirectoryInfo(Path.GetDirectoryName(typeof(ApiBenchmarks).Assembly.Location)!);
+
+        do
         {
-            if (_host != null)
+            var solutionPath = Directory.EnumerateFiles(directoryInfo.FullName, "API.sln").FirstOrDefault();
+
+            if (solutionPath != null)
             {
-                await _host.StartAsync();
-            }
-        }
-
-        [GlobalCleanup]
-        public async Task StopServer()
-        {
-            if (_host != null)
-            {
-                await _host.StopAsync();
-                _host.Dispose();
-                _host = null;
-            }
-        }
-
-        [Benchmark]
-        public async Task<byte[]> Hash()
-        {
-            var body = new { algorithm = "sha1", Format = "base64", plaintext = "Hello, world!" };
-
-            using var response = await _client.PostAsJsonAsync("/hash", body);
-            return await response!.Content!.ReadAsByteArrayAsync();
-        }
-
-        [Benchmark]
-        public async Task<byte[]> Time()
-            => await _client.GetByteArrayAsync("/time");
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!_disposed)
-            {
-                _client?.Dispose();
-                _host?.Dispose();
+                contentRoot = Path.GetFullPath(Path.Combine(directoryInfo.FullName, "src", "API"));
+                break;
             }
 
-            _disposed = true;
+            directoryInfo = directoryInfo.Parent;
         }
+        while (directoryInfo is not null);
+
+        return contentRoot;
     }
 }

@@ -3,29 +3,28 @@
 
 using System.Text.Json.Serialization;
 
-namespace MartinCostello.Api.Models
+namespace MartinCostello.Api.Models;
+
+/// <summary>
+/// Represents the response from the <c>/tools/machinekey</c> API resource.
+/// </summary>
+public sealed class MachineKeyResponse
 {
     /// <summary>
-    /// Represents the response from the <c>/tools/machinekey</c> API resource.
+    /// Gets or sets a string containing the decryption key.
     /// </summary>
-    public sealed class MachineKeyResponse
-    {
-        /// <summary>
-        /// Gets or sets a string containing the decryption key.
-        /// </summary>
-        [JsonPropertyName("decryptionKey")]
-        public string DecryptionKey { get; set; } = string.Empty;
+    [JsonPropertyName("decryptionKey")]
+    public string DecryptionKey { get; set; } = string.Empty;
 
-        /// <summary>
-        /// Gets or sets a string containing the validation key.
-        /// </summary>
-        [JsonPropertyName("validationKey")]
-        public string ValidationKey { get; set; } = string.Empty;
+    /// <summary>
+    /// Gets or sets a string containing the validation key.
+    /// </summary>
+    [JsonPropertyName("validationKey")]
+    public string ValidationKey { get; set; } = string.Empty;
 
-        /// <summary>
-        /// Gets or sets a string containing the <c>&lt;machineKey&gt;</c> XML configuration element.
-        /// </summary>
-        [JsonPropertyName("machineKeyXml")]
-        public string MachineKeyXml { get; set; } = string.Empty;
-    }
+    /// <summary>
+    /// Gets or sets a string containing the <c>machineKey</c> XML configuration element.
+    /// </summary>
+    [JsonPropertyName("machineKeyXml")]
+    public string MachineKeyXml { get; set; } = string.Empty;
 }

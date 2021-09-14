@@ -1,33 +1,11 @@
 {
-  "iisSettings": {
-    "windowsAuthentication": false,
-    "anonymousAuthentication": true,
-    "iisExpress": {
-      "applicationUrl": "http://localhost:61103/",
-      "sslPort": 44340
-    }
-  },
   "profiles": {
-    "IIS Express": {
-      "commandName": "IISExpress",
-      "ancmHostingModel": "InProcess",
-      "launchBrowser": true,
-      "launchUrl": "https://localhost:44340/",
-      "environmentVariables": {
-        "Azure:Datacenter": "Local",
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "ASPNETCORE_HTTPS_PORT": "44340"
-      }
-    },
     "API": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "https://localhost:5001/",
-      "applicationUrl": "http://localhost:5000",
+      "applicationUrl": "https://localhost:5001;http://localhost:5000",
       "environmentVariables": {
-        "Azure:Datacenter": "Local",
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "ASPNETCORE_HTTPS_PORT": "5001"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       }
     }
   }

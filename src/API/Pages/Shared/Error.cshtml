@@ -1,7 +1,8 @@
-﻿@model int?
+@page "/error"
+@model ErrorModel
 @{
     ViewData["Title"] = "Error";
 }
 <h1 class="text-danger">Error.</h1>
 <h2 class="text-danger">An error occurred while processing your request.</h2>
-<h3 class="text-danger">HTTP status code @(Model ?? 500).</h3>
+<h3 class="text-danger">HTTP status code @(Model.ErrorStatusCode).</h3>

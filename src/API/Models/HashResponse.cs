@@ -3,17 +3,16 @@
 
 using System.Text.Json.Serialization;
 
-namespace MartinCostello.Api.Models
+namespace MartinCostello.Api.Models;
+
+/// <summary>
+/// Represents the response from the <c>/tools/hash</c> API resource.
+/// </summary>
+public sealed class HashResponse
 {
     /// <summary>
-    /// Represents the response from the <c>/tools/hash</c> API resource.
+    /// Gets or sets a string containing the generated hash value in the requested format.
     /// </summary>
-    public sealed class HashResponse
-    {
-        /// <summary>
-        /// Gets or sets a string containing the generated hash value in the requested format.
-        /// </summary>
-        [JsonPropertyName("hash")]
-        public string Hash { get; set; } = string.Empty;
-    }
+    [JsonPropertyName("hash")]
+    public string Hash { get; set; } = string.Empty;
 }

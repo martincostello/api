@@ -3,21 +3,20 @@
 
 using MartinCostello.Api.Models;
 
-namespace MartinCostello.Api.Swagger
+namespace MartinCostello.Api.Swagger;
+
+/// <summary>
+/// A class representing an implementation of <see cref="IExampleProvider"/>
+/// for the <see cref="HashResponse"/> class. This class cannot be inherited.
+/// </summary>
+public sealed class HashResponseExampleProvider : IExampleProvider<HashResponse>
 {
-    /// <summary>
-    /// A class representing an implementation of <see cref="IExampleProvider"/>
-    /// for the <see cref="HashResponse"/> class. This class cannot be inherited.
-    /// </summary>
-    public sealed class HashResponseExampleProvider : IExampleProvider
+    /// <inheritdoc />
+    public object GetExample()
     {
-        /// <inheritdoc />
-        public object GetExample()
+        return new HashResponse()
         {
-            return new HashResponse()
-            {
-                Hash = "NFVO5w7Axj+MxTTlzt9ACDDAJj9ZrMf/GdD7AFIu5i8=",
-            };
-        }
+            Hash = "fTi1zSWiuvha07tbkxE4PmcaihQuswKzJNSl+6h0jGk=",
+        };
     }
 }

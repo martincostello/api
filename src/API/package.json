@@ -1,7 +1,7 @@
 {
   "name": "apimartincostellocom",
   "private": true,
-  "version": "3.0.0",
+  "version": "6.0.0",
   "devDependencies": {
     "bootstrap": ">=4.6.0",
     "braces": ">=2.3.1",

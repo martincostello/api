@@ -1,98 +1,94 @@
-// Copyright (c) Martin Costello, 2016. All rights reserved.
+﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
-using System;
-using System.IO;
 using MartinCostello.Api.Options;
 using MartinCostello.Api.Swagger;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace MartinCostello.Api.Extensions
+namespace MartinCostello.Api.Extensions;
+
+/// <summary>
+/// A class containing extension methods for the <see cref="IServiceCollection"/> interface. This class cannot be inherited.
+/// </summary>
+public static class IServiceCollectionExtensions
 {
     /// <summary>
-    /// A class containing extension methods for the <see cref="IServiceCollection"/> interface. This class cannot be inherited.
+    /// Adds Swagger to the services.
     /// </summary>
-    public static class IServiceCollectionExtensions
+    /// <param name="value">The <see cref="IServiceCollection"/> to add the service to.</param>
+    /// <param name="environment">The current hosting environment.</param>
+    /// <returns>
+    /// The value specified by <paramref name="value"/>.
+    /// </returns>
+    public static IServiceCollection AddSwagger(this IServiceCollection value, IWebHostEnvironment environment)
     {
-        /// <summary>
-        /// Adds Swagger to the services.
-        /// </summary>
-        /// <param name="value">The <see cref="IServiceCollection"/> to add the service to.</param>
-        /// <param name="environment">The current hosting environment.</param>
-        /// <returns>
-        /// The value specified by <paramref name="value"/>.
-        /// </returns>
-        public static IServiceCollection AddSwagger(this IServiceCollection value, IWebHostEnvironment environment)
+        value.AddSwaggerGen((options) =>
         {
-            value.AddSwaggerGen((p) =>
+            var provider = value.BuildServiceProvider();
+            var siteOptions = provider.GetRequiredService<IOptions<SiteOptions>>().Value;
+
+            var info = new OpenApiInfo()
+            {
+                Contact = new()
                 {
-                    var provider = value.BuildServiceProvider();
-                    var options = provider.GetRequiredService<IOptions<SiteOptions>>().Value;
+                    Name = siteOptions.Metadata?.Author?.Name,
+                    Url = new Uri(siteOptions.Metadata?.Author?.Website ?? string.Empty),
+                },
+                Description = siteOptions.Metadata?.Description,
+                License = new()
+                {
+                    Name = siteOptions.Api?.License?.Name,
+                    Url = new Uri(siteOptions.Api?.License?.Url ?? string.Empty),
+                },
+                Title = siteOptions.Metadata?.Name,
+                Version = string.Empty,
+            };
 
-                    var info = new OpenApiInfo()
-                    {
-                        Contact = new OpenApiContact()
-                        {
-                            Name = options.Metadata?.Author?.Name,
-                            Url = new Uri(options.Metadata?.Author?.Website ?? string.Empty),
-                        },
-                        Description = options.Metadata?.Description,
-                        License = new OpenApiLicense()
-                        {
-                            Name = options.Api?.License?.Name,
-                            Url = new Uri(options.Api?.License?.Url ?? string.Empty),
-                        },
-                        Title = options.Metadata?.Name,
-                        Version = string.Empty,
-                    };
+            options.EnableAnnotations();
 
-                    p.EnableAnnotations();
+            options.IgnoreObsoleteActions();
+            options.IgnoreObsoleteProperties();
 
-                    p.IgnoreObsoleteActions();
-                    p.IgnoreObsoleteProperties();
+            AddXmlCommentsIfExists(options, environment, "API.xml");
 
-                    AddXmlCommentsIfExists(p, environment, "API.xml");
+            options.SwaggerDoc("api", info);
 
-                    p.SwaggerDoc("api", info);
+            options.SchemaFilter<ExampleFilter>();
+            options.OperationFilter<AnnotationsOperationFilter>();
+            options.OperationFilter<ExampleFilter>();
+            options.OperationFilter<RemoveStyleCopPrefixesFilter>();
+            options.ParameterFilter<AnnotationsParameterFilter>();
+        });
 
-                    p.SchemaFilter<ExampleFilter>();
-                    p.OperationFilter<ExampleFilter>();
-                    p.OperationFilter<RemoveStyleCopPrefixesFilter>();
-                });
+        return value;
+    }
 
-            return value;
+    /// <summary>
+    /// Adds XML comments to Swagger if the file exists.
+    /// </summary>
+    /// <param name="options">The Swagger options.</param>
+    /// <param name="environment">The current hosting environment.</param>
+    /// <param name="fileName">The XML comments file name to try to add.</param>
+    private static void AddXmlCommentsIfExists(SwaggerGenOptions options, IWebHostEnvironment environment, string fileName)
+    {
+        string applicationPath;
+
+        if (environment.IsDevelopment())
+        {
+            applicationPath = Path.GetDirectoryName(typeof(GitMetadata).Assembly.Location) ?? ".";
+        }
+        else
+        {
+            applicationPath = environment.ContentRootPath;
         }
 
-        /// <summary>
-        /// Adds XML comments to Swagger if the file exists.
-        /// </summary>
-        /// <param name="options">The Swagger options.</param>
-        /// <param name="environment">The current hosting environment.</param>
-        /// <param name="fileName">The XML comments file name to try to add.</param>
-        private static void AddXmlCommentsIfExists(SwaggerGenOptions options, IWebHostEnvironment environment, string fileName)
+        var path = Path.GetFullPath(Path.Combine(applicationPath, fileName));
+
+        if (File.Exists(path))
         {
-            string applicationPath;
-
-            if (environment.IsDevelopment())
-            {
-                applicationPath = Path.GetDirectoryName(typeof(Startup).Assembly.Location) ?? ".";
-            }
-            else
-            {
-                applicationPath = environment.ContentRootPath;
-            }
-
-            var path = Path.GetFullPath(Path.Combine(applicationPath, fileName));
-
-            if (File.Exists(path))
-            {
-                options.IncludeXmlComments(path);
-            }
+            options.IncludeXmlComments(path);
         }
     }
 }
