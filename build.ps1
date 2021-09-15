@@ -1,7 +1,8 @@
 #! /usr/bin/pwsh
 param(
     [Parameter(Mandatory = $false)][string] $OutputPath = "",
-    [Parameter(Mandatory = $false)][switch] $SkipTests
+    [Parameter(Mandatory = $false)][switch] $SkipTests,
+    [Parameter(Mandatory = $false)][string] $Runtime = ""
 )
 
 $ErrorActionPreference = "Stop"
@@ -101,8 +102,19 @@ function DotNetTest {
 
 function DotNetPublish {
     param([string]$Project)
+
     $publishPath = (Join-Path $OutputPath "publish")
-    & $dotnet publish $Project --output $publishPath --configuration "Release"
+
+    $additionalArgs = @()
+
+    if (![string]::IsNullOrEmpty($Runtime)) {
+        $additionalArgs += "--self-contained"
+        $additionalArgs += "--runtime"
+        $additionalArgs += $Runtime
+    }
+
+    & $dotnet publish $Project --output $publishPath --configuration "Release" $additionalArgs
+
     if ($LASTEXITCODE -ne 0) {
         throw "dotnet publish failed with exit code $LASTEXITCODE"
     }
