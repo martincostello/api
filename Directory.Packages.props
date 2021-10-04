@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <NodaTimeVersion>3.0.6</NodaTimeVersion>
+    <NodaTimeVersion>3.0.7</NodaTimeVersion>
     <SwashbuckleAspNetCoreVersion>6.2.2</SwashbuckleAspNetCoreVersion>
   </PropertyGroup>
   <ItemGroup>
