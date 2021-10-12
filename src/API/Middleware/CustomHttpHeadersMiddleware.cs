@@ -1,4 +1,4 @@
-// Copyright (c) Martin Costello, 2016. All rights reserved.
+﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 using System.Diagnostics;
@@ -144,7 +144,7 @@ manifest-src 'self';";
 
             if (options?.ExternalLinks?.Reports?.ContentSecurityPolicy != null)
             {
-                builder.Append($"report-uri {options.ExternalLinks.Reports.ContentSecurityPolicy};");
+                builder.Append(CultureInfo.InvariantCulture, $"report-uri {options.ExternalLinks.Reports.ContentSecurityPolicy};");
             }
         }
 
@@ -181,7 +181,7 @@ manifest-src 'self';";
 
         if (!baseUri.IsDefaultPort)
         {
-            builder.Append($":{baseUri.Port}");
+            builder.Append(CultureInfo.InvariantCulture, $":{baseUri.Port}");
         }
 
         return builder.ToString();

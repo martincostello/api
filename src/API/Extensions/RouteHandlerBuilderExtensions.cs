@@ -9,23 +9,24 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace MartinCostello.Api.Extensions;
 
 /// <summary>
-/// A class containing extension methods for the <see cref="DelegateEndpointConventionBuilder"/> class. This class cannot be inherited.
+/// A class containing extension methods for the <see cref="RouteHandlerBuilder"/> class. This class cannot be inherited.
 /// </summary>
-internal static class DelegateEndpointConventionBuilderExtensions
+internal static class RouteHandlerBuilderExtensions
 {
     /// <summary>
     /// Adds <see cref="IAcceptsMetadata"/> to the metadata for all builders produced by builder.
     /// </summary>
     /// <typeparam name="TRequest">The type of the request.</typeparam>
     /// <typeparam name="TRequestExampleProvider">The type of the request example provider.</typeparam>
-    /// <param name="builder">The <see cref="DelegateEndpointConventionBuilder"/>.</param>
+    /// <param name="builder">The <see cref="RouteHandlerBuilder"/>.</param>
     /// <param name="contentType">The request content type. Defaults to "application/json" if empty.</param>
     /// <returns>
-    /// A <see cref="DelegateEndpointConventionBuilder"/> that can be used to further customize the endpoint.
+    /// A <see cref="OpenApiRouteHandlerBuilderExtensions"/> that can be used to further customize the endpoint.
     /// </returns>
-    public static DelegateEndpointConventionBuilder Accepts<TRequest, TRequestExampleProvider>(
-        this DelegateEndpointConventionBuilder builder,
+    public static RouteHandlerBuilder Accepts<TRequest, TRequestExampleProvider>(
+        this RouteHandlerBuilder builder,
         string contentType = "application/json")
+        where TRequest : notnull
         where TRequestExampleProvider : IExampleProvider<TRequest>
     {
         return builder
@@ -37,15 +38,15 @@ internal static class DelegateEndpointConventionBuilderExtensions
     /// Adds <see cref="SwaggerResponseAttribute"/> to the metadata for all builders produced by builder.
     /// </summary>
     /// <typeparam name="TResponse">The type of the response.</typeparam>
-    /// <param name="builder">The <see cref="DelegateEndpointConventionBuilder"/>.</param>
+    /// <param name="builder">The <see cref="RouteHandlerBuilder"/>.</param>
     /// <param name="description">The response description.</param>
     /// <param name="statusCode">The response status code. Defaults to <see cref="StatusCodes.Status200OK"/>.</param>
     /// <param name="contentType">The response content type. Defaults to <c>application/json</c>.</param>
     /// <returns>
-    /// A <see cref="DelegateEndpointConventionBuilder"/> that can be used to further customize the endpoint.
+    /// A <see cref="RouteHandlerBuilder"/> that can be used to further customize the endpoint.
     /// </returns>
-    internal static DelegateEndpointConventionBuilder Produces<TResponse>(
-        this DelegateEndpointConventionBuilder builder,
+    internal static RouteHandlerBuilder Produces<TResponse>(
+        this RouteHandlerBuilder builder,
         string description,
         int statusCode = StatusCodes.Status200OK,
         string? contentType = null)
@@ -60,15 +61,15 @@ internal static class DelegateEndpointConventionBuilderExtensions
     /// </summary>
     /// <typeparam name="TResponse">The type of the response.</typeparam>
     /// <typeparam name="TResponseExampleProvider">The type of the example provider for the response.</typeparam>
-    /// <param name="builder">The <see cref="DelegateEndpointConventionBuilder"/>.</param>
+    /// <param name="builder">The <see cref="RouteHandlerBuilder"/>.</param>
     /// <param name="description">The response description.</param>
     /// <param name="statusCode">The response status code. Defaults to <see cref="StatusCodes.Status200OK"/>.</param>
     /// <param name="contentType">The response content type. Defaults to <c>application/json</c>.</param>
     /// <returns>
-    /// A <see cref="DelegateEndpointConventionBuilder"/> that can be used to further customize the endpoint.
+    /// A <see cref="RouteHandlerBuilder"/> that can be used to further customize the endpoint.
     /// </returns>
-    internal static DelegateEndpointConventionBuilder Produces<TResponse, TResponseExampleProvider>(
-        this DelegateEndpointConventionBuilder builder,
+    internal static RouteHandlerBuilder Produces<TResponse, TResponseExampleProvider>(
+        this RouteHandlerBuilder builder,
         string description,
         int statusCode = StatusCodes.Status200OK,
         string? contentType = null)
@@ -82,14 +83,14 @@ internal static class DelegateEndpointConventionBuilderExtensions
     /// <summary>
     /// Adds <see cref="SwaggerResponseAttribute"/> to the metadata for all builders produced by builder.
     /// </summary>
-    /// <param name="builder">The <see cref="DelegateEndpointConventionBuilder"/>.</param>
+    /// <param name="builder">The <see cref="RouteHandlerBuilder"/>.</param>
     /// <param name="description">The response description.</param>
     /// <param name="statusCode">The response status code. Defaults to <see cref="StatusCodes.Status400BadRequest"/>.</param>
     /// <returns>
-    /// A <see cref="DelegateEndpointConventionBuilder"/> that can be used to further customize the endpoint.
+    /// A <see cref="RouteHandlerBuilder"/> that can be used to further customize the endpoint.
     /// </returns>
-    internal static DelegateEndpointConventionBuilder ProducesProblem(
-        this DelegateEndpointConventionBuilder builder,
+    internal static RouteHandlerBuilder ProducesProblem(
+        this RouteHandlerBuilder builder,
         string description,
         int statusCode = StatusCodes.Status400BadRequest)
     {
@@ -102,14 +103,14 @@ internal static class DelegateEndpointConventionBuilderExtensions
     /// <summary>
     /// Adds the <see cref="SwaggerOperationAttribute"/> to the metadata for all builders produced by builder.
     /// </summary>
-    /// <param name="builder">The <see cref="DelegateEndpointConventionBuilder"/>.</param>
+    /// <param name="builder">The <see cref="RouteHandlerBuilder"/>.</param>
     /// <param name="summary">The operation summary.</param>
     /// <param name="description">The optional operation description.</param>
     /// <returns>
-    /// A <see cref="DelegateEndpointConventionBuilder"/> that can be used to further customize the endpoint.
+    /// A <see cref="RouteHandlerBuilder"/> that can be used to further customize the endpoint.
     /// </returns>
-    internal static DelegateEndpointConventionBuilder WithOperationDescription(
-        this DelegateEndpointConventionBuilder builder,
+    internal static RouteHandlerBuilder WithOperationDescription(
+        this RouteHandlerBuilder builder,
         string summary,
         string? description = null)
     {
@@ -119,11 +120,11 @@ internal static class DelegateEndpointConventionBuilderExtensions
     /// <summary>
     /// Adds the <see cref="SwaggerResponseExampleAttribute"/> for <see cref="ProblemDetails"/> to the metadata for all builders produced by builder.
     /// </summary>
-    /// <param name="builder">The <see cref="DelegateEndpointConventionBuilder"/>.</param>
+    /// <param name="builder">The <see cref="RouteHandlerBuilder"/>.</param>
     /// <returns>
-    /// A <see cref="DelegateEndpointConventionBuilder"/> that can be used to further customize the endpoint.
+    /// A <see cref="RouteHandlerBuilder"/> that can be used to further customize the endpoint.
     /// </returns>
-    internal static DelegateEndpointConventionBuilder WithProblemDetailsResponseExample(this DelegateEndpointConventionBuilder builder)
+    internal static RouteHandlerBuilder WithProblemDetailsResponseExample(this RouteHandlerBuilder builder)
     {
         return builder.WithResponseExample<ProblemDetails, ProblemDetailsExampleProvider>();
     }
@@ -133,11 +134,11 @@ internal static class DelegateEndpointConventionBuilderExtensions
     /// </summary>
     /// <typeparam name="TRequest">The type of the request.</typeparam>
     /// <typeparam name="TExampleProvider">The type of the example provider.</typeparam>
-    /// <param name="builder">The <see cref="DelegateEndpointConventionBuilder"/>.</param>
+    /// <param name="builder">The <see cref="RouteHandlerBuilder"/>.</param>
     /// <returns>
-    /// A <see cref="DelegateEndpointConventionBuilder"/> that can be used to further customize the endpoint.
+    /// A <see cref="RouteHandlerBuilder"/> that can be used to further customize the endpoint.
     /// </returns>
-    internal static DelegateEndpointConventionBuilder WithRequestExample<TRequest, TExampleProvider>(this DelegateEndpointConventionBuilder builder)
+    internal static RouteHandlerBuilder WithRequestExample<TRequest, TExampleProvider>(this RouteHandlerBuilder builder)
         where TExampleProvider : IExampleProvider
     {
         return builder.WithMetadata(new SwaggerRequestExampleAttribute(typeof(TRequest), typeof(TExampleProvider)));
@@ -148,11 +149,11 @@ internal static class DelegateEndpointConventionBuilderExtensions
     /// </summary>
     /// <typeparam name="TResponse">The type of the response.</typeparam>
     /// <typeparam name="TExampleProvider">The type of the example provider.</typeparam>
-    /// <param name="builder">The <see cref="DelegateEndpointConventionBuilder"/>.</param>
+    /// <param name="builder">The <see cref="RouteHandlerBuilder"/>.</param>
     /// <returns>
-    /// A <see cref="DelegateEndpointConventionBuilder"/> that can be used to further customize the endpoint.
+    /// A <see cref="RouteHandlerBuilder"/> that can be used to further customize the endpoint.
     /// </returns>
-    internal static DelegateEndpointConventionBuilder WithResponseExample<TResponse, TExampleProvider>(this DelegateEndpointConventionBuilder builder)
+    internal static RouteHandlerBuilder WithResponseExample<TResponse, TExampleProvider>(this RouteHandlerBuilder builder)
         where TExampleProvider : IExampleProvider<TResponse>
     {
         return builder.WithMetadata(new SwaggerResponseExampleAttribute(typeof(TResponse), typeof(TExampleProvider)));
