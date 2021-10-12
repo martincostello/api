@@ -1,4 +1,4 @@
-// Copyright (c) Martin Costello, 2016. All rights reserved.
+﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 using BenchmarkDotNet.Attributes;
@@ -10,7 +10,7 @@ namespace MartinCostello.Api.Benchmarks;
 
 [EventPipeProfiler(EventPipeProfile.CpuSampling)]
 [MemoryDiagnoser]
-public class ApiBenchmarks : IDisposable
+public class ApiBenchmarks : IAsyncDisposable
 {
     private WebApplication? _app;
     private HttpClient? _client;
@@ -24,11 +24,6 @@ public class ApiBenchmarks : IDisposable
         builder.WebHost.UseUrls("https://127.0.0.1:0");
 
         _app = ApiBuilder.Configure(builder);
-    }
-
-    ~ApiBenchmarks()
-    {
-        Dispose(false);
     }
 
     [GlobalSetup]
@@ -45,6 +40,8 @@ public class ApiBenchmarks : IDisposable
                 .Select((p) => new Uri(p))
                 .Last();
 
+#pragma warning disable CA2000
+#pragma warning disable CA5400
             var handler = new HttpClientHandler
             {
                 ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
@@ -54,6 +51,8 @@ public class ApiBenchmarks : IDisposable
             {
                 BaseAddress = baseAddress,
             };
+#pragma warning restore CA2000
+#pragma warning restore CA5400
         }
     }
 
@@ -83,17 +82,18 @@ public class ApiBenchmarks : IDisposable
     public async Task<byte[]> Time()
         => await _client!.GetByteArrayAsync("/time");
 
-    public void Dispose()
+    public async ValueTask DisposeAsync()
     {
-        Dispose(true);
         GC.SuppressFinalize(this);
-    }
 
-    protected virtual void Dispose(bool disposing)
-    {
         if (!_disposed)
         {
             _client?.Dispose();
+
+            if (_app is not null)
+            {
+                await _app.DisposeAsync();
+            }
         }
 
         _disposed = true;
@@ -106,7 +106,7 @@ public class ApiBenchmarks : IDisposable
 
         do
         {
-            var solutionPath = Directory.EnumerateFiles(directoryInfo.FullName, "API.sln").FirstOrDefault();
+            string? solutionPath = Directory.EnumerateFiles(directoryInfo.FullName, "API.sln").FirstOrDefault();
 
             if (solutionPath != null)
             {
