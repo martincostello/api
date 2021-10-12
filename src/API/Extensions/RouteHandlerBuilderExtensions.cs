@@ -11,7 +11,7 @@ namespace MartinCostello.Api.Extensions;
 /// <summary>
 /// A class containing extension methods for the <see cref="RouteHandlerBuilder"/> class. This class cannot be inherited.
 /// </summary>
-internal static class DelegateEndpointConventionBuilderExtensions
+internal static class RouteHandlerBuilderExtensions
 {
     /// <summary>
     /// Adds <see cref="IAcceptsMetadata"/> to the metadata for all builders produced by builder.
