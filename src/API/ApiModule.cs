@@ -63,7 +63,7 @@ public static class ApiModule
         .WithOperationDescription("Gets the current UTC time.");
 
         builder.MapGet("/tools/guid", (
-            [SwaggerParameterExample("The format for which to generate a GUID.", "base64")] string? format,
+            [SwaggerParameterExample("The format for which to generate a GUID.", "D")] string? format,
             [SwaggerParameterExample("Whether to return the GUID in uppercase.")] bool? uppercase) =>
         {
             string guid;

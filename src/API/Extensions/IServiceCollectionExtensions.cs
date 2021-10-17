@@ -59,7 +59,7 @@ public static class IServiceCollectionExtensions
             options.OperationFilter<AnnotationsOperationFilter>();
             options.OperationFilter<ExampleFilter>();
             options.OperationFilter<RemoveStyleCopPrefixesFilter>();
-            options.ParameterFilter<AnnotationsParameterFilter>();
+            options.ParameterFilter<ExampleFilter>();
         });
 
         return value;

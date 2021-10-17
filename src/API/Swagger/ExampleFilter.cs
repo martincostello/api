@@ -15,7 +15,7 @@ namespace MartinCostello.Api.Swagger;
 /// <summary>
 /// A class representing an operation filter that adds the example to use for display in Swagger documentation. This class cannot be inherited.
 /// </summary>
-internal sealed class ExampleFilter : IOperationFilter, ISchemaFilter
+internal sealed class ExampleFilter : IOperationFilter, IParameterFilter, ISchemaFilter
 {
     /// <summary>
     /// The <see cref="JsonSerializerOptions"/> to use for formatting example responses. This field is read-only.
@@ -42,6 +42,19 @@ internal sealed class ExampleFilter : IOperationFilter, ISchemaFilter
     }
 
     /// <inheritdoc />
+    public void Apply(OpenApiParameter parameter, ParameterFilterContext context)
+    {
+        if (context.PropertyInfo is not null)
+        {
+            ApplyPropertyAnnotations(parameter, context.PropertyInfo);
+        }
+        else if (context.ParameterInfo is not null)
+        {
+            ApplyParameterAnnotations(parameter, context.ParameterInfo);
+        }
+    }
+
+    /// <inheritdoc />
     public void Apply(OpenApiSchema schema, SchemaFilterContext context)
     {
         if (context.Type != null)
@@ -53,34 +66,6 @@ internal sealed class ExampleFilter : IOperationFilter, ISchemaFilter
                 schema.Example = CreateExample(attribute.ExampleType);
             }
         }
-    }
-
-    /// <summary>
-    /// Returns the example from the specified provider formatted as JSON.
-    /// </summary>
-    /// <param name="examples">The examples to format.</param>
-    /// <param name="options">The optional <see cref="JsonSerializerOptions"/> to use.</param>
-    /// <returns>
-    /// An <see cref="object"/> representing the formatted example.
-    /// </returns>
-    internal static IOpenApiAny FormatAsJson(object? examples, JsonSerializerOptions? options = null)
-    {
-        // Apply any formatting rules configured for the API (e.g. camel casing)
-        var json = JsonSerializer.Serialize(examples, options);
-        using var document = JsonDocument.Parse(json);
-
-        var result = new OpenApiObject();
-
-        // Recursively build up the example from the properties of the JObject
-        foreach (var token in document.RootElement.EnumerateObject())
-        {
-            if (TryParse(token.Value, out var any))
-            {
-                result[token.Name] = any;
-            }
-        }
-
-        return result;
     }
 
     /// <summary>
@@ -188,9 +173,41 @@ internal sealed class ExampleFilter : IOperationFilter, ISchemaFilter
     private IOpenApiAny CreateExample(Type exampleType)
     {
         var provider = Activator.CreateInstance(exampleType) as IExampleProvider;
-        var examples = provider!.GetExample();
+        object? examples = provider!.GetExample();
 
-        return FormatAsJson(examples, _options);
+        return FormatAsJson(examples);
+    }
+
+    /// <summary>
+    /// Returns the example from the specified provider formatted as JSON.
+    /// </summary>
+    /// <param name="examples">The examples to format.</param>
+    /// <returns>
+    /// An <see cref="object"/> representing the formatted example.
+    /// </returns>
+    private IOpenApiAny FormatAsJson(object? examples)
+    {
+        // Apply any formatting rules configured for the API (e.g. camel casing)
+        string? json = JsonSerializer.Serialize(examples, _options);
+        using var document = JsonDocument.Parse(json);
+
+        if (document.RootElement.ValueKind == JsonValueKind.String)
+        {
+            return new OpenApiString(document.RootElement.ToString());
+        }
+
+        var result = new OpenApiObject();
+
+        // Recursively build up the example from the properties of the JObject
+        foreach (var token in document.RootElement.EnumerateObject())
+        {
+            if (TryParse(token.Value, out var any))
+            {
+                result[token.Name] = any;
+            }
+        }
+
+        return result;
     }
 
     /// <summary>
@@ -245,6 +262,53 @@ internal sealed class ExampleFilter : IOperationFilter, ISchemaFilter
             {
                 response.Value.Example = CreateExample(attribute.ExampleType);
             }
+        }
+    }
+
+    /// <summary>
+    /// Applies any relevant property annotations.
+    /// </summary>
+    /// <param name="parameter">The parameter to annotate.</param>
+    /// <param name="propertyInfo">The property being annotated.</param>
+    private void ApplyPropertyAnnotations(OpenApiParameter parameter, PropertyInfo propertyInfo)
+    {
+        var attribute = propertyInfo
+            .GetCustomAttributes<SwaggerParameterExampleAttribute>()
+            .FirstOrDefault();
+
+        if (attribute is not null)
+        {
+            ApplyExampleFromAttribute(parameter, attribute);
+        }
+    }
+
+    /// <summary>
+    /// Applies any relevant parameter annotations.
+    /// </summary>
+    /// <param name="parameter">The parameter to annotate.</param>
+    /// <param name="parameterInfo">The parameter being annotated.</param>
+    private void ApplyParameterAnnotations(OpenApiParameter parameter, ParameterInfo parameterInfo)
+    {
+        var attribute = parameterInfo
+            .GetCustomAttributes<SwaggerParameterExampleAttribute>()
+            .FirstOrDefault();
+
+        if (attribute is not null)
+        {
+            ApplyExampleFromAttribute(parameter, attribute);
+        }
+    }
+
+    /// <summary>
+    /// Applies the example to the specified parameter.
+    /// </summary>
+    /// <param name="parameter">The parameter to apply the example to.</param>
+    /// <param name="attribute">The attribute declaring the example.</param>
+    private void ApplyExampleFromAttribute(OpenApiParameter parameter, SwaggerParameterExampleAttribute attribute)
+    {
+        if (attribute.Example is not null)
+        {
+            parameter.Example = FormatAsJson(attribute.Example);
         }
     }
 }
