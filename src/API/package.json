@@ -3,7 +3,7 @@
   "private": true,
   "version": "6.0.0",
   "devDependencies": {
-    "bootstrap": ">=4.6.0",
+    "bootstrap": ">=4.6.1",
     "braces": ">=2.3.1",
     "clean-css": ">=5.2.2",
     "cryptiles": "4.1.3",
