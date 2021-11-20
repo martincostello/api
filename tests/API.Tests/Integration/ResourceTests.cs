@@ -83,6 +83,7 @@ public class ResourceTests : IntegrationTest
         {
             "content-security-policy",
             "feature-policy",
+            "Permissions-Policy",
             "Referrer-Policy",
             "X-Content-Type-Options",
             "X-Datacenter",

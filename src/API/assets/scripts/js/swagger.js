@@ -43,6 +43,7 @@
           // Delete overly-verbose headers from the UI
           delete response.headers['content-security-policy'];
           delete response.headers['feature-policy'];
+          delete response.headers['permissions-policy'];
         }
       });
 
