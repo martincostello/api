@@ -3,6 +3,7 @@
 
 using System.IO.Compression;
 using System.Net.Mime;
+using System.Text.Json.Serialization;
 using MartinCostello.Api.Extensions;
 using MartinCostello.Api.Options;
 using Microsoft.AspNetCore.CookiePolicy;
@@ -75,10 +76,17 @@ public static class ApiBuilder
 
         builder.Services.Configure<GzipCompressionProviderOptions>((p) => p.Level = CompressionLevel.Fastest);
         builder.Services.Configure<BrotliCompressionProviderOptions>((p) => p.Level = CompressionLevel.Fastest);
+
         builder.Services.Configure<JsonOptions>((options) =>
         {
             options.SerializerOptions.PropertyNameCaseInsensitive = false;
             options.SerializerOptions.WriteIndented = true;
+        });
+
+        builder.Services.AddSingleton<JsonSerializerContext>((p) =>
+        {
+            var options = p.GetRequiredService<IOptions<JsonOptions>>().Value;
+            return new ApplicationJsonSerializerContext(options.SerializerOptions);
         });
 
         builder.Services.AddResponseCompression((options) =>
