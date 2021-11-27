@@ -82,7 +82,7 @@ public static class ApiModule
                 guid = guid.ToUpperInvariant();
             }
 
-            return Results.Json(new GuidResponse() { Guid = guid });
+            return Results.Extensions.Json(new GuidResponse() { Guid = guid });
         })
         .Produces<GuidResponse, GuidResponseExampleProvider>("A GUID was generated successfully.")
         .ProducesProblem("The specified format is invalid.")
@@ -155,7 +155,7 @@ public static class ApiModule
                 Hash = formatAsBase64 ? Convert.ToBase64String(hash) : BytesToHexString(hash).ToLowerInvariant(),
             };
 
-            return Results.Json(result);
+            return Results.Extensions.Json(result);
         })
         .Accepts<HashRequest, HashRequestExampleProvider>()
         .Produces<HashResponse, HashResponseExampleProvider>("The hash was generated successfully.")
@@ -197,7 +197,7 @@ public static class ApiModule
                 validationAlgorithm.Split('-', StringSplitOptions.RemoveEmptyEntries)[0].ToUpperInvariant(),
                 decryptionAlgorithm.Split('-', StringSplitOptions.RemoveEmptyEntries)[0].ToUpperInvariant());
 
-            return Results.Json(result);
+            return Results.Extensions.Json(result);
         })
         .Produces<MachineKeyResponse, MachineKeyResponseExampleProvider>("The machine key was generated successfully.")
         .ProducesProblem("The specified decryption or validation algorithm is invalid.")

@@ -84,7 +84,7 @@ public static class IServiceCollectionExtensions
             applicationPath = environment.ContentRootPath;
         }
 
-        var path = Path.GetFullPath(Path.Combine(applicationPath, fileName));
+        string? path = Path.GetFullPath(Path.Combine(applicationPath, fileName));
 
         if (File.Exists(path))
         {
