@@ -48,7 +48,7 @@ public static class ApiModule
             var formatProvider = CultureInfo.InvariantCulture;
             var now = clock.GetCurrentInstant().ToDateTimeOffset();
 
-            return new TimeResponse()
+            var result = new TimeResponse()
             {
                 Timestamp = now,
                 Rfc1123 = now.ToString("r", formatProvider),
@@ -56,6 +56,8 @@ public static class ApiModule
                 UniversalSortable = now.UtcDateTime.ToString("u", formatProvider),
                 Unix = now.ToUnixTimeSeconds(),
             };
+
+            return Results.Extensions.Json(result);
         })
         .Produces<TimeResponse, TimeResponseExampleProvider>("The current UTC date and time.")
         .RequireCors("DefaultCorsPolicy")

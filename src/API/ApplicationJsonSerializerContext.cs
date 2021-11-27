@@ -11,6 +11,7 @@ namespace MartinCostello.Api;
 [JsonSerializable(typeof(GuidResponse))]
 [JsonSerializable(typeof(HashResponse))]
 [JsonSerializable(typeof(MachineKeyResponse))]
+[JsonSerializable(typeof(TimeResponse))]
 internal sealed partial class ApplicationJsonSerializerContext : JsonSerializerContext
 {
 }
