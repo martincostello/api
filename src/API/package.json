@@ -35,7 +35,7 @@
     "popper.js": "^1.16.1",
     "puppeteer": "13.1.1",
     "randomatic": ">=3.0.0",
-    "superagent": "7.1.0"
+    "superagent": "7.1.1"
   },
   "scripts": {
     "publish": "gulp publish"
