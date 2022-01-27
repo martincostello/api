@@ -82,7 +82,14 @@ function DotNetTest {
     $coverageOutput = Join-Path $OutputPath "coverage.cobertura.xml"
     $reportOutput = Join-Path $OutputPath "coverage"
 
-    & $dotnet test $Project --output $OutputPath -- RunConfiguration.TestSessionTimeout=1200000
+    $additionalArgs = @()
+
+    if (![string]::IsNullOrEmpty($env:GITHUB_SHA)) {
+        $additionalArgs += "--logger"
+        $additionalArgs += "GitHubActions;report-warnings=false"
+    }
+
+    & $dotnet test $Project --output $OutputPath $additionalArgs -- RunConfiguration.TestSessionTimeout=1200000
 
     $dotNetTestExitCode = $LASTEXITCODE
 
