@@ -83,7 +83,7 @@ jobs:
           const benchmark = arguments[1];
           core.info(`Benchmark: ${benchmark}`);
 
-          const start_body = `Started [benchmark](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${process.env.GITHUB_RUN_ID}).`;
+          const start_body = `Started [${benchmark} benchmark](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${process.env.GITHUB_RUN_ID}).`;
           await github.issues.createComment({
             issue_number: context.issue.number,
             owner: context.repo.owner,
