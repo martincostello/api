@@ -2,7 +2,8 @@
 param(
     [Parameter(Mandatory = $false)][string] $OutputPath = "",
     [Parameter(Mandatory = $false)][switch] $SkipTests,
-    [Parameter(Mandatory = $false)][string] $Runtime = ""
+    [Parameter(Mandatory = $false)][string] $Runtime = "",
+    [Parameter(Mandatory = $false)][switch] $InstallDotNetSdkLocally
 )
 
 $ErrorActionPreference = "Stop"
@@ -17,10 +18,10 @@ if ($OutputPath -eq "") {
     $OutputPath = Join-Path "$(Convert-Path "$PSScriptRoot")" "artifacts"
 }
 
-$installDotNetSdk = $false;
+$installDotNetSdk = $InstallDotNetSdkLocally;
 
 if (($null -eq (Get-Command "dotnet" -ErrorAction SilentlyContinue)) -and ($null -eq (Get-Command "dotnet.exe" -ErrorAction SilentlyContinue))) {
-    Write-Host "The .NET Core SDK is not installed."
+    Write-Host "The .NET SDK is not installed."
     $installDotNetSdk = $true
 }
 else {
@@ -32,14 +33,14 @@ else {
     }
 
     if ($installedDotNetVersion -ne $dotnetVersion) {
-        Write-Host "The required version of the .NET Core SDK is not installed. Expected $dotnetVersion."
+        Write-Host "The required version of the .NET SDK is not installed. Expected $dotnetVersion."
         $installDotNetSdk = $true
     }
 }
 
 if ($installDotNetSdk -eq $true) {
 
-    $env:DOTNET_INSTALL_DIR = Join-Path "$(Convert-Path "$PSScriptRoot")" ".dotnetcli"
+    $env:DOTNET_INSTALL_DIR = Join-Path "$(Convert-Path "$PSScriptRoot")" ".dotnet"
     $sdkPath = Join-Path $env:DOTNET_INSTALL_DIR "sdk\$dotnetVersion"
 
     if (!(Test-Path $sdkPath)) {

@@ -1,0 +1,23 @@
+components:
+  api:
+    script: |
+      pwsh build.ps1 -InstallDotNetSdkLocally
+    arguments: ""
+
+defaults: --config ./crank.yml
+
+profiles:
+  local:
+    description: Local
+    arguments: --profile local
+
+benchmarks:
+  root:
+    description: Root
+    arguments: --config ./crank.yml --scenario root
+  guid:
+    description: Root
+    arguments: --config ./crank.yml --scenario guid
+  time:
+    description: Root
+    arguments: --config ./crank.yml --scenario time
