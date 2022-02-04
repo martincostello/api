@@ -1,7 +1,7 @@
 components:
   api:
     script: |
-      pwsh build.ps1 -InstallDotNetSdkLocally
+      pwsh build.ps1 -InstallDotNetSdkLocally -SkipTests
     arguments: ""
 
 defaults: --config ./crank.yml
