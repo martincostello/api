@@ -16,8 +16,8 @@ benchmarks:
     description: Root
     arguments: --config ./crank.yml --scenario root
   guid:
-    description: Root
+    description: GUID
     arguments: --config ./crank.yml --scenario guid
   time:
-    description: Root
+    description: Time
     arguments: --config ./crank.yml --scenario time
