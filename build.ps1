@@ -1,9 +1,12 @@
 #! /usr/bin/env pwsh
+
+#Requires -PSEdition Core
+#Requires -Version 7
+
 param(
     [Parameter(Mandatory = $false)][string] $OutputPath = "",
     [Parameter(Mandatory = $false)][switch] $SkipTests,
-    [Parameter(Mandatory = $false)][string] $Runtime = "",
-    [Parameter(Mandatory = $false)][switch] $InstallDotNetSdkLocally
+    [Parameter(Mandatory = $false)][string] $Runtime = ""
 )
 
 $ErrorActionPreference = "Stop"
@@ -18,7 +21,7 @@ if ($OutputPath -eq "") {
     $OutputPath = Join-Path "$(Convert-Path "$PSScriptRoot")" "artifacts"
 }
 
-$installDotNetSdk = $InstallDotNetSdkLocally;
+$installDotNetSdk = $false;
 
 if (($null -eq (Get-Command "dotnet" -ErrorAction SilentlyContinue)) -and ($null -eq (Get-Command "dotnet.exe" -ErrorAction SilentlyContinue))) {
     Write-Host "The .NET SDK is not installed."
@@ -41,7 +44,7 @@ else {
 if ($installDotNetSdk -eq $true) {
 
     $env:DOTNET_INSTALL_DIR = Join-Path "$(Convert-Path "$PSScriptRoot")" ".dotnet"
-    $sdkPath = Join-Path $env:DOTNET_INSTALL_DIR "sdk\$dotnetVersion"
+    $sdkPath = Join-Path $env:DOTNET_INSTALL_DIR "sdk" "$dotnetVersion"
 
     if (!(Test-Path $sdkPath)) {
         if (!(Test-Path $env:DOTNET_INSTALL_DIR)) {
@@ -75,10 +78,10 @@ if ($installDotNetSdk -eq $true) {
 function DotNetTest {
     param([string]$Project)
 
-    $nugetPath = $env:NUGET_PACKAGES ?? (Join-Path ($env:USERPROFILE ?? "~") ".nuget\packages")
+    $nugetPath = $env:NUGET_PACKAGES ?? (Join-Path ($env:USERPROFILE ?? "~") ".nuget" "packages")
     $propsFile = Join-Path $solutionPath "Directory.Packages.props"
     $reportGeneratorVersion = (Select-Xml -Path $propsFile -XPath "//PackageVersion[@Include='ReportGenerator']/@Version").Node.'#text'
-    $reportGeneratorPath = Join-Path $nugetPath "reportgenerator\$reportGeneratorVersion\tools\net6.0\ReportGenerator.dll"
+    $reportGeneratorPath = Join-Path $nugetPath "reportgenerator" $reportGeneratorVersion "tools" "net6.0" "ReportGenerator.dll"
 
     $coverageOutput = Join-Path $OutputPath "coverage.cobertura.xml"
     $reportOutput = Join-Path $OutputPath "coverage"
@@ -129,11 +132,11 @@ function DotNetPublish {
 }
 
 $testProjects = @(
-    (Join-Path $solutionPath "tests\API.Tests\API.Tests.csproj")
+    (Join-Path $solutionPath "tests" "API.Tests" "API.Tests.csproj")
 )
 
 $publishProjects = @(
-    (Join-Path $solutionPath "src\API\API.csproj")
+    (Join-Path $solutionPath "src" "API" "API.csproj")
 )
 
 Write-Host "Publishing solution..." -ForegroundColor Green
