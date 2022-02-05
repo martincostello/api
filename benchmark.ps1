@@ -1,4 +1,8 @@
 #! /usr/bin/env pwsh
+
+#Requires -PSEdition Core
+#Requires -Version 7
+
 param(
     [Parameter(Mandatory = $false)][string] $Configuration = "Release",
     [Parameter(Mandatory = $false)][string] $Framework = "net6.0"
@@ -33,7 +37,7 @@ else {
 
 if ($installDotNetSdk -eq $true) {
     $env:DOTNET_INSTALL_DIR = Join-Path "$(Convert-Path "$PSScriptRoot")" ".dotnet"
-    $sdkPath = Join-Path $env:DOTNET_INSTALL_DIR "sdk\$dotnetVersion"
+    $sdkPath = Join-Path $env:DOTNET_INSTALL_DIR "sdk" "$dotnetVersion"
 
     if (!(Test-Path $sdkPath)) {
         if (!(Test-Path $env:DOTNET_INSTALL_DIR)) {
@@ -52,7 +56,7 @@ else {
     $dotnet = "dotnet"
 }
 
-$benchmarks = (Join-Path $solutionPath "tests\API.Benchmarks\API.Benchmarks.csproj")
+$benchmarks = (Join-Path $solutionPath "tests" "API.Benchmarks" "API.Benchmarks.csproj")
 
 Write-Host "Running benchmarks..." -ForegroundColor Green
 
