@@ -79,23 +79,19 @@ internal sealed class ExampleFilter : IOperationFilter, IParameterFilter, ISchem
     private static IList<T> GetAttributes<T>(ApiDescription apiDescription)
         where T : Attribute
     {
+        IEnumerable<T> attributes = Enumerable.Empty<T>();
+
         if (apiDescription.TryGetMethodInfo(out MethodInfo methodInfo))
         {
-            return methodInfo
-                .GetCustomAttributes<T>(inherit: true)
-                .ToArray();
+            attributes = attributes.Concat(methodInfo.GetCustomAttributes<T>(inherit: true));
         }
-        else if (apiDescription.ActionDescriptor is not null)
+
+        if (apiDescription.ActionDescriptor is not null)
         {
-            return apiDescription.ActionDescriptor.EndpointMetadata
-                .OfType<T>()
-                .Distinct()
-                .ToArray();
+            attributes = attributes.Concat(apiDescription.ActionDescriptor.EndpointMetadata.OfType<T>());
         }
-        else
-        {
-            return Array.Empty<T>();
-        }
+
+        return attributes.ToArray();
     }
 
     /// <summary>
