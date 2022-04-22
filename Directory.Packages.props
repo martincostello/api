@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <NodaTimeVersion>3.1.0</NodaTimeVersion>
-    <SwashbuckleAspNetCoreVersion>6.3.0</SwashbuckleAspNetCoreVersion>
+    <SwashbuckleAspNetCoreVersion>6.3.1</SwashbuckleAspNetCoreVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="BenchmarkDotNet" Version="0.13.1.1695" />
