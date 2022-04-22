@@ -123,9 +123,9 @@ public sealed class CustomHttpHeadersMiddleware
     {
         string basePolicy = $@"
 default-src 'self' stackpath.bootstrapcdn.com;
-script-src 'self' ajax.googleapis.com cdnjs.cloudflare.com stackpath.bootstrapcdn.com www.google-analytics.com 'unsafe-inline';
+script-src 'self' ajax.googleapis.com cdnjs.cloudflare.com stackpath.bootstrapcdn.com www.googletagmanager.com 'unsafe-inline';
 style-src 'self' ajax.googleapis.com cdnjs.cloudflare.com fonts.googleapis.com stackpath.bootstrapcdn.com 'unsafe-inline';
-img-src 'self' data: online.swagger.io www.google-analytics.com {GetCdnOriginForContentSecurityPolicy(options)};
+img-src 'self' data: online.swagger.io www.googletagmanager.com {GetCdnOriginForContentSecurityPolicy(options)};
 font-src 'self' ajax.googleapis.com fonts.googleapis.com fonts.gstatic.com stackpath.bootstrapcdn.com;
 connect-src 'self';
 media-src 'none';
