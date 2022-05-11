@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
+using Microsoft.AspNetCore.Http.HttpResults;
+
 namespace MartinCostello.Api.Extensions;
 
 /// <summary>
@@ -14,11 +16,11 @@ internal static class ResultsExtensions
     /// <param name="resultExtensions">The <see cref="IResultExtensions"/> being extended.</param>
     /// <param name="detail">The error detail.</param>
     /// <returns>
-    /// The <see cref="IResult"/> representing the response.
+    /// The <see cref="ProblemHttpResult"/> representing the response.
     /// </returns>
-    public static IResult InvalidRequest(this IResultExtensions resultExtensions, string detail)
+    public static ProblemHttpResult InvalidRequest(this IResultExtensions resultExtensions, string detail)
     {
         ArgumentNullException.ThrowIfNull(resultExtensions);
-        return Results.Problem(detail, statusCode: StatusCodes.Status400BadRequest);
+        return TypedResults.Problem(detail, statusCode: StatusCodes.Status400BadRequest);
     }
 }
