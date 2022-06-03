@@ -8,7 +8,6 @@ var cssmin = require('gulp-cssmin');
 var uglify = require('gulp-uglify');
 var csslint = require('gulp-csslint');
 var jshint = require('gulp-jshint');
-var karmaServer = require('karma').Server;
 var rename = require('gulp-rename');
 
 var webroot = './wwwroot/assets/';
@@ -21,7 +20,6 @@ var paths = {
     jsDest: webroot + 'js',
     minJs: webroot + 'js/**/*.min.js',
     minJsDest: webroot + 'js/site.min.js',
-    testsJs: scripts + 'js/**/*.spec.js',
     css: styles + 'css/**/*.css',
     minCssDest: webroot + 'css/**/site.min.css',
     concatJsDest: webroot + 'js/site.js',
@@ -57,7 +55,7 @@ gulp.task('lint:js', function () {
 gulp.task('lint', gulp.parallel('lint:js', 'lint:css'));
 
 gulp.task('min:js', function () {
-  return gulp.src([paths.js, '!' + paths.minJs, '!' + paths.concatJsDest, '!' + paths.testsJs])
+  return gulp.src([paths.js, '!' + paths.minJs, '!' + paths.concatJsDest])
     .pipe(concat(paths.concatJsDest))
     .pipe(gulp.dest('.'))
     .pipe(uglify())
@@ -79,24 +77,5 @@ gulp.task('min:css', function () {
 
 gulp.task('min', gulp.parallel('min:js', 'min:css'));
 
-gulp.task('test:js:karma', function (done) {
-  new karmaServer({
-    configFile: __dirname + '/karma.conf.js',
-    singleRun: true
-  }, done).start();
-});
-
-gulp.task('test:js:chrome', function (done) {
-  new karmaServer({
-    configFile: __dirname + '/karma.conf.js',
-    browsers: ['Chrome']
-  }, done).start();
-});
-
-gulp.task('test:js', gulp.series('test:js:karma'));
-gulp.task('test', gulp.series('test:js'));
-
 gulp.task('build', gulp.series('lint', 'min'));
-gulp.task('publish', gulp.series('build', 'test'));
-
 gulp.task('default', gulp.series('build'));
