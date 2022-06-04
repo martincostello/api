@@ -73,8 +73,8 @@ public static class ApiBuilder
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddRazorPages();
 
-        builder.Services.Configure<GzipCompressionProviderOptions>((p) => p.Level = CompressionLevel.Fastest);
         builder.Services.Configure<BrotliCompressionProviderOptions>((p) => p.Level = CompressionLevel.Fastest);
+        builder.Services.Configure<GzipCompressionProviderOptions>((p) => p.Level = CompressionLevel.Fastest);
 
         builder.Services.Configure<JsonOptions>((options) =>
         {
@@ -94,6 +94,39 @@ public static class ApiBuilder
         {
             options.AppendTrailingSlash = true;
             options.LowercaseUrls = true;
+        });
+
+        builder.Services.Configure<StaticFileOptions>((options) =>
+        {
+            var provider = new FileExtensionContentTypeProvider();
+            provider.Mappings[".webmanifest"] = "application/manifest+json";
+
+            options.ContentTypeProvider = provider;
+            options.DefaultContentType = MediaTypeNames.Application.Json;
+            options.ServeUnknownFileTypes = true;
+
+            options.OnPrepareResponse = (context) =>
+            {
+                var maxAge = TimeSpan.FromDays(7);
+
+                if (context.File.Exists && builder.Environment.IsProduction())
+                {
+                    string? extension = Path.GetExtension(context.File.PhysicalPath);
+
+                    // These files are served with a content hash in the URL so can be cached for longer
+                    bool isScriptOrStyle =
+                        string.Equals(extension, ".css", StringComparison.OrdinalIgnoreCase) ||
+                        string.Equals(extension, ".js", StringComparison.OrdinalIgnoreCase);
+
+                    if (isScriptOrStyle)
+                    {
+                        maxAge = TimeSpan.FromDays(365);
+                    }
+                }
+
+                var headers = context.Context.Response.GetTypedHeaders();
+                headers.CacheControl = new() { MaxAge = maxAge };
+            };
         });
 
         if (!builder.Environment.IsDevelopment())
@@ -131,16 +164,7 @@ public static class ApiBuilder
 
         app.UseResponseCompression();
 
-        var provider = new FileExtensionContentTypeProvider();
-        provider.Mappings[".webmanifest"] = "application/manifest+json";
-
-        app.UseStaticFiles(new StaticFileOptions()
-        {
-            ContentTypeProvider = provider,
-            DefaultContentType = MediaTypeNames.Application.Json,
-            OnPrepareResponse = (context) => SetCacheHeaders(context, app.Environment.IsDevelopment()),
-            ServeUnknownFileTypes = true,
-        });
+        app.UseStaticFiles();
 
         app.UseRouting();
 
@@ -159,33 +183,5 @@ public static class ApiBuilder
         app.MapApiEndpoints();
 
         return app;
-    }
-
-    /// <summary>
-    /// Configures the cache headers for the API.
-    /// </summary>
-    /// <param name="context">The response context.</param>
-    /// <param name="isDevelopment">Whether the application is running in development.</param>
-    private static void SetCacheHeaders(StaticFileResponseContext context, bool isDevelopment)
-    {
-        var maxAge = TimeSpan.FromDays(7);
-
-        if (context.File.Exists && !isDevelopment)
-        {
-            string? extension = Path.GetExtension(context.File.PhysicalPath);
-
-            // These files are served with a content hash in the URL so can be cached for longer
-            bool isScriptOrStyle =
-                string.Equals(extension, ".css", StringComparison.OrdinalIgnoreCase) ||
-                string.Equals(extension, ".js", StringComparison.OrdinalIgnoreCase);
-
-            if (isScriptOrStyle)
-            {
-                maxAge = TimeSpan.FromDays(365);
-            }
-        }
-
-        var headers = context.Context.Response.GetTypedHeaders();
-        headers.CacheControl = new() { MaxAge = maxAge };
     }
 }
