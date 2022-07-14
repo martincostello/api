@@ -2,7 +2,7 @@
   <PropertyGroup>
     <MicrosoftAspNetCoreVersion>6.0.7</MicrosoftAspNetCoreVersion>
     <NodaTimeVersion>3.1.0</NodaTimeVersion>
-    <SwashbuckleAspNetCoreVersion>6.3.1</SwashbuckleAspNetCoreVersion>
+    <SwashbuckleAspNetCoreVersion>6.3.2</SwashbuckleAspNetCoreVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="BenchmarkDotNet" Version="0.13.1.1695" />
