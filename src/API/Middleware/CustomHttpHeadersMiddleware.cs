@@ -122,11 +122,11 @@ public sealed class CustomHttpHeadersMiddleware
     private static string BuildContentSecurityPolicy(bool isProduction, SiteOptions options)
     {
         string basePolicy = $@"
-default-src 'self' stackpath.bootstrapcdn.com;
-script-src 'self' ajax.googleapis.com cdnjs.cloudflare.com stackpath.bootstrapcdn.com www.googletagmanager.com 'unsafe-inline';
-style-src 'self' ajax.googleapis.com cdnjs.cloudflare.com fonts.googleapis.com stackpath.bootstrapcdn.com 'unsafe-inline';
+default-src 'self';
+script-src 'self' ajax.googleapis.com cdnjs.cloudflare.com www.googletagmanager.com 'unsafe-inline';
+style-src 'self' ajax.googleapis.com cdnjs.cloudflare.com fonts.googleapis.com 'unsafe-inline';
 img-src 'self' data: online.swagger.io www.googletagmanager.com {GetCdnOriginForContentSecurityPolicy(options)};
-font-src 'self' ajax.googleapis.com fonts.googleapis.com fonts.gstatic.com stackpath.bootstrapcdn.com;
+font-src 'self' ajax.googleapis.com fonts.googleapis.com fonts.gstatic.com;
 connect-src 'self' region1.google-analytics.com www.google-analytics.com;
 media-src 'none';
 object-src 'none';

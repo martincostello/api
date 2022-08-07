@@ -3,7 +3,6 @@
   "private": true,
   "version": "6.0.0",
   "devDependencies": {
-    "bootstrap": "^5.2.0",
     "clean-css": "^5.3.1",
     "colors": "1.4.0",
     "del": "^6.1.1",
