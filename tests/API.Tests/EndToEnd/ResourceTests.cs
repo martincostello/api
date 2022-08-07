@@ -56,7 +56,6 @@ public class ResourceTests : EndToEndTest
         string[] expectedHeaders = new[]
         {
             "content-security-policy",
-            "feature-policy",
             "Permissions-Policy",
             "Referrer-Policy",
             "X-Content-Type-Options",
