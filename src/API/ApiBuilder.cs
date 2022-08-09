@@ -79,7 +79,8 @@ public static class ApiBuilder
         {
             options.SerializerOptions.PropertyNameCaseInsensitive = false;
             options.SerializerOptions.WriteIndented = true;
-            options.SerializerOptions.AddContext<ApplicationJsonSerializerContext>();
+            //// HACK Remove due to issue serializing ProblemDetails for OpenAPI
+            ////options.SerializerOptions.AddContext<ApplicationJsonSerializerContext>();
         });
 
         builder.Services.AddResponseCompression((options) =>
