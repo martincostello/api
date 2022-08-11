@@ -28,7 +28,8 @@ internal sealed class ExampleFilter : IOperationFilter, IParameterFilter, ISchem
     /// <param name="options">The <see cref="JsonOptions"/> to use.</param>
     public ExampleFilter(IOptions<JsonOptions> options)
     {
-        _options = options.Value.SerializerOptions;
+        _options = new(options.Value.SerializerOptions);
+        _options.TypeInfoResolver = null; // Remove the JsonSerializerContext
     }
 
     /// <inheritdoc />
