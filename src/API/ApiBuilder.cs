@@ -3,6 +3,7 @@
 
 using System.IO.Compression;
 using System.Net.Mime;
+using System.Text.Json.Serialization.Metadata;
 using MartinCostello.Api.Extensions;
 using MartinCostello.Api.Options;
 using Microsoft.AspNetCore.CookiePolicy;
@@ -79,7 +80,9 @@ public static class ApiBuilder
         {
             options.SerializerOptions.PropertyNameCaseInsensitive = false;
             options.SerializerOptions.WriteIndented = true;
-            options.SerializerOptions.AddContext<ApplicationJsonSerializerContext>();
+            options.SerializerOptions.TypeInfoResolver = JsonTypeInfoResolver.Combine(
+                ApplicationJsonSerializerContext.Default,
+                new DefaultJsonTypeInfoResolver());
         });
 
         builder.Services.AddResponseCompression((options) =>
