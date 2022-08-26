@@ -1,7 +1,7 @@
 name: benchmark
 
 env:
-  CRANK_VERSION: '0.2.0-*'
+  CRANK_VERSION: '0.2.0-ci'
   DOTNET_CLI_TELEMETRY_OPTOUT: true
   DOTNET_NOLOGO: true
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
@@ -111,9 +111,9 @@ jobs:
     - name: Install crank
       shell: pwsh
       run: |
-        dotnet tool install --global Microsoft.Crank.Agent --version "${{ env.CRANK_VERSION }}"
-        dotnet tool install --global Microsoft.Crank.Controller --version "${{ env.CRANK_VERSION }}"
-        dotnet tool install --global Microsoft.Crank.PullRequestBot --version "${{ env.CRANK_VERSION }}"
+        dotnet tool install Microsoft.Crank.Agent --version "${{ env.CRANK_VERSION }}" --add-source ./.packages
+        dotnet tool install Microsoft.Crank.Controller --version "${{ env.CRANK_VERSION }}" --add-source ./.packages
+        dotnet tool install Microsoft.Crank.PullRequestBot --version "${{ env.CRANK_VERSION }}" --add-source ./.packages
 
     - name: Run crank
       shell: pwsh
