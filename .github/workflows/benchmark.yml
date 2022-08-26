@@ -122,3 +122,18 @@ jobs:
         DOTNET_NOLOGO: true
         DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
         NUGET_XMLDOC_MODE: skip
+
+    - name: Report failure
+      uses: actions/github-script@v6
+      if: ${{ failure() }}
+      with:
+        script: |
+          const start_body = `Benchmark [${{ steps.benchmark-argument.outputs.result }}](${{ github.server_url }}/${context.repo.owner}/${context.repo.repo}/actions/runs/${process.env.GITHUB_RUN_ID}) failed.`;
+          await github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: start_body
+          });
+
+          return benchmark;
