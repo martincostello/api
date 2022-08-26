@@ -86,7 +86,7 @@ jobs:
           const benchmark = arguments[1];
           core.info(`Benchmark: ${benchmark}`);
 
-          const start_body = `Started [${benchmark} benchmark](${{ github.server_url }}/${context.repo.owner}/${context.repo.repo}/actions/runs/${process.env.GITHUB_RUN_ID}).`;
+          const start_body = `Started [${benchmark} benchmark](${{ github.server_url }}/${context.repo.owner}/${context.repo.repo}/actions/runs/${process.env.GITHUB_RUN_ID}). :hourglass:`;
           await github.rest.issues.createComment({
             issue_number: context.issue.number,
             owner: context.repo.owner,
@@ -122,3 +122,16 @@ jobs:
         DOTNET_NOLOGO: true
         DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
         NUGET_XMLDOC_MODE: skip
+
+    - name: Report failure
+      uses: actions/github-script@v6
+      if: ${{ failure() }}
+      with:
+        script: |
+          const failure_body = `Benchmark [${{ steps.benchmark-argument.outputs.result }}](${{ github.server_url }}/${context.repo.owner}/${context.repo.repo}/actions/runs/${process.env.GITHUB_RUN_ID}) failed. :x:`;
+          await github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: failure_body
+          });
