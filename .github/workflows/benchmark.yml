@@ -111,9 +111,9 @@ jobs:
     - name: Install crank
       shell: pwsh
       run: |
-        dotnet tool install Microsoft.Crank.Agent --version "${{ env.CRANK_VERSION }}" --add-source ./.packages
-        dotnet tool install Microsoft.Crank.Controller --version "${{ env.CRANK_VERSION }}" --add-source ./.packages
-        dotnet tool install Microsoft.Crank.PullRequestBot --version "${{ env.CRANK_VERSION }}" --add-source ./.packages
+        dotnet tool install --global Microsoft.Crank.Agent --version "${{ env.CRANK_VERSION }}" --add-source ./.packages
+        dotnet tool install --global Microsoft.Crank.Controller --version "${{ env.CRANK_VERSION }}" --add-source ./.packages
+        dotnet tool install --global Microsoft.Crank.PullRequestBot --version "${{ env.CRANK_VERSION }}" --add-source ./.packages
 
     - name: Run crank
       shell: pwsh
