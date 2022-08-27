@@ -36,9 +36,6 @@
     <VersionPrefix>6.0.0</VersionPrefix>
     <VersionSuffix></VersionSuffix>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(CI)' != '' or !Exists('$(MSBuildThisFileDirectory)\src\API\node_modules') ">
-    <InstallWebPackages>true</InstallWebPackages>
-  </PropertyGroup>
   <ItemGroup>
     <Using Include="System.Globalization" />
   </ItemGroup>
