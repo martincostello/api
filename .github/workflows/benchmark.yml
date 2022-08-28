@@ -15,14 +15,9 @@ on:
 
 jobs:
   benchmark:
-    name: ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
+    name: benchmark
+    runs-on: ubuntu-latest
     if: ${{ github.event.repository.fork == false && github.event.issue.pull_request != '' && contains(github.event.comment.body, '/benchmark') }}
-
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ ubuntu-latest ]
 
     steps:
 
@@ -123,11 +118,6 @@ jobs:
           -Repository "${{ github.server_url }}/${{ github.repository }}" `
           -PullRequestId "${{ github.event.issue.number }}" `
           -AccessToken "${{ secrets.GITHUB_TOKEN }}"
-      env:
-        DOTNET_CLI_TELEMETRY_OPTOUT: true
-        DOTNET_NOLOGO: true
-        DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
-        NUGET_XMLDOC_MODE: skip
 
     - name: Report failure
       uses: actions/github-script@v6
