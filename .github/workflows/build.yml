@@ -12,6 +12,7 @@ on:
   workflow_dispatch:
 
 env:
+  APPLICATION_URL_PROD: https://api.martincostello.com
   AZURE_WEBAPP_NAME: apimartincostello
   AZURE_WEBAPP_PACKAGE_PATH: ./artifacts/publish
   DOTNET_CLI_TELEMETRY_OPTOUT: true
@@ -22,7 +23,6 @@ env:
   DOTNET_SYSTEM_CONSOLE_ALLOW_ANSI_COLOR_REDIRECTION: 1
   NUGET_XMLDOC_MODE: skip
   TERM: xterm
-  WEBSITE_URL_PROD: https://api.martincostello.com
 
 jobs:
   build:
@@ -74,7 +74,7 @@ jobs:
     concurrency: production_environment
     environment:
       name: production
-      url: ${{ env.WEBSITE_URL_PROD }}
+      url: ${{ env.APPLICATION_URL_PROD }}
 
     steps:
 
@@ -108,4 +108,4 @@ jobs:
       shell: pwsh
       run: dotnet test ./tests/API.Tests --configuration Release --filter Category=EndToEnd /p:CollectCoverage=false
       env:
-        WEBSITE_URL: ${{ env.WEBSITE_URL_PROD }}
+        WEBSITE_URL: ${{ env.APPLICATION_URL_PROD }}
