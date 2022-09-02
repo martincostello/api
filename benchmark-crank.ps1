@@ -7,7 +7,7 @@ param(
     [Parameter(Mandatory = $true)][string] $PullRequestId,
     [Parameter(Mandatory = $false)][string] $AccessToken,
     [Parameter(Mandatory = $false)][string] $Benchmark = "root",
-    [Parameter(Mandatory = $false)][string] $Repository = "https://github.com/martincostello/api"
+    [Parameter(Mandatory = $false)][string] $Repository = "https://github.com/martincostello/api",
     [Parameter(Mandatory = $false)][switch] $PublishResults
 )
 
