@@ -24,9 +24,9 @@ if (![string]::IsNullOrEmpty($AccessToken)) {
 }
 
 if ($IsWindows) {
-    Start-Process -FilePath "crank-agent" -WindowStyle Hidden | Out-Null
+    $agent = Start-Process -FilePath "crank-agent" -WindowStyle Hidden | Out-Null
 } else {
-    Start-Process -FilePath "crank-agent" | Out-Null
+    $agent = Start-Process -FilePath "crank-agent" | Out-Null
 }
 
 Start-Sleep -Seconds 2
@@ -36,11 +36,16 @@ $components = "api"
 $config = Join-Path $repoPath "benchmark.yml"
 $profiles = "local"
 
-crank-pr `
-    --benchmarks $Benchmark `
-    --components $components `
-    --config $config `
-    --profiles $profiles `
-    --pull-request $PullRequestId `
-    --repository $Repository `
-    $additionalArgs
+try {
+    crank-pr `
+        --benchmarks $Benchmark `
+        --components $components `
+        --config $config `
+        --profiles $profiles `
+        --pull-request $PullRequestId `
+        --repository $Repository `
+        $additionalArgs
+}
+finally {
+    Stop-Process -InputObject $agent -Force | Out-Null
+}
