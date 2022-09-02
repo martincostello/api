@@ -1,7 +1,7 @@
 components:
   api:
     script: |
-      dotnet build --configuration Release
+      pwsh build.ps1 -SkipTests
     arguments: ""
 
 defaults: --config ./crank.yml
