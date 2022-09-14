@@ -76,7 +76,7 @@ public static class ApiBuilder
         builder.Services.Configure<BrotliCompressionProviderOptions>((p) => p.Level = CompressionLevel.Fastest);
         builder.Services.Configure<GzipCompressionProviderOptions>((p) => p.Level = CompressionLevel.Fastest);
 
-        builder.Services.ConfigureRouteHandlerJsonOptions((options) =>
+        builder.Services.ConfigureHttpJsonOptions((options) =>
         {
             options.SerializerOptions.PropertyNameCaseInsensitive = false;
             options.SerializerOptions.WriteIndented = true;
