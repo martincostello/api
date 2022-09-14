@@ -9,6 +9,7 @@ namespace MartinCostello.Api;
 
 [ExcludeFromCodeCoverage]
 [JsonSerializable(typeof(GuidResponse))]
+[JsonSerializable(typeof(HashRequest))]
 [JsonSerializable(typeof(HashResponse))]
 [JsonSerializable(typeof(MachineKeyResponse))]
 [JsonSerializable(typeof(TimeResponse))]

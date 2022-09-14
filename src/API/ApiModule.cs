@@ -6,6 +6,7 @@ using System.Text;
 using MartinCostello.Api.Extensions;
 using MartinCostello.Api.Models;
 using MartinCostello.Api.Swagger;
+using Microsoft.AspNetCore.Http.HttpResults;
 using NodaTime;
 
 namespace MartinCostello.Api;
@@ -24,13 +25,13 @@ public static class ApiModule
         ["3DES-V"] = 24,
         ["AES-128-D"] = 16,
         ["AES-192-D"] = 24,
-        ["AES-256-D"] = 32,
+        ["AES-256-D"] = SHA256.HashSizeInBytes,
         ["AES-V"] = 32,
         ["DES-D"] = 32,
-        ["MD5-V"] = 16,
-        ["HMACSHA256-V"] = 32,
-        ["HMACSHA384-V"] = 48,
-        ["HMACSHA512-V"] = 64,
+        ["MD5-V"] = MD5.HashSizeInBytes,
+        ["HMACSHA256-V"] = SHA256.HashSizeInBytes,
+        ["HMACSHA384-V"] = SHA384.HashSizeInBytes,
+        ["HMACSHA512-V"] = SHA512.HashSizeInBytes,
         ["SHA1-V"] = 64,
     };
 
@@ -57,14 +58,15 @@ public static class ApiModule
                 Unix = now.ToUnixTimeSeconds(),
             };
 
-            return Results.Json(result);
+            return TypedResults.Ok(result);
         })
         .Produces<TimeResponse, TimeResponseExampleProvider>("The current UTC date and time.")
         .RequireCors("DefaultCorsPolicy")
         .WithName("Time")
         .WithOperationDescription("Gets the current UTC time.");
 
-        builder.MapGet("/tools/guid", (
+        builder.MapGet("/tools/guid", Results<JsonHttpResult<GuidResponse>, ProblemHttpResult>
+            (
             [SwaggerParameterExample("The format for which to generate a GUID.", "D")] string? format,
             [SwaggerParameterExample("Whether to return the GUID in uppercase.")] bool? uppercase) =>
         {
@@ -84,7 +86,7 @@ public static class ApiModule
                 guid = guid.ToUpperInvariant();
             }
 
-            return Results.Json(new GuidResponse() { Guid = guid });
+            return TypedResults.Json(new GuidResponse() { Guid = guid });
         })
         .Produces<GuidResponse, GuidResponseExampleProvider>("A GUID was generated successfully.")
         .ProducesProblem("The specified format is invalid.")
@@ -92,7 +94,8 @@ public static class ApiModule
         .WithOperationDescription("Generates a GUID.")
         .WithProblemDetailsResponseExample();
 
-        builder.MapPost("/tools/hash", (HashRequest? request) =>
+        builder.MapPost("/tools/hash", Results<JsonHttpResult<HashResponse>, ProblemHttpResult>
+            (HashRequest? request) =>
         {
             if (request == null)
             {
@@ -157,7 +160,7 @@ public static class ApiModule
                 Hash = formatAsBase64 ? Convert.ToBase64String(hash) : BytesToHexString(hash).ToLowerInvariant(),
             };
 
-            return Results.Json(result);
+            return TypedResults.Json(result);
         })
         .Accepts<HashRequest, HashRequestExampleProvider>()
         .Produces<HashResponse, HashResponseExampleProvider>("The hash was generated successfully.")
@@ -166,7 +169,8 @@ public static class ApiModule
         .WithOperationDescription("Generates a hash of some plaintext for a specified hash algorithm and returns it in the required format.")
         .WithProblemDetailsResponseExample();
 
-        builder.MapGet("/tools/machinekey", (
+        builder.MapGet("/tools/machinekey", Results<JsonHttpResult<MachineKeyResponse>, ProblemHttpResult>
+            (
             [SwaggerParameterExample("The name of the decryption algorithm.", "AES-256")] string? decryptionAlgorithm,
             [SwaggerParameterExample("The name of the validation algorithm.", "SHA1")] string? validationAlgorithm) =>
         {
@@ -199,7 +203,7 @@ public static class ApiModule
                 validationAlgorithm.Split('-', StringSplitOptions.RemoveEmptyEntries)[0].ToUpperInvariant(),
                 decryptionAlgorithm.Split('-', StringSplitOptions.RemoveEmptyEntries)[0].ToUpperInvariant());
 
-            return Results.Json(result);
+            return TypedResults.Json(result);
         })
         .Produces<MachineKeyResponse, MachineKeyResponseExampleProvider>("The machine key was generated successfully.")
         .ProducesProblem("The specified decryption or validation algorithm is invalid.")
