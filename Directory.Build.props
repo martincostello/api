@@ -45,7 +45,7 @@
     <Using Include="Xunit.Abstractions" />
   </ItemGroup>
   <PropertyGroup>
-    <CollectCoverage>true</CollectCoverage>
+    <CollectCoverage Condition=" '$(WEBSITE_URL)' == '' ">true</CollectCoverage>
     <CoverletOutput Condition=" '$(OutputPath)' != '' ">$(OutputPath)/</CoverletOutput>
     <CoverletOutputFormat>cobertura,json</CoverletOutputFormat>
     <Exclude>[xunit.*]*</Exclude>

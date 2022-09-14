@@ -106,6 +106,6 @@ jobs:
 
     - name: Run end-to-end tests
       shell: pwsh
-      run: dotnet test ./tests/API.Tests --configuration Release --filter Category=EndToEnd /p:CollectCoverage=false
+      run: dotnet test ./tests/API.Tests --configuration Release --filter Category=EndToEnd
       env:
         WEBSITE_URL: ${{ env.APPLICATION_URL_PROD }}
