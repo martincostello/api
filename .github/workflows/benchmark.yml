@@ -116,15 +116,14 @@ jobs:
             body: start_body
           });
 
-          // Add a commit status to the current commit
           await github.rest.repos.createCommitStatus({
             owner: context.repo.owner,
             repo: context.repo.repo,
-            sha: sha: '${{ steps.get-pr.outputs.result }}',,
+            sha: '${{ steps.get-pr.outputs.result }}',
             state: 'pending',
             target_url: workflowUrl,
             description: `Benchmark ${benchmark} started...`,
-            context: `benchmarks / ${normalizedbenchmark.toLowerCase()}`
+            context: `benchmarks / ${benchmark.toLowerCase()}`
           });
 
           return benchmark;
@@ -156,8 +155,10 @@ jobs:
       uses: actions/github-script@v6
       with:
         script: |
+          const benchmark = '${{ steps.benchmark-argument.outputs.result }}';
           const workflowUrl = `${{ github.server_url }}/${context.repo.owner}/${context.repo.repo}/actions/runs/${process.env.GITHUB_RUN_ID}`;
-          const success_body = `Benchmark [${{ steps.benchmark-argument.outputs.result }}](${workflowUrl}) succeeded. :white_check_mark:`;
+
+          const success_body = `Benchmark [${benchmark}](${workflowUrl}) succeeded. :white_check_mark:`;
           await github.rest.issues.createComment({
             issue_number: context.issue.number,
             owner: context.repo.owner,
@@ -165,15 +166,14 @@ jobs:
             body: success_body
           });
 
-          // Add a commit status to the current commit
           await github.rest.repos.createCommitStatus({
             owner: context.repo.owner,
             repo: context.repo.repo,
             sha: '${{ steps.get-pr.outputs.result }}',
             state: 'success',
             target_url: workflowUrl,
-            description: `Benchmark ${benchmark} succeeded.`,
-            context: `benchmarks / ${normalizedbenchmark.toLowerCase()}`
+            description: 'Benchmark ${benchmark} succeeded.',
+            context: `benchmarks / ${benchmark.toLowerCase()}`
           });
 
     - name: Report failure
@@ -181,8 +181,10 @@ jobs:
       if: ${{ failure() }}
       with:
         script: |
+          const benchmark = '${{ steps.benchmark-argument.outputs.result }}';
           const workflowUrl = `${{ github.server_url }}/${context.repo.owner}/${context.repo.repo}/actions/runs/${process.env.GITHUB_RUN_ID}`;
-          const failure_body = `Benchmark [${{ steps.benchmark-argument.outputs.result }}](${workflowUrl}) failed. :x:`;
+
+          const failure_body = `Benchmark [${benchmark}](${workflowUrl}) failed. :x:`;
           await github.rest.issues.createComment({
             issue_number: context.issue.number,
             owner: context.repo.owner,
@@ -190,7 +192,6 @@ jobs:
             body: failure_body
           });
 
-          // Add a commit status to the current commit
           await github.rest.repos.createCommitStatus({
             owner: context.repo.owner,
             repo: context.repo.repo,
@@ -198,5 +199,5 @@ jobs:
             state: 'failure',
             target_url: workflowUrl,
             description: `Benchmark ${benchmark} failed.`,
-            context: `benchmarks / ${normalizedbenchmark.toLowerCase()}`
+            context: `benchmarks / ${benchmark.toLowerCase()}`
           });
