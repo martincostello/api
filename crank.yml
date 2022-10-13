@@ -9,6 +9,7 @@ jobs:
       repository: https://github.com/martincostello/api
       branchOrCommit: main
       project: src/API/API.csproj
+    channel: current
     readyStateText: Application started.
 
 scenarios:
