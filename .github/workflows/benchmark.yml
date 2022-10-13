@@ -172,7 +172,7 @@ jobs:
             sha: '${{ steps.get-pr.outputs.result }}',
             state: 'success',
             target_url: workflowUrl,
-            description: 'Benchmark ${benchmark} succeeded.',
+            description: `Benchmark ${benchmark} succeeded.`,
             context: `benchmarks / ${benchmark.toLowerCase()}`
           });
 
