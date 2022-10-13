@@ -7,9 +7,31 @@ param(
     [Parameter(Mandatory = $true)][string] $PullRequestId,
     [Parameter(Mandatory = $false)][string] $AccessToken,
     [Parameter(Mandatory = $false)][string] $Benchmark = "root",
+    [Parameter(Mandatory = $false)][string] $CrankPath = "",
     [Parameter(Mandatory = $false)][string] $Repository = "https://github.com/martincostello/api",
     [Parameter(Mandatory = $false)][switch] $PublishResults
 )
+
+$crankAgent = "crank-agent"
+$crankPR = "crank-pr"
+
+if (![string]::IsNullOrEmpty($CrankPath)) {
+    $crankAgent = Join-Path $CrankPath $crankAgent
+    $crankPR = Join-Path $CrankPath $crankPR
+}
+
+if ($IsWindows) {
+    $agent = Start-Process -FilePath $crankAgent -WindowStyle Hidden -PassThru
+} else {
+    $agent = Start-Process -FilePath $crankAgent -PassThru
+}
+
+Start-Sleep -Seconds 2
+
+$repoPath = Split-Path $MyInvocation.MyCommand.Definition
+$components = "api"
+$config = Join-Path $repoPath "benchmark.yml"
+$profiles = "local"
 
 $additionalArgs = @()
 
@@ -23,21 +45,8 @@ if (![string]::IsNullOrEmpty($AccessToken)) {
     }
 }
 
-if ($IsWindows) {
-    $agent = Start-Process -FilePath "crank-agent" -WindowStyle Hidden | Out-Null
-} else {
-    $agent = Start-Process -FilePath "crank-agent" | Out-Null
-}
-
-Start-Sleep -Seconds 2
-
-$repoPath = Split-Path $MyInvocation.MyCommand.Definition
-$components = "api"
-$config = Join-Path $repoPath "benchmark.yml"
-$profiles = "local"
-
 try {
-    crank-pr `
+    & $crankPR `
         --benchmarks $Benchmark `
         --components $components `
         --config $config `
