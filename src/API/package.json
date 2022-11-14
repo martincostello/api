@@ -14,7 +14,7 @@
     "gulp-rename": "^2.0.0",
     "gulp-uglify": "^3.0.2",
     "jquery": "^3.6.1",
-    "jshint": "^2.13.5"
+    "jshint": "^2.13.6"
   },
   "scripts": {
     "publish": "gulp build"
