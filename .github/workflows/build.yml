@@ -84,7 +84,7 @@ jobs:
         name: webapp
 
     - name: Deploy to Azure App Service
-      uses: azure/webapps-deploy@v2.2.4
+      uses: azure/webapps-deploy@v2.2.5
       id: deploy_production
       with:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
