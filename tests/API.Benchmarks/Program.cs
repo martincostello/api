@@ -6,7 +6,9 @@
 using BenchmarkDotNet.Running;
 using MartinCostello.Api.Benchmarks;
 
-if (args?.Length == 1 && string.Equals(args[0], "--test", StringComparison.OrdinalIgnoreCase))
+args ??= Array.Empty<string>();
+
+if (args.Length == 1 && string.Equals(args[0], "--test", StringComparison.OrdinalIgnoreCase))
 {
     await using var benchmark = new ApiBenchmarks();
     await benchmark.StartServer();
