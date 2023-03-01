@@ -81,7 +81,7 @@ public sealed class CustomHttpHeadersMiddleware
                 context.Response.Headers.XContentTypeOptions = "nosniff";
                 context.Response.Headers.Append("X-Datacenter", _datacenter);
                 context.Response.Headers.Append("X-Download-Options", "noopen");
-                context.Response.Headers.Append("X-Frame-Options", "DENY");
+                context.Response.Headers.XFrameOptions = "DENY";
                 context.Response.Headers.XXSSProtection = "1; mode=block";
 
 #if DEBUG
