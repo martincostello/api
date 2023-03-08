@@ -78,14 +78,6 @@ if ($installDotNetSdk -eq $true) {
 function DotNetTest {
     param([string]$Project)
 
-    $nugetPath = $env:NUGET_PACKAGES ?? (Join-Path ($env:USERPROFILE ?? "~") ".nuget" "packages")
-    $propsFile = Join-Path $solutionPath "Directory.Packages.props"
-    $reportGeneratorVersion = (Select-Xml -Path $propsFile -XPath "//PackageVersion[@Include='ReportGenerator']/@Version").Node.'#text'
-    $reportGeneratorPath = Join-Path $nugetPath "reportgenerator" $reportGeneratorVersion "tools" "net6.0" "ReportGenerator.dll"
-
-    $coverageOutput = Join-Path $OutputPath "coverage.cobertura.xml"
-    $reportOutput = Join-Path $OutputPath "coverage"
-
     $additionalArgs = @()
 
     if (![string]::IsNullOrEmpty($env:GITHUB_SHA)) {
@@ -95,19 +87,8 @@ function DotNetTest {
 
     & $dotnet test $Project --configuration "Release" --output $OutputPath $additionalArgs -- RunConfiguration.TestSessionTimeout=1200000
 
-    $dotNetTestExitCode = $LASTEXITCODE
-
-    if (Test-Path $coverageOutput) {
-        & $dotnet `
-            $reportGeneratorPath `
-            `"-reports:$coverageOutput`" `
-            `"-targetdir:$reportOutput`" `
-            -reporttypes:HTML `
-            -verbosity:Warning
-    }
-
-    if ($dotNetTestExitCode -ne 0) {
-        throw "dotnet test failed with exit code $dotNetTestExitCode"
+    if ($LASTEXITCODE -ne 0) {
+        throw "dotnet test failed with exit code $LASTEXITCODE"
     }
 }
 
