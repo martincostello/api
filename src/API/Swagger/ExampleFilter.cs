@@ -217,8 +217,9 @@ internal sealed class ExampleFilter : IOperationFilter, IParameterFilter, ISchem
 
         foreach (var attribute in examples)
         {
-            if (!context.SchemaRepository.TryLookupByType(attribute.RequestType, out OpenApiSchema schema) ||
-                !context.SchemaRepository.Schemas.TryGetValue(schema.Reference.Id, out OpenApiSchema _))
+            if (!context.SchemaRepository.TryLookupByType(attribute.RequestType, out OpenApiSchema? schema) ||
+                schema is null ||
+                !context.SchemaRepository.Schemas.TryGetValue(schema.Reference.Id, out _))
             {
                 continue;
             }
