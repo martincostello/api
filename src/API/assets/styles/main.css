@@ -3,6 +3,7 @@
     Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 */
 
+/* stylelint-disable-next-line media-feature-name-no-vendor-prefix */
 @media (-webkit-min-device-pixel-ratio: 1.25), (min-resolution: 120dpi) {
   html {
     font-size: 16px;
@@ -23,6 +24,7 @@ a,
   padding-top: 85px;
 }
 
+/* stylelint-disable-next-line selector-class-pattern */
 .response-col_status {
   width: unset;
 }
@@ -45,6 +47,7 @@ a,
   width: 0;
 }
 
+/* stylelint-disable-next-line selector-class-pattern */
 .parameters-col_name {
   width: 20%;
 }

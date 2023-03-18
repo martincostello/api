@@ -6,8 +6,8 @@
   "scripts": {
     "build": "npm run compile && npm run format && npm run lint",
     "compile": "webpack",
-    "format": "prettier --write assets/**/*.ts",
-    "format-check": "prettier --check assets/**/*.ts",
+    "format": "prettier --write assets/**/*.ts && stylelint --fix assets/*/*.css",
+    "format-check": "prettier --check assets/**/*.ts && stylelint assets/*/*.css",
     "lint": "eslint --ext .ts assets",
     "watch": "webpack --watch"
   },
@@ -31,6 +31,8 @@
     "moment": "^2.29.4",
     "prettier": "^2.8.4",
     "style-loader": "^3.3.2",
+    "stylelint": "^15.3.0",
+    "stylelint-config-standard": "^31.0.0",
     "ts-loader": "^9.4.2",
     "tsify": "^5.0.4",
     "typescript": "^5.0.2",
