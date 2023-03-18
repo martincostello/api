@@ -2,7 +2,6 @@ module.exports = {
   'env': {
       'browser': true,
       'es6': true,
-      'jest/globals': true,
       'node': true
   },
   'extends': [
@@ -14,8 +13,7 @@ module.exports = {
       'sourceType': 'module'
   },
   'plugins': [
-      '@typescript-eslint',
-      'jest'
+      '@typescript-eslint'
   ],
   'rules': {
       '@typescript-eslint/indent': 'error',
