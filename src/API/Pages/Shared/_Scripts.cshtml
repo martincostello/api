@@ -9,9 +9,4 @@
 {
     <script src="https://www.googletagmanager.com/gtag/js?id=@(analyticsId)" async></script>
 }
-<environment names="Development">
-    <script src="~/assets/js/site.js" asp-append-version="true" defer></script>
-</environment>
-<environment names="Staging,Production">
-    <script src="~/assets/js/site.min.js" asp-append-version="true" defer></script>
-</environment>
+<script src="~/assets/scripts/main.js" asp-append-version="true" defer></script>

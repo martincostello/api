@@ -1,0 +1,50 @@
+const path = require('path');
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const RemoveEmptyScriptsPlugin = require("webpack-remove-empty-scripts");
+
+module.exports = {
+  devtool: 'source-map',
+  entry: {
+    scripts: path.resolve(__dirname, './assets/scripts/main.ts'),
+    styles: path.resolve(__dirname, './assets/styles/main.css'),
+  },
+  mode: 'production',
+  module: {
+    rules: [
+      {
+        test: /.css$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          { loader: "css-loader", options: { sourceMap: true } },
+        ],
+      },
+      {
+        test: /\.ts$/,
+        use: 'ts-loader',
+        exclude: /node_modules/,
+      },
+    ],
+  },
+  optimization: {
+    minimize: true,
+    minimizer: [
+      `...`,
+      new CssMinimizerPlugin(),
+    ],
+  },
+  output: {
+    clean: true,
+    filename: '[name]/main.js',
+    path: path.resolve(__dirname, 'wwwroot', 'assets'),
+  },
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: '[name]/main.css'
+    }),
+    new RemoveEmptyScriptsPlugin(),
+  ],
+  resolve: {
+    extensions: ['.css', '.ts', '.js'],
+  },
+};

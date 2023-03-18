@@ -1,4 +1,3 @@
-
 root = true
 
 [*]
@@ -9,7 +8,7 @@ indent_style = space
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-[*.{config,csproj,css,js,json,props,ruleset,targets,vsconfig,xml,yml}]
+[*.{config,csproj,css,js,json,props,ruleset,targets,ts,vsconfig,xml,yml}]
 indent_size = 2
 
 [*.{cs,csx,vb,vbx}]
