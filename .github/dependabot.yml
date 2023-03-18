@@ -17,10 +17,6 @@ updates:
   reviewers:
     - "martincostello"
   open-pull-requests-limit: 99
-  ignore:
-  - dependency-name: gulp-jasmine
-    versions:
-    - ">= 4.a, < 5"
 - package-ecosystem: nuget
   directory: "/"
   schedule:
