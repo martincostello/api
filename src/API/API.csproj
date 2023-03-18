@@ -8,6 +8,8 @@
     <RootNamespace>MartinCostello.Api</RootNamespace>
     <TargetFramework>net7.0</TargetFramework>
     <Summary>Martin Costello's API</Summary>
+    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+    <TypeScriptToolsVersion>latest</TypeScriptToolsVersion>
     <UserSecretsId>api.martincostello.com</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
@@ -21,6 +23,11 @@
     <PackageReference Include="NodaTime" />
     <PackageReference Include="Swashbuckle.AspNetCore" />
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update=".prettierrc.json;package.json;package-lock.json;tsconfig.json" CopyToPublishDirectory="Never" />
+    <None Remove="assets\scripts\**\*.ts" />
+    <TypeScriptCompile Include="assets\scripts\**\*.ts" />
   </ItemGroup>
   <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">
     <Exec Command="npm ci" Condition=" !Exists('$(MSBuildThisFileDirectory)\node_modules') AND '$(GITHUB_ACTIONS)' != '' " />
