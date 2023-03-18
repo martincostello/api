@@ -7,7 +7,7 @@
     "noImplicitAny": true,
     "noImplicitOverride": true,
     "noImplicitThis": true,
-    "outDir": "./wwwroot/assets/scripts",
+    "outDir": "./wwwroot/assets/js",
     "removeComments": false,
     "sourceMap": true,
     "target": "ES2015"
