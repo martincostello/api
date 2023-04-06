@@ -10,7 +10,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-$solutionPath = Split-Path $MyInvocation.MyCommand.Definition
+$solutionPath = $PSScriptRoot
 $sdkFile = Join-Path $solutionPath "global.json"
 
 $dotnetVersion = (Get-Content $sdkFile | Out-String | ConvertFrom-Json).sdk.version
@@ -36,7 +36,7 @@ else {
 }
 
 if ($installDotNetSdk -eq $true) {
-    $env:DOTNET_INSTALL_DIR = Join-Path "$(Convert-Path "$PSScriptRoot")" ".dotnet"
+    $env:DOTNET_INSTALL_DIR = Join-Path $PSScriptRoot ".dotnet"
     $sdkPath = Join-Path $env:DOTNET_INSTALL_DIR "sdk" "$dotnetVersion"
 
     if (!(Test-Path $sdkPath)) {
@@ -61,3 +61,4 @@ $benchmarks = (Join-Path $solutionPath "tests" "API.Benchmarks" "API.Benchmarks.
 Write-Host "Running benchmarks..." -ForegroundColor Green
 
 & $dotnet run --project $benchmarks --configuration $Configuration --framework $Framework
+
