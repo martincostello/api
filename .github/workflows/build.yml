@@ -81,7 +81,7 @@ jobs:
     - uses: codecov/codecov-action@v3
       name: Upload coverage to Codecov
       with:
-        file: ./artifacts/coverage.cobertura.xml
+        file: ./.artifacts/coverage/coverage.cobertura.xml
         flags: ${{ matrix.codecov_os }}
 
     - name: Publish artifacts
@@ -89,7 +89,7 @@ jobs:
       if: ${{ runner.os == 'Windows' && success() }}
       with:
         name: webapp
-        path: ./artifacts/publish
+        path: ./.artifacts/publish/API/release_${{ env.PUBLISH_RUNTIME }}
         if-no-files-found: error
 
   deploy:
