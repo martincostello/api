@@ -61,4 +61,3 @@ $benchmarks = (Join-Path $solutionPath "tests" "API.Benchmarks" "API.Benchmarks.
 Write-Host "Running benchmarks..." -ForegroundColor Green
 
 & $dotnet run --project $benchmarks --configuration $Configuration --framework $Framework
-
