@@ -4,7 +4,6 @@
 #Requires -Version 7
 
 param(
-    [Parameter(Mandatory = $false)][string] $OutputPath = "",
     [Parameter(Mandatory = $false)][switch] $SkipTests,
     [Parameter(Mandatory = $false)][string] $Runtime = ""
 )
@@ -16,10 +15,6 @@ $solutionPath = $PSScriptRoot
 $sdkFile = Join-Path $solutionPath "global.json"
 
 $dotnetVersion = (Get-Content $sdkFile | Out-String | ConvertFrom-Json).sdk.version
-
-if ($OutputPath -eq "") {
-    $OutputPath = Join-Path $PSScriptRoot "artifacts"
-}
 
 $installDotNetSdk = $false;
 
@@ -85,7 +80,7 @@ function DotNetTest {
         $additionalArgs += "GitHubActions;report-warnings=false"
     }
 
-    & $dotnet test $Project --configuration "Release" --output $OutputPath $additionalArgs -- RunConfiguration.TestSessionTimeout=1200000
+    & $dotnet test $Project --configuration "Release" $additionalArgs -- RunConfiguration.TestSessionTimeout=1200000
 
     if ($LASTEXITCODE -ne 0) {
         throw "dotnet test failed with exit code $LASTEXITCODE"
@@ -95,8 +90,6 @@ function DotNetTest {
 function DotNetPublish {
     param([string]$Project)
 
-    $publishPath = (Join-Path $OutputPath "publish")
-
     $additionalArgs = @()
 
     if (![string]::IsNullOrEmpty($Runtime)) {
@@ -105,7 +98,7 @@ function DotNetPublish {
         $additionalArgs += $Runtime
     }
 
-    & $dotnet publish $Project --output $publishPath --configuration "Release" $additionalArgs
+    & $dotnet publish $Project $additionalArgs
 
     if ($LASTEXITCODE -ne 0) {
         throw "dotnet publish failed with exit code $LASTEXITCODE"
