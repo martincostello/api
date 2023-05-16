@@ -92,7 +92,7 @@ jobs:
       if: ${{ runner.os == 'Windows' && success() }}
       with:
         name: webapp
-        path: ./.artifacts/publish/API/release_${{ env.PUBLISH_RUNTIME }}
+        path: ./artifacts/publish/API/release_${{ env.PUBLISH_RUNTIME }}
         if-no-files-found: error
 
   deploy:
