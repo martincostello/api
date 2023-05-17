@@ -7,7 +7,6 @@ using MartinCostello.Api.Extensions;
 using MartinCostello.Api.Models;
 using MartinCostello.Api.Swagger;
 using Microsoft.AspNetCore.Http.HttpResults;
-using NodaTime;
 
 namespace MartinCostello.Api;
 
@@ -44,10 +43,10 @@ public static class ApiModule
     /// </returns>
     public static IEndpointRouteBuilder MapApiEndpoints(this IEndpointRouteBuilder builder)
     {
-        builder.MapGet("/time", (IClock clock) =>
+        builder.MapGet("/time", (TimeProvider timeProvider) =>
         {
             var formatProvider = CultureInfo.InvariantCulture;
-            var now = clock.GetCurrentInstant().ToDateTimeOffset();
+            var now = timeProvider.GetUtcNow();
 
             var result = new TimeResponse()
             {
