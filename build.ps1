@@ -131,4 +131,3 @@ if ($SkipTests -eq $false) {
         DotNetTest $project
     }
 }
-

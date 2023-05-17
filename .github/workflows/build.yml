@@ -81,7 +81,7 @@ jobs:
     - uses: codecov/codecov-action@v3
       name: Upload coverage to Codecov
       with:
-        file: ./artifacts/coverage.cobertura.xml
+        file: ./artifacts/coverage/coverage.cobertura.xml
         flags: ${{ matrix.codecov_os }}
 
     - name: Publish artifacts
