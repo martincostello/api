@@ -138,7 +138,7 @@ public static class ApiBuilder
         }
 
         builder.Services.AddSwagger(builder.Environment);
-        builder.Services.TryAddSingleton<TimeProvider>((_) => TimeProvider.System);
+        builder.Services.TryAddSingleton(TimeProvider.System);
 
         builder.WebHost.CaptureStartupErrors(true);
         builder.WebHost.ConfigureKestrel((p) => p.AddServerHeader = false);
