@@ -39,7 +39,7 @@ public class TestServerFixture : WebApplicationFactory<Models.TimeResponse>, ITe
             var mock = new Mock<TimeProvider>();
             mock.Setup((p) => p.GetUtcNow()).Returns(now);
 
-            services.AddSingleton<TimeProvider>(mock.Object);
+            services.AddSingleton(mock.Object);
         });
     }
 }
