@@ -6,8 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NodaTime;
-using NodaTime.Testing;
+using Moq;
 
 namespace MartinCostello.Api.Integration;
 
@@ -35,10 +34,12 @@ public class TestServerFixture : WebApplicationFactory<Models.TimeResponse>, ITe
         builder.ConfigureLogging((loggingBuilder) => loggingBuilder.ClearProviders().AddXUnit(this));
         builder.ConfigureServices((services) =>
         {
-            var initial = Instant.FromUtc(2016, 05, 24, 12, 34, 56);
-            var clock = new FakeClock(initial);
+            var now = new DateTimeOffset(2016, 05, 24, 12, 34, 56, TimeSpan.Zero);
 
-            services.AddSingleton<IClock>(clock);
+            var mock = new Mock<TimeProvider>();
+            mock.Setup((p) => p.GetUtcNow()).Returns(now);
+
+            services.AddSingleton<TimeProvider>(mock.Object);
         });
     }
 }
