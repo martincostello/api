@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
-using NodaTime;
 
 namespace MartinCostello.Api;
 
@@ -139,7 +138,7 @@ public static class ApiBuilder
         }
 
         builder.Services.AddSwagger(builder.Environment);
-        builder.Services.TryAddSingleton<IClock>((_) => SystemClock.Instance);
+        builder.Services.TryAddSingleton<TimeProvider>((_) => TimeProvider.System);
 
         builder.WebHost.CaptureStartupErrors(true);
         builder.WebHost.ConfigureKestrel((p) => p.AddServerHeader = false);
