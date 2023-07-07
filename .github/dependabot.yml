@@ -10,6 +10,11 @@ updates:
     - "martincostello"
 - package-ecosystem: npm
   directory: "/src/API"
+  groups:
+    dependencies:
+      patterns:
+        - "@babel/*"
+        - "@typescript-eslint/*"
   schedule:
     interval: daily
     time: "05:30"
