@@ -105,7 +105,7 @@ public class ApiTests : EndToEndTest
         // Assert
         response.EnsureSuccessStatusCode();
 
-        using var result = JsonDocument.Parse(await response.Content.ReadAsStreamAsync());
+        using var result = await JsonDocument.ParseAsync(await response.Content.ReadAsStreamAsync());
 
         result.RootElement.GetProperty("hash").GetString().ShouldBe(expected);
     }
