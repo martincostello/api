@@ -37,7 +37,7 @@ public class ToolsTests : IntegrationTest
     [InlineData("sha256", "hexadecimal", "martincostello.com", "3b8143aa8119eaf0910aef5cade45dd0e6bb7b70e8d1c8c057bf3fc125248642")]
     [InlineData("sha384", "hexadecimal", "martincostello.com", "5c0e892a9348c184df255f46ab7282eb5792d552c896eb6893d90f36c7202540a9942c80ce5812616d29c08331c60510")]
     [InlineData("sha512", "hexadecimal", "martincostello.com", "3be0167275455dcf1e34f8818d48b7ae4a61fb8549153f42d0d035464fdccee97022d663549eb249d4796956e4016ad83d5e64ba766fb751c8fb2c03b2b4eb9a")]
-    public async void Tools_Post_Hash_Returns_Correct_Response(string algorithm, string format, string plaintext, string expected)
+    public async Task Tools_Post_Hash_Returns_Correct_Response(string algorithm, string format, string plaintext, string expected)
     {
         // Arrange
         var request = new HashRequest()
@@ -62,7 +62,7 @@ public class ToolsTests : IntegrationTest
     }
 
     [Fact]
-    public async void Tools_Get_Machine_Key_Returns_Correct_Response()
+    public async Task Tools_Get_Machine_Key_Returns_Correct_Response()
     {
         // Arrange
         using var client = Fixture.CreateClient();
