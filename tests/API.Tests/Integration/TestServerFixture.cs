@@ -35,9 +35,9 @@ public class TestServerFixture : WebApplicationFactory<Models.TimeResponse>, ITe
         builder.ConfigureServices((services) =>
         {
             var utcNow = new DateTimeOffset(2016, 05, 24, 12, 34, 56, TimeSpan.Zero);
-#pragma warning disable EXTEXP0004
+#pragma warning disable TBD
             var timeProvider = new FakeTimeProvider(utcNow);
-#pragma warning restore EXTEXP0004
+#pragma warning restore TBD
 
             services.AddSingleton<TimeProvider>(timeProvider);
         });
