@@ -13,7 +13,6 @@
     <UserSecretsId>api.martincostello.com</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="parameters.xml" CopyToOutputDirectory="PreserveNewest" />
     <Content Update="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
   <ItemGroup>
