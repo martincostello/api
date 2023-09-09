@@ -92,14 +92,14 @@ jobs:
 
     - name: Publish artifacts
       uses: actions/upload-artifact@v3
-      if: ${{ runner.os == 'Windows' && success() }}
+      if: runner.os == 'Windows' && success()
       with:
         name: webapp
         path: ./artifacts/publish
         if-no-files-found: error
 
   deploy:
-    if: ${{ github.event.repository.fork == false && github.ref_name == github.event.repository.default_branch }}
+    if: github.event.repository.fork == false && github.ref_name == github.event.repository.default_branch
     name: deploy-production
     needs: build
     runs-on: windows-latest
@@ -120,7 +120,7 @@ jobs:
         name: webapp
 
     - name: Azure log in
-      uses: azure/login@92a5484dfaf04ca78a94597f4f19fea633851fa2 # v1.4.7
+      uses: azure/login@v1
       with:
         client-id: ${{ secrets.AZURE_CLIENT_ID }}
         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
