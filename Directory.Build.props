@@ -33,7 +33,8 @@
     <RepositoryUrl>$(PackageProjectUrl).git</RepositoryUrl>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <TypeScriptToolsVersion>latest</TypeScriptToolsVersion>
-    <VersionPrefix>7.0.0</VersionPrefix>
+    <UseArtifactsOutput>true</UseArtifactsOutput>
+    <VersionPrefix>8.0.0</VersionPrefix>
     <VersionSuffix></VersionSuffix>
   </PropertyGroup>
   <ItemGroup>

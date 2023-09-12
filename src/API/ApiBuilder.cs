@@ -3,7 +3,6 @@
 
 using System.IO.Compression;
 using System.Net.Mime;
-using System.Text.Json.Serialization.Metadata;
 using MartinCostello.Api.Extensions;
 using MartinCostello.Api.Options;
 using Microsoft.AspNetCore.CookiePolicy;
@@ -12,7 +11,6 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
-using NodaTime;
 
 namespace MartinCostello.Api;
 
@@ -80,9 +78,7 @@ public static class ApiBuilder
         {
             options.SerializerOptions.PropertyNameCaseInsensitive = false;
             options.SerializerOptions.WriteIndented = true;
-            options.SerializerOptions.TypeInfoResolver = JsonTypeInfoResolver.Combine(
-                ApplicationJsonSerializerContext.Default,
-                new DefaultJsonTypeInfoResolver());
+            options.SerializerOptions.TypeInfoResolverChain.Add(ApplicationJsonSerializerContext.Default);
         });
 
         builder.Services.AddResponseCompression((options) =>
@@ -142,7 +138,7 @@ public static class ApiBuilder
         }
 
         builder.Services.AddSwagger(builder.Environment);
-        builder.Services.TryAddSingleton<IClock>((_) => SystemClock.Instance);
+        builder.Services.TryAddSingleton(TimeProvider.System);
 
         builder.WebHost.CaptureStartupErrors(true);
         builder.WebHost.ConfigureKestrel((p) => p.AddServerHeader = false);
