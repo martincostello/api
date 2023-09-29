@@ -1,12 +1,12 @@
 ﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
-#pragma warning disable CA1852
-
 using BenchmarkDotNet.Running;
 using MartinCostello.Api.Benchmarks;
 
-args ??= Array.Empty<string>();
+#pragma warning disable SA1010
+args ??= [];
+#pragma warning restore SA1010
 
 if (args.Length == 1 && string.Equals(args[0], "--test", StringComparison.OrdinalIgnoreCase))
 {

@@ -6,13 +6,8 @@ using System.Net.Mime;
 
 namespace MartinCostello.Api.EndToEnd;
 
-public class ResourceTests : EndToEndTest
+public class ResourceTests(ApiFixture fixture) : EndToEndTest(fixture)
 {
-    public ResourceTests(ApiFixture fixture)
-        : base(fixture)
-    {
-    }
-
     [SkippableTheory]
     [InlineData("/", MediaTypeNames.Text.Html)]
     [InlineData("/apple-touch-icon.png", "image/png")]
@@ -53,8 +48,8 @@ public class ResourceTests : EndToEndTest
     public async Task Response_Headers_Contains_Expected_Headers()
     {
         // Arrange
-        string[] expectedHeaders = new[]
-        {
+        string[] expectedHeaders =
+        [
             "content-security-policy",
             "Permissions-Policy",
             "Referrer-Policy",
@@ -66,7 +61,7 @@ public class ResourceTests : EndToEndTest
             "X-Request-Id",
             "X-Revision",
             "X-XSS-Protection",
-        };
+        ];
 
         using var client = Fixture.CreateClient();
 

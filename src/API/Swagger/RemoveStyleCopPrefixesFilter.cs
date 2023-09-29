@@ -1,4 +1,4 @@
-// Copyright (c) Martin Costello, 2016. All rights reserved.
+﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 using Microsoft.OpenApi.Models;
@@ -24,21 +24,25 @@ internal sealed class RemoveStyleCopPrefixesFilter : IOperationFilter
         {
             foreach (var definition in context.SchemaRepository.Schemas.Values)
             {
-                if (definition.Properties != null)
+                if (definition.Properties is null)
                 {
-                    foreach (var property in definition.Properties.Values)
-                    {
-                        if (property.Description != null)
-                        {
-                            if (property.Description.StartsWith(Prefix, StringComparison.Ordinal))
-                            {
-                                // Remove the StyleCop property prefix
-                                property.Description = property.Description.Replace(Prefix, string.Empty, StringComparison.Ordinal);
+                    continue;
+                }
 
-                                // Capitalize the first letter that's left over
-                                property.Description = char.ToUpperInvariant(property.Description[0]) + property.Description[1..];
-                            }
-                        }
+                foreach (var property in definition.Properties.Values)
+                {
+                    if (property.Description is null)
+                    {
+                        continue;
+                    }
+
+                    if (property.Description.StartsWith(Prefix, StringComparison.Ordinal))
+                    {
+                        // Remove the StyleCop property prefix
+                        property.Description = property.Description.Replace(Prefix, string.Empty, StringComparison.Ordinal);
+
+                        // Capitalize the first letter that's left over
+                        property.Description = char.ToUpperInvariant(property.Description[0]) + property.Description[1..];
                     }
                 }
             }

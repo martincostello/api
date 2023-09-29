@@ -5,12 +5,7 @@ namespace MartinCostello.Api.EndToEnd;
 
 [Collection(ApiCollection.Name)]
 [Trait("Category", "EndToEnd")]
-public abstract class EndToEndTest
+public abstract class EndToEndTest(ApiFixture fixture)
 {
-    protected EndToEndTest(ApiFixture fixture)
-    {
-        Fixture = fixture;
-    }
-
-    protected ApiFixture Fixture { get; }
+    protected ApiFixture Fixture { get; } = fixture;
 }

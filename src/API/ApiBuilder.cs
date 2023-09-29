@@ -48,14 +48,15 @@ public static class ApiBuilder
             var siteOptions = new SiteOptions();
             builder.Configuration.Bind("Site", siteOptions);
 
+#pragma warning disable SA1010
             corsOptions.AddPolicy(
                 "DefaultCorsPolicy",
                 (policy) =>
                 {
                     policy
-                        .WithExposedHeaders(siteOptions.Api?.Cors?.ExposedHeaders ?? Array.Empty<string>())
-                        .WithHeaders(siteOptions.Api?.Cors?.Headers ?? Array.Empty<string>())
-                        .WithMethods(siteOptions.Api?.Cors?.Methods ?? Array.Empty<string>());
+                        .WithExposedHeaders(siteOptions.Api?.Cors?.ExposedHeaders ?? [])
+                        .WithHeaders(siteOptions.Api?.Cors?.Headers ?? [])
+                        .WithMethods(siteOptions.Api?.Cors?.Methods ?? []);
 
                     if (builder.Environment.IsDevelopment())
                     {
@@ -63,9 +64,10 @@ public static class ApiBuilder
                     }
                     else
                     {
-                        policy.WithOrigins(siteOptions.Api?.Cors?.Origins ?? Array.Empty<string>());
+                        policy.WithOrigins(siteOptions.Api?.Cors?.Origins ?? []);
                     }
                 });
+#pragma warning restore SA1010
         });
 
         builder.Services.AddEndpointsApiExplorer();

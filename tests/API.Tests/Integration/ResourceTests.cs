@@ -10,18 +10,13 @@ namespace MartinCostello.Api.Integration;
 /// <summary>
 /// A class containing tests for loading resources in the website.
 /// </summary>
-public class ResourceTests : IntegrationTest
+/// <remarks>
+/// Initializes a new instance of the <see cref="ResourceTests"/> class.
+/// </remarks>
+/// <param name="fixture">The fixture to use.</param>
+/// <param name="outputHelper">The test output helper to use.</param>
+public class ResourceTests(TestServerFixture fixture, ITestOutputHelper outputHelper) : IntegrationTest(fixture, outputHelper)
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ResourceTests"/> class.
-    /// </summary>
-    /// <param name="fixture">The fixture to use.</param>
-    /// <param name="outputHelper">The test output helper to use.</param>
-    public ResourceTests(TestServerFixture fixture, ITestOutputHelper outputHelper)
-        : base(fixture, outputHelper)
-    {
-    }
-
     [Theory]
     [InlineData("/", MediaTypeNames.Text.Html)]
     [InlineData("/apple-touch-icon.png", "image/png")]
@@ -79,8 +74,8 @@ public class ResourceTests : IntegrationTest
     public async Task Response_Headers_Contains_Expected_Headers()
     {
         // Arrange
-        string[] expectedHeaders = new[]
-        {
+        string[] expectedHeaders =
+        [
             "content-security-policy",
             "Permissions-Policy",
             "Referrer-Policy",
@@ -92,7 +87,7 @@ public class ResourceTests : IntegrationTest
             "X-Request-Id",
             "X-Revision",
             "X-XSS-Protection",
-        };
+        ];
 
         using var client = Fixture.CreateClient();
 
