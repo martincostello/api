@@ -9,18 +9,13 @@ namespace MartinCostello.Api.Integration;
 /// <summary>
 /// A class containing tests for the <c>/time</c> endpoint.
 /// </summary>
-public class TimeTests : IntegrationTest
+/// <remarks>
+/// Initializes a new instance of the <see cref="TimeTests"/> class.
+/// </remarks>
+/// <param name="fixture">The fixture to use.</param>
+/// <param name="outputHelper">The test output helper to use.</param>
+public class TimeTests(TestServerFixture fixture, ITestOutputHelper outputHelper) : IntegrationTest(fixture, outputHelper)
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="TimeTests"/> class.
-    /// </summary>
-    /// <param name="fixture">The fixture to use.</param>
-    /// <param name="outputHelper">The test output helper to use.</param>
-    public TimeTests(TestServerFixture fixture, ITestOutputHelper outputHelper)
-        : base(fixture, outputHelper)
-    {
-    }
-
     [Fact]
     public async Task Time_Get_Returns_Correct_Response()
     {

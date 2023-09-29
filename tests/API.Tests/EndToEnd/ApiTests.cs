@@ -7,13 +7,8 @@ using Microsoft.AspNetCore.WebUtilities;
 
 namespace MartinCostello.Api.EndToEnd;
 
-public class ApiTests : EndToEndTest
+public class ApiTests(ApiFixture fixture) : EndToEndTest(fixture)
 {
-    public ApiTests(ApiFixture fixture)
-        : base(fixture)
-    {
-    }
-
     [SkippableFact]
     public async Task Can_Get_Time()
     {

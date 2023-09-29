@@ -18,7 +18,7 @@ public class ApiBenchmarks : IAsyncDisposable
 
     public ApiBenchmarks()
     {
-        var builder = WebApplication.CreateBuilder(new[] { "--contentRoot=" + GetContentRoot() });
+        var builder = WebApplication.CreateBuilder(["--contentRoot=" + GetContentRoot()]);
 
         builder.Logging.ClearProviders();
         builder.WebHost.UseUrls("https://127.0.0.1:0");

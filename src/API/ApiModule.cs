@@ -146,7 +146,9 @@ public static class ApiModule
                 "SHA256" => SHA256.HashData(buffer),
                 "SHA384" => SHA384.HashData(buffer),
                 "SHA512" => SHA512.HashData(buffer),
-                _ => Array.Empty<byte>(),
+#pragma warning disable SA1010
+                _ => [],
+#pragma warning restore SA1010
             };
 
             if (hash.Length == 0)

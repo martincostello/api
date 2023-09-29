@@ -8,22 +8,16 @@ namespace MartinCostello.Api.Swagger;
 /// <summary>
 /// Defines a Swagger operation parameter with an example value. This class cannot be inherited.
 /// </summary>
+/// <remarks>
+/// Initializes a new instance of the <see cref="SwaggerParameterExampleAttribute"/> class.
+/// </remarks>
+/// <param name="description">The description of the parameter.</param>
+/// <param name="example">The optional example value.</param>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Parameter, AllowMultiple = false)]
-public sealed class SwaggerParameterExampleAttribute : SwaggerParameterAttribute
+public sealed class SwaggerParameterExampleAttribute(string description, object? example = null) : SwaggerParameterAttribute(description)
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SwaggerParameterExampleAttribute"/> class.
-    /// </summary>
-    /// <param name="description">The description of the parameter.</param>
-    /// <param name="example">The optional example value.</param>
-    public SwaggerParameterExampleAttribute(string description, object? example = null)
-        : base(description)
-    {
-        Example = example;
-    }
-
     /// <summary>
     /// Gets the example value for the parameter.
     /// </summary>
-    public object? Example { get; }
+    public object? Example { get; } = example;
 }
