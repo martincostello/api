@@ -48,7 +48,6 @@ public static class ApiBuilder
             var siteOptions = new SiteOptions();
             builder.Configuration.Bind("Site", siteOptions);
 
-#pragma warning disable SA1010
             corsOptions.AddPolicy(
                 "DefaultCorsPolicy",
                 (policy) =>
@@ -67,7 +66,6 @@ public static class ApiBuilder
                         policy.WithOrigins(siteOptions.Api?.Cors?.Origins ?? []);
                     }
                 });
-#pragma warning restore SA1010
         });
 
         builder.Services.AddEndpointsApiExplorer();

@@ -3,8 +3,6 @@
 
 namespace MartinCostello.Api.Options;
 
-#pragma warning disable SA1010
-
 /// <summary>
 /// A class representing the CORS options for the API. This class cannot be inherited.
 /// </summary>
