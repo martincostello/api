@@ -4,9 +4,7 @@
 using BenchmarkDotNet.Running;
 using MartinCostello.Api.Benchmarks;
 
-#pragma warning disable SA1010
 args ??= [];
-#pragma warning restore SA1010
 
 if (args.Length == 1 && string.Equals(args[0], "--test", StringComparison.OrdinalIgnoreCase))
 {
