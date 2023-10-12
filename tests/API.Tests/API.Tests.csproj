@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Description>Tests for https://api.martincostello.com/</Description>
     <IsTestProject>true</IsTestProject>
-    <NoWarn>$(NoWarn);CA1707;CA1711;CA2007;CA2234;EXTEXP0004;SA1600</NoWarn>
+    <NoWarn>$(NoWarn);CA1707;CA1711;CA2007;CA2234;SA1600</NoWarn>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <RootNamespace>MartinCostello.Api</RootNamespace>
     <Summary>Tests for Martin Costello's API</Summary>
