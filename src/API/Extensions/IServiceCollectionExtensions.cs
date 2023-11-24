@@ -76,7 +76,7 @@ public static class IServiceCollectionExtensions
 
         if (environment.IsDevelopment())
         {
-            applicationPath = Path.GetDirectoryName(typeof(GitMetadata).Assembly.Location) ?? ".";
+            applicationPath = Path.GetDirectoryName(AppContext.BaseDirectory) ?? ".";
         }
         else
         {

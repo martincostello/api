@@ -85,7 +85,7 @@ public static class ApiModule
                 guid = guid.ToUpperInvariant();
             }
 
-            return TypedResults.Json(new GuidResponse() { Guid = guid });
+            return TypedResults.Json(new GuidResponse() { Guid = guid }, ApplicationJsonSerializerContext.Default.GuidResponse);
         })
         .Produces<GuidResponse, GuidResponseExampleProvider>("A GUID was generated successfully.")
         .ProducesProblem("The specified format is invalid.")
@@ -159,7 +159,7 @@ public static class ApiModule
                 Hash = formatAsBase64 ? Convert.ToBase64String(hash) : BytesToHexString(hash).ToLowerInvariant(),
             };
 
-            return TypedResults.Json(result);
+            return TypedResults.Json(result, ApplicationJsonSerializerContext.Default.HashResponse);
         })
         .Accepts<HashRequest, HashRequestExampleProvider>()
         .Produces<HashResponse, HashResponseExampleProvider>("The hash was generated successfully.")
@@ -202,7 +202,7 @@ public static class ApiModule
                 validationAlgorithm.Split('-', StringSplitOptions.RemoveEmptyEntries)[0].ToUpperInvariant(),
                 decryptionAlgorithm.Split('-', StringSplitOptions.RemoveEmptyEntries)[0].ToUpperInvariant());
 
-            return TypedResults.Json(result);
+            return TypedResults.Json(result, ApplicationJsonSerializerContext.Default.MachineKeyResponse);
         })
         .Produces<MachineKeyResponse, MachineKeyResponseExampleProvider>("The machine key was generated successfully.")
         .ProducesProblem("The specified decryption or validation algorithm is invalid.")
