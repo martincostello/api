@@ -78,7 +78,7 @@ public static class ApiBuilder
         {
             options.SerializerOptions.PropertyNameCaseInsensitive = false;
             options.SerializerOptions.WriteIndented = true;
-            options.SerializerOptions.TypeInfoResolverChain.Add(ApplicationJsonSerializerContext.Default);
+            options.SerializerOptions.TypeInfoResolverChain.Insert(0, ApplicationJsonSerializerContext.Default);
         });
 
         builder.Services.AddResponseCompression((options) =>

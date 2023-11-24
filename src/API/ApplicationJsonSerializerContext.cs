@@ -13,6 +13,7 @@ namespace MartinCostello.Api;
 [JsonSerializable(typeof(HashResponse))]
 [JsonSerializable(typeof(MachineKeyResponse))]
 [JsonSerializable(typeof(TimeResponse))]
+[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase, WriteIndented = true)]
 internal sealed partial class ApplicationJsonSerializerContext : JsonSerializerContext
 {
 }
