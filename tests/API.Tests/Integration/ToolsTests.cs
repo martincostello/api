@@ -14,6 +14,7 @@ namespace MartinCostello.Api.Integration;
 /// </remarks>
 /// <param name="fixture">The fixture to use.</param>
 /// <param name="outputHelper">The test output helper to use.</param>
+[Collection(TestServerCollection.Name)]
 public class ToolsTests(TestServerFixture fixture, ITestOutputHelper outputHelper) : IntegrationTest(fixture, outputHelper)
 {
     [Theory]
