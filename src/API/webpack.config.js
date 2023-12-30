@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const RemoveEmptyScriptsPlugin = require("webpack-remove-empty-scripts");
@@ -43,6 +44,7 @@ module.exports = {
       filename: '[name]/main.css'
     }),
     new RemoveEmptyScriptsPlugin(),
+    new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en-gb/),
   ],
   resolve: {
     extensions: ['.css', '.ts', '.js'],

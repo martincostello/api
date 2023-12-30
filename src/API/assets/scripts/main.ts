@@ -1,6 +1,8 @@
 // Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
+import moment from 'moment';
+
 document.addEventListener('DOMContentLoaded', () => {
     const trackingId = document.querySelector('meta[name="google-analytics"]').getAttribute('content');
     if (trackingId && 'dataLayer' in window) {
@@ -13,12 +15,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const element = document.getElementById('build-date');
-    if (element && 'moment' in window) {
+    if (element) {
         const timestamp = element.getAttribute('data-timestamp');
         const format = element.getAttribute('data-format');
 
-        const moment = window['moment'] as any;
-        const value: any = moment(timestamp, format);
+        const value = moment(timestamp, format);
         if (value.isValid()) {
             const text: string = value.fromNow();
             element.textContent = `(${text})`;
