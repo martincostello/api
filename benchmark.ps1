@@ -4,11 +4,13 @@
 #Requires -Version 7
 
 param(
-    [Parameter(Mandatory = $false)][string] $Configuration = "Release",
-    [Parameter(Mandatory = $false)][string] $Framework = "net8.0"
 )
 
 $ErrorActionPreference = "Stop"
+
+if ($null -eq $env:MSBUILDTERMINALLOGGER) {
+    $env:MSBUILDTERMINALLOGGER = "auto"
+}
 
 $solutionPath = $PSScriptRoot
 $sdkFile = Join-Path $solutionPath "global.json"
@@ -60,4 +62,4 @@ $benchmarks = (Join-Path $solutionPath "tests" "API.Benchmarks" "API.Benchmarks.
 
 Write-Host "Running benchmarks..." -ForegroundColor Green
 
-& $dotnet run --project $benchmarks --configuration $Configuration --framework $Framework
+& $dotnet run --project $benchmarks --configuration "Release"

@@ -2,14 +2,12 @@
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Diagnosers;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 
 namespace MartinCostello.Api.Benchmarks;
 
-[EventPipeProfiler(EventPipeProfile.CpuSampling)]
-[MemoryDiagnoser]
+[Config(typeof(CustomBenchmarkConfig))]
 public class ApiBenchmarks : IAsyncDisposable
 {
     private WebApplication? _app;
