@@ -1,12 +1,15 @@
 ﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
+using System.ComponentModel;
 using System.Security.Cryptography;
 using System.Text;
 using MartinCostello.Api.Extensions;
 using MartinCostello.Api.Models;
-using MartinCostello.Api.Swagger;
+using MartinCostello.Api.OpenApi;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
+using NSwag.Annotations;
 
 namespace MartinCostello.Api;
 
@@ -43,172 +46,18 @@ public static class ApiModule
     /// </returns>
     public static IEndpointRouteBuilder MapApiEndpoints(this IEndpointRouteBuilder builder)
     {
-        builder.MapGet("/time", (TimeProvider timeProvider) =>
-        {
-            var formatProvider = CultureInfo.InvariantCulture;
-            var now = timeProvider.GetUtcNow();
+        builder.MapGet("/time", GetTime)
+               .RequireCors("DefaultCorsPolicy")
+               .WithName("Time");
 
-            var result = new TimeResponse()
-            {
-                Timestamp = now,
-                Rfc1123 = now.ToString("r", formatProvider),
-                UniversalFull = now.UtcDateTime.ToString("U", formatProvider),
-                UniversalSortable = now.UtcDateTime.ToString("u", formatProvider),
-                Unix = now.ToUnixTimeSeconds(),
-            };
+        builder.MapGet("/tools/guid", GenerateGuid)
+               .WithName("Guid");
 
-            return TypedResults.Ok(result);
-        })
-        .Produces<TimeResponse, TimeResponseExampleProvider>("The current UTC date and time.")
-        .RequireCors("DefaultCorsPolicy")
-        .WithName("Time")
-        .WithOperationDescription("Gets the current UTC time.");
+        builder.MapPost("/tools/hash", GenerateHash)
+               .WithName("Hash");
 
-        builder.MapGet("/tools/guid", Results<JsonHttpResult<GuidResponse>, ProblemHttpResult>
-            (
-            [SwaggerParameterExample("The format for which to generate a GUID.", "D")] string? format,
-            [SwaggerParameterExample("Whether to return the GUID in uppercase.")] bool? uppercase) =>
-        {
-            string guid;
-
-            try
-            {
-                guid = Guid.NewGuid().ToString(format ?? "D", CultureInfo.InvariantCulture);
-            }
-            catch (FormatException)
-            {
-                return Results.Extensions.InvalidRequest($"The specified format '{format}' is invalid.");
-            }
-
-            if (uppercase == true)
-            {
-                guid = guid.ToUpperInvariant();
-            }
-
-            return TypedResults.Json(new GuidResponse() { Guid = guid }, ApplicationJsonSerializerContext.Default.GuidResponse);
-        })
-        .Produces<GuidResponse, GuidResponseExampleProvider>("A GUID was generated successfully.")
-        .ProducesProblem("The specified format is invalid.")
-        .WithName("Guid")
-        .WithOperationDescription("Generates a GUID.")
-        .WithProblemDetailsResponseExample();
-
-        builder.MapPost("/tools/hash", Results<JsonHttpResult<HashResponse>, ProblemHttpResult>
-            (HashRequest? request) =>
-        {
-            if (request == null)
-            {
-                return Results.Extensions.InvalidRequest("No hash request specified.");
-            }
-
-            if (string.IsNullOrWhiteSpace(request.Algorithm))
-            {
-                return Results.Extensions.InvalidRequest("No hash algorithm name specified.");
-            }
-
-            if (string.IsNullOrWhiteSpace(request.Format))
-            {
-                return Results.Extensions.InvalidRequest("No hash output format specified.");
-            }
-
-            bool formatAsBase64;
-
-            switch (request.Format.ToUpperInvariant())
-            {
-                case "BASE64":
-                    formatAsBase64 = true;
-                    break;
-
-                case "HEXADECIMAL":
-                    formatAsBase64 = false;
-                    break;
-
-                default:
-                    return Results.Extensions.InvalidRequest($"The specified hash format '{request.Format}' is invalid.");
-            }
-
-            const int MaxPlaintextLength = 4096;
-
-            if (request.Plaintext?.Length > MaxPlaintextLength)
-            {
-                return Results.Extensions.InvalidRequest($"The plaintext to hash cannot be more than {MaxPlaintextLength} characters in length.");
-            }
-
-            byte[] buffer = Encoding.UTF8.GetBytes(request.Plaintext ?? string.Empty);
-            byte[] hash = request.Algorithm.ToUpperInvariant() switch
-            {
-#pragma warning disable CA5350
-#pragma warning disable CA5351
-                "MD5" => MD5.HashData(buffer),
-                "SHA1" => SHA1.HashData(buffer),
-#pragma warning restore CA5350
-#pragma warning restore CA5351
-                "SHA256" => SHA256.HashData(buffer),
-                "SHA384" => SHA384.HashData(buffer),
-                "SHA512" => SHA512.HashData(buffer),
-                _ => [],
-            };
-
-            if (hash.Length == 0)
-            {
-                return Results.Extensions.InvalidRequest($"The specified hash algorithm '{request.Algorithm}' is not supported.");
-            }
-
-            var result = new HashResponse()
-            {
-                Hash = formatAsBase64 ? Convert.ToBase64String(hash) : BytesToHexString(hash).ToLowerInvariant(),
-            };
-
-            return TypedResults.Json(result, ApplicationJsonSerializerContext.Default.HashResponse);
-        })
-        .Accepts<HashRequest, HashRequestExampleProvider>()
-        .Produces<HashResponse, HashResponseExampleProvider>("The hash was generated successfully.")
-        .ProducesProblem("The specified hash algorithm or output format is invalid.")
-        .WithName("Hash")
-        .WithOperationDescription("Generates a hash of some plaintext for a specified hash algorithm and returns it in the required format.")
-        .WithProblemDetailsResponseExample();
-
-        builder.MapGet("/tools/machinekey", Results<JsonHttpResult<MachineKeyResponse>, ProblemHttpResult>
-            (
-            [SwaggerParameterExample("The name of the decryption algorithm.", "AES-256")] string? decryptionAlgorithm,
-            [SwaggerParameterExample("The name of the validation algorithm.", "SHA1")] string? validationAlgorithm) =>
-        {
-            if (string.IsNullOrEmpty(decryptionAlgorithm) ||
-                !HashSizes.TryGetValue(decryptionAlgorithm + "-D", out int decryptionKeyLength))
-            {
-                return Results.Extensions.InvalidRequest($"The specified decryption algorithm '{decryptionAlgorithm}' is invalid.");
-            }
-
-            if (string.IsNullOrEmpty(validationAlgorithm) ||
-                !HashSizes.TryGetValue(validationAlgorithm + "-V", out int validationKeyLength))
-            {
-                return Results.Extensions.InvalidRequest($"The specified validation algorithm '{validationAlgorithm}' is invalid.");
-            }
-
-            byte[] decryptionKey = RandomNumberGenerator.GetBytes(decryptionKeyLength);
-            byte[] validationKey = RandomNumberGenerator.GetBytes(validationKeyLength);
-
-            var result = new MachineKeyResponse()
-            {
-                DecryptionKey = BytesToHexString(decryptionKey),
-                ValidationKey = BytesToHexString(validationKey),
-            };
-
-            result.MachineKeyXml = string.Format(
-                CultureInfo.InvariantCulture,
-                @"<machineKey validationKey=""{0}"" decryptionKey=""{1}"" validation=""{2}"" decryption=""{3}"" />",
-                result.ValidationKey,
-                result.DecryptionKey,
-                validationAlgorithm.Split('-', StringSplitOptions.RemoveEmptyEntries)[0].ToUpperInvariant(),
-                decryptionAlgorithm.Split('-', StringSplitOptions.RemoveEmptyEntries)[0].ToUpperInvariant());
-
-            return TypedResults.Json(result, ApplicationJsonSerializerContext.Default.MachineKeyResponse);
-        })
-        .Produces<MachineKeyResponse, MachineKeyResponseExampleProvider>("The machine key was generated successfully.")
-        .ProducesProblem("The specified decryption or validation algorithm is invalid.")
-        .WithName("MachineKey")
-        .WithOperationDescription("Generates a machine key for a Web.config configuration file for ASP.NET.")
-        .WithProblemDetailsResponseExample();
+        builder.MapGet("/tools/machinekey", GenerateMachineKey)
+               .WithName("MachineKey");
 
         return builder;
     }
@@ -222,4 +71,186 @@ public static class ApiModule
     /// </returns>
     private static string BytesToHexString(ReadOnlySpan<byte> bytes)
         => Convert.ToHexString(bytes);
+
+    [OpenApiExample<TimeResponse>]
+    [OpenApiOperation("Gets the current UTC time.", "Gets the current date and time in UTC.")]
+    [OpenApiTag("API")]
+    [SwaggerResponse(StatusCodes.Status200OK, typeof(TimeResponse), Description = "The current UTC date and time.")]
+    private static Ok<TimeResponse> GetTime(TimeProvider timeProvider)
+    {
+        var formatProvider = CultureInfo.InvariantCulture;
+        var now = timeProvider.GetUtcNow();
+
+        var result = new TimeResponse()
+        {
+            Timestamp = now,
+            Rfc1123 = now.ToString("r", formatProvider),
+            UniversalFull = now.UtcDateTime.ToString("U", formatProvider),
+            UniversalSortable = now.UtcDateTime.ToString("u", formatProvider),
+            Unix = now.ToUnixTimeSeconds(),
+        };
+
+        return TypedResults.Ok(result);
+    }
+
+    [OpenApiExample<GuidResponse>]
+    [OpenApiExample<ProblemDetails, ProblemDetailsExampleProvider>]
+    [OpenApiOperation("Generates a GUID.", "Generates a new GUID in the specified format.")]
+    [OpenApiTag("API")]
+    [SwaggerResponse(StatusCodes.Status200OK, typeof(GuidResponse), Description = "A GUID was generated successfully.")]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, typeof(ProblemDetails), Description = "The specified format is invalid.")]
+    private static Results<JsonHttpResult<GuidResponse>, ProblemHttpResult> GenerateGuid(
+        [Description("The format for which to generate a GUID.")] string? format,
+        [Description("Whether to return the GUID in uppercase.")] bool? uppercase)
+    {
+        string guid;
+
+        try
+        {
+            guid = Guid.NewGuid().ToString(format ?? "D", CultureInfo.InvariantCulture);
+        }
+        catch (FormatException)
+        {
+            return Results.Extensions.InvalidRequest($"The specified format '{format}' is invalid.");
+        }
+
+        if (uppercase is true)
+        {
+            guid = guid.ToUpperInvariant();
+        }
+
+        return TypedResults.Json(new GuidResponse() { Guid = guid }, ApplicationJsonSerializerContext.Default.GuidResponse);
+    }
+
+    [OpenApiExample<HashRequest>]
+    [OpenApiExample<HashResponse>]
+    [OpenApiExample<ProblemDetails, ProblemDetailsExampleProvider>]
+    [OpenApiOperation("Hashes a string.", "Generates a hash of some plaintext for a specified hash algorithm and returns it in the required format.")]
+    [OpenApiTag("API")]
+    [SwaggerResponse(StatusCodes.Status200OK, typeof(HashResponse), Description = "The hash was generated successfully.")]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, typeof(ProblemDetails), Description = "The specified hash algorithm or output format is invalid.")]
+    private static Results<JsonHttpResult<HashResponse>, ProblemHttpResult> GenerateHash(HashRequest? request)
+    {
+        if (request == null)
+        {
+            return Results.Extensions.InvalidRequest("No hash request specified.");
+        }
+
+        if (string.IsNullOrWhiteSpace(request.Algorithm))
+        {
+            return Results.Extensions.InvalidRequest("No hash algorithm name specified.");
+        }
+
+        if (string.IsNullOrWhiteSpace(request.Format))
+        {
+            return Results.Extensions.InvalidRequest("No hash output format specified.");
+        }
+
+        bool formatAsBase64;
+
+        switch (request.Format.ToUpperInvariant())
+        {
+            case "BASE64":
+                formatAsBase64 = true;
+                break;
+
+            case "HEXADECIMAL":
+                formatAsBase64 = false;
+                break;
+
+            default:
+                return Results.Extensions.InvalidRequest($"The specified hash format '{request.Format}' is invalid.");
+        }
+
+        const int MaxPlaintextLength = 4096;
+
+        if (request.Plaintext?.Length > MaxPlaintextLength)
+        {
+            return Results.Extensions.InvalidRequest($"The plaintext to hash cannot be more than {MaxPlaintextLength} characters in length.");
+        }
+
+        byte[] buffer = Encoding.UTF8.GetBytes(request.Plaintext ?? string.Empty);
+        byte[] hash = request.Algorithm.ToUpperInvariant() switch
+        {
+#pragma warning disable CA5350
+#pragma warning disable CA5351
+            "MD5" => MD5.HashData(buffer),
+            "SHA1" => SHA1.HashData(buffer),
+#pragma warning restore CA5350
+#pragma warning restore CA5351
+            "SHA256" => SHA256.HashData(buffer),
+            "SHA384" => SHA384.HashData(buffer),
+            "SHA512" => SHA512.HashData(buffer),
+            _ => [],
+        };
+
+        if (hash.Length == 0)
+        {
+            return Results.Extensions.InvalidRequest($"The specified hash algorithm '{request.Algorithm}' is not supported.");
+        }
+
+        var result = new HashResponse()
+        {
+            Hash = formatAsBase64 ? Convert.ToBase64String(hash) : BytesToHexString(hash).ToLowerInvariant(),
+        };
+
+        return TypedResults.Json(result, ApplicationJsonSerializerContext.Default.HashResponse);
+    }
+
+    [OpenApiExample<MachineKeyResponse>]
+    [OpenApiExample<ProblemDetails, ProblemDetailsExampleProvider>]
+    [OpenApiOperation("Generates a machine key.", "Generates a machine key for a Web.config configuration file for ASP.NET.")]
+    [OpenApiTag("API")]
+    [SwaggerResponse(StatusCodes.Status200OK, typeof(MachineKeyResponse), Description = "The machine key was generated successfully.")]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, typeof(ProblemDetails), Description = "The specified decryption or validation algorithm is invalid.")]
+    private static Results<JsonHttpResult<MachineKeyResponse>, ProblemHttpResult> GenerateMachineKey(
+        [Description("The name of the decryption algorithm.")] string? decryptionAlgorithm,
+        [Description("The name of the validation algorithm.")] string? validationAlgorithm)
+    {
+        if (string.IsNullOrEmpty(decryptionAlgorithm) ||
+            !HashSizes.TryGetValue(decryptionAlgorithm + "-D", out int decryptionKeyLength))
+        {
+            return Results.Extensions.InvalidRequest($"The specified decryption algorithm '{decryptionAlgorithm}' is invalid.");
+        }
+
+        if (string.IsNullOrEmpty(validationAlgorithm) ||
+            !HashSizes.TryGetValue(validationAlgorithm + "-V", out int validationKeyLength))
+        {
+            return Results.Extensions.InvalidRequest($"The specified validation algorithm '{validationAlgorithm}' is invalid.");
+        }
+
+        byte[] decryptionKey = RandomNumberGenerator.GetBytes(decryptionKeyLength);
+        byte[] validationKey = RandomNumberGenerator.GetBytes(validationKeyLength);
+
+        var result = new MachineKeyResponse()
+        {
+            DecryptionKey = BytesToHexString(decryptionKey),
+            ValidationKey = BytesToHexString(validationKey),
+        };
+
+        result.MachineKeyXml = string.Format(
+            CultureInfo.InvariantCulture,
+            @"<machineKey validationKey=""{0}"" decryptionKey=""{1}"" validation=""{2}"" decryption=""{3}"" />",
+            result.ValidationKey,
+            result.DecryptionKey,
+            validationAlgorithm.Split('-', StringSplitOptions.RemoveEmptyEntries)[0].ToUpperInvariant(),
+            decryptionAlgorithm.Split('-', StringSplitOptions.RemoveEmptyEntries)[0].ToUpperInvariant());
+
+        return TypedResults.Json(result, ApplicationJsonSerializerContext.Default.MachineKeyResponse);
+    }
+
+    private sealed class ProblemDetailsExampleProvider : IExampleProvider<ProblemDetails>
+    {
+        public static ProblemDetails GenerateExample()
+        {
+            // TODO Fix JSON deserialization (no Instance, camelCase)
+            return new()
+            {
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                Title = "Bad Request",
+                Status = StatusCodes.Status400BadRequest,
+                Detail = "The specified value is invalid.",
+            };
+        }
+    }
 }

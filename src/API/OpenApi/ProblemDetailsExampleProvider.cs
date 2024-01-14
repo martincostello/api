@@ -3,18 +3,18 @@
 
 using Microsoft.AspNetCore.Mvc;
 
-namespace MartinCostello.Api.Swagger;
+namespace MartinCostello.Api.OpenApi;
 
 /// <summary>
-/// A class representing an implementation of <see cref="IExampleProvider"/>
-/// for the <see cref="ProblemDetails"/> class. This class cannot be inherited.
+/// A class representing an example provider for <see cref="ProblemDetails"/>.
 /// </summary>
 public sealed class ProblemDetailsExampleProvider : IExampleProvider<ProblemDetails>
 {
-    /// <inheritdoc />
-    public object GetExample()
+    /// <inheritdoc/>
+    public static ProblemDetails GenerateExample()
     {
-        return new ProblemDetails()
+        // TODO Fix JSON deserialization (no Instance, camelCase)
+        return new()
         {
             Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
             Title = "Bad Request",
