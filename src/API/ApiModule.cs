@@ -100,7 +100,7 @@ public static class ApiModule
     [SwaggerResponse(StatusCodes.Status200OK, typeof(GuidResponse), Description = "A GUID was generated successfully.")]
     [SwaggerResponse(StatusCodes.Status400BadRequest, typeof(ProblemDetails), Description = "The specified format is invalid.")]
     private static Results<JsonHttpResult<GuidResponse>, ProblemHttpResult> GenerateGuid(
-        [Description("The format for which to generate a GUID.")] string? format,
+        [Description("The format for which to generate a GUID.")] [OpenApiParameterExample("D")] string? format,
         [Description("Whether to return the GUID in uppercase.")] bool? uppercase)
     {
         string guid;
@@ -204,8 +204,8 @@ public static class ApiModule
     [SwaggerResponse(StatusCodes.Status200OK, typeof(MachineKeyResponse), Description = "The machine key was generated successfully.")]
     [SwaggerResponse(StatusCodes.Status400BadRequest, typeof(ProblemDetails), Description = "The specified decryption or validation algorithm is invalid.")]
     private static Results<JsonHttpResult<MachineKeyResponse>, ProblemHttpResult> GenerateMachineKey(
-        [Description("The name of the decryption algorithm.")] string? decryptionAlgorithm,
-        [Description("The name of the validation algorithm.")] string? validationAlgorithm)
+        [Description("The name of the decryption algorithm.")] [OpenApiParameterExample("AES-256")] string? decryptionAlgorithm,
+        [Description("The name of the validation algorithm.")] [OpenApiParameterExample("SHA1")] string? validationAlgorithm)
     {
         if (string.IsNullOrEmpty(decryptionAlgorithm) ||
             !HashSizes.TryGetValue(decryptionAlgorithm + "-D", out int decryptionKeyLength))

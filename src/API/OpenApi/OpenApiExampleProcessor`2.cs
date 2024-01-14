@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
+using System.Reflection;
 using NSwag.Generation.Processors;
 using NSwag.Generation.Processors.Contexts;
 
@@ -18,9 +19,12 @@ public sealed class OpenApiExampleProcessor<TSchema, TProvider> : IOperationProc
     /// <inheritdoc/>
     public bool Process(OperationProcessorContext context)
     {
-        foreach (var p in context.Parameters)
+        foreach ((var info, var parameter) in context.Parameters)
         {
-            p.Value.Example = null; // TODO "D" for format for GUID
+            if (info.GetCustomAttribute<OpenApiParameterExampleAttribute>() is { } example)
+            {
+                parameter.Example = example.Value;
+            }
         }
 
         if (context.Document.Components.Schemas.TryGetValue(typeof(TSchema).Name, out var schema))
