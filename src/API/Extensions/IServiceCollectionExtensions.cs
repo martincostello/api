@@ -49,6 +49,7 @@ public static class IServiceCollectionExtensions
             };
 
             options.OperationProcessors.Add(new RemoveParameterPositionProcessor());
+            options.OperationProcessors.Add(new UpdateProblemDetailsMediaTypeProvider());
             options.SchemaSettings.SchemaProcessors.Add(new RemoveStyleCopPrefixesProcessor());
         });
 

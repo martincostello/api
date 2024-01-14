@@ -18,7 +18,6 @@ public sealed class OpenApiExampleProcessor<TSchema, TProvider> : IOperationProc
     /// <inheritdoc/>
     public bool Process(OperationProcessorContext context)
     {
-        // TODO Need application/problem+json for 4xx errors
         foreach (var p in context.Parameters)
         {
             p.Value.Example = null; // TODO "D" for format for GUID
@@ -28,7 +27,6 @@ public sealed class OpenApiExampleProcessor<TSchema, TProvider> : IOperationProc
         {
             schema.Example = TProvider.GenerateExample();
 
-            // TODO This isn't working
             foreach (var parameter in context.OperationDescription.Operation.Parameters)
             {
                 if (parameter.Schema?.Reference == schema)
