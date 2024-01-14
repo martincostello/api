@@ -1,18 +1,30 @@
-// Copyright (c) Martin Costello, 2016. All rights reserved.
+﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 using System.Text.Json.Serialization;
+using MartinCostello.Api.OpenApi;
+using Newtonsoft.Json;
 
 namespace MartinCostello.Api.Models;
 
 /// <summary>
 /// Represents the response from the <c>/tools/hash</c> API resource.
 /// </summary>
-public sealed class HashResponse
+public sealed class HashResponse : IExampleProvider<HashResponse>
 {
     /// <summary>
     /// Gets or sets a string containing the generated hash value in the requested format.
     /// </summary>
+    [JsonProperty("hash")]
     [JsonPropertyName("hash")]
     public string Hash { get; set; } = string.Empty;
+
+    /// <inheritdoc/>
+    static object IExampleProvider<HashResponse>.GenerateExample()
+    {
+        return new HashResponse()
+        {
+            Hash = "fTi1zSWiuvha07tbkxE4PmcaihQuswKzJNSl+6h0jGk=",
+        };
+    }
 }

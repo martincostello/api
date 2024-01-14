@@ -137,7 +137,7 @@ public static class ApiBuilder
             });
         }
 
-        builder.Services.AddSwagger(builder.Environment);
+        builder.Services.AddOpenApi();
         builder.Services.TryAddSingleton(TimeProvider.System);
 
         builder.WebHost.CaptureStartupErrors(true);
@@ -170,7 +170,7 @@ public static class ApiBuilder
 
         app.MapRazorPages();
 
-        app.UseSwagger();
+        app.UseOpenApi();
 
         app.UseCookiePolicy(new()
         {

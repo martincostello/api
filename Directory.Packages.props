@@ -1,7 +1,4 @@
 <Project>
-  <PropertyGroup>
-    <SwashbuckleAspNetCoreVersion>6.5.0</SwashbuckleAspNetCoreVersion>
-  </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="BenchmarkDotNet" Version="0.13.12" />
     <PackageVersion Include="BenchmarkDotNet.TestAdapter" Version="0.13.12" />
@@ -10,24 +7,19 @@
     <PackageVersion Include="MartinCostello.Logging.XUnit" Version="0.3.0" />
     <PackageVersion Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
     <PackageVersion Include="Microsoft.AspNetCore.AzureAppServices.HostingStartup" Version="8.0.1" />
-    <PackageVersion Include="Microsoft.Extensions.TimeProvider.Testing" Version="8.1.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.TimeProvider.Testing" Version="8.1.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
     <PackageVersion Include="Microsoft.TypeScript.MSBuild" Version="5.3.3" />
+    <PackageVersion Include="NSwag.AspNetCore" Version="14.0.1" />
     <PackageVersion Include="ReportGenerator" Version="5.2.0" />
     <PackageVersion Include="Shouldly" Version="4.2.1" />
     <PackageVersion Include="StyleCop.Analyzers" Version="1.2.0-beta.556" />
-    <PackageVersion Include="Swashbuckle.AspNetCore" Version="$(SwashbuckleAspNetCoreVersion)" />
-    <PackageVersion Include="Swashbuckle.AspNetCore.Annotations" Version="$(SwashbuckleAspNetCoreVersion)" />
     <PackageVersion Include="xunit" Version="2.6.5" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="2.5.6" />
     <PackageVersion Include="Xunit.SkippableFact" Version="1.4.13" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="StyleCop.Analyzers" PrivateAssets="All" />
-  </ItemGroup>
-  <ItemGroup Condition=" '$(IsTestProject)' == 'true' ">
-    <PackageReference Include="coverlet.msbuild" PrivateAssets="All" />
-    <PackageReference Include="ReportGenerator" PrivateAssets="All" />
   </ItemGroup>
 </Project>
