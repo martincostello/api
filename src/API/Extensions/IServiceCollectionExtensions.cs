@@ -46,6 +46,8 @@ public static class IServiceCollectionExtensions
                     Name = siteOptions.Api?.License?.Name,
                     Url = siteOptions.Api?.License?.Url ?? string.Empty,
                 };
+
+                document.Info.Version = string.Empty;
             };
 
             options.OperationProcessors.Add(new RemoveParameterPositionProcessor());
