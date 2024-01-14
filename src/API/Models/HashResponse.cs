@@ -20,9 +20,9 @@ public sealed class HashResponse : IExampleProvider<HashResponse>
     public string Hash { get; set; } = string.Empty;
 
     /// <inheritdoc/>
-    static HashResponse IExampleProvider<HashResponse>.GenerateExample()
+    static object IExampleProvider<HashResponse>.GenerateExample()
     {
-        return new()
+        return new HashResponse()
         {
             Hash = "fTi1zSWiuvha07tbkxE4PmcaihQuswKzJNSl+6h0jGk=",
         };

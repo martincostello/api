@@ -38,9 +38,9 @@ public sealed class HashRequest : IExampleProvider<HashRequest>
     public string Plaintext { get; set; } = string.Empty;
 
     /// <inheritdoc/>
-    static HashRequest IExampleProvider<HashRequest>.GenerateExample()
+    static object IExampleProvider<HashRequest>.GenerateExample()
     {
-        return new()
+        return new HashRequest()
         {
             Algorithm = "sha256",
             Format = "base64",
