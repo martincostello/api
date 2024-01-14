@@ -238,19 +238,4 @@ public static class ApiModule
 
         return TypedResults.Json(result, ApplicationJsonSerializerContext.Default.MachineKeyResponse);
     }
-
-    private sealed class ProblemDetailsExampleProvider : IExampleProvider<ProblemDetails>
-    {
-        public static ProblemDetails GenerateExample()
-        {
-            // TODO Fix JSON deserialization (no Instance, camelCase)
-            return new()
-            {
-                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
-                Title = "Bad Request",
-                Status = StatusCodes.Status400BadRequest,
-                Detail = "The specified value is invalid.",
-            };
-        }
-    }
 }
