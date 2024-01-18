@@ -66,7 +66,7 @@ jobs:
       run: echo "dir=$(npm config get cache)" >> ${env:GITHUB_OUTPUT}
 
     - name: Setup npm cache
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       id: npm-cache
       with:
         path: ${{ steps.npm-cache-dir.outputs.dir }}
@@ -74,7 +74,7 @@ jobs:
         restore-keys: ${{ runner.os }}-node-
 
     - name: Setup NuGet cache
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.nuget/packages
         key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/*.props') }}
@@ -157,7 +157,7 @@ jobs:
       run: echo "dir=$(npm config get cache)" >> ${env:GITHUB_OUTPUT}
 
     - name: Setup npm cache
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       id: npm-cache
       with:
         path: ${{ steps.npm-cache-dir.outputs.dir }}
@@ -165,7 +165,7 @@ jobs:
         restore-keys: ${{ runner.os }}-node-
 
     - name: Setup NuGet cache
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.nuget/packages
         key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/*.props') }}
