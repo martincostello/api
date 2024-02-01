@@ -1,6 +1,7 @@
 # Martin Costello's API
 
 [![Build status](https://github.com/martincostello/api/workflows/build/badge.svg?branch=main&event=push)](https://github.com/martincostello/api/actions?query=workflow%3Abuild+branch%3Amain+event%3Apush)
+[![codecov](https://codecov.io/gh/martincostello/api/branch/main/graph/badge.svg)](https://codecov.io/gh/martincostello/api)
 
 ## Overview
 
