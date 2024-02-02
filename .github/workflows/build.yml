@@ -86,11 +86,10 @@ jobs:
 
     - uses: codecov/codecov-action@v4
       name: Upload coverage to Codecov
-      env:
-        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       with:
         file: ./artifacts/coverage/coverage.cobertura.xml
         flags: ${{ matrix.codecov_os }}
+        token: ${{ secrets.CODECOV_TOKEN }}
 
     - name: Publish artifacts
       uses: actions/upload-artifact@v4
