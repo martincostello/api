@@ -8,10 +8,6 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-if ($null -eq $env:MSBUILDTERMINALLOGGER) {
-    $env:MSBUILDTERMINALLOGGER = "auto"
-}
-
 $solutionPath = $PSScriptRoot
 $sdkFile = Join-Path $solutionPath "global.json"
 
