@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
+using System.Net;
 using System.Net.Http.Json;
 using MartinCostello.Api.Models;
 
@@ -73,5 +74,65 @@ public class ToolsTests(TestServerFixture fixture, ITestOutputHelper outputHelpe
         actual.DecryptionKey.ShouldNotBeNullOrWhiteSpace();
         actual.MachineKeyXml.ShouldNotBeNullOrWhiteSpace();
         actual.ValidationKey.ShouldNotBeNullOrWhiteSpace();
+    }
+
+    [Theory]
+    [InlineData("foo")]
+    public async Task Tools_Get_Guid_Returns_Correct_Response_For_Invalid_Parameters(
+        string format)
+    {
+        // Arrange
+        using var client = Fixture.CreateClient();
+
+        // Act
+        using var response = await client.GetAsync(
+            $"/tools/guid?format={format}");
+
+        // Assert
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+    }
+
+    [Theory]
+    [InlineData("", "SHA1")]
+    [InlineData("foo", "SHA1")]
+    [InlineData("AES-256", "")]
+    [InlineData("AES-256", "foo")]
+    public async Task Tools_Get_Machine_Key_Returns_Correct_Response_For_Invalid_Parameters(
+        string decryptionAlgorithm,
+        string validationAlgorithm)
+    {
+        // Arrange
+        using var client = Fixture.CreateClient();
+
+        // Act
+        using var response = await client.GetAsync(
+            $"/tools/machinekey?decryptionAlgorithm={decryptionAlgorithm}&validationAlgorithm={validationAlgorithm}");
+
+        // Assert
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+    }
+
+    [Theory]
+    [InlineData("", "Hexadecimal", "")]
+    [InlineData("foo", "Hexadecimal", "")]
+    [InlineData("MD5", "", "")]
+    [InlineData("MD5", "foo", "")]
+    public async Task Tools_Post_Hash_Returns_Correct_Response_For_Invalid_Parameters(string algorithm, string format, string plaintext)
+    {
+        // Arrange
+        var request = new HashRequest()
+        {
+            Algorithm = algorithm,
+            Format = format,
+            Plaintext = plaintext,
+        };
+
+        using var client = Fixture.CreateClient();
+
+        // Act
+        using var response = await client.PostAsJsonAsync("/tools/hash", request);
+
+        // Assert
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 }

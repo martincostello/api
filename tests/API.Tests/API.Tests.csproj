@@ -33,4 +33,11 @@
     <Using Include="Xunit" />
     <Using Include="Xunit.Abstractions" />
   </ItemGroup>
+  <PropertyGroup>
+    <CollectCoverage Condition=" '$(WEBSITE_URL)' == '' ">true</CollectCoverage>
+    <CoverletOutputFormat>cobertura,json</CoverletOutputFormat>
+    <Exclude>[xunit.*]*</Exclude>
+    <ExcludeByAttribute>GeneratedCodeAttribute</ExcludeByAttribute>
+    <Threshold>64</Threshold>
+  </PropertyGroup>
 </Project>
