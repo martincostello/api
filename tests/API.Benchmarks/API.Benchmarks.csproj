@@ -2,6 +2,7 @@
   <PropertyGroup>
     <Description>Benchmarks for the API.</Description>
     <GenerateProgramFile>false</GenerateProgramFile>
+    <IsTestProject>false</IsTestProject>
     <NoWarn>$(NoWarn);CA2007;CA2234;SA1600</NoWarn>
     <OpenApiGenerateDocuments>false</OpenApiGenerateDocuments>
     <OutputType>Exe</OutputType>
