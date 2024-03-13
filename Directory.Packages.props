@@ -2,7 +2,7 @@
   <ItemGroup>
     <PackageVersion Include="BenchmarkDotNet" Version="0.13.12" />
     <PackageVersion Include="BenchmarkDotNet.TestAdapter" Version="0.13.12" />
-    <PackageVersion Include="coverlet.msbuild" Version="6.0.1" />
+    <PackageVersion Include="coverlet.msbuild" Version="6.0.2" />
     <PackageVersion Include="GitHubActionsTestLogger" Version="2.3.3" />
     <PackageVersion Include="MartinCostello.Logging.XUnit" Version="0.3.0" />
     <PackageVersion Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
