@@ -6,20 +6,12 @@ namespace MartinCostello.Api.OpenApi;
 /// <summary>
 /// An attribute representing an example for an OpenAPI operation parameter. This class cannot be inherited.
 /// </summary>
+/// <param name="value">The example value.</param>
 [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false)]
-public sealed class OpenApiParameterExampleAttribute : Attribute
+public sealed class OpenApiParameterExampleAttribute(object value) : Attribute
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="OpenApiParameterExampleAttribute"/> class.
-    /// </summary>
-    /// <param name="value">The example value.</param>
-    public OpenApiParameterExampleAttribute(object value)
-    {
-        Value = value;
-    }
-
     /// <summary>
     /// Gets the example value.
     /// </summary>
-    public object Value { get; }
+    public object Value { get; } = value;
 }
