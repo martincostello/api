@@ -28,7 +28,7 @@
     <None Remove="assets\scripts\**\*.ts" />
     <TypeScriptCompile Include="assets\scripts\**\*.ts" />
   </ItemGroup>
-  <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">
+  <Target Name="PrepublishScript" BeforeTargets="BeforeBuild">
     <Exec Command="npm ci" Condition=" !Exists('$(MSBuildThisFileDirectory)\node_modules') AND '$(GITHUB_ACTIONS)' != '' " />
     <Exec Command="npm install" Condition=" !Exists('$(MSBuildThisFileDirectory)\node_modules') AND '$(GITHUB_ACTIONS)' == '' " />
     <Exec Command="npm run build" Condition=" ('$(BuildingInsideVisualStudio)' != 'true' and '$(GITHUB_ACTIONS)' != 'true') or !Exists('$(MSBuildThisFileDirectory)\wwwroot\assets\js\main.js') " />
