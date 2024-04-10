@@ -6,10 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using MartinCostello.Api.Extensions;
 using MartinCostello.Api.Models;
-using MartinCostello.Api.OpenApi;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
-using NSwag.Annotations;
 
 namespace MartinCostello.Api;
 
@@ -73,10 +70,6 @@ public static class ApiModule
     private static string BytesToHexString(ReadOnlySpan<byte> bytes, bool toLower = false)
         => toLower ? Convert.ToHexStringLower(bytes) : Convert.ToHexString(bytes);
 
-    [OpenApiExample<TimeResponse>]
-    [OpenApiOperation("Gets the current UTC time.", "Gets the current date and time in UTC.")]
-    [OpenApiTag("API")]
-    [SwaggerResponse(StatusCodes.Status200OK, typeof(TimeResponse), Description = "The current UTC date and time.")]
     private static Ok<TimeResponse> GetTime(TimeProvider timeProvider)
     {
         var formatProvider = CultureInfo.InvariantCulture;
@@ -94,14 +87,8 @@ public static class ApiModule
         return TypedResults.Ok(result);
     }
 
-    [OpenApiExample<GuidResponse>]
-    [OpenApiExample<ProblemDetails, ProblemDetailsExampleProvider>]
-    [OpenApiOperation("Generates a GUID.", "Generates a new GUID in the specified format.")]
-    [OpenApiTag("API")]
-    [SwaggerResponse(StatusCodes.Status200OK, typeof(GuidResponse), Description = "A GUID was generated successfully.")]
-    [SwaggerResponse(StatusCodes.Status400BadRequest, typeof(ProblemDetails), Description = "The specified format is invalid.")]
     private static Results<JsonHttpResult<GuidResponse>, ProblemHttpResult> GenerateGuid(
-        [Description("The format for which to generate a GUID.")][OpenApiParameterExample("D")] string? format,
+        [Description("The format for which to generate a GUID.")] string? format,
         [Description("Whether to return the GUID in uppercase.")] bool? uppercase)
     {
         string guid;
@@ -123,13 +110,6 @@ public static class ApiModule
         return TypedResults.Json(new GuidResponse() { Guid = guid }, ApplicationJsonSerializerContext.Default.GuidResponse);
     }
 
-    [OpenApiExample<HashRequest>]
-    [OpenApiExample<HashResponse>]
-    [OpenApiExample<ProblemDetails, ProblemDetailsExampleProvider>]
-    [OpenApiOperation("Hashes a string.", "Generates a hash of some plaintext for a specified hash algorithm and returns it in the required format.")]
-    [OpenApiTag("API")]
-    [SwaggerResponse(StatusCodes.Status200OK, typeof(HashResponse), Description = "The hash was generated successfully.")]
-    [SwaggerResponse(StatusCodes.Status400BadRequest, typeof(ProblemDetails), Description = "The specified hash algorithm or output format is invalid.")]
     private static Results<JsonHttpResult<HashResponse>, ProblemHttpResult> GenerateHash(HashRequest? request)
     {
         if (request == null)
@@ -196,15 +176,9 @@ public static class ApiModule
         return TypedResults.Json(result, ApplicationJsonSerializerContext.Default.HashResponse);
     }
 
-    [OpenApiExample<MachineKeyResponse>]
-    [OpenApiExample<ProblemDetails, ProblemDetailsExampleProvider>]
-    [OpenApiOperation("Generates a machine key.", "Generates a machine key for a Web.config configuration file for ASP.NET.")]
-    [OpenApiTag("API")]
-    [SwaggerResponse(StatusCodes.Status200OK, typeof(MachineKeyResponse), Description = "The machine key was generated successfully.")]
-    [SwaggerResponse(StatusCodes.Status400BadRequest, typeof(ProblemDetails), Description = "The specified decryption or validation algorithm is invalid.")]
     private static Results<JsonHttpResult<MachineKeyResponse>, ProblemHttpResult> GenerateMachineKey(
-        [Description("The name of the decryption algorithm.")][OpenApiParameterExample("AES-256")] string? decryptionAlgorithm,
-        [Description("The name of the validation algorithm.")][OpenApiParameterExample("SHA1")] string? validationAlgorithm)
+        [Description("The name of the decryption algorithm.")] string? decryptionAlgorithm,
+        [Description("The name of the validation algorithm.")] string? validationAlgorithm)
     {
         if (string.IsNullOrEmpty(decryptionAlgorithm) ||
             !HashSizes.TryGetValue(decryptionAlgorithm + "-D", out int decryptionKeyLength))

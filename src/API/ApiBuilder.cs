@@ -28,8 +28,6 @@ public static class ApiBuilder
     /// </returns>
     public static WebApplication Configure(WebApplicationBuilder builder)
     {
-        builder.Services.AddApplicationInsightsTelemetry(builder.Configuration);
-
         builder.Services.AddOptions();
         builder.Services.Configure<SiteOptions>(builder.Configuration.GetSection("Site"));
 
@@ -67,9 +65,6 @@ public static class ApiBuilder
                     }
                 });
         });
-
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddRazorPages();
 
         builder.Services.Configure<BrotliCompressionProviderOptions>((p) => p.Level = CompressionLevel.Fastest);
         builder.Services.Configure<GzipCompressionProviderOptions>((p) => p.Level = CompressionLevel.Fastest);
@@ -137,7 +132,6 @@ public static class ApiBuilder
             });
         }
 
-        builder.Services.AddOpenApi();
         builder.Services.TryAddSingleton(TimeProvider.System);
 
         builder.WebHost.CaptureStartupErrors(true);
@@ -167,10 +161,6 @@ public static class ApiBuilder
         app.UseRouting();
 
         app.UseCors();
-
-        app.MapRazorPages();
-
-        app.UseOpenApi();
 
         app.UseCookiePolicy(new()
         {
