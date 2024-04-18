@@ -3,8 +3,6 @@
 @using System.Reflection
 @{
     ViewBag.Title = "Home Page";
-    string? mvcVersion = typeof(Microsoft.Extensions.DependencyInjection.MvcServiceCollectionExtensions)
-        .Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
     SiteOptions options = Options.Value;
 }
 <div class="bg-light mb-4 p-5 rounded-3">
