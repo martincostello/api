@@ -1,4 +1,4 @@
-// Copyright (c) Martin Costello, 2016. All rights reserved.
+﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 namespace MartinCostello.Api.Integration;
@@ -53,12 +53,9 @@ public abstract class IntegrationTest : IDisposable
     {
         if (!_disposed)
         {
-            if (disposing)
+            if (disposing && Fixture != null)
             {
-                if (Fixture != null)
-                {
-                    Fixture.OutputHelper = null;
-                }
+                Fixture.OutputHelper = null;
             }
 
             _disposed = true;
