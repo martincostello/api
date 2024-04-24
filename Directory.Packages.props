@@ -16,7 +16,7 @@
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
     <PackageVersion Include="Microsoft.TypeScript.MSBuild" Version="5.4.4" />
     <PackageVersion Include="NSwag.AspNetCore" Version="14.0.7" />
-    <PackageVersion Include="ReportGenerator" Version="5.2.4" />
+    <PackageVersion Include="ReportGenerator" Version="5.2.5" />
     <PackageVersion Include="Shouldly" Version="4.2.1" />
     <PackageVersion Include="xunit" Version="2.7.1" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="2.5.8" />
