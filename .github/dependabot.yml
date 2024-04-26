@@ -30,6 +30,9 @@ updates:
     BenchmarkDotNet:
       patterns:
         - BenchmarkDotNet*
+    OpenTelemetry:
+      patterns:
+        - OpenTelemetry*
     xunit:
       patterns:
         - xunit*

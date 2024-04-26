@@ -1,4 +1,4 @@
-// Copyright (c) Martin Costello, 2016. All rights reserved.
+﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 using System.Reflection;
@@ -29,6 +29,11 @@ public static class GitMetadata
     /// Gets the timestamp the assembly was compiled at.
     /// </summary>
     public static DateTime Timestamp { get; } = DateTime.Parse(GetMetadataValue("BuildTimestamp", DateTime.UtcNow.ToString("o", CultureInfo.InvariantCulture)), CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal);
+
+    /// <summary>
+    /// Gets the informational version of the assembly.
+    /// </summary>
+    public static string Version { get; } = typeof(GitMetadata).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()!.InformationalVersion;
 
     /// <summary>
     /// Gets the specified metadata value.
