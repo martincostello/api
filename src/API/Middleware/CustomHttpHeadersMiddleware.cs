@@ -30,11 +30,6 @@ public sealed class CustomHttpHeadersMiddleware
     private readonly string _environmentName;
 
     /// <summary>
-    /// The current datacenter name. This field is read-only.
-    /// </summary>
-    private readonly string _datacenter;
-
-    /// <summary>
     /// Whether the current hosting environment is production. This field is read-only.
     /// </summary>
     private readonly bool _isProduction;
@@ -44,18 +39,15 @@ public sealed class CustomHttpHeadersMiddleware
     /// </summary>
     /// <param name="next">The delegate for the next part of the pipeline.</param>
     /// <param name="environment">The current hosting environment.</param>
-    /// <param name="config">The current configuration.</param>
     /// <param name="options">The current site configuration options.</param>
     public CustomHttpHeadersMiddleware(
         RequestDelegate next,
         IWebHostEnvironment environment,
-        IConfiguration config,
         IOptions<SiteOptions> options)
     {
         _next = next;
         _isProduction = environment.IsProduction();
         _environmentName = (_isProduction ? null : environment.EnvironmentName) ?? string.Empty;
-        _datacenter = config["Azure:Datacenter"] ?? "Local";
         _contentSecurityPolicy = BuildContentSecurityPolicy(_isProduction, options.Value);
     }
 
@@ -79,7 +71,6 @@ public sealed class CustomHttpHeadersMiddleware
                 context.Response.Headers.Append("Permissions-Policy", "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()");
                 context.Response.Headers.Append("Referrer-Policy", "no-referrer-when-downgrade");
                 context.Response.Headers.XContentTypeOptions = "nosniff";
-                context.Response.Headers.Append("X-Datacenter", _datacenter);
                 context.Response.Headers.Append("X-Download-Options", "noopen");
                 context.Response.Headers.XFrameOptions = "DENY";
                 context.Response.Headers.XXSSProtection = "1; mode=block";

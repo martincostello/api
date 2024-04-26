@@ -4,13 +4,13 @@
 using System.IO.Compression;
 using System.Net.Mime;
 using MartinCostello.Api.Extensions;
+using MartinCostello.Api.Middleware;
 using MartinCostello.Api.Options;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Options;
 
 namespace MartinCostello.Api;
 
@@ -28,10 +28,10 @@ public static class ApiBuilder
     /// </returns>
     public static WebApplication Configure(WebApplicationBuilder builder)
     {
-        builder.Services.AddApplicationInsightsTelemetry(builder.Configuration);
-
         builder.Services.AddOptions();
         builder.Services.Configure<SiteOptions>(builder.Configuration.GetSection("Site"));
+
+        builder.Services.AddTelemetry(builder.Environment);
 
         builder.Services.AddAntiforgery((options) =>
         {
@@ -140,12 +140,14 @@ public static class ApiBuilder
         builder.Services.AddOpenApi();
         builder.Services.TryAddSingleton(TimeProvider.System);
 
+        builder.Logging.AddTelemetry();
+
         builder.WebHost.CaptureStartupErrors(true);
         builder.WebHost.ConfigureKestrel((p) => p.AddServerHeader = false);
 
         var app = builder.Build();
 
-        app.UseCustomHttpHeaders(app.Environment, app.Configuration, app.Services.GetRequiredService<IOptions<SiteOptions>>());
+        app.UseMiddleware<CustomHttpHeadersMiddleware>();
 
         if (!app.Environment.IsDevelopment())
         {

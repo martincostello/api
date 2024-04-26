@@ -54,7 +54,6 @@ public class ResourceTests(ApiFixture fixture) : EndToEndTest(fixture)
             "Permissions-Policy",
             "Referrer-Policy",
             "X-Content-Type-Options",
-            "X-Datacenter",
             "X-Download-Options",
             "X-Frame-Options",
             "X-Instance",

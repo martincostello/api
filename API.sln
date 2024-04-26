@@ -44,6 +44,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API.Benchmarks", "tests\API
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{FBD1DEA8-994C-4AA8-A554-876D6D6B7EAA}"
 	ProjectSection(SolutionItems) = preProject
+		.github\actionlint-matcher.json = .github\actionlint-matcher.json
 		.github\dependabot.yml = .github\dependabot.yml
 	EndProjectSection
 EndProject
@@ -52,8 +53,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 		.github\workflows\benchmark.yml = .github\workflows\benchmark.yml
 		.github\workflows\build.yml = .github\workflows\build.yml
 		.github\workflows\codeql-analysis.yml = .github\workflows\codeql-analysis.yml
-		.github\workflows\update-dotnet-sdk.yml = .github\workflows\update-dotnet-sdk.yml
-		.github\workflows\update-static-assets.yml = .github\workflows\update-static-assets.yml
+		.github\workflows\dependency-review.yml = .github\workflows\dependency-review.yml
+		.github\workflows\lint.yml = .github\workflows\lint.yml
 	EndProjectSection
 EndProject
 Global
