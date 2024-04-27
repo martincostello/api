@@ -23,6 +23,7 @@
     <ContainerTitle>$(GITHUB_REPOSITORY)</ContainerTitle>
     <ContainerVendor>$(GITHUB_REPOSITORY_OWNER)</ContainerVendor>
     <ContainerVersion>$(GITHUB_SHA)</ContainerVersion>
+    <PublishSelfContained>true</PublishSelfContained>
   </PropertyGroup>
   <ItemGroup Condition=" '$(CI)' == 'true' ">
     <ContainerLabel Include="com.docker.extension.changelog" Value="$(GITHUB_SERVER_URL)/$(GITHUB_REPOSITORY)/commit/$(GITHUB_SHA)" />
