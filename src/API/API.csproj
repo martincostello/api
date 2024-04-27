@@ -25,7 +25,6 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(CI)' == 'true' ">
     <ContainerImageTags>github-$(GITHUB_RUN_NUMBER);latest</ContainerImageTags>
-    <ContainerRegistry>$(GITHUB_REPOSITORY_OWNER).azurecr.io</ContainerRegistry>
     <ContainerRepository>$(GITHUB_REPOSITORY)</ContainerRepository>
     <ContainerTitle>$(GITHUB_REPOSITORY)</ContainerTitle>
     <ContainerVendor>$(GITHUB_REPOSITORY_OWNER)</ContainerVendor>
