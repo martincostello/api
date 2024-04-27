@@ -35,6 +35,13 @@ jobs:
     name: ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
 
+    env:
+      CONTAINER_REGISTRY: '${{ github.repository_owner }}.azurecr.io'
+      PUBLISH_CONTAINER: ${{ github.event.repository.fork == false && github.ref_name == github.event.repository.default_branch && matrix.os == 'ubuntu-latest' }}
+
+    outputs:
+      container-image: ${{ steps.publish-container.outputs.container-image }}
+
     strategy:
       fail-fast: false
       matrix:
@@ -99,77 +106,22 @@ jobs:
         path: ./artifacts/publish/API/release_${{ env.PUBLISH_RUNTIME }}
         if-no-files-found: error
 
-  publish:
-    #if: github.event.repository.fork == false && github.ref_name == github.event.repository.default_branch
-    #needs: build
-    runs-on: ubuntu-latest
-
-    environment:
-      name: production
-
-    permissions:
-      id-token: write
-
-    steps:
-
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Setup .NET SDK
-      uses: actions/setup-dotnet@v4
-
-    - name: Setup Node
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
-
-    - name: Get npm cache directory
-      id: npm-cache-dir
-      shell: pwsh
-      run: echo "dir=$(npm config get cache)" >> ${env:GITHUB_OUTPUT}
-
-    - name: Setup npm cache
-      uses: actions/cache@v4
-      id: npm-cache
-      with:
-        path: ${{ steps.npm-cache-dir.outputs.dir }}
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: ${{ runner.os }}-node-
-
-    - name: Setup NuGet cache
-      uses: actions/cache@v4
-      with:
-        path: ~/.nuget/packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/*.props') }}
-        restore-keys: ${{ runner.os }}-nuget-
-
     - name: Docker log in
       uses: azure/docker-login@v1
+      if: env.PUBLISH_CONTAINER == 'true'
       with:
-        login-server: '${{ github.repository_owner }}.azurecr.io'
+        login-server: ${{ env.CONTAINER_REGISTRY }}
         username: ${{ secrets.ACR_REGISTRY_USERNAME }}
         password: ${{ secrets.ACR_REGISTRY_PASSWORD }}
 
     - name: Publish container
+      id: publish-container
+      if: env.PUBLISH_CONTAINER == 'true'
       shell: pwsh
       run: |
-        dotnet publish ./src/API `
-          --arch x64 `
-          --os linux `
-          -p:PublishProfile=DefaultContainer
-
-    - name: Azure log in
-      uses: azure/login@v2
-      with:
-        client-id: ${{ secrets.AZURE_CLIENT_ID }}
-        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-    - name: Deploy to Azure App Service
-      uses: azure/webapps-deploy@v3
-      with:
-        app-name: 'api-martincostello'
-        images: '${{ github.repository_owner }}.azurecr.io/${{ github.repository }}:${{ github.sha }}'
+        dotnet publish ./src/API --arch x64 --os linux -p:PublishProfile=DefaultContainer
+        $containerImage = "${env:CONTAINER_REGISTRY}/${env:GITHUB_REPOSITORY}:${env:GITHUB_SHA}"
+        "container-image=${containerImage}" >> "${env:GITHUB_OUTPUT}"
 
   deploy:
     if: github.event.repository.fork == false && github.ref_name == github.event.repository.default_branch
@@ -199,10 +151,17 @@ jobs:
         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-    - name: Deploy to Azure App Service
+    - name: Deploy application to Azure App Service
       uses: azure/webapps-deploy@v3
       with:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
+
+    - name: Deploy container to Azure App Service
+      uses: azure/webapps-deploy@v3
+      if: needs.build.outputs.container-image != ''
+      with:
+        app-name: 'api-martincostello'
+        images: ${{ needs.build.outputs.container-image }}
 
   test:
     name: test-production
