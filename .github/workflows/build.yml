@@ -165,20 +165,6 @@ jobs:
         app-name: 'api-martincostello'
         images: ${{ needs.build.outputs.container-tag }}
 
-    - name: Docker log in
-      uses: azure/docker-login@v1
-      if: needs.build.outputs.container-tag != ''
-      with:
-        login-server: ${{ env.CONTAINER_REGISTRY }}
-        username: ${{ secrets.ACR_REGISTRY_USERNAME }}
-        password: ${{ secrets.ACR_REGISTRY_PASSWORD }}
-
-    - name: Tag deployed container
-      if: needs.build.outputs.container-tag != ''
-      shell: pwsh
-      run: |
-        docker tag ${{ needs.build.outputs.container-tag }} ${{ needs.build.outputs.container-image }}:deployed
-
   test:
     name: test-production
     needs: deploy
