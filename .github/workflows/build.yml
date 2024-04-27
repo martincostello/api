@@ -17,6 +17,7 @@ on:
 env:
   APPLICATION_URL_PROD: https://api.martincostello.com
   AZURE_WEBAPP_NAME: apimartincostello
+  CONTAINER_REGISTRY: '${{ github.repository_owner }}.azurecr.io'
   DOTNET_CLI_TELEMETRY_OPTOUT: true
   DOTNET_GENERATE_ASPNET_CERTIFICATE: false
   DOTNET_MULTILEVEL_LOOKUP: 0
@@ -36,11 +37,11 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     env:
-      CONTAINER_REGISTRY: '${{ github.repository_owner }}.azurecr.io'
       PUBLISH_CONTAINER: ${{ github.event.repository.fork == false && github.ref_name == github.event.repository.default_branch && matrix.os == 'ubuntu-latest' }}
 
     outputs:
       container-image: ${{ steps.publish-container.outputs.container-image }}
+      container-tag: ${{ steps.publish-container.outputs.container-tag }}
 
     strategy:
       fail-fast: false
@@ -120,8 +121,9 @@ jobs:
       shell: pwsh
       run: |
         dotnet publish ./src/API --arch x64 --os linux -p:PublishProfile=DefaultContainer
-        $containerImage = "${env:CONTAINER_REGISTRY}/${env:GITHUB_REPOSITORY}:${env:GITHUB_SHA}"
+        $containerImage = "${env:CONTAINER_REGISTRY}/${env:GITHUB_REPOSITORY}"
         "container-image=${containerImage}" >> "${env:GITHUB_OUTPUT}"
+        "container-tag=${containerImage}:github-${env:GITHUB_RUN_NUMBER}" >> "${env:GITHUB_OUTPUT}"
 
   deploy:
     if: github.event.repository.fork == false && github.ref_name == github.event.repository.default_branch
@@ -158,10 +160,24 @@ jobs:
 
     - name: Deploy container to Azure App Service
       uses: azure/webapps-deploy@v3
-      if: needs.build.outputs.container-image != ''
+      if: needs.build.outputs.container-tag != ''
       with:
         app-name: 'api-martincostello'
-        images: ${{ needs.build.outputs.container-image }}
+        images: ${{ needs.build.outputs.container-tag }}
+
+    - name: Docker log in
+      uses: azure/docker-login@v1
+      if: needs.build.outputs.container-tag != ''
+      with:
+        login-server: ${{ env.CONTAINER_REGISTRY }}
+        username: ${{ secrets.ACR_REGISTRY_USERNAME }}
+        password: ${{ secrets.ACR_REGISTRY_PASSWORD }}
+
+    - name: Tag deployed container
+      if: needs.build.outputs.container-tag != ''
+      shell: pwsh
+      run: |
+        docker tag ${{ needs.build.outputs.container-tag }} ${{ needs.build.outputs.container-image }}:deployed
 
   test:
     name: test-production
