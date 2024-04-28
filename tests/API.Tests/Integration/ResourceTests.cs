@@ -42,6 +42,7 @@ public class ResourceTests(TestServerFixture fixture, ITestOutputHelper outputHe
     [InlineData("/tools/guid?uppercase=false", MediaTypeNames.Application.Json)]
     [InlineData("/tools/guid?uppercase=true", MediaTypeNames.Application.Json)]
     [InlineData("/tools/machinekey?decryptionAlgorithm=3DES&validationAlgorithm=3DES", MediaTypeNames.Application.Json)]
+    [InlineData("/version", MediaTypeNames.Application.Json)]
     public async Task Can_Load_Resource_As_Get(string requestUri, string contentType)
     {
         // Arrange

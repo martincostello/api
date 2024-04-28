@@ -30,6 +30,7 @@ public class ResourceTests(ApiFixture fixture) : EndToEndTest(fixture)
     [InlineData("/time", MediaTypeNames.Application.Json)]
     [InlineData("/tools/guid", MediaTypeNames.Application.Json)]
     [InlineData("/tools/machinekey?decryptionAlgorithm=3DES&validationAlgorithm=3DES", MediaTypeNames.Application.Json)]
+    [InlineData("/version", MediaTypeNames.Application.Json)]
     public async Task Can_Load_Resource_As_Get(string requestUri, string contentType)
     {
         // Arrange
