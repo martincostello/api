@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <ContainerFamily>noble-chiseled</ContainerFamily>
+    <ContainerRepository>martincostello/api</ContainerRepository>
     <Description>https://api.martincostello.com/</Description>
     <EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
     <EnableRequestDelegateGenerator>true</EnableRequestDelegateGenerator>
@@ -16,10 +17,6 @@
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <TypeScriptToolsVersion>latest</TypeScriptToolsVersion>
     <UserSecretsId>api.martincostello.com</UserSecretsId>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ContainerFamily>noble-chiseled</ContainerFamily>
-    <ContainerRepository>martincostello/api</ContainerRepository>
   </PropertyGroup>
   <ItemGroup>
     <ContainerPort Include="8080" Type="tcp" />
