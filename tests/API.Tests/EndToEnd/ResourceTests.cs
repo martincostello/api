@@ -25,6 +25,7 @@ public class ResourceTests(ApiFixture fixture) : EndToEndTest(fixture)
     [InlineData("/humans.txt", MediaTypeNames.Text.Plain)]
     [InlineData("/keybase.txt", MediaTypeNames.Text.Plain)]
     [InlineData("/robots.txt", MediaTypeNames.Text.Plain)]
+    [InlineData("/robots933456.txt", MediaTypeNames.Text.Plain)]
     [InlineData("/sitemap.xml", MediaTypeNames.Text.Xml)]
     [InlineData("/swagger/api/swagger.json", MediaTypeNames.Application.Json)]
     [InlineData("/time", MediaTypeNames.Application.Json)]
