@@ -4,8 +4,7 @@
 #Requires -Version 7
 
 param(
-    [Parameter(Mandatory = $false)][switch] $SkipTests,
-    [Parameter(Mandatory = $false)][string] $Runtime = ""
+    [Parameter(Mandatory = $false)][switch] $SkipTests
 )
 
 $ErrorActionPreference = "Stop"
@@ -94,15 +93,7 @@ function DotNetTest {
 function DotNetPublish {
     param([string]$Project)
 
-    $additionalArgs = @()
-
-    if (![string]::IsNullOrEmpty($Runtime)) {
-        $additionalArgs += "--self-contained"
-        $additionalArgs += "--runtime"
-        $additionalArgs += $Runtime
-    }
-
-    & $dotnet publish $Project $additionalArgs
+    & $dotnet publish $Project
 
     if ($LASTEXITCODE -ne 0) {
         throw "dotnet publish failed with exit code $LASTEXITCODE"
