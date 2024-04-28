@@ -17,7 +17,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <!-- TODO Remove if https://github.com/dotnet/sdk/issues/40500 implemented or when no longer only in nightly -->
-    <ContainerBaseImage>mcr.microsoft.com/dotnet/nightly/runtime-deps:9.0-noble-chiseled</ContainerBaseImage>
+    <ContainerBaseImage>mcr.microsoft.com/dotnet/runtime-deps:9.0-jammy-chiseled</ContainerBaseImage>
     <ContainerFamily>noble-chiseled</ContainerFamily>
     <ContainerRepository>martincostello/api</ContainerRepository>
   </PropertyGroup>
