@@ -16,7 +16,7 @@ on:
 
 env:
   APPLICATION_URL_PROD: https://api.martincostello.com
-  AZURE_WEBAPP_NAME: apimartincostello
+  AZURE_WEBAPP_NAME: api-martincostello
   CONTAINER_REGISTRY: '${{ github.repository_owner }}.azurecr.io'
   DOTNET_CLI_TELEMETRY_OPTOUT: true
   DOTNET_GENERATE_ASPNET_CERTIFICATE: false
@@ -25,7 +25,6 @@ env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
   DOTNET_SYSTEM_CONSOLE_ALLOW_ANSI_COLOR_REDIRECTION: 1
   NUGET_XMLDOC_MODE: skip
-  PUBLISH_RUNTIME: win-x64
   TERM: xterm
 
 permissions:
@@ -90,7 +89,7 @@ jobs:
 
     - name: Build, test and publish
       shell: pwsh
-      run: ./build.ps1 -Runtime ${env:PUBLISH_RUNTIME}
+      run: ./build.ps1
 
     - uses: codecov/codecov-action@v4
       name: Upload coverage to Codecov
@@ -99,19 +98,11 @@ jobs:
         flags: ${{ matrix.codecov_os }}
         token: ${{ secrets.CODECOV_TOKEN }}
 
-    - name: Publish artifacts
-      uses: actions/upload-artifact@v4
-      if: runner.os == 'Windows' && success()
-      with:
-        name: webapp
-        path: ./artifacts/publish/API/release_${{ env.PUBLISH_RUNTIME }}
-        if-no-files-found: error
-
     - name: Docker log in
-      uses: azure/docker-login@v1
+      uses: docker/login-action@v3
       if: env.PUBLISH_CONTAINER == 'true'
       with:
-        login-server: ${{ env.CONTAINER_REGISTRY }}
+        registry: ${{ env.CONTAINER_REGISTRY }}
         username: ${{ secrets.ACR_REGISTRY_USERNAME }}
         password: ${{ secrets.ACR_REGISTRY_PASSWORD }}
 
@@ -133,7 +124,7 @@ jobs:
     if: github.event.repository.fork == false && github.ref_name == github.event.repository.default_branch
     name: deploy-production
     needs: build
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     concurrency: production_environment
 
     environment:
@@ -145,11 +136,6 @@ jobs:
 
     steps:
 
-    - name: Download artifacts
-      uses: actions/download-artifact@v4
-      with:
-        name: webapp
-
     - name: Azure log in
       uses: azure/login@v2
       with:
@@ -157,16 +143,10 @@ jobs:
         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-    - name: Deploy application to Azure App Service
+    - name: Deploy container to Azure App Service
       uses: azure/webapps-deploy@v3
       with:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
-
-    - name: Deploy container to Azure App Service
-      uses: azure/webapps-deploy@v3
-      if: needs.build.outputs.container-tag != ''
-      with:
-        app-name: 'api-martincostello'
         images: ${{ needs.build.outputs.container-tag }}
 
   test:
@@ -219,18 +199,22 @@ jobs:
         for ($i = 0; $i -lt $limit; $i++) {
           $response = $null
           try {
-            $response = Invoke-WebRequest -Uri $env:APPLICATION_URL -Method Get -UseBasicParsing
+            $response = Invoke-WebRequest -Uri "${env:APPLICATION_URL}/version" -Method Get -UseBasicParsing
           } catch {
             $response = $_.Exception.Response
           }
           if (($null -ne $response) -And ($response.StatusCode -eq 200)) {
-            $success = $true
-            break
+            $json = $response.Content | ConvertFrom-Json
+            $version = $json.applicationVersion
+            if ((-Not [string]::IsNullOrWhiteSpace($version)) -And $version.Contains(${env:GITHUB_SHA})) {
+              $success = $true
+              break
+            }
           }
           Start-Sleep -Seconds $delay
         }
         if (-Not $success) {
-          throw "$($env:APPLICATION_URL) did not return a successful status code within the time limit after $limit attempts."
+          throw "${env:APPLICATION_URL} did not return a successful status code and the expected version within the time limit after $limit attempts."
         }
 
     - name: Run end-to-end tests
