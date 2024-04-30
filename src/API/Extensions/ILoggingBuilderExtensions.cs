@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
-using Azure.Monitor.OpenTelemetry.Exporter;
 using OpenTelemetry.Logs;
 
 namespace MartinCostello.Api.Extensions;
@@ -24,11 +23,6 @@ public static class ILoggingBuilderExtensions
         {
             p.IncludeFormattedMessage = true;
             p.IncludeScopes = true;
-
-            if (TelemetryExtensions.IsAzureMonitorConfigured())
-            {
-                p.AddAzureMonitorLogExporter();
-            }
 
             if (TelemetryExtensions.IsOtlpCollectorConfigured())
             {
