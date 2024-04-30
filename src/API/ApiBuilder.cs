@@ -158,8 +158,12 @@ public static class ApiBuilder
 
         if (!app.Environment.IsDevelopment())
         {
-            app.UseHsts()
-               .UseHttpsRedirection();
+            app.UseHsts();
+
+            if (!string.Equals(app.Configuration["ForwardedHeaders_Enabled"], bool.TrueString, StringComparison.OrdinalIgnoreCase))
+            {
+                app.UseHttpsRedirection();
+            }
         }
 
         app.UseResponseCompression();
