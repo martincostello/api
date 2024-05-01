@@ -36,7 +36,8 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     env:
-      PUBLISH_CONTAINER: ${{ github.event.repository.fork == false && github.ref_name == github.event.repository.default_branch && matrix.os == 'ubuntu-latest' }}
+      #PUBLISH_CONTAINER: ${{ github.event.repository.fork == false && github.ref_name == github.event.repository.default_branch && matrix.os == 'ubuntu-latest' }}
+      PUBLISH_CONTAINER: 'true'
 
     outputs:
       container-tag: ${{ steps.publish-container.outputs.container-tag }}
@@ -126,8 +127,7 @@ jobs:
 
     - name: Attest container image
       uses: github-early-access/generate-build-provenance@main
-      #if: ${{ env.PUBLISH_CONTAINER == 'true' && steps.publish-container.outputs.container-digest != '' }}
-      if: ${{ steps.publish-container.outputs.container-digest != '' }}
+      if: ${{ env.PUBLISH_CONTAINER == 'true' && steps.publish-container.outputs.container-digest != '' }}
       with:
         push-to-registry: true
         subject-digest: ${{ steps.publish-container.outputs.container-digest }}
