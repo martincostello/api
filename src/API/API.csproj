@@ -53,6 +53,6 @@
     </ItemGroup>
   </Target>
   <Target Name="OutputImageDigest" AfterTargets="PublishContainer" Condition=" '$(GITHUB_OUTPUT)' != '' ">
-    <Exec Command="pwsh -Command %22'container-digest=$(GeneratedContainerDigest)' | Out-File -FilePath ${env:GITHUB_OUTPUT} -Append%22" />
+    <Exec Command="pwsh -Command %22'container-digest=$(GeneratedContainerDigest)' | Out-File -FilePath $(GITHUB_OUTPUT) -Append%22" />
   </Target>
 </Project>
