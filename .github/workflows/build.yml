@@ -36,8 +36,7 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     env:
-      #PUBLISH_CONTAINER: ${{ github.event.repository.fork == false && github.ref_name == github.event.repository.default_branch && matrix.os == 'ubuntu-latest' }}
-      PUBLISH_CONTAINER: ${{ github.event.repository.fork == false && matrix.os == 'ubuntu-latest' }}
+      PUBLISH_CONTAINER: ${{ github.event.repository.fork == false && github.ref_name == github.event.repository.default_branch && matrix.os == 'ubuntu-latest' }}
 
     outputs:
       container-tag: ${{ steps.publish-container.outputs.container-tag }}
