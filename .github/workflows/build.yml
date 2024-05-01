@@ -131,7 +131,7 @@ jobs:
       with:
         push-to-registry: true
         subject-digest: ${{ steps.publish-container.outputs.container-digest }}
-        subject-name: '${{ env.CONTAINER_REGISTRY }}/${{ env.GITHUB_REPOSITORY }}'
+        subject-name: '${{ env.CONTAINER_REGISTRY }}/${{ github.repository }}'
 
   deploy:
     if: github.event.repository.fork == false && github.ref_name == github.event.repository.default_branch
