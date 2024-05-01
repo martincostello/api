@@ -147,12 +147,6 @@ jobs:
         subject-digest: ${{ steps.publish-container.outputs.container-digest }}
         subject-name: ${{ steps.publish-container.outputs.container-image }}
 
-    - name: Attest SBOM for binaries
-      uses: actions/attest-sbom@v1
-      with:
-        sbom-path: ./artifacts/sbom-publish.json
-        subject-path: ./artifacts/publish
-
     - name: Attest SBOM for container
       uses: actions/attest-sbom@v1
       with:
