@@ -130,14 +130,14 @@ jobs:
       uses: anchore/sbom-action@v0
       with:
         path: ./artifacts/publish
-        output-file: ./artifacts/sbom/publish.json
+        output-file: ./artifacts/sbom-publish.json
 
     - name: Generate SBOM for container
       uses: anchore/sbom-action@v0
       if: env.PUBLISH_CONTAINER == 'true' && steps.publish-container.outputs.container-digest != ''
       with:
         image: ${{ steps.publish-container.outputs.container-tag }}
-        output-file: ./artifacts/sbom/container.json
+        output-file: ./artifacts/sbom-container.json
 
     - name: Attest container image
       uses: actions/attest-build-provenance@v1
@@ -150,14 +150,14 @@ jobs:
     - name: Attest SBOM for binaries
       uses: actions/attest-sbom@v1
       with:
-        sbom-path: ./artifacts/sbom/publish.json
+        sbom-path: ./artifacts/sbom-publish.json
         subject-path: ./artifacts/publish
 
     - name: Attest SBOM for container
       uses: actions/attest-sbom@v1
       with:
         push-to-registry: true
-        sbom-path: ./artifacts/sbom/container.json
+        sbom-path: ./artifacts/sbom-container.json
         subject-digest: ${{ steps.publish-container.outputs.container-digest }}
         subject-name: ${{ steps.publish-container.outputs.container-image }}
 
