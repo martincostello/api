@@ -120,7 +120,7 @@ jobs:
         dotnet publish ./src/API --arch x64 --os linux -p:PublishProfile=DefaultContainer
         if (-Not [string]::IsNullOrWhiteSpace(${env:CONTAINER_REGISTRY})) {
           $containerImage = "${env:CONTAINER_REGISTRY}/${env:GITHUB_REPOSITORY}".ToLowerInvariant()
-          $containerTag = "${containerImage}:github-${env:GITHUB_RUN_NUMBER}".ToLowerInvariant()
+          $containerTag = "${containerImage}:github-${env:GITHUB_RUN_NUMBER}"
           "container-image=${containerImage}" >> "${env:GITHUB_OUTPUT}"
           "container-tag=${containerTag}" >> "${env:GITHUB_OUTPUT}"
         }
