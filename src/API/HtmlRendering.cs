@@ -29,7 +29,7 @@ internal static class HtmlRendering
 
         renderingContext.Links =
             $"""
-             <link rel="swagger" href="{context.Request.Content("~/swagger/api/swagger.json")}" />
+             <link rel="swagger" href="{context.Request.Content("~/swagger/api/swagger.json", appendVersion: false)}" />
              """;
 
         renderingContext.Scripts =

@@ -73,8 +73,9 @@ public static class HttpRequestExtensions
     /// </summary>
     /// <param name="request">The <see cref="HttpRequest"/>.</param>
     /// <param name="contentPath">The virtual path of the content.</param>
+    /// <param name="appendVersion">Whether to append a version to the URL.</param>
     /// <returns>The relatve URI to the content.</returns>
-    public static string? Content(this HttpRequest request, string? contentPath)
+    public static string? Content(this HttpRequest request, string? contentPath, bool appendVersion = true)
     {
         string? result = string.Empty;
 
@@ -94,7 +95,10 @@ public static class HttpRequestExtensions
             }
         }
 
-        result += $"?v={GitMetadata.Commit}";
+        if (appendVersion)
+        {
+            result += $"?v={GitMetadata.Commit}";
+        }
 
         return result;
     }
