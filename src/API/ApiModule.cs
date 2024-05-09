@@ -8,7 +8,6 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json.Nodes;
-using MartinCostello.Api.Extensions;
 using MartinCostello.Api.Models;
 using MartinCostello.Api.OpenApi;
 using Microsoft.AspNetCore.Http.HttpResults;
