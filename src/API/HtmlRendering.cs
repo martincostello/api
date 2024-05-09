@@ -116,40 +116,22 @@ internal static class HtmlRendering
     {
         var environment = context.RequestServices.GetRequiredService<IHostEnvironment>();
 
-        // lang=html
-        return
-            $$"""
-              <!DOCTYPE html>
-              <html lang="en-gb">
-              <head prefix="og:http://ogp.me/ns#">
-                  {{Meta(context.Request, renderingContext, environment)}}
-                  {{Links(context.Request, renderingContext)}}
-                  {{renderingContext.Links}}
-                  {{renderingContext.Styles}}
-                  <script type="text/javascript">
-                      if (self == top) {
-                          document.documentElement.className = document.documentElement.className.replace(/\bjs-flash\b/, '');
-                      }
-                      else {
-                          top.location = self.location;
-                      }
-                  </script>
-              </head>
-              <body>
-                  {{Navbar(renderingContext.Options)}}
-                  <main class="container body-content">
-                      {{body}}
-                      {{Footer(renderingContext.Options)}}
-                  </main>
-                  {{Styles(context.Request)}}
-                  {{Scripts(context.Request, renderingContext.Options)}}
-                  {{renderingContext.Scripts}}
-              </body>
-              <!--
-                  Commit: {{GitMetadata.Commit}}
-              -->
-              </html>
-              """;
+        object?[] args =
+        [
+            Meta(context.Request, renderingContext, environment),
+            Links(context.Request, renderingContext),
+            renderingContext.Links,
+            renderingContext.Styles,
+            Navbar(renderingContext.Options),
+            body,
+            Footer(renderingContext.Options),
+            Styles(context.Request),
+            Scripts(context.Request, renderingContext.Options),
+            renderingContext.Scripts,
+            GitMetadata.Commit,
+        ];
+
+        return LoadTemplate("_layout", args);
     }
 
     private static string Footer(SiteOptions options)
