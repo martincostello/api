@@ -15,7 +15,7 @@
   },
   "servers": [
     {
-      "url": "https://localhost:50001"
+      "url": "https://api.martincostello.com"
     }
   ],
   "paths": {
