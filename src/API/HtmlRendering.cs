@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
+using System.Collections.Concurrent;
+using System.Text;
 using MartinCostello.Api.Extensions;
 using MartinCostello.Api.Models;
 using MartinCostello.Api.Options;
@@ -13,6 +15,8 @@ namespace MartinCostello.Api;
 /// </summary>
 internal static class HtmlRendering
 {
+    private static ConcurrentDictionary<string, CompositeFormat> Templates { get; } = new();
+
     /// <summary>
     /// Returns the HTML for the API documentation page.
     /// </summary>
@@ -32,48 +36,10 @@ internal static class HtmlRendering
              <link rel="swagger" href="{context.Request.Content("~/swagger/api/swagger.json", appendVersion: false)}" />
              """;
 
-        renderingContext.Scripts =
-            """
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.17.3/swagger-ui-bundle.min.js" integrity="sha512-utyd7bY+4W4mRdhMMFcK3/gF0cohNI6jAOl6Sxi7uQYoCM/KzcGOYTNHJgG5eWR1IKN7dQPDCJ403PiXAwOHXw==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.17.3/swagger-ui-standalone-preset.min.js" integrity="sha512-O9wzlLwJTuO3Rt8s5Dpn750A4KyhyUvG4YDgUMyFXLZ+v15MZuWsYeJfJIMWR2iwwlgIsgpkHdzr2LiBRNfn7g==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
-            """;
+        renderingContext.Scripts = LoadTemplate("docs.scripts");
+        renderingContext.Styles = LoadTemplate("docs.styles");
 
-        renderingContext.Styles =
-            """
-            <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Source+Code+Pro:300,600|Titillium+Web:400,600,700" crossorigin="anonymous" />
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.17.3/swagger-ui.min.css" integrity="sha512-+9UD8YSD9GF7FzOH38L9S6y56aYNx3R4dYbOCgvTJ2ZHpJScsahNdaMQJU/8osUiz9FPu0YZ8wdKf4evUbsGSg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-            """;
-
-        string body =
-            """
-            <h1>API Documentation</h1>
-            <div id="swagger-ui"></div>
-            <svg class="swagger-ui-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <defs>
-                    <symbol viewBox="0 0 20 20" id="unlocked">
-                        <path d="M15.8 8H14V5.6C14 2.703 12.665 1 10 1 7.334 1 6 2.703 6 5.6V6h2v-.801C8 3.754 8.797 3 10 3c1.203 0 2 .754 2 2.199V8H4c-.553 0-1 .646-1 1.199V17c0 .549.428 1.139.951 1.307l1.197.387C5.672 18.861 6.55 19 7.1 19h5.8c.549 0 1.428-.139 1.951-.307l1.196-.387c.524-.167.953-.757.953-1.306V9.199C17 8.646 16.352 8 15.8 8z"></path>
-                    </symbol>
-                    <symbol viewBox="0 0 20 20" id="locked">
-                        <path d="M15.8 8H14V5.6C14 2.703 12.665 1 10 1 7.334 1 6 2.703 6 5.6V8H4c-.553 0-1 .646-1 1.199V17c0 .549.428 1.139.951 1.307l1.197.387C5.672 18.861 6.55 19 7.1 19h5.8c.549 0 1.428-.139 1.951-.307l1.196-.387c.524-.167.953-.757.953-1.306V9.199C17 8.646 16.352 8 15.8 8zM12 8H8V5.199C8 3.754 8.797 3 10 3c1.203 0 2 .754 2 2.199V8z" />
-                    </symbol>
-                    <symbol viewBox="0 0 20 20" id="close">
-                        <path d="M14.348 14.849c-.469.469-1.229.469-1.697 0L10 11.819l-2.651 3.029c-.469.469-1.229.469-1.697 0-.469-.469-.469-1.229 0-1.697l2.758-3.15-2.759-3.152c-.469-.469-.469-1.228 0-1.697.469-.469 1.228-.469 1.697 0L10 8.183l2.651-3.031c.469-.469 1.228-.469 1.697 0 .469.469.469 1.229 0 1.697l-2.758 3.152 2.758 3.15c.469.469.469 1.229 0 1.698z" />
-                    </symbol>
-                    <symbol viewBox="0 0 20 20" id="large-arrow">
-                        <path d="M13.25 10L6.109 2.58c-.268-.27-.268-.707 0-.979.268-.27.701-.27.969 0l7.83 7.908c.268.271.268.709 0 .979l-7.83 7.908c-.268.271-.701.27-.969 0-.268-.269-.268-.707 0-.979L13.25 10z" />
-                    </symbol>
-                    <symbol viewBox="0 0 20 20" id="large-arrow-down">
-                        <path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z" />
-                    </symbol>
-                    <symbol viewBox="0 0 24 24" id="jump-to">
-                        <path d="M19 7v4H5.83l3.58-3.59L8 6l-6 6 6 6 1.41-1.41L5.83 13H21V7z" />
-                    </symbol>
-                    <symbol viewBox="0 0 24 24" id="expand">
-                        <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z" />
-                    </symbol>
-                </defs>
-            </svg>
-            """;
+        string body = LoadTemplate("docs");
 
         return Layout(context, renderingContext, body);
     }
@@ -369,6 +335,35 @@ internal static class HtmlRendering
                  </div>
              </nav>
              """;
+    }
+
+    private static string LoadTemplate(string name, params object[] args)
+    {
+        if (!Templates.TryGetValue(name, out var format))
+        {
+            var type = typeof(ApiBuilder);
+            var assembly = type.Assembly;
+
+            string resource = $"{type.Namespace}.Templates.{name}.html";
+            using var stream = assembly.GetManifestResourceStream(resource);
+
+            string template;
+
+            if (stream is null)
+            {
+                template = string.Empty;
+            }
+            else
+            {
+                using var reader = new StreamReader(stream);
+                template = reader.ReadToEnd();
+            }
+
+            format = CompositeFormat.Parse(template);
+            _ = Templates.TryAdd(name, format);
+        }
+
+        return string.Format(CultureInfo.InvariantCulture, format, args);
     }
 
     private struct RenderingContext

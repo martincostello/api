@@ -40,7 +40,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Update="coverage\**;package.json;package-lock.json;tsconfig.json" CopyToPublishDirectory="Never" />
-    <None Remove="assets\scripts\**\*.ts" />
+    <EmbeddedResource Include="Templates\**\*.html" />
+    <None Remove="assets\scripts\**\*.ts;Templates\**\*.html" />
     <TypeScriptCompile Include="assets\scripts\**\*.ts" />
   </ItemGroup>
   <Target Name="PrepublishScript" BeforeTargets="BeforeBuild">
