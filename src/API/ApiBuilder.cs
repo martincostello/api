@@ -171,16 +171,16 @@ public static class ApiBuilder
 
         app.UseResponseCompression();
 
+        if (RuntimeFeature.IsDynamicCodeSupported)
+        {
+            app.UseOpenApi();
+        }
+
         app.UseStaticFiles();
 
         app.UseRouting();
 
         app.UseCors();
-
-        if (RuntimeFeature.IsDynamicCodeSupported)
-        {
-            app.UseOpenApi();
-        }
 
         app.UseCookiePolicy(new()
         {
