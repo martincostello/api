@@ -284,19 +284,9 @@ internal static class HtmlRendering
             var assembly = type.Assembly;
 
             string resource = $"{type.Namespace}.Templates.{name}.html";
-            using var stream = assembly.GetManifestResourceStream(resource);
-
-            string template;
-
-            if (stream is null)
-            {
-                template = string.Empty;
-            }
-            else
-            {
-                using var reader = new StreamReader(stream);
-                template = reader.ReadToEnd();
-            }
+            using var stream = assembly.GetManifestResourceStream(resource) ?? throw new ArgumentException($"The '{name}' template cannot be found.", nameof(name));
+            using var reader = new StreamReader(stream);
+            string template = reader.ReadToEnd();
 
             format = CompositeFormat.Parse(template);
             _ = Templates.TryAdd(name, format);
