@@ -7,6 +7,7 @@
     <InvariantGlobalization>true</InvariantGlobalization>
     <OutputType>Exe</OutputType>
     <PreserveCompilationContext>true</PreserveCompilationContext>
+    <PublishAot>true</PublishAot>
     <PublishSelfContained>true</PublishSelfContained>
     <RootNamespace>MartinCostello.Api</RootNamespace>
     <TargetFramework>net8.0</TargetFramework>
