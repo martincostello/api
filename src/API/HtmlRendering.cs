@@ -55,39 +55,16 @@ internal static class HtmlRendering
     {
         var renderingContext = CreateContext(context, "Home Page");
 
-        // lang=html
-        string body =
-            $"""
-             <div class="bg-light mb-4 p-5 rounded-3">
-                 <div class="container-fluid pt-2">
-                     <h1 class="display-5 fw-bold">Martin Costello's API</h1>
-                     <p class="col-md-8 fs-4">
-                         This website is an excercise in the use of ASP.NET Core {Environment.Version.ToString(1)} for a website and REST API.
-                     </p>
-                 </div>
-             </div>
-             <div>
-                 <p>
-                     This website is hosted in <a href="https://azure.microsoft.com" rel="noopener" target="_blank" title="Microsoft Azure">Microsoft Azure</a>
-                     and the source code can be found on <a href="{renderingContext.Options.Metadata?.Repository}" rel="noopener" target="_blank" title="This application's GitHub repository">GitHub</a>.
-                 </p>
-                 <p>
-                     It is currently running {System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription}.
-                 </p>
-             </div>
-             <div class="row">
-                 <div class="col-lg-6">
-                     <h2 class="h3">Website</h2>
-                     <p>My main website.</p>
-                     <p><a id="link-website" href="{renderingContext.Options.Metadata?.Author?.Website}" class="btn btn-lg btn-primary" rel="noopener" role="button" target="_blank" title="Visit my website">Visit website »</a></p>
-                 </div>
-                 <div class="col-lg-6">
-                     <h2 class="h3">Blog</h2>
-                     <p>I occasionally blog about topics related to .NET development.</p>
-                     <p><a id="link-blog" href="{renderingContext.Options.ExternalLinks?.Blog?.AbsoluteUri}" class="btn btn-lg btn-primary" rel="noopener" role="button" target="_blank" title="Visit my blog">Visit blog »</a></p>
-                 </div>
-             </div>
-             """;
+        object?[] args =
+        [
+            Environment.Version.ToString(1),
+            renderingContext.Options.Metadata?.Repository,
+            System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription,
+            renderingContext.Options.Metadata?.Author?.Website,
+            renderingContext.Options.ExternalLinks?.Blog?.AbsoluteUri,
+        ];
+
+        string body = LoadTemplate("home", args);
 
         return Layout(context, renderingContext, body);
     }
@@ -331,7 +308,7 @@ internal static class HtmlRendering
              """;
     }
 
-    private static string LoadTemplate(string name, params object[] args)
+    private static string LoadTemplate(string name, params object?[] args)
     {
         if (!Templates.TryGetValue(name, out var format))
         {
