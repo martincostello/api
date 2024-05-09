@@ -39,6 +39,6 @@
     <CoverletOutputFormat>cobertura,json</CoverletOutputFormat>
     <Exclude>[xunit.*]*</Exclude>
     <ExcludeByAttribute>GeneratedCodeAttribute</ExcludeByAttribute>
-    <Threshold>63</Threshold>
+    <Threshold>64</Threshold>
   </PropertyGroup>
 </Project>
