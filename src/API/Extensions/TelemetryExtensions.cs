@@ -34,7 +34,7 @@ public static class TelemetryExtensions
                 (p) => p.ConnectionString = AzureMonitorConnectionString());
         }
 
-        var telemetry = services
+        services
             .AddOpenTelemetry()
             .WithMetrics((builder) =>
             {
