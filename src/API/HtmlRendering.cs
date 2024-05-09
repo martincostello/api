@@ -31,11 +31,7 @@ internal static class HtmlRendering
             "API Documentation",
             "Documentation for the resources in api.martincostello.com.");
 
-        renderingContext.Links =
-            $"""
-             <link rel="swagger" href="{context.Request.Content("~/swagger/api/swagger.json", appendVersion: false)}" />
-             """;
-
+        renderingContext.Links = $"""<link rel="swagger" href="{context.Request.Content("~/swagger/api/swagger.json", appendVersion: false)}" />""";
         renderingContext.Scripts = LoadTemplate("docs.scripts");
         renderingContext.Styles = LoadTemplate("docs.styles");
 
@@ -119,7 +115,6 @@ internal static class HtmlRendering
         string body)
     {
         var environment = context.RequestServices.GetRequiredService<IHostEnvironment>();
-        string? analyticsId = renderingContext.Options.Analytics?.Google;
 
         // lang=html
         return
@@ -146,13 +141,8 @@ internal static class HtmlRendering
                       {{body}}
                       {{Footer(renderingContext.Options)}}
                   </main>
-                  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3.3/flatly/bootstrap.min.css" integrity="sha512-qoT4KwnRpAQ9uczPsw7GunsNmhRnYwSlE2KRCUPRQHSkDuLulCtDXuC2P/P6oqr3M5hoGagUG9pgHDPkD2zCDA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-                  <link rel="stylesheet" href="{{context.Request.Content("~/assets/css/main.css")}}" />
-                  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js" integrity="sha512-7Pi/otdlbbCR+LnW+F7PwFcSDJOuUJB3OxtEHbg4vSMvzvJjde4Po1v4BR9Gdc9aXNUNFVUY+SK51wWT8WF0Gg==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
-                  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
-                  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js" integrity="sha512-jNDtFf7qgU0eH/+Z42FG4fw3w7DM/9zbgNPe3wfJlCylVDTT3IgKW5r92Vy9IHa6U50vyMz5gRByIu4YIXFtaQ==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
-                  {{(string.IsNullOrEmpty(analyticsId) ? string.Empty : $"<script src=\"https://www.googletagmanager.com/gtag/js?id={analyticsId}\" async></script>")}}
-                  <script src="{{context.Request.Content("~/assets/js/main.js")}}" defer></script>
+                  {{Styles(context.Request)}}
+                  {{Scripts(context.Request, renderingContext.Options)}}
                   {{renderingContext.Scripts}}
               </body>
               <!--
@@ -164,29 +154,19 @@ internal static class HtmlRendering
 
     private static string Footer(SiteOptions options)
     {
-        // lang=html
-        return
-            $"""
-             <hr />
-             <footer>
-                 <p>
-                     &copy; {options.Metadata?.Author?.Name} {DateTimeOffset.UtcNow.Year} |
-                     Built from
-                     <a href="{options.Metadata?.Repository}/commit/{GitMetadata.Commit}" title="View commit {GitMetadata.Commit} on GitHub">
-                         {string.Join(string.Empty, GitMetadata.Commit.Take(7))}
-                     </a>
-                     on
-                     <a href="{options.Metadata?.Repository}/tree/{GitMetadata.Branch}" title="View branch {GitMetadata.Branch} on GitHub">
-                         {GitMetadata.Branch}
-                     </a>
-                     by
-                     <a href="{options.Metadata?.Repository}/actions/runs/{GitMetadata.DeployId}" title="View deployment on GitHub">
-                         GitHub
-                     </a>
-                     <span id="build-date" data-format="YYYY-MM-DD HH:mm Z" data-timestamp="{GitMetadata.Timestamp.ToString("u", CultureInfo.InvariantCulture)}"></span>
-                 </p>
-             </footer>
-             """;
+        object?[] args =
+        [
+            options.Metadata?.Author?.Name,
+            DateTimeOffset.UtcNow.Year,
+            options.Metadata?.Repository,
+            GitMetadata.Commit,
+            string.Join(string.Empty, GitMetadata.Commit.Take(7)),
+            GitMetadata.Branch,
+            GitMetadata.DeployId,
+            GitMetadata.Timestamp.ToString("u", CultureInfo.InvariantCulture),
+        ];
+
+        return LoadTemplate("_footer", args);
     }
 
     private static string Links(HttpRequest request, RenderingContext context)
@@ -281,32 +261,38 @@ internal static class HtmlRendering
 
     private static string Navbar(SiteOptions options)
     {
-        // lang=html
-        return
-            $"""
-             <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary">
-                 <div class="container">
-                     <a id="link-home" href="/" class="navbar-brand">{options.Metadata?.Domain}</a>
-                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#site-navbar" aria-controls="site-navbar" aria-expanded="false" aria-label="Toggle navigation">
-                         <span class="navbar-toggler-icon"></span>
-                     </button>
-                     <div class="collapse navbar-collapse" id="site-navbar">
-                         <ul class="navbar-nav me-auto">
-                             <li class="nav-item">
-                                 <a id="link-docs" href="/{options.Api?.Documentation?.Location}" class="nav-link" title="My personal projects">Documentation</a>
-                             </li>
-                             <li class="nav-item">
-                                 <a id="link-blog-header" class="nav-link" href="{options.ExternalLinks?.Blog?.AbsoluteUri}" rel="noopener" target="_blank" title="My blog">Blog</a>
-                             </li>
-                             <li class="nav-item">
-                                 <a id="link-about" class="nav-link" href="{new Uri(new Uri(options.Metadata?.Author?.Website ?? string.Empty), "home/about/")}" rel="noopener" target="_blank" title="About me">About</a>
-                             </li>
-                         </ul>
-                     </div>
-                 </div>
-             </nav>
-             """;
+        object?[] args =
+        [
+            options.Metadata?.Domain,
+            options.Api?.Documentation?.Location,
+            options.ExternalLinks?.Blog?.AbsoluteUri,
+            new Uri(new Uri(options.Metadata?.Author?.Website ?? string.Empty), "home/about/"),
+        ];
+
+        return LoadTemplate("_navbar", args);
     }
+
+    private static string Scripts(HttpRequest request, SiteOptions options)
+    {
+        string? analyticsId = options.Analytics?.Google;
+        string analyticsScript = string.Empty;
+
+        if (!string.IsNullOrWhiteSpace(analyticsId))
+        {
+            analyticsScript = $"""<script src="https://www.googletagmanager.com/gtag/js?id={analyticsId}" async></script>""";
+        }
+
+        object?[] args =
+        [
+            analyticsScript,
+            request.Content("~/assets/js/main.js"),
+        ];
+
+        return LoadTemplate("_scripts", args);
+    }
+
+    private static string Styles(HttpRequest request)
+        => LoadTemplate("_styles", request.Content("~/assets/css/main.css"));
 
     private static string LoadTemplate(string name, params object?[] args)
     {
