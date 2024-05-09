@@ -117,13 +117,7 @@ internal static class HtmlRendering
 
         context.Response.StatusCode = statusCode;
 
-        // lang=html
-        string body =
-            $"""
-             <h1 class="text-danger">Error.</h1>
-             <h2 class="text-danger">An error occurred while processing your request.</h2>
-             <h3 class="text-danger">HTTP status code {statusCode}.</h3>
-             """;
+        string body = LoadTemplate("error", statusCode);
 
         return Layout(context, renderingContext, body);
     }
