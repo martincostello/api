@@ -3,6 +3,7 @@
 
 using System.IO.Compression;
 using System.Net.Mime;
+using System.Runtime.CompilerServices;
 using MartinCostello.Api.Extensions;
 using MartinCostello.Api.Middleware;
 using MartinCostello.Api.Options;
@@ -67,9 +68,6 @@ public static class ApiBuilder
                     }
                 });
         });
-
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddRazorPages();
 
         builder.Services.Configure<BrotliCompressionProviderOptions>((p) => p.Level = CompressionLevel.Fastest);
         builder.Services.Configure<GzipCompressionProviderOptions>((p) => p.Level = CompressionLevel.Fastest);
@@ -137,7 +135,12 @@ public static class ApiBuilder
             });
         }
 
-        builder.Services.AddOpenApi();
+        if (RuntimeFeature.IsDynamicCodeSupported)
+        {
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddOpenApi();
+        }
+
         builder.Services.TryAddSingleton(TimeProvider.System);
 
         builder.Logging.AddTelemetry();
@@ -168,15 +171,16 @@ public static class ApiBuilder
 
         app.UseResponseCompression();
 
+        if (RuntimeFeature.IsDynamicCodeSupported)
+        {
+            app.UseOpenApi();
+        }
+
         app.UseStaticFiles();
 
         app.UseRouting();
 
         app.UseCors();
-
-        app.MapRazorPages();
-
-        app.UseOpenApi();
 
         app.UseCookiePolicy(new()
         {
@@ -185,6 +189,26 @@ public static class ApiBuilder
         });
 
         app.MapApiEndpoints();
+
+        string[] methods = [HttpMethod.Get.Method, HttpMethod.Head.Method];
+
+        app.MapMethods("/", methods, static (HttpContext context) =>
+        {
+            string html = HtmlRendering.Home(context);
+            return Results.Extensions.Html(html);
+        }).ExcludeFromDescription();
+
+        app.MapMethods("/docs", methods, static (HttpContext context) =>
+        {
+            string html = HtmlRendering.Docs(context);
+            return Results.Extensions.Html(html);
+        }).ExcludeFromDescription();
+
+        app.MapMethods("/error", methods, static (HttpContext context) =>
+        {
+            string html = HtmlRendering.Error(context);
+            return Results.Extensions.Html(html);
+        }).ExcludeFromDescription();
 
         return app;
     }

@@ -7,6 +7,7 @@
     <InvariantGlobalization>true</InvariantGlobalization>
     <OutputType>Exe</OutputType>
     <PreserveCompilationContext>true</PreserveCompilationContext>
+    <PublishAot>true</PublishAot>
     <PublishSelfContained>true</PublishSelfContained>
     <RootNamespace>MartinCostello.Api</RootNamespace>
     <TargetFramework>net8.0</TargetFramework>
@@ -39,7 +40,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Update="coverage\**;package.json;package-lock.json;tsconfig.json" CopyToPublishDirectory="Never" />
-    <None Remove="assets\scripts\**\*.ts" />
+    <EmbeddedResource Include="Templates\**\*.html" />
+    <None Remove="assets\scripts\**\*.ts;Templates\**\*.html" />
     <TypeScriptCompile Include="assets\scripts\**\*.ts" />
   </ItemGroup>
   <Target Name="PrepublishScript" BeforeTargets="BeforeBuild">

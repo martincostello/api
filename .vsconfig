@@ -8,7 +8,6 @@
     "Microsoft.VisualStudio.Component.Roslyn.Compiler",
     "Microsoft.VisualStudio.Component.Roslyn.LanguageServices",
     "Microsoft.VisualStudio.ComponentGroup.WebToolsExtensions",
-    "Component.Microsoft.VisualStudio.RazorExtension",
     "Microsoft.VisualStudio.Component.IISExpress",
     "Microsoft.VisualStudio.Component.WebDeploy"
   ]
