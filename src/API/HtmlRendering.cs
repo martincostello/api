@@ -153,39 +153,63 @@ internal static class HtmlRendering
 
     private static string Links(HttpRequest request, RenderingContext context)
     {
-        // lang=html
-        return
-            $"""
-             <link rel="canonical" href="{context.CanonicalUri}" />
-             <link rel="manifest" href="{request.Content("~/manifest.webmanifest")}" />
-             <link rel="sitemap" type="application/xml" href="{request.Content("~/sitemap.xml")}" />
-             <link rel="shortcut icon" type="image/x-icon" href="{request.CdnContent("favicon.ico", context.Options)}" />
-             <link rel="apple-touch-icon" sizes="57x57" href="{request.CdnContent("apple-touch-icon-57x57.png", context.Options)}" />
-             <link rel="apple-touch-icon" sizes="60x60" href="{request.CdnContent("apple-touch-icon-60x60.png", context.Options)}" />
-             <link rel="apple-touch-icon" sizes="72x72" href="{request.CdnContent("apple-touch-icon-72x72.png", context.Options)}" />
-             <link rel="apple-touch-icon" sizes="76x76" href="{request.CdnContent("apple-touch-icon-76x76.png", context.Options)}" />
-             <link rel="apple-touch-icon" sizes="114x114" href="{request.CdnContent("apple-touch-icon-114x114.png", context.Options)}" />
-             <link rel="apple-touch-icon" sizes="120x120" href="{request.CdnContent("apple-touch-icon-120x120.png", context.Options)}" />
-             <link rel="apple-touch-icon" sizes="144x144" href="{request.CdnContent("apple-touch-icon-144x144.png", context.Options)}" />
-             <link rel="apple-touch-icon" sizes="152x152" href="{request.CdnContent("apple-touch-icon-152x152.png", context.Options)}" />
-             <link rel="apple-touch-icon" sizes="180x180" href="{request.CdnContent("apple-touch-icon-180x180.png", context.Options)}" />
-             <link rel="icon" type="image/png" href="{request.CdnContent("android-chrome-192x192.png", context.Options)}" sizes="192x192" />
-             <link rel="icon" type="image/png" href="{request.CdnContent("favicon-32x32.png", context.Options)}" sizes="32x32" />
-             <link rel="icon" type="image/png" href="{request.CdnContent("favicon-96x96.png", context.Options)}" sizes="96x96" />
-             <link rel="icon" type="image/png" href="{request.CdnContent("favicon-16x16.png", context.Options)}" sizes="16x16" />
-             <link rel="dns-prefetch" href="//ajax.googleapis.com" />
-             <link rel="dns-prefetch" href="//{context.Options.ExternalLinks?.Cdn?.Host}" />
-             <link rel="dns-prefetch" href="//cdnjs.cloudflare.com" />
-             <link rel="dns-prefetch" href="//fonts.googleapis.com" />
-             <link rel="dns-prefetch" href="//fonts.gstatic.com" />
-             <link rel="dns-prefetch" href="//www.googletagmanager.com" />
-             <link rel="preconnect" href="//ajax.googleapis.com" />
-             <link rel="preconnect" href="//{context.Options.ExternalLinks?.Cdn?.Host}" />
-             <link rel="preconnect" href="//cdnjs.cloudflare.com" />
-             <link rel="preconnect" href="//fonts.googleapis.com" />
-             <link rel="preconnect" href="//fonts.gstatic.com" />
-             <link rel="preconnect" href="//www.googletagmanager.com" />
-             """;
+        var builder = new StringBuilder();
+
+        AppendLink(builder, "canonical", context.CanonicalUri);
+        AppendLink(builder, "manifest", request.Content("~/manifest.webmanifest"));
+        AppendLink(builder, "sitemap", request.Content("~/sitemap.xml"), type: "application/xml");
+        AppendLink(builder, "shortcut icon", request.CdnContent("favicon.ico", context.Options), type: "image/x-icon");
+
+        ReadOnlySpan<string> sizes = ["57", "60", "72", "76", "114", "120", "144", "152", "180"];
+
+        foreach (string size in sizes)
+        {
+            AppendLink(builder, "apple-touch-icon", request.CdnContent($"apple-touch-icon-{size}x{size}.png", context.Options), sizes: $"{size}x{size}");
+        }
+
+        AppendLink(builder, "icon", request.CdnContent("android-chrome-192x192.png", context.Options), type: "image/png", sizes: "192x192");
+
+        sizes = ["16", "32", "96"];
+
+        foreach (string size in sizes)
+        {
+            AppendLink(builder, "icon", request.CdnContent($"favicon-{size}x{size}.png", context.Options), type: "image/png", sizes: $"{size}x{size}");
+        }
+
+        ReadOnlySpan<string> domains =
+        [
+            "//ajax.googleapis.com",
+            $"//{context.Options.ExternalLinks?.Cdn?.Host}",
+            "//cdnjs.cloudflare.com",
+            "//fonts.googleapis.com",
+            "//fonts.gstatic.com",
+            "//www.googletagmanager.com",
+        ];
+
+        foreach (string domain in domains)
+        {
+            AppendLink(builder, "dns-prefetch", domain);
+            AppendLink(builder, "preconnect", domain);
+        }
+
+        return builder.ToString();
+
+        static void AppendLink(StringBuilder builder, string rel, string? href, string? type = null, string? sizes = null)
+        {
+            builder.Append($"<link rel=\"{rel}\" href=\"{href}\" ");
+
+            if (type is not null)
+            {
+                builder.Append($"type=\"{type}\" ");
+            }
+
+            if (sizes is not null)
+            {
+                builder.Append($"sizes=\"{sizes}\" ");
+            }
+
+            builder.AppendLine("/>");
+        }
     }
 
     private static string Meta(
