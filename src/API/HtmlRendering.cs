@@ -223,46 +223,65 @@ internal static class HtmlRendering
             description: context.Description,
             title: context.Title);
 
-        // lang=html
-        return
-            $"""
-             <title>{model.Title}</title>
-             <meta charset="utf-8" />
-             <meta http-equiv="cache-control" content="no-cache, no-store" />
-             <meta http-equiv="content-type" content="text/html;" />
-             <meta http-equiv="pragma" content="no-cache" />
-             <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-             <meta name="author" content="{model.Author}" />
-             <meta name="copyright" content="&copy; {model.Author} {DateTimeOffset.UtcNow.Date.Year}" />
-             <meta name="description" content="{model.Description}" />
-             <meta name="language" content="en" />
-             <meta name="keywords" content="{model.Keywords}" />
-             <meta name="referrer" content="origin-when-cross-origin" />
-             <meta name="robots" content="{model.Robots}" />
-             <meta name="theme-color" content="#ffffff" />
-             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-             <meta property="fb:profile_id" content="{model.Facebook}" />
-             <meta property="og:description" content="{model.Description}" />
-             <meta property="og:locale" content="en_GB" />
-             <meta property="og:site_name" content="{model.SiteName}" />
-             <meta property="og:title" content="{model.Title}" />
-             <meta property="og:type" content="{model.SiteType}" />
-             <meta property="og:url" content="{model.CanonicalUri}" />
-             <meta name="twitter:card" content="{model.TwitterCard}" />
-             <meta name="twitter:creator" content="{model.TwitterHandle}" />
-             <meta name="twitter:description" content="{model.Description}" />
-             <meta name="twitter:domain" content="{model.HostName}" />
-             <meta name="twitter:site" content="{model.TwitterHandle}" />
-             <meta name="twitter:title" content="{model.Title}" />
-             <meta name="twitter:url" content="{model.CanonicalUri}" />
-             <meta name="application-name" content="{model.SiteName}" />
-             <meta name="google-analytics" content="{(environment.IsProduction() ? context.Options.Analytics?.Google : string.Empty)}" />
-             <meta name="msapplication-config" content="browserconfig.xml" />
-             <meta name="msapplication-navbutton-color" content="#0095DA" />
-             <meta name="msapplication-starturl" content="/" />
-             <meta name="msapplication-TileColor" content="#2d89ef" />
-             <meta name="msapplication-TileImage" content="{request.CdnContent("mstile-144x144.png", context.Options)}" />
-             """;
+        var builder = new StringBuilder()
+            .AppendLine($"<title>{model.Title}</title>")
+            .AppendLine("<meta charset=\"utf-8\" />")
+            .AppendLine("<meta http-equiv=\"cache-control\" content=\"no-cache, no-store\" />")
+            .AppendLine("<meta http-equiv=\"content-type\" content=\"text/html;\" />")
+            .AppendLine("<meta http-equiv=\"pragma\" content=\"no-cache\" />")
+            .AppendLine("<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />");
+
+        AppendName(builder, "author", model.Author);
+        AppendName(builder, "copyright", $"&copy; {model.Author} {DateTimeOffset.UtcNow.Date.Year}");
+        AppendName(builder, "description", model.Description);
+        AppendName(builder, "language", "en");
+        AppendName(builder, "keywords", model.Keywords);
+        AppendName(builder, "referrer", "origin-when-cross-origin");
+        AppendName(builder, "robots", model.Robots);
+        AppendName(builder, "theme-color", "#ffffff");
+        AppendName(builder, "viewport", "width=device-width, initial-scale=1.0");
+
+        AppendName(builder, "twitter:card", model.TwitterCard);
+        AppendName(builder, "twitter:creator", model.TwitterHandle);
+        AppendName(builder, "twitter:description", model.Description);
+        AppendName(builder, "twitter:domain", model.HostName);
+        AppendName(builder, "twitter:site", model.TwitterHandle);
+        AppendName(builder, "twitter:title", model.Title);
+        AppendName(builder, "twitter:url", model.CanonicalUri);
+
+        AppendName(builder, "application-name", model.SiteName);
+        AppendName(builder, "google-analytics", environment.IsProduction() ? context.Options.Analytics?.Google : string.Empty);
+        AppendName(builder, "msapplication-config", "browserconfig.xml");
+        AppendName(builder, "msapplication-navbutton-color", "#0095DA");
+        AppendName(builder, "msapplication-starturl", "/");
+        AppendName(builder, "msapplication-TileColor", "#2d89ef");
+        AppendName(builder, "msapplication-TileImage", request.CdnContent("mstile-144x144.png", context.Options));
+
+        AppendProperty(builder, "fb:profile_id", model.Facebook);
+        AppendProperty(builder, "og:description", model.Description);
+        AppendProperty(builder, "og:locale", "en_GB");
+        AppendProperty(builder, "og:site_name", model.SiteName);
+        AppendProperty(builder, "og:title", model.Title);
+        AppendProperty(builder, "og:type", model.SiteType);
+        AppendProperty(builder, "og:url", model.CanonicalUri);
+
+        return builder.ToString();
+
+        static void AppendName(StringBuilder builder, string name, string? content)
+        {
+            if (content is not null)
+            {
+                builder.AppendLine($"<meta name=\"{name}\" content=\"{content}\" />");
+            }
+        }
+
+        static void AppendProperty(StringBuilder builder, string name, string? content)
+        {
+            if (content is not null)
+            {
+                builder.AppendLine($"<meta property=\"{name}\" content=\"{content}\" />");
+            }
+        }
     }
 
     private static string Navbar(SiteOptions options)
