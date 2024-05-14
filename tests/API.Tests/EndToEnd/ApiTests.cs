@@ -24,7 +24,7 @@ public class ApiTests(ApiFixture fixture) : EndToEndTest(fixture)
         response.ShouldNotBeNull();
         response.RootElement.GetProperty("timestamp").GetDateTimeOffset().ShouldBe(utcNow, tolerance);
 
-        DateTimeOffset.TryParse(response.RootElement.GetProperty("rfc1123").GetString(), out DateTimeOffset actual).ShouldBeTrue();
+        DateTimeOffset.TryParse(response.RootElement.GetProperty("rfc1123").GetString(), out var actual).ShouldBeTrue();
         actual.ShouldBe(utcNow, TimeSpan.FromSeconds(5), "rfc1123 is not a valid DateTimeOffset.");
 
         DateTimeOffset.TryParse(response.RootElement.GetProperty("universalSortable").GetString(), out actual).ShouldBeTrue();
