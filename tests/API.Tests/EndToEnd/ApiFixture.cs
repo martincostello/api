@@ -13,7 +13,7 @@ public sealed class ApiFixture
     {
         string url = Environment.GetEnvironmentVariable(WebsiteUrl) ?? string.Empty;
 
-        if (Uri.TryCreate(url, UriKind.Absolute, out Uri? address))
+        if (Uri.TryCreate(url, UriKind.Absolute, out var address))
         {
             ServerAddress = address;
         }
