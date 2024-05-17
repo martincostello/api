@@ -36,6 +36,7 @@
     <PackageReference Include="OpenTelemetry.Instrumentation.Http" />
     <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" />
     <PackageReference Include="OpenTelemetry.ResourceDetectors.Azure" />
+    <PackageReference Include="OpenTelemetry.ResourceDetectors.Container" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="coverage\**;package.json;package-lock.json;tsconfig.json" CopyToPublishDirectory="Never" />
