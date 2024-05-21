@@ -52,11 +52,11 @@ jobs:
         os: [ macos-latest, ubuntu-latest, windows-latest ]
         include:
           - os: macos-latest
-            codecov_os: macos
+            os-name: macos
           - os: ubuntu-latest
-            codecov_os: linux
+            os-name: linux
           - os: windows-latest
-            codecov_os: windows
+            os-name: windows
 
     steps:
 
@@ -99,7 +99,7 @@ jobs:
       name: Upload coverage to Codecov
       with:
         file: ./artifacts/coverage/coverage.cobertura.xml
-        flags: ${{ matrix.codecov_os }}
+        flags: ${{ matrix.os-name }}
         token: ${{ secrets.CODECOV_TOKEN }}
 
     - name: Docker log in
@@ -122,15 +122,16 @@ jobs:
     - name: Generate SBOM for binaries
       uses: anchore/sbom-action@v0
       with:
+        artifact-name: 'publish-${{ matrix.os-name }}.spdx.json'
+        output-file: ./artifacts/publish.spdx.json
         path: ./artifacts/publish
-        output-file: ./artifacts/sbom-publish.json
 
     - name: Generate SBOM for container
       uses: anchore/sbom-action@v0
       if: steps.publish-container.outputs.container-tag != ''
       with:
         image: ${{ steps.publish-container.outputs.container-tag }}
-        output-file: ./artifacts/sbom-container.json
+        output-file: ./artifacts/container.spdx.json
 
     - name: Attest container image
       uses: actions/attest-build-provenance@v1
