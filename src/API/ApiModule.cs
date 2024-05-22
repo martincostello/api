@@ -49,18 +49,29 @@ public static class ApiModule
     /// </returns>
     public static IEndpointRouteBuilder MapApiEndpoints(this IEndpointRouteBuilder builder)
     {
-        builder.MapGet("/time", GetTime)
-               .RequireCors("DefaultCorsPolicy")
-               .WithName("Time");
+        var group = builder.MapGroup(string.Empty)
+                           .WithTags("API");
 
-        builder.MapGet("/tools/guid", GenerateGuid)
-               .WithName("Guid");
+        group.MapGet("/time", GetTime)
+             .RequireCors("DefaultCorsPolicy")
+             .WithName("Time")
+             .WithSummary("Gets the current UTC time.")
+             .WithDescription("Gets the current date and time in UTC.");
 
-        builder.MapPost("/tools/hash", GenerateHash)
-               .WithName("Hash");
+        group.MapGet("/tools/guid", GenerateGuid)
+             .WithName("Guid")
+             .WithSummary("Generates a GUID.")
+             .WithDescription("Generates a new GUID in the specified format.");
 
-        builder.MapGet("/tools/machinekey", GenerateMachineKey)
-               .WithName("MachineKey");
+        group.MapPost("/tools/hash", GenerateHash)
+             .WithName("Hash")
+             .WithSummary("Hashes a string.")
+             .WithDescription("Generates a hash of some plaintext for a specified hash algorithm and returns it in the required format.");
+
+        group.MapGet("/tools/machinekey", GenerateMachineKey)
+             .WithName("MachineKey")
+             .WithSummary("Generates a machine key.")
+             .WithDescription("Generates a machine key for a Web.config configuration file for ASP.NET.");
 
         builder.MapGet("/version", static () =>
                 {
