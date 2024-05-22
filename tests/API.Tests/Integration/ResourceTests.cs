@@ -34,6 +34,7 @@ public class ResourceTests(TestServerFixture fixture, ITestOutputHelper outputHe
     [InlineData("/gss.xsl", MediaTypeNames.Text.Xml)]
     [InlineData("/humans.txt", MediaTypeNames.Text.Plain)]
     [InlineData("/keybase.txt", MediaTypeNames.Text.Plain)]
+    [InlineData("/openapi/api.json", MediaTypeNames.Application.Json)]
     [InlineData("/robots.txt", MediaTypeNames.Text.Plain)]
     [InlineData("/robots933456.txt", MediaTypeNames.Text.Plain)]
     [InlineData("/sitemap.xml", MediaTypeNames.Text.Xml)]
