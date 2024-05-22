@@ -13,15 +13,15 @@ namespace MartinCostello.Api.Extensions;
 public static class IServiceCollectionExtensions
 {
     /// <summary>
-    /// Adds OpenAPI to the services.
+    /// Adds OpenAPI documentation to the services.
     /// </summary>
-    /// <param name="value">The <see cref="IServiceCollection"/> to add the service to.</param>
+    /// <param name="services">The <see cref="IServiceCollection"/> to add OpenAPI documentation to.</param>
     /// <returns>
-    /// The value specified by <paramref name="value"/>.
+    /// The value specified by <paramref name="services"/>.
     /// </returns>
-    public static IServiceCollection AddOpenApi(this IServiceCollection value)
+    public static IServiceCollection AddOpenApiDocumentation(this IServiceCollection services)
     {
-        value.AddOpenApiDocument((options, services) =>
+        services.AddOpenApiDocument((options, services) =>
         {
             var siteOptions = services.GetRequiredService<IOptions<SiteOptions>>().Value;
 
@@ -55,6 +55,6 @@ public static class IServiceCollectionExtensions
             options.SchemaSettings.SchemaProcessors.Add(new RemoveStyleCopPrefixesProcessor());
         });
 
-        return value;
+        return services;
     }
 }

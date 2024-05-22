@@ -138,7 +138,7 @@ public static class ApiBuilder
         if (RuntimeFeature.IsDynamicCodeSupported)
         {
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddOpenApi();
+            builder.Services.AddOpenApiDocumentation();
         }
 
         builder.Services.TryAddSingleton(TimeProvider.System);
