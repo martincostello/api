@@ -80,4 +80,39 @@ public class OpenApiTests(TestServerFixture fixture, ITestOutputHelper outputHel
         var errors = actual.OpenApiDocument.Validate(ruleSet);
         errors.ShouldBeEmpty();
     }
+
+    [SkippableFact]
+    public async Task OpenApi_And_NSwag_Schemas_Should_Match()
+    {
+        Skip.If(Environment.GetEnvironmentVariable("GITHUB_ACTIONS") is "true", "The schemas currently differ quite significantly.");
+
+        // Arrange
+        using var client = Fixture.CreateClient();
+
+        // Act
+        string nswagJson = await client.GetStringAsync("/swagger/api/swagger.json");
+        string openApiJson = await client.GetStringAsync("/openapi/api.json");
+
+        // Use System.Text.Json equivalent when available.
+        // See https://github.com/fluentassertions/fluentassertions/issues/2205.
+        var expected = JToken.Parse(nswagJson);
+        var actual = JToken.Parse(openApiJson);
+
+        string[] propertiesToIgnore =
+        [
+            "servers", // Removed because the URL won't neccessarily match.
+            "components", // TODO OpenAPI current uses inline schemas
+            "openapi", // TODO NSwag uses 3.0.0 and OpenAPI uses 3.0.1
+            "tags", // TODO NSwag doesn't have document-level tags
+        ];
+
+        foreach (string property in propertiesToIgnore)
+        {
+            expected[property]?.Parent?.Remove();
+            actual[property]?.Parent?.Remove();
+        }
+
+        // Assert
+        actual.Should().BeEquivalentTo(expected);
+    }
 }
