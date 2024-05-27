@@ -12,8 +12,9 @@ env:
   TERM: xterm
 
 jobs:
-  lint:
+  scan-image:
     runs-on: ubuntu-latest
+    if: github.event.repository.fork == false
 
     permissions:
       security-events: write
