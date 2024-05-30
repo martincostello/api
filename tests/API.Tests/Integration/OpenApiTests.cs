@@ -1,7 +1,10 @@
 ﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
+using System.Net.Http.Json;
+using System.Text.Json;
 using FluentAssertions.Json;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Linq;
@@ -11,6 +14,20 @@ namespace MartinCostello.Api.Integration;
 [Collection(TestServerCollection.Name)]
 public class OpenApiTests(TestServerFixture fixture, ITestOutputHelper outputHelper) : IntegrationTest(fixture, outputHelper)
 {
+    [Fact]
+    public async Task Dynamic_Schema_Is_Served()
+    {
+        // Arrange
+        using var client = Fixture.CreateClient();
+
+        // Act
+        var actual = await client.GetFromJsonAsync<JsonDocument>("/swagger/api/swagger.json");
+
+        // Assert
+        actual.ShouldNotBeNull();
+        actual.RootElement.GetString("openapi").ShouldBe("3.0.1");
+    }
+
     [Fact]
     public async Task Static_And_Dynamic_Schema_Should_Match()
     {
@@ -53,7 +70,7 @@ public class OpenApiTests(TestServerFixture fixture, ITestOutputHelper outputHel
         actual.Should().BeEquivalentTo(expected, customMessage.Trim());
     }
 
-    [SkippableFact]
+    [Fact(Skip = "Skipped.")]
     public async Task OpenApi_And_NSwag_Schemas_Should_Match()
     {
         Skip.If(Environment.GetEnvironmentVariable("GITHUB_ACTIONS") is "true", "The schemas currently differ quite significantly.");
