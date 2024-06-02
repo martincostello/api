@@ -3,13 +3,11 @@
 
 namespace MartinCostello.Api.OpenApi;
 
-#pragma warning disable CA1000
-
 /// <summary>
 /// Defines a method for obtaining examples for OpenAPI documentation.
 /// </summary>
 /// <typeparam name="T">The type of the example.</typeparam>
-public interface IExampleProvider<in T>
+public interface IExampleProvider<T>
 {
     /// <summary>
     /// Generates the example to use.
@@ -17,5 +15,5 @@ public interface IExampleProvider<in T>
     /// <returns>
     /// A <typeparamref name="T"/> that should be used as the example.
     /// </returns>
-    static abstract object GenerateExample();
+    static abstract T GenerateExample();
 }

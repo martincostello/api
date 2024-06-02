@@ -4,7 +4,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using MartinCostello.Api.OpenApi;
-using Newtonsoft.Json;
 
 namespace MartinCostello.Api.Models;
 
@@ -16,7 +15,6 @@ public sealed class HashRequest : IExampleProvider<HashRequest>
     /// <summary>
     /// Gets or sets the name of the hash algorithm to use.
     /// </summary>
-    [JsonProperty("algorithm")]
     [JsonPropertyName("algorithm")]
     [Required]
     public string Algorithm { get; set; } = string.Empty;
@@ -24,7 +22,6 @@ public sealed class HashRequest : IExampleProvider<HashRequest>
     /// <summary>
     /// Gets or sets the format in which to return the hash.
     /// </summary>
-    [JsonProperty("format")]
     [JsonPropertyName("format")]
     [Required]
     public string Format { get; set; } = string.Empty;
@@ -32,15 +29,14 @@ public sealed class HashRequest : IExampleProvider<HashRequest>
     /// <summary>
     /// Gets or sets the plaintext value to generate the hash from.
     /// </summary>
-    [JsonProperty("plaintext")]
     [JsonPropertyName("plaintext")]
     [Required]
     public string Plaintext { get; set; } = string.Empty;
 
     /// <inheritdoc/>
-    static object IExampleProvider<HashRequest>.GenerateExample()
+    static HashRequest IExampleProvider<HashRequest>.GenerateExample()
     {
-        return new HashRequest()
+        return new()
         {
             Algorithm = "sha256",
             Format = "base64",

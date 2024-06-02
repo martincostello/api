@@ -3,7 +3,6 @@
 
 using System.Text.Json.Serialization;
 using MartinCostello.Api.OpenApi;
-using Newtonsoft.Json;
 
 namespace MartinCostello.Api.Models;
 
@@ -15,14 +14,13 @@ public sealed class HashResponse : IExampleProvider<HashResponse>
     /// <summary>
     /// Gets or sets a string containing the generated hash value in the requested format.
     /// </summary>
-    [JsonProperty("hash")]
     [JsonPropertyName("hash")]
     public string Hash { get; set; } = string.Empty;
 
     /// <inheritdoc/>
-    static object IExampleProvider<HashResponse>.GenerateExample()
+    static HashResponse IExampleProvider<HashResponse>.GenerateExample()
     {
-        return new HashResponse()
+        return new()
         {
             Hash = "fTi1zSWiuvha07tbkxE4PmcaihQuswKzJNSl+6h0jGk=",
         };

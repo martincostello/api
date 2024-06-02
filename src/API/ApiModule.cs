@@ -12,7 +12,6 @@ using MartinCostello.Api.Models;
 using MartinCostello.Api.OpenApi;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using NSwag.Annotations;
 
 namespace MartinCostello.Api;
 
@@ -121,9 +120,7 @@ public static class ApiModule
         => toLower ? Convert.ToHexStringLower(bytes) : Convert.ToHexString(bytes);
 
     [OpenApiExample<TimeResponse>]
-    [OpenApiOperation("Gets the current UTC time.", "Gets the current date and time in UTC.")]
-    [OpenApiTag("API")]
-    [SwaggerResponse(StatusCodes.Status200OK, typeof(TimeResponse), Description = "The current UTC date and time.")]
+    [OpenApiResponse(StatusCodes.Status200OK, "The current UTC date and time.")]
     private static Ok<TimeResponse> GetTime(TimeProvider timeProvider)
     {
         var formatProvider = CultureInfo.InvariantCulture;
@@ -143,10 +140,8 @@ public static class ApiModule
 
     [OpenApiExample<GuidResponse>]
     [OpenApiExample<ProblemDetails, ProblemDetailsExampleProvider>]
-    [OpenApiOperation("Generates a GUID.", "Generates a new GUID in the specified format.")]
-    [OpenApiTag("API")]
-    [SwaggerResponse(StatusCodes.Status200OK, typeof(GuidResponse), Description = "A GUID was generated successfully.")]
-    [SwaggerResponse(StatusCodes.Status400BadRequest, typeof(ProblemDetails), Description = "The specified format is invalid.")]
+    [OpenApiResponse(StatusCodes.Status200OK, "A GUID was generated successfully.")]
+    [OpenApiResponse(StatusCodes.Status400BadRequest, "The specified format is invalid.")]
     private static Results<JsonHttpResult<GuidResponse>, ProblemHttpResult> GenerateGuid(
         [Description("The format for which to generate a GUID.")][OpenApiParameterExample("D")] string? format,
         [Description("Whether to return the GUID in uppercase.")] bool? uppercase)
@@ -173,10 +168,8 @@ public static class ApiModule
     [OpenApiExample<HashRequest>]
     [OpenApiExample<HashResponse>]
     [OpenApiExample<ProblemDetails, ProblemDetailsExampleProvider>]
-    [OpenApiOperation("Hashes a string.", "Generates a hash of some plaintext for a specified hash algorithm and returns it in the required format.")]
-    [OpenApiTag("API")]
-    [SwaggerResponse(StatusCodes.Status200OK, typeof(HashResponse), Description = "The hash was generated successfully.")]
-    [SwaggerResponse(StatusCodes.Status400BadRequest, typeof(ProblemDetails), Description = "The specified hash algorithm or output format is invalid.")]
+    [OpenApiResponse(StatusCodes.Status200OK, "The hash was generated successfully.")]
+    [OpenApiResponse(StatusCodes.Status400BadRequest, "The specified hash algorithm or output format is invalid.")]
     private static Results<JsonHttpResult<HashResponse>, ProblemHttpResult> GenerateHash(HashRequest? request)
     {
         if (request == null)
@@ -245,10 +238,8 @@ public static class ApiModule
 
     [OpenApiExample<MachineKeyResponse>]
     [OpenApiExample<ProblemDetails, ProblemDetailsExampleProvider>]
-    [OpenApiOperation("Generates a machine key.", "Generates a machine key for a Web.config configuration file for ASP.NET.")]
-    [OpenApiTag("API")]
-    [SwaggerResponse(StatusCodes.Status200OK, typeof(MachineKeyResponse), Description = "The machine key was generated successfully.")]
-    [SwaggerResponse(StatusCodes.Status400BadRequest, typeof(ProblemDetails), Description = "The specified decryption or validation algorithm is invalid.")]
+    [OpenApiResponse(StatusCodes.Status200OK, "The machine key was generated successfully.")]
+    [OpenApiResponse(StatusCodes.Status400BadRequest, "The specified decryption or validation algorithm is invalid.")]
     private static Results<JsonHttpResult<MachineKeyResponse>, ProblemHttpResult> GenerateMachineKey(
         [Description("The name of the decryption algorithm.")][OpenApiParameterExample("AES-256")] string? decryptionAlgorithm,
         [Description("The name of the validation algorithm.")][OpenApiParameterExample("SHA1")] string? validationAlgorithm)

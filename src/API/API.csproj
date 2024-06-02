@@ -14,6 +14,7 @@
     <PublishSelfContained>true</PublishSelfContained>
     <RootNamespace>MartinCostello.Api</RootNamespace>
     <TargetFramework>net9.0</TargetFramework>
+    <TrimmerSingleWarn>false</TrimmerSingleWarn>
     <Summary>Martin Costello's API</Summary>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <TypeScriptToolsVersion>latest</TypeScriptToolsVersion>
@@ -28,7 +29,6 @@
     <PackageReference Include="Microsoft.AspNetCore.AzureAppServices.HostingStartup" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
     <PackageReference Include="Microsoft.TypeScript.MSBuild" />
-    <PackageReference Include="NSwag.AspNetCore" />
     <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" />
     <PackageReference Include="OpenTelemetry.Extensions.Hosting" />
     <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" />
