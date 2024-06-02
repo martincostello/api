@@ -24,48 +24,50 @@ public static class IServiceCollectionExtensions
     /// </returns>
     public static IServiceCollection AddOpenApiDocumentation(this IServiceCollection services)
     {
+        if (!RuntimeFeature.IsDynamicCodeSupported)
+        {
+            return services;
+        }
+
         services.AddOpenApi("api", (options) =>
         {
             options.UseTransformer<OpenApiDocumentTransformer>();
         });
 
-        if (RuntimeFeature.IsDynamicCodeSupported)
+        services.AddEndpointsApiExplorer();
+        services.AddOpenApiDocument((options, services) =>
         {
-            services.AddEndpointsApiExplorer();
-            services.AddOpenApiDocument((options, services) =>
+            var siteOptions = services.GetRequiredService<IOptions<SiteOptions>>().Value;
+
+            options.DocumentName = "api";
+            options.Title = siteOptions.Metadata?.Name;
+            options.Version = string.Empty;
+
+            options.PostProcess = (document) =>
             {
-                var siteOptions = services.GetRequiredService<IOptions<SiteOptions>>().Value;
+                document.Generator = null;
 
-                options.DocumentName = "api";
-                options.Title = siteOptions.Metadata?.Name;
-                options.Version = string.Empty;
-
-                options.PostProcess = (document) =>
+                document.Info.Contact = new()
                 {
-                    document.Generator = null;
-
-                    document.Info.Contact = new()
-                    {
-                        Name = siteOptions.Metadata?.Author?.Name,
-                        Url = siteOptions.Metadata?.Author?.Website ?? string.Empty,
-                    };
-
-                    document.Info.Description = siteOptions.Metadata?.Description;
-
-                    document.Info.License = new()
-                    {
-                        Name = siteOptions.Api?.License?.Name,
-                        Url = siteOptions.Api?.License?.Url ?? string.Empty,
-                    };
-
-                    document.Info.Version = string.Empty;
+                    Name = siteOptions.Metadata?.Author?.Name,
+                    Url = siteOptions.Metadata?.Author?.Website ?? string.Empty,
                 };
 
-                options.OperationProcessors.Add(new RemoveParameterPositionProcessor());
-                options.OperationProcessors.Add(new UpdateProblemDetailsMediaTypeProvider());
-                options.SchemaSettings.SchemaProcessors.Add(new RemoveStyleCopPrefixesProcessor());
-            });
-        }
+                document.Info.Description = siteOptions.Metadata?.Description;
+
+                document.Info.License = new()
+                {
+                    Name = siteOptions.Api?.License?.Name,
+                    Url = siteOptions.Api?.License?.Url ?? string.Empty,
+                };
+
+                document.Info.Version = string.Empty;
+            };
+
+            options.OperationProcessors.Add(new RemoveParameterPositionProcessor());
+            options.OperationProcessors.Add(new UpdateProblemDetailsMediaTypeProvider());
+            options.SchemaSettings.SchemaProcessors.Add(new RemoveStyleCopPrefixesProcessor());
+        });
 
         return services;
     }
