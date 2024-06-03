@@ -83,6 +83,7 @@ jobs:
 
     - name: Publish artifacts
       uses: actions/upload-artifact@v4
+      if: ${{ !cancelled() }}
       with:
         name: artifacts
         path: ${{ steps.get-openapi-schemas.outputs.schemas-path }}
