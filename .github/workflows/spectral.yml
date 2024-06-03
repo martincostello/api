@@ -77,8 +77,6 @@ jobs:
       env:
         SCHEMAS_PATH: ${{ steps.get-openapi-schemas.outputs.schemas-path }}
       run: |
-        spectral lint "${SCHEMAS_PATH}/*.{json,yml,yaml}"
-        spectral lint "${SCHEMAS_PATH}/*.{json,yml,yaml}" --format json --output "${SCHEMAS_PATH}/spectral.json" --quiet
         spectral lint "${SCHEMAS_PATH}/*.{json,yml,yaml}" --format github-actions --output "${SCHEMAS_PATH}/spectral.json" --quiet
 
     - name: Publish artifacts
