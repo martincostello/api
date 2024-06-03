@@ -33,15 +33,11 @@ jobs:
       uses: actions/setup-dotnet@v4
 
     - name: Get OpenAPI documents
-      id: get-openapi
+      id: get-openapi-schemas
       shell: pwsh
       env:
         APPLICATION_URL: 'https://localhost:50001'
       run: |
-        Push-Location (Join-Path "src" "API")
-        npm ci
-        npm run build
-        Pop-Location
         Start-Process nohup 'dotnet run --project ./src/API/API.csproj --configuration Release /p:EnableNETAnalyzers=false /p:EnforceCodeStyleInBuild=false'
         $StatusCode = 0
         $Attempts = 0
@@ -61,24 +57,21 @@ jobs:
         If ($StatusCode -ne 200) {
           throw "Failed to successfully connect to website after $Attempts attempts."
         }
-        $openApiUrl = "${env:APPLICATION_URL}/swagger/api/swagger.json"
-        $openApi = (Invoke-WebRequest $openApiUrl -SkipCertificateCheck).Content
-        "open-api-schema=${openApi}" >> $env:GITHUB_OUTPUT
 
-    - name: Write OpenAPI documents
-      id: generate-schemas
-      shell: pwsh
-      env:
-        OPENAPI_SCHEMA: ${{ steps.get-openapi.outputs.open-api-schema }}
-      run: |
-        $artifactsPath = "${env:GITHUB_WORKSPACE}/artifacts"
+        $artifactsPath = (Join-Path ${env:GITHUB_WORKSPACE} "artifacts")
+
         if (-Not (Test-Path $artifactsPath)) {
           New-Item -Path ${artifactsPath} -ItemType Directory | Out-Null
         }
-        ${env:OPENAPI_SCHEMA} >> (Join-Path $artifactsPath "schema.json")
-        "schemas-path=${openApi}" >> $env:GITHUB_OUTPUT
+
+        $openApiUrl = "${env:APPLICATION_URL}/swagger/api/swagger.json"
+        $openApi = ((Invoke-WebRequest $openApiUrl -SkipCertificateCheck).Content | Out-String)
+
+        $openApi | Out-File -FilePath (Join-Path $artifactsPath "schema.json")
+
+        "schemas-path=${openApi}" >> ${env:GITHUB_OUTPUT}
 
     - name: Run Spectral
       uses: stoplightio/spectral-action@v0.8.11
       with:
-        file_glob: '${{ steps.generate-schemas.outputs.schemas-path }}/*.json'
+        file_glob: '${{ steps.get-openapi-schemas.outputs.schemas-path }}/*.json'
