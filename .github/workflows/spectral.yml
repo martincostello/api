@@ -38,6 +38,10 @@ jobs:
       env:
         APPLICATION_URL: 'https://localhost:5001'
       run: |
+        Push-Location (Join-Path "src" "API")
+        npm ci
+        npm run build
+        Pop-Location
         Start-Process nohup 'dotnet run --project ./src/API/API.csproj --configuration Release /p:EnableNETAnalyzers=false /p:EnforceCodeStyleInBuild=false'
         $StatusCode = 0
         $Attempts = 0
