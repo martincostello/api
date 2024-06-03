@@ -36,7 +36,7 @@ jobs:
       id: get-openapi
       shell: pwsh
       env:
-        APPLICATION_URL: 'https://localhost:5001'
+        APPLICATION_URL: 'https://localhost:50001'
       run: |
         Push-Location (Join-Path "src" "API")
         npm ci
