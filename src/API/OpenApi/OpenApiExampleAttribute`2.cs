@@ -30,5 +30,5 @@ public class OpenApiExampleAttribute<TSchema, TProvider> : Attribute, IOpenApiEx
 
     /// <inheritdoc/>
     IOpenApiAny IOpenApiExampleMetadata.GenerateExample(JsonSerializerOptions options)
-        => JsonFormatter.FormatAsJson(GenerateExample(), options);
+        => ExampleFormatter.AsJson(GenerateExample(), options);
 }
