@@ -7,7 +7,7 @@ using Microsoft.OpenApi.Models;
 namespace MartinCostello.Api.OpenApi;
 
 /// <summary>
-/// Represents a document processor that adds descriptions to the responses of API endpoints. This class cannot be inherited.
+/// Represents an operation processor that adds descriptions to the responses of API endpoints. This class cannot be inherited.
 /// </summary>
 internal sealed class AddResponseDescriptionTransformer : IOpenApiOperationTransformer
 {
