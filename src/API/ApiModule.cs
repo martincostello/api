@@ -181,6 +181,7 @@ public static class ApiModule
     [NSwagOpenApiExample<HashRequest>]
     [NSwagOpenApiExample<HashResponse>]
     [NSwagOpenApiExample<ProblemDetails, ProblemDetailsExampleProvider>]
+    [OpenApiExample<HashRequest>]
     [OpenApiExample<HashResponse>]
     [OpenApiExample<ProblemDetails, ProblemDetailsExampleProvider>]
     [OpenApiOperation("Hashes a string.", "Generates a hash of some plaintext for a specified hash algorithm and returns it in the required format.")]
@@ -190,7 +191,7 @@ public static class ApiModule
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest, "application/problem+json")]
     [SwaggerResponse(StatusCodes.Status200OK, typeof(HashResponse), Description = "The hash was generated successfully.")]
     [SwaggerResponse(StatusCodes.Status400BadRequest, typeof(ProblemDetails), Description = "The specified hash algorithm or output format is invalid.")]
-    private static Results<Ok<HashResponse>, ProblemHttpResult> GenerateHash([OpenApiExample<HashRequest>] HashRequest? request)
+    private static Results<Ok<HashResponse>, ProblemHttpResult> GenerateHash(HashRequest? request)
     {
         if (request == null)
         {
