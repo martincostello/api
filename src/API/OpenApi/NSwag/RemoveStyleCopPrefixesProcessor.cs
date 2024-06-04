@@ -16,7 +16,7 @@ public sealed class RemoveStyleCopPrefixesProcessor : ISchemaProcessor
     /// <inheritdoc/>
     public void Process(SchemaProcessorContext context)
     {
-        foreach ((_, var property) in context.Schema.ActualProperties)
+        foreach (var property in context.Schema.ActualProperties.Values)
         {
             if (property.Description is not null)
             {

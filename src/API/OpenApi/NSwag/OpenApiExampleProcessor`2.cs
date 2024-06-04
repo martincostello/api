@@ -49,7 +49,7 @@ public sealed class OpenApiExampleProcessor<TSchema, TProvider> : IOperationProc
                 parameter.Example = schema.Example;
             }
 
-            foreach ((_, var response) in context.OperationDescription.Operation.Responses)
+            foreach (var response in context.OperationDescription.Operation.Responses.Values)
             {
                 foreach (var mediaType in response.Content.Values.Where((p) => p.Schema?.Reference == schema))
                 {

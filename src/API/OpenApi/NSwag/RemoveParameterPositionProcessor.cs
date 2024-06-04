@@ -15,7 +15,7 @@ public sealed class RemoveParameterPositionProcessor : IOperationProcessor
     /// <inheritdoc/>
     public bool Process(OperationProcessorContext context)
     {
-        foreach ((_, var parameter) in context.Parameters)
+        foreach (var parameter in context.Parameters.Values)
         {
             parameter.Position = null;
         }
