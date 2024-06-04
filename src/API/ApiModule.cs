@@ -49,18 +49,29 @@ public static class ApiModule
     /// </returns>
     public static IEndpointRouteBuilder MapApiEndpoints(this IEndpointRouteBuilder builder)
     {
-        builder.MapGet("/time", GetTime)
-               .RequireCors("DefaultCorsPolicy")
-               .WithName("Time");
+        var group = builder.MapGroup(string.Empty)
+                           .WithTags("API");
 
-        builder.MapGet("/tools/guid", GenerateGuid)
-               .WithName("Guid");
+        group.MapGet("/time", GetTime)
+             .RequireCors("DefaultCorsPolicy")
+             .WithName("Time")
+             .WithSummary("Gets the current UTC time.")
+             .WithDescription("Gets the current date and time in UTC.");
 
-        builder.MapPost("/tools/hash", GenerateHash)
-               .WithName("Hash");
+        group.MapGet("/tools/guid", GenerateGuid)
+             .WithName("Guid")
+             .WithSummary("Generates a GUID.")
+             .WithDescription("Generates a new GUID in the specified format.");
 
-        builder.MapGet("/tools/machinekey", GenerateMachineKey)
-               .WithName("MachineKey");
+        group.MapPost("/tools/hash", GenerateHash)
+             .WithName("Hash")
+             .WithSummary("Hashes a string.")
+             .WithDescription("Generates a hash of some plaintext for a specified hash algorithm and returns it in the required format.");
+
+        group.MapGet("/tools/machinekey", GenerateMachineKey)
+             .WithName("MachineKey")
+             .WithSummary("Generates a machine key.")
+             .WithDescription("Generates a machine key for a Web.config configuration file for ASP.NET.");
 
         builder.MapGet("/version", static () =>
                 {
@@ -133,9 +144,10 @@ public static class ApiModule
     [OpenApiExample<ProblemDetails, ProblemDetailsExampleProvider>]
     [OpenApiOperation("Generates a GUID.", "Generates a new GUID in the specified format.")]
     [OpenApiTag("API")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest, "application/problem+json")]
     [SwaggerResponse(StatusCodes.Status200OK, typeof(GuidResponse), Description = "A GUID was generated successfully.")]
     [SwaggerResponse(StatusCodes.Status400BadRequest, typeof(ProblemDetails), Description = "The specified format is invalid.")]
-    private static Results<JsonHttpResult<GuidResponse>, ProblemHttpResult> GenerateGuid(
+    private static Results<Ok<GuidResponse>, ProblemHttpResult> GenerateGuid(
         [Description("The format for which to generate a GUID.")][OpenApiParameterExample("D")] string? format,
         [Description("Whether to return the GUID in uppercase.")] bool? uppercase)
     {
@@ -155,7 +167,7 @@ public static class ApiModule
             guid = guid.ToUpperInvariant();
         }
 
-        return TypedResults.Json(new GuidResponse() { Guid = guid }, ApplicationJsonSerializerContext.Default.GuidResponse);
+        return TypedResults.Ok(new GuidResponse() { Guid = guid });
     }
 
     [OpenApiExample<HashRequest>]
@@ -163,9 +175,10 @@ public static class ApiModule
     [OpenApiExample<ProblemDetails, ProblemDetailsExampleProvider>]
     [OpenApiOperation("Hashes a string.", "Generates a hash of some plaintext for a specified hash algorithm and returns it in the required format.")]
     [OpenApiTag("API")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest, "application/problem+json")]
     [SwaggerResponse(StatusCodes.Status200OK, typeof(HashResponse), Description = "The hash was generated successfully.")]
     [SwaggerResponse(StatusCodes.Status400BadRequest, typeof(ProblemDetails), Description = "The specified hash algorithm or output format is invalid.")]
-    private static Results<JsonHttpResult<HashResponse>, ProblemHttpResult> GenerateHash(HashRequest? request)
+    private static Results<Ok<HashResponse>, ProblemHttpResult> GenerateHash(HashRequest? request)
     {
         if (request == null)
         {
@@ -230,16 +243,17 @@ public static class ApiModule
             Hash = formatAsBase64 ? Convert.ToBase64String(hash) : BytesToHexString(hash).ToLowerInvariant(),
         };
 
-        return TypedResults.Json(result, ApplicationJsonSerializerContext.Default.HashResponse);
+        return TypedResults.Ok(result);
     }
 
     [OpenApiExample<MachineKeyResponse>]
     [OpenApiExample<ProblemDetails, ProblemDetailsExampleProvider>]
     [OpenApiOperation("Generates a machine key.", "Generates a machine key for a Web.config configuration file for ASP.NET.")]
     [OpenApiTag("API")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest, "application/problem+json")]
     [SwaggerResponse(StatusCodes.Status200OK, typeof(MachineKeyResponse), Description = "The machine key was generated successfully.")]
     [SwaggerResponse(StatusCodes.Status400BadRequest, typeof(ProblemDetails), Description = "The specified decryption or validation algorithm is invalid.")]
-    private static Results<JsonHttpResult<MachineKeyResponse>, ProblemHttpResult> GenerateMachineKey(
+    private static Results<Ok<MachineKeyResponse>, ProblemHttpResult> GenerateMachineKey(
         [Description("The name of the decryption algorithm.")][OpenApiParameterExample("AES-256")] string? decryptionAlgorithm,
         [Description("The name of the validation algorithm.")][OpenApiParameterExample("SHA1")] string? validationAlgorithm)
     {
@@ -272,6 +286,6 @@ public static class ApiModule
             validationAlgorithm.Split('-', StringSplitOptions.RemoveEmptyEntries)[0].ToUpperInvariant(),
             decryptionAlgorithm.Split('-', StringSplitOptions.RemoveEmptyEntries)[0].ToUpperInvariant());
 
-        return TypedResults.Json(result, ApplicationJsonSerializerContext.Default.MachineKeyResponse);
+        return TypedResults.Ok(result);
     }
 }
