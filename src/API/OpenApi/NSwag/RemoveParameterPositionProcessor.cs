@@ -4,7 +4,7 @@
 using NSwag.Generation.Processors;
 using NSwag.Generation.Processors.Contexts;
 
-namespace MartinCostello.Api.OpenApi;
+namespace MartinCostello.Api.OpenApi.NSwag;
 
 /// <summary>
 /// A class representing a operation processor that removes

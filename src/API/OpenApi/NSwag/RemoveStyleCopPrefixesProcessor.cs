@@ -3,7 +3,7 @@
 
 using NJsonSchema.Generation;
 
-namespace MartinCostello.Api.OpenApi;
+namespace MartinCostello.Api.OpenApi.NSwag;
 
 /// <summary>
 /// A class representing a document processor that removes StyleCop
