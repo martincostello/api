@@ -6,13 +6,13 @@ using Microsoft.AspNetCore.Mvc;
 using NSwag.Generation.Processors;
 using NSwag.Generation.Processors.Contexts;
 
-namespace MartinCostello.Api.OpenApi;
+namespace MartinCostello.Api.OpenApi.NSwag;
 
 /// <summary>
 /// A class representing a operation processor that fixes the media type
 /// to use for <see cref="ProblemDetails"/>. This class cannot be inherited.
 /// </summary>
-public sealed class UpdateProblemDetailsMediaTypeProvider : IOperationProcessor
+public sealed class UpdateProblemDetailsMediaTypeProcessor : IOperationProcessor
 {
     /// <inheritdoc/>
     public bool Process(OperationProcessorContext context)

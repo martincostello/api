@@ -1,7 +1,8 @@
 ﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
-using MartinCostello.Api.OpenApi;
+using System.Runtime.CompilerServices;
+using MartinCostello.Api.OpenApi.NSwag;
 using MartinCostello.Api.Options;
 using Microsoft.Extensions.Options;
 
@@ -21,6 +22,12 @@ public static class IServiceCollectionExtensions
     /// </returns>
     public static IServiceCollection AddOpenApiDocumentation(this IServiceCollection services)
     {
+        if (!RuntimeFeature.IsDynamicCodeSupported)
+        {
+            return services;
+        }
+
+        services.AddEndpointsApiExplorer();
         services.AddOpenApiDocument((options, services) =>
         {
             var siteOptions = services.GetRequiredService<IOptions<SiteOptions>>().Value;
@@ -51,7 +58,7 @@ public static class IServiceCollectionExtensions
             };
 
             options.OperationProcessors.Add(new RemoveParameterPositionProcessor());
-            options.OperationProcessors.Add(new UpdateProblemDetailsMediaTypeProvider());
+            options.OperationProcessors.Add(new UpdateProblemDetailsMediaTypeProcessor());
             options.SchemaSettings.SchemaProcessors.Add(new RemoveStyleCopPrefixesProcessor());
         });
 

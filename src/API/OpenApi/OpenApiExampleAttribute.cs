@@ -8,10 +8,16 @@ namespace MartinCostello.Api.OpenApi;
 /// </summary>
 /// <param name="value">The example value.</param>
 [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false)]
-public sealed class OpenApiParameterExampleAttribute(object value) : Attribute
+public sealed class OpenApiExampleAttribute(string value) : OpenApiExampleAttribute<string, OpenApiExampleAttribute>, IExampleProvider<string>
 {
     /// <summary>
     /// Gets the example value.
     /// </summary>
-    public object Value { get; } = value;
+    public string Value { get; } = value;
+
+    /// <inheritdoc/>
+    static string IExampleProvider<string>.GenerateExample() => "string";
+
+    /// <inheritdoc />
+    public override string GenerateExample() => Value;
 }

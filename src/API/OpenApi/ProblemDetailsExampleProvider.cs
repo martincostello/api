@@ -11,14 +11,14 @@ namespace MartinCostello.Api.OpenApi;
 public sealed class ProblemDetailsExampleProvider : IExampleProvider<ProblemDetails>
 {
     /// <inheritdoc/>
-    public static object GenerateExample()
+    public static ProblemDetails GenerateExample()
     {
-        return new
+        return new()
         {
-            type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
-            title = "Bad Request",
-            status = StatusCodes.Status400BadRequest,
-            detail = "The specified value is invalid.",
+            Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+            Title = "Bad Request",
+            Status = StatusCodes.Status400BadRequest,
+            Detail = "The specified value is invalid.",
         };
     }
 }

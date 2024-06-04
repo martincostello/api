@@ -22,9 +22,9 @@ public sealed class GuidResponse : IExampleProvider<GuidResponse>
 #pragma warning restore CA1720
 
     /// <inheritdoc/>
-    static object IExampleProvider<GuidResponse>.GenerateExample()
+    static GuidResponse IExampleProvider<GuidResponse>.GenerateExample()
     {
-        return new GuidResponse()
+        return new()
         {
             Guid = new("6bc55a07-3d3e-4d52-8701-362a1187772d"),
         };

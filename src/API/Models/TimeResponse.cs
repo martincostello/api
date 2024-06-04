@@ -48,11 +48,11 @@ public sealed class TimeResponse : IExampleProvider<TimeResponse>
     public string UniversalFull { get; set; } = string.Empty;
 
     /// <inheritdoc/>
-    static object IExampleProvider<TimeResponse>.GenerateExample()
+    static TimeResponse IExampleProvider<TimeResponse>.GenerateExample()
     {
-        return new TimeResponse()
+        return new()
         {
-            Timestamp = new DateTimeOffset(2016, 6, 3, 18, 44, 14, TimeSpan.Zero),
+            Timestamp = new(2016, 6, 3, 18, 44, 14, TimeSpan.Zero),
             Rfc1123 = "Fri, 03 Jun 2016 18:44:14 GMT",
             UniversalFull = "Friday, 03 June 2016 18:44:14",
             UniversalSortable = "2016-06-03 18:44:14Z",
