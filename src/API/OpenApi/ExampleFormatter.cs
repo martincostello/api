@@ -7,9 +7,9 @@ using Microsoft.OpenApi.Any;
 namespace MartinCostello.Api.OpenApi;
 
 /// <summary>
-/// A class containing methods to help format JSON for OpenAPI. This class cannot be inherited.
+/// A class containing methods to help format JSON examples for OpenAPI. This class cannot be inherited.
 /// </summary>
-internal static class JsonFormatter
+internal static class ExampleFormatter
 {
     /// <summary>
     /// Formats the specified value as JSON.
@@ -20,7 +20,7 @@ internal static class JsonFormatter
     /// <returns>
     /// The <see cref="IOpenApiAny"/> to use as the example.
     /// </returns>
-    public static IOpenApiAny FormatAsJson<T>(T example, JsonSerializerOptions options)
+    public static IOpenApiAny AsJson<T>(T example, JsonSerializerOptions options)
     {
         // Apply any formatting rules configured for the API (e.g. camel casing)
         string? json = JsonSerializer.Serialize(example, options);
