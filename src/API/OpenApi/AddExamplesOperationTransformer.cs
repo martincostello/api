@@ -4,6 +4,7 @@
 using System.Reflection;
 using System.Text.Json;
 using Microsoft.AspNetCore.Http.Json;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
@@ -28,12 +29,19 @@ internal sealed class AddExamplesOperationTransformer : IOpenApiOperationTransfo
             TryAddParameterExamples(operation, context, parameters, options);
         }
 
-        if (operation.RequestBody is { } body)
-        {
-            TryAddRequestExamples(body, options);
-        }
+        var examples = context.Description.ActionDescriptor.EndpointMetadata
+            .OfType<IOpenApiExampleMetadata>()
+            .ToArray();
 
-        TryAddResponseExamples(operation, context, options);
+        if (examples.Length > 0)
+        {
+            if (operation.RequestBody is not null)
+            {
+                TryAddRequestExamples(operation, context, examples, options);
+            }
+
+            TryAddResponseExamples(operation, context, examples, options);
+        }
 
         return Task.CompletedTask;
     }
@@ -69,7 +77,6 @@ internal sealed class AddExamplesOperationTransformer : IOpenApiOperationTransfo
                     var parameter = operation.Parameters.FirstOrDefault((p) => p.Name == argument.Name);
                     if (parameter is not null)
                     {
-                        options ??= context.ApplicationServices.GetRequiredService<IOptions<JsonOptions>>().Value.SerializerOptions;
                         parameter.Example = value;
                     }
                 }
@@ -77,27 +84,42 @@ internal sealed class AddExamplesOperationTransformer : IOpenApiOperationTransfo
         }
     }
 
-    private static void TryAddRequestExamples(OpenApiRequestBody request, JsonSerializerOptions options)
+    private static void TryAddRequestExamples(
+        OpenApiOperation operation,
+        OpenApiOperationTransformerContext context,
+        IList<IOpenApiExampleMetadata> examples,
+        JsonSerializerOptions options)
     {
-        // TODO
-        ArgumentNullException.ThrowIfNull(request);
+        ArgumentNullException.ThrowIfNull(operation);
         ArgumentNullException.ThrowIfNull(options);
+
+        var schemaResponses = context.Description.ParameterDescriptions
+            .Where((p) => p.Source == BindingSource.Body)
+            .Where((p) => examples.Any((r) => r.SchemaType == p.Type))
+            .ToArray();
+
+        if (schemaResponses.Length < 1)
+        {
+            return;
+        }
+
+        var metadata = examples.FirstOrDefault((p) => p.SchemaType == schemaResponses[0].Type);
+
+        if (metadata is not null)
+        {
+            if (operation.RequestBody.Content.TryGetValue("application/json", out var mediaType))
+            {
+                mediaType.Example = metadata.GenerateExample(options);
+            }
+        }
     }
 
     private static void TryAddResponseExamples(
         OpenApiOperation operation,
         OpenApiOperationTransformerContext context,
+        IList<IOpenApiExampleMetadata> examples,
         JsonSerializerOptions options)
     {
-        var examples = context.Description.ActionDescriptor.EndpointMetadata
-            .OfType<IOpenApiExampleMetadata>()
-            .ToArray();
-
-        if (examples.Length < 1)
-        {
-            return;
-        }
-
         var schemaResponses = context.Description.SupportedResponseTypes
             .Where((p) => examples.Any((r) => r.SchemaType == p.Type))
             .ToArray();
