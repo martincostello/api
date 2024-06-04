@@ -169,7 +169,6 @@ public static class ApiBuilder
 
         if (RuntimeFeature.IsDynamicCodeSupported)
         {
-            app.UseOpenApi();
             app.MapOpenApi();
         }
 

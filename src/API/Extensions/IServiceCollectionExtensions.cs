@@ -3,10 +3,7 @@
 
 using System.Runtime.CompilerServices;
 using MartinCostello.Api.OpenApi;
-using MartinCostello.Api.OpenApi.NSwag;
-using MartinCostello.Api.Options;
 using Microsoft.AspNetCore.OpenApi;
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 
 namespace MartinCostello.Api.Extensions;
@@ -39,40 +36,6 @@ public static class IServiceCollectionExtensions
 
             // HACK See https://github.com/dotnet/aspnetcore/issues/55832
             options.UseTransformer<ScrubExtensionsTransformer>();
-        });
-
-        services.AddOpenApiDocument((options, services) =>
-        {
-            var siteOptions = services.GetRequiredService<IOptions<SiteOptions>>().Value;
-
-            options.DocumentName = "api";
-            options.Title = siteOptions.Metadata?.Name;
-            options.Version = string.Empty;
-
-            options.PostProcess = (document) =>
-            {
-                document.Generator = null;
-
-                document.Info.Contact = new()
-                {
-                    Name = siteOptions.Metadata?.Author?.Name,
-                    Url = siteOptions.Metadata?.Author?.Website ?? string.Empty,
-                };
-
-                document.Info.Description = siteOptions.Metadata?.Description;
-
-                document.Info.License = new()
-                {
-                    Name = siteOptions.Api?.License?.Name,
-                    Url = siteOptions.Api?.License?.Url ?? string.Empty,
-                };
-
-                document.Info.Version = string.Empty;
-            };
-
-            options.OperationProcessors.Add(new RemoveParameterPositionProcessor());
-            options.OperationProcessors.Add(new UpdateProblemDetailsMediaTypeProcessor());
-            options.SchemaSettings.SchemaProcessors.Add(new RemoveStyleCopPrefixesProcessor());
         });
 
         return services;
