@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 using System.Runtime.CompilerServices;
+using MartinCostello.Api.OpenApi;
 using MartinCostello.Api.OpenApi.NSwag;
 using MartinCostello.Api.Options;
 using Microsoft.AspNetCore.OpenApi;
@@ -31,7 +32,13 @@ public static class IServiceCollectionExtensions
 
         services.AddOpenApi("api", (options) =>
         {
-            options.UseTransformer<OpenApiDocumentTransformer>();
+            options.UseTransformer<AddApiInfoTransformer>();
+            options.UseTransformer<RemoveStyleCopPrefixesTransformer>();
+
+            options.UseOperationTransformer(OperationTransformers.TransformOperations);
+
+            // HACK See https://github.com/dotnet/aspnetcore/issues/55832
+            options.UseTransformer<ScrubExtensionsTransformer>();
         });
 
         services.AddEndpointsApiExplorer();
@@ -72,43 +79,19 @@ public static class IServiceCollectionExtensions
         return services;
     }
 
-    private sealed class OpenApiDocumentTransformer(IOptions<SiteOptions> options) : IOpenApiDocumentTransformer
+    private sealed class ScrubExtensionsTransformer : IOpenApiDocumentTransformer
     {
-        public async Task TransformAsync(
-            OpenApiDocument document,
-            OpenApiDocumentTransformerContext context,
-            CancellationToken cancellationToken)
+        public Task TransformAsync(OpenApiDocument document, OpenApiDocumentTransformerContext context, CancellationToken cancellationToken)
         {
-            var siteOptions = options.Value;
-
-            document.Info.Title = siteOptions.Metadata?.Name;
-            document.Info.Version = string.Empty;
-
-            document.Info.Contact = new()
+            foreach (var pathItem in document.Paths.Values)
             {
-                Name = siteOptions.Metadata?.Author?.Name,
-            };
-
-            if (siteOptions.Metadata?.Author?.Website is { } contactUrl)
-            {
-                document.Info.Contact.Url = new(contactUrl);
+                foreach (var operation in pathItem.Operations.Values)
+                {
+                    operation.Extensions.Remove("x-aspnetcore-id");
+                }
             }
 
-            document.Info.Description = siteOptions.Metadata?.Description;
-
-            document.Info.License = new()
-            {
-                Name = siteOptions.Api?.License?.Name,
-            };
-
-            if (siteOptions.Api?.License?.Url is { } licenseUrl)
-            {
-                document.Info.License.Url = new(licenseUrl);
-            }
-
-            document.Info.Version = string.Empty;
-
-            await Task.CompletedTask;
+            return Task.CompletedTask;
         }
     }
 }
