@@ -2,6 +2,8 @@
   <PropertyGroup>
     <Description>Tests for https://api.martincostello.com/</Description>
     <IsTestProject>true</IsTestProject>
+    <!-- HACK Enable when https://github.com/dotnet/aspnetcore/pull/55595 is merged -->
+    <JsonSerializerIsReflectionEnabledByDefault>true</JsonSerializerIsReflectionEnabledByDefault>
     <NoWarn>$(NoWarn);CA1707;CA1711;CA2007;CA2234;SA1600</NoWarn>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <RootNamespace>MartinCostello.Api</RootNamespace>

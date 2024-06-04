@@ -1,0 +1,104 @@
+﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
+// Licensed under the MIT license. See the LICENSE file in the project root for full license information.
+
+using System.Text.Json;
+using Microsoft.OpenApi.Any;
+
+namespace MartinCostello.Api.OpenApi;
+
+/// <summary>
+/// A class containing methods to help format JSON for OpenAPI. This class cannot be inherited.
+/// </summary>
+internal static class JsonFormatter
+{
+    /// <summary>
+    /// Formats the specified value as JSON.
+    /// </summary>
+    /// <typeparam name="T">The type of the value.</typeparam>
+    /// <param name="example">The example value to format as JSON.</param>
+    /// <param name="options">The JSON serializer options to use.</param>
+    /// <returns>
+    /// The <see cref="IOpenApiAny"/> to use as the example.
+    /// </returns>
+    public static IOpenApiAny FormatAsJson<T>(T example, JsonSerializerOptions options)
+    {
+        // Apply any formatting rules configured for the API (e.g. camel casing)
+        string? json = JsonSerializer.Serialize(example, options);
+        using var document = JsonDocument.Parse(json);
+
+        if (document.RootElement.ValueKind == JsonValueKind.String)
+        {
+            return new OpenApiString(document.RootElement.ToString());
+        }
+
+        var result = new OpenApiObject();
+
+        // Recursively build up the example from the properties of the object
+        foreach (var token in document.RootElement.EnumerateObject())
+        {
+            if (TryParse(token.Value, out var any))
+            {
+                result[token.Name] = any;
+            }
+        }
+
+        return result;
+    }
+
+    private static bool TryParse(JsonElement token, out IOpenApiAny? any)
+    {
+        any = null;
+
+        switch (token.ValueKind)
+        {
+            case JsonValueKind.Array:
+                var array = new OpenApiArray();
+
+                foreach (var value in token.EnumerateArray())
+                {
+                    if (TryParse(value, out var child))
+                    {
+                        array.Add(child);
+                    }
+                }
+
+                any = array;
+                return true;
+
+            case JsonValueKind.False:
+                any = new OpenApiBoolean(false);
+                return true;
+
+            case JsonValueKind.True:
+                any = new OpenApiBoolean(true);
+                return true;
+
+            case JsonValueKind.Number:
+                any = new OpenApiDouble(token.GetDouble());
+                return true;
+
+            case JsonValueKind.String:
+                any = new OpenApiString(token.GetString());
+                return true;
+
+            case JsonValueKind.Object:
+                var obj = new OpenApiObject();
+
+                foreach (var child in token.EnumerateObject())
+                {
+                    if (TryParse(child.Value, out var value))
+                    {
+                        obj[child.Name] = value;
+                    }
+                }
+
+                any = obj;
+                return true;
+
+            case JsonValueKind.Null:
+            case JsonValueKind.Undefined:
+            default:
+                return false;
+        }
+    }
+}
