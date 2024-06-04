@@ -97,12 +97,9 @@ internal sealed class AddExamplesOperationTransformer : IOpenApiOperationTransfo
 
         var metadata = examples.FirstOrDefault((p) => p.SchemaType == schemaResponses[0].Type);
 
-        if (metadata is not null)
+        if (metadata is not null && body.Content.TryGetValue("application/json", out var mediaType))
         {
-            if (body.Content.TryGetValue("application/json", out var mediaType))
-            {
-                mediaType.Example = metadata.GenerateExample(options);
-            }
+            mediaType.Example = metadata.GenerateExample(options);
         }
     }
 
