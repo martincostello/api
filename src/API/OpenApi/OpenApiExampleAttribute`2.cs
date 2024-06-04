@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
-using System.Diagnostics;
+using System.Reflection;
 using System.Text.Json;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.OpenApi;
@@ -28,23 +28,35 @@ public class OpenApiExampleAttribute<TSchema, TProvider> : Attribute, IOpenApiOp
         OpenApiOperationTransformerContext context,
         CancellationToken cancellationToken)
     {
+        JsonSerializerOptions? options = null;
+
         if (operation.Parameters is { Count: > 0 } parameters)
         {
-            foreach (var parameter in parameters)
-            {
-                Debug.Assert(parameter is not null, "parameter");
-                /*
-                var info = context.Description.ParameterDescriptions.FirstOrDefault((p) => p.Name == parameter.Name);
+            var methodInfo = context.Description.ActionDescriptor.EndpointMetadata
+                .OfType<MethodInfo>()
+                .FirstOrDefault();
 
-                if (info.ParameterDescriptor.GetCustomAttribute<OpenApiParameterExampleAttribute>() is { } example)
+            var arguments = methodInfo?
+                .GetParameters()
+                .ToArray();
+
+            if (arguments is { Length: > 0 })
+            {
+                foreach (var argument in arguments)
                 {
-                    parameter.Example = example.Value;
+                    var example = argument.GetCustomAttribute<OpenApiParameterExampleAttribute>();
+                    if (example?.Value is { } value)
+                    {
+                        var parameter = operation.Parameters.FirstOrDefault((p) => p.Name == argument.Name);
+                        if (parameter is not null)
+                        {
+                            options ??= context.ApplicationServices.GetRequiredService<IOptions<JsonOptions>>().Value.SerializerOptions;
+                            parameter.Example = FormatAsJson(value, options);
+                        }
+                    }
                 }
-                */
             }
         }
-
-        JsonSerializerOptions? options = null;
 
         var schemaResponses = context.Description.SupportedResponseTypes
             .Where((p) => p.Type == typeof(TSchema))
@@ -65,30 +77,10 @@ public class OpenApiExampleAttribute<TSchema, TProvider> : Attribute, IOpenApiOp
             }
         }
 
-        /*
-        if (operation.Responses.TryGetValue(typeof(TSchema).Name, out var schema))
-        {
-            schema.Example = TProvider.GenerateExample();
-
-            foreach (var parameter in context.OperationDescription.Operation.Parameters.Where((p) => p.Schema?.Reference == schema))
-            {
-                parameter.Example = schema.Example;
-            }
-
-            foreach ((_, var response) in context.OperationDescription.Operation.Responses)
-            {
-                foreach (var mediaType in response.Content.Values.Where((p) => p.Schema?.Reference == schema))
-                {
-                    mediaType.Example = schema.Example;
-                }
-            }
-        }
-        */
-
         return Task.CompletedTask;
     }
 
-    private static IOpenApiAny FormatAsJson(TSchema example, JsonSerializerOptions options)
+    private static IOpenApiAny FormatAsJson<T>(T example, JsonSerializerOptions options)
     {
         // Apply any formatting rules configured for the API (e.g. camel casing)
         string? json = JsonSerializer.Serialize(example, options);

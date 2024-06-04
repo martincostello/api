@@ -1,12 +1,10 @@
 ﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
-using System.Reflection;
 using MartinCostello.Api.OpenApi;
 using MartinCostello.Api.Options;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 
 namespace MartinCostello.Api.Extensions;
@@ -34,6 +32,9 @@ public static class IServiceCollectionExtensions
             options.UseTransformer<UpdateProblemDetailsMediaTypeTransformer>();
 
             options.UseOperationTransformer(OperationTransformers.AddResponseExamples);
+
+            // HACK See https://github.com/dotnet/aspnetcore/issues/55832
+            options.UseTransformer<ScrubExtensionsTransformer>();
         });
 
         return services;
@@ -109,32 +110,6 @@ public static class IServiceCollectionExtensions
                     foreach (var transformer in transformers)
                     {
                         await transformer.TransformAsync(document, context, cancellationToken);
-                    }
-
-                    if (operation.Parameters?.Count > 0)
-                    {
-                        var method = endpoint.ActionDescriptor.EndpointMetadata
-                            .OfType<MethodInfo>()
-                            .FirstOrDefault();
-
-                        // Get all the arguments for the method
-                        var arguments = method?.GetParameters().ToArray();
-
-                        if (arguments is not null)
-                        {
-                            foreach (var arg in arguments)
-                            {
-                                var custom = arg.GetCustomAttribute<OpenApiParameterExampleAttribute>();
-                                if (custom?.Value is { Length: > 0 } example)
-                                {
-                                    var parameter = operation.Parameters.FirstOrDefault((p) => p.Name == arg.Name);
-                                    if (parameter is not null)
-                                    {
-                                        parameter.Example = new OpenApiString(example);
-                                    }
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -262,6 +237,22 @@ public static class IServiceCollectionExtensions
                             response.Content.Remove("application/json");
                         }
                     }
+                }
+            }
+
+            return Task.CompletedTask;
+        }
+    }
+
+    private sealed class ScrubExtensionsTransformer : IOpenApiDocumentTransformer
+    {
+        public Task TransformAsync(OpenApiDocument document, OpenApiDocumentTransformerContext context, CancellationToken cancellationToken)
+        {
+            foreach (var pathItem in document.Paths.Values)
+            {
+                foreach (var operation in pathItem.Operations.Values)
+                {
+                    operation.Extensions.Remove("x-aspnetcore-id");
                 }
             }
 

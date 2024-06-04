@@ -8,10 +8,10 @@ namespace MartinCostello.Api.OpenApi;
 /// </summary>
 /// <param name="value">The example value.</param>
 [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false)]
-public sealed class OpenApiParameterExampleAttribute(string value) : Attribute
+public sealed class OpenApiParameterExampleAttribute(object value) : Attribute
 {
     /// <summary>
     /// Gets the example value.
     /// </summary>
-    public string Value { get; } = value;
+    public object Value { get; } = value;
 }
