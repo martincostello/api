@@ -12,7 +12,7 @@ using Microsoft.OpenApi.Models;
 namespace MartinCostello.Api.OpenApi;
 
 /// <summary>
-/// A class representing a operation processor that adds examples to API endpoints. This class cannot be inherited.
+/// A class representing an operation processor that adds examples to API endpoints. This class cannot be inherited.
 /// </summary>
 internal sealed class AddExamplesOperationTransformer : IOpenApiOperationTransformer
 {
@@ -26,7 +26,7 @@ internal sealed class AddExamplesOperationTransformer : IOpenApiOperationTransfo
 
         if (operation.Parameters is { Count: > 0 } parameters)
         {
-            TryAddParameterExamples(operation, context, parameters, options);
+            TryAddParameterExamples(parameters, context, options);
         }
 
         var examples = context.Description.ActionDescriptor.EndpointMetadata
@@ -35,27 +35,22 @@ internal sealed class AddExamplesOperationTransformer : IOpenApiOperationTransfo
 
         if (examples.Length > 0)
         {
-            if (operation.RequestBody is not null)
+            if (operation.RequestBody is { } body)
             {
-                TryAddRequestExamples(operation, context, examples, options);
+                TryAddRequestExamples(body, context, examples, options);
             }
 
-            TryAddResponseExamples(operation, context, examples, options);
+            TryAddResponseExamples(operation.Responses, context, examples, options);
         }
 
         return Task.CompletedTask;
     }
 
     private static void TryAddParameterExamples(
-        OpenApiOperation operation,
-        OpenApiOperationTransformerContext context,
         IList<OpenApiParameter> parameters,
+        OpenApiOperationTransformerContext context,
         JsonSerializerOptions options)
     {
-        // TODO
-        ArgumentNullException.ThrowIfNull(parameters);
-        ArgumentNullException.ThrowIfNull(options);
-
         var methodInfo = context.Description.ActionDescriptor.EndpointMetadata
             .OfType<MethodInfo>()
             .FirstOrDefault();
@@ -74,7 +69,7 @@ internal sealed class AddExamplesOperationTransformer : IOpenApiOperationTransfo
 
                 if (metadata?.GenerateExample(options) is { } value)
                 {
-                    var parameter = operation.Parameters.FirstOrDefault((p) => p.Name == argument.Name);
+                    var parameter = parameters.FirstOrDefault((p) => p.Name == argument.Name);
                     if (parameter is not null)
                     {
                         parameter.Example = value;
@@ -85,14 +80,11 @@ internal sealed class AddExamplesOperationTransformer : IOpenApiOperationTransfo
     }
 
     private static void TryAddRequestExamples(
-        OpenApiOperation operation,
+        OpenApiRequestBody body,
         OpenApiOperationTransformerContext context,
         IList<IOpenApiExampleMetadata> examples,
         JsonSerializerOptions options)
     {
-        ArgumentNullException.ThrowIfNull(operation);
-        ArgumentNullException.ThrowIfNull(options);
-
         var schemaResponses = context.Description.ParameterDescriptions
             .Where((p) => p.Source == BindingSource.Body)
             .Where((p) => examples.Any((r) => r.SchemaType == p.Type))
@@ -107,7 +99,7 @@ internal sealed class AddExamplesOperationTransformer : IOpenApiOperationTransfo
 
         if (metadata is not null)
         {
-            if (operation.RequestBody.Content.TryGetValue("application/json", out var mediaType))
+            if (body.Content.TryGetValue("application/json", out var mediaType))
             {
                 mediaType.Example = metadata.GenerateExample(options);
             }
@@ -115,7 +107,7 @@ internal sealed class AddExamplesOperationTransformer : IOpenApiOperationTransfo
     }
 
     private static void TryAddResponseExamples(
-        OpenApiOperation operation,
+        OpenApiResponses responses,
         OpenApiOperationTransformerContext context,
         IList<IOpenApiExampleMetadata> examples,
         JsonSerializerOptions options)
@@ -133,7 +125,7 @@ internal sealed class AddExamplesOperationTransformer : IOpenApiOperationTransfo
         {
             foreach (var responseFormat in schemaResponse.ApiResponseFormats)
             {
-                foreach (var response in operation.Responses.Values)
+                foreach (var response in responses.Values)
                 {
                     if (response.Content.TryGetValue(responseFormat.MediaType, out var mediaType) && mediaType.Example is null)
                     {
