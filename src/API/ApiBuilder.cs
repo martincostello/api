@@ -135,11 +135,7 @@ public static class ApiBuilder
             });
         }
 
-        if (RuntimeFeature.IsDynamicCodeSupported)
-        {
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddOpenApiDocumentation();
-        }
+        builder.Services.AddOpenApiDocumentation();
 
         builder.Services.TryAddSingleton(TimeProvider.System);
 

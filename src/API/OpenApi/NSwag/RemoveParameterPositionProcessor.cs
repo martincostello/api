@@ -4,7 +4,7 @@
 using NSwag.Generation.Processors;
 using NSwag.Generation.Processors.Contexts;
 
-namespace MartinCostello.Api.OpenApi;
+namespace MartinCostello.Api.OpenApi.NSwag;
 
 /// <summary>
 /// A class representing a operation processor that removes
@@ -15,7 +15,7 @@ public sealed class RemoveParameterPositionProcessor : IOperationProcessor
     /// <inheritdoc/>
     public bool Process(OperationProcessorContext context)
     {
-        foreach ((_, var parameter) in context.Parameters)
+        foreach (var parameter in context.Parameters.Values)
         {
             parameter.Position = null;
         }

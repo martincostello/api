@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.Json.Nodes;
 using MartinCostello.Api.Models;
 using MartinCostello.Api.OpenApi;
+using MartinCostello.Api.OpenApi.NSwag;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
@@ -119,6 +120,7 @@ public static class ApiModule
     private static string BytesToHexString(ReadOnlySpan<byte> bytes)
         => Convert.ToHexString(bytes);
 
+    [NSwagOpenApiExample<TimeResponse>]
     [OpenApiExample<TimeResponse>]
     [OpenApiOperation("Gets the current UTC time.", "Gets the current date and time in UTC.")]
     [OpenApiTag("API")]
@@ -140,6 +142,8 @@ public static class ApiModule
         return TypedResults.Ok(result);
     }
 
+    [NSwagOpenApiExample<GuidResponse>]
+    [NSwagOpenApiExample<ProblemDetails, ProblemDetailsExampleProvider>]
     [OpenApiExample<GuidResponse>]
     [OpenApiExample<ProblemDetails, ProblemDetailsExampleProvider>]
     [OpenApiOperation("Generates a GUID.", "Generates a new GUID in the specified format.")]
@@ -148,7 +152,7 @@ public static class ApiModule
     [SwaggerResponse(StatusCodes.Status200OK, typeof(GuidResponse), Description = "A GUID was generated successfully.")]
     [SwaggerResponse(StatusCodes.Status400BadRequest, typeof(ProblemDetails), Description = "The specified format is invalid.")]
     private static Results<Ok<GuidResponse>, ProblemHttpResult> GenerateGuid(
-        [Description("The format for which to generate a GUID.")][OpenApiParameterExample("D")] string? format,
+        [Description("The format for which to generate a GUID.")][OpenApiExample("D")] string? format,
         [Description("Whether to return the GUID in uppercase.")] bool? uppercase)
     {
         string guid;
@@ -170,6 +174,9 @@ public static class ApiModule
         return TypedResults.Ok(new GuidResponse() { Guid = guid });
     }
 
+    [NSwagOpenApiExample<HashRequest>]
+    [NSwagOpenApiExample<HashResponse>]
+    [NSwagOpenApiExample<ProblemDetails, ProblemDetailsExampleProvider>]
     [OpenApiExample<HashRequest>]
     [OpenApiExample<HashResponse>]
     [OpenApiExample<ProblemDetails, ProblemDetailsExampleProvider>]
@@ -246,6 +253,8 @@ public static class ApiModule
         return TypedResults.Ok(result);
     }
 
+    [NSwagOpenApiExample<MachineKeyResponse>]
+    [NSwagOpenApiExample<ProblemDetails, ProblemDetailsExampleProvider>]
     [OpenApiExample<MachineKeyResponse>]
     [OpenApiExample<ProblemDetails, ProblemDetailsExampleProvider>]
     [OpenApiOperation("Generates a machine key.", "Generates a machine key for a Web.config configuration file for ASP.NET.")]
@@ -254,8 +263,8 @@ public static class ApiModule
     [SwaggerResponse(StatusCodes.Status200OK, typeof(MachineKeyResponse), Description = "The machine key was generated successfully.")]
     [SwaggerResponse(StatusCodes.Status400BadRequest, typeof(ProblemDetails), Description = "The specified decryption or validation algorithm is invalid.")]
     private static Results<Ok<MachineKeyResponse>, ProblemHttpResult> GenerateMachineKey(
-        [Description("The name of the decryption algorithm.")][OpenApiParameterExample("AES-256")] string? decryptionAlgorithm,
-        [Description("The name of the validation algorithm.")][OpenApiParameterExample("SHA1")] string? validationAlgorithm)
+        [Description("The name of the decryption algorithm.")][OpenApiExample("AES-256")] string? decryptionAlgorithm,
+        [Description("The name of the validation algorithm.")][OpenApiExample("SHA1")] string? validationAlgorithm)
     {
         if (string.IsNullOrEmpty(decryptionAlgorithm) ||
             !HashSizes.TryGetValue(decryptionAlgorithm + "-D", out int decryptionKeyLength))
