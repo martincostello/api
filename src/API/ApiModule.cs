@@ -142,6 +142,8 @@ public static class ApiModule
     [OpenApiExample<ProblemDetails, ProblemDetailsExampleProvider>]
     [OpenApiResponse(StatusCodes.Status200OK, "A GUID was generated successfully.")]
     [OpenApiResponse(StatusCodes.Status400BadRequest, "The specified format is invalid.")]
+    [Produces<GuidResponse>]
+    [ProducesErrorResponseType(typeof(ProblemDetails))]
     private static Results<JsonHttpResult<GuidResponse>, ProblemHttpResult> GenerateGuid(
         [Description("The format for which to generate a GUID.")][OpenApiParameterExample("D")] string? format,
         [Description("Whether to return the GUID in uppercase.")] bool? uppercase)
@@ -170,6 +172,8 @@ public static class ApiModule
     [OpenApiExample<ProblemDetails, ProblemDetailsExampleProvider>]
     [OpenApiResponse(StatusCodes.Status200OK, "The hash was generated successfully.")]
     [OpenApiResponse(StatusCodes.Status400BadRequest, "The specified hash algorithm or output format is invalid.")]
+    [Produces<HashResponse>]
+    [ProducesErrorResponseType(typeof(ProblemDetails))]
     private static Results<JsonHttpResult<HashResponse>, ProblemHttpResult> GenerateHash(HashRequest? request)
     {
         if (request == null)
