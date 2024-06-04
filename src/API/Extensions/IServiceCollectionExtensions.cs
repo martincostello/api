@@ -1,10 +1,12 @@
 ﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
+using System.Reflection;
 using MartinCostello.Api.OpenApi;
 using MartinCostello.Api.Options;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 
 namespace MartinCostello.Api.Extensions;
@@ -108,36 +110,34 @@ public static class IServiceCollectionExtensions
                     {
                         await transformer.TransformAsync(document, context, cancellationToken);
                     }
-                }
-            }
 
-            /*
-            foreach ((var info, var parameter) in context.Parameters)
-            {
-                if (info.GetCustomAttribute<OpenApiParameterExampleAttribute>() is { } example)
-                {
-                    parameter.Example = example.Value;
-                }
-            }
-
-            if (context.Document.Components.Schemas.TryGetValue(typeof(TSchema).Name, out var schema))
-            {
-                schema.Example = TProvider.GenerateExample();
-
-                foreach (var parameter in context.OperationDescription.Operation.Parameters.Where((p) => p.Schema?.Reference == schema))
-                {
-                    parameter.Example = schema.Example;
-                }
-
-                foreach ((_, var response) in context.OperationDescription.Operation.Responses)
-                {
-                    foreach (var mediaType in response.Content.Values.Where((p) => p.Schema?.Reference == schema))
+                    if (operation.Parameters?.Count > 0)
                     {
-                        mediaType.Example = schema.Example;
+                        var method = endpoint.ActionDescriptor.EndpointMetadata
+                            .OfType<MethodInfo>()
+                            .FirstOrDefault();
+
+                        // Get all the arguments for the method
+                        var arguments = method?.GetParameters().ToArray();
+
+                        if (arguments is not null)
+                        {
+                            foreach (var arg in arguments)
+                            {
+                                var custom = arg.GetCustomAttribute<OpenApiParameterExampleAttribute>();
+                                if (custom?.Value is { Length: > 0 } example)
+                                {
+                                    var parameter = operation.Parameters.FirstOrDefault((p) => p.Name == arg.Name);
+                                    if (parameter is not null)
+                                    {
+                                        parameter.Example = new OpenApiString(example);
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
-            */
         }
     }
 
