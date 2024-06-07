@@ -1,0 +1,42 @@
+@inherits RazorLayoutSlice<LayoutModel>
+@inject IOptions<SiteOptions> Options
+
+@{
+    var options = Options.Value;
+    var meta = MetaModel.Create(
+        options.Metadata,
+        canonicalUri: HttpContext!.Request.Canonical(),
+        description: Model.Description,
+        title: Model.Title,
+        robots: Model.Robots);
+}
+<!DOCTYPE html>
+<html lang="en-gb">
+<head prefix="og:http://ogp.me/ns#">
+    @(await RenderPartialAsync<_Meta, MetaModel>(meta))
+    @(await RenderPartialAsync<_Links>())
+    @await RenderSectionAsync("links")
+    @await RenderSectionAsync("styles")
+    <script type="text/javascript">
+        if (self == top) {
+            document.documentElement.className = document.documentElement.className.replace(/\bjs-flash\b/, '');
+        }
+        else {
+            top.location = self.location;
+        }
+    </script>
+</head>
+<body>
+    @(await RenderPartialAsync<_Navbar>())
+    <main class="container body-content">
+        @await RenderBodyAsync()
+        @(await RenderPartialAsync<_Footer>())
+    </main>
+    @(await RenderPartialAsync<_Styles>())
+    @(await RenderPartialAsync<_Scripts>())
+    @await RenderSectionAsync("scripts")
+</body>
+<!--
+  Commit: @(GitMetadata.Commit)
+-->
+</html>

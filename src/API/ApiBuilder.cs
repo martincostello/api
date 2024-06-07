@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using MartinCostello.Api.Extensions;
 using MartinCostello.Api.Middleware;
 using MartinCostello.Api.Options;
+using MartinCostello.Api.Slices;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.ResponseCompression;
@@ -188,22 +189,23 @@ public static class ApiBuilder
 
         string[] methods = [HttpMethod.Get.Method, HttpMethod.Head.Method];
 
-        app.MapMethods("/", methods, static (HttpContext context) =>
-        {
-            string html = HtmlRendering.Home(context);
-            return Results.Extensions.Html(html);
-        }).ExcludeFromDescription();
+        app.MapMethods("/", methods, () => Results.Extensions.RazorSlice<Home>())
+           .ExcludeFromDescription();
 
-        app.MapMethods("/docs", methods, static (HttpContext context) =>
-        {
-            string html = HtmlRendering.Docs(context);
-            return Results.Extensions.Html(html);
-        }).ExcludeFromDescription();
+        app.MapMethods("/docs", methods, () => Results.Extensions.RazorSlice<Docs>())
+           .ExcludeFromDescription();
 
-        app.MapMethods("/error", methods, static (HttpContext context) =>
+        app.MapMethods("/error", methods, (int? id) =>
         {
-            string html = HtmlRendering.Error(context);
-            return Results.Extensions.Html(html);
+            int statusCode = StatusCodes.Status500InternalServerError;
+
+            if (id is { } status &&
+                status >= 400 && status < 599)
+            {
+                statusCode = status;
+            }
+
+            return Results.Extensions.RazorSlice<Error>(statusCode);
         }).ExcludeFromDescription();
 
         return app;
