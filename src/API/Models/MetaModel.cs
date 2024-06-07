@@ -86,8 +86,6 @@ public sealed class MetaModel
     /// <param name="options">The options to use.</param>
     /// <param name="canonicalUri">The optional canonical URI of the page.</param>
     /// <param name="description">The optional page description.</param>
-    /// <param name="imageUri">The optional image URI.</param>
-    /// <param name="imageAltText">The optional image alternate text.</param>
     /// <param name="robots">The optional robots value.</param>
     /// <param name="title">The optional page title.</param>
     /// <returns>
@@ -97,8 +95,6 @@ public sealed class MetaModel
         MetadataOptions? options,
         string? canonicalUri = null,
         string? description = null,
-        string? imageUri = null,
-        string? imageAltText = null,
         string? robots = null,
         string? title = null)
     {
@@ -111,8 +107,6 @@ public sealed class MetaModel
             Description = description ?? options.Description,
             Facebook = options.Author?.SocialMedia?.Facebook,
             HostName = options.Domain,
-            ImageUri = imageUri ?? string.Empty,
-            ImageAltText = imageAltText ?? string.Empty,
             Keywords = options.Keywords ?? "martin,costello,api",
             Robots = robots ?? options.Robots,
             SiteName = options.Name ?? "api.martincostello.com",

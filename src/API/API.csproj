@@ -34,11 +34,11 @@
     <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" />
     <PackageReference Include="OpenTelemetry.ResourceDetectors.Azure" />
     <PackageReference Include="OpenTelemetry.ResourceDetectors.Container" />
+    <PackageReference Include="RazorSlices" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="coverage\**;package.json;package-lock.json;tsconfig.json" CopyToPublishDirectory="Never" />
-    <EmbeddedResource Include="Templates\**\*.html" />
-    <None Remove="assets\scripts\**\*.ts;Templates\**\*.html" />
+    <None Remove="assets\scripts\**\*.ts" />
     <TypeScriptCompile Include="assets\scripts\**\*.ts" />
   </ItemGroup>
   <Target Name="PrepublishScript" BeforeTargets="BeforeBuild">

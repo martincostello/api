@@ -1,0 +1,15 @@
+@implements IUsesLayout<_Layout, LayoutModel>
+@{
+    var statusCode = HttpContext!.Response.StatusCode;
+}
+<h1 class="text-danger">Error.</h1>
+<h2 class="text-danger">@(Microsoft.AspNetCore.WebUtilities.ReasonPhrases.GetReasonPhrase(statusCode))</h2>
+<h3 class="text-danger">HTTP status code @(statusCode).</h3>
+
+@functions {
+    public LayoutModel LayoutModel { get; } = new("Error")
+    {
+        Description = string.Empty,
+        Robots = "NOINDEX",
+    };
+}

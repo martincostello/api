@@ -1,0 +1,19 @@
+@inherits RazorSliceHttpResult
+
+@using System.Globalization
+@using Microsoft.AspNetCore.Razor
+@using Microsoft.AspNetCore.Http.HttpResults
+@using Microsoft.Extensions.Configuration
+@using Microsoft.Extensions.Hosting
+@using Microsoft.Extensions.Options
+@using MartinCostello.Api
+@using MartinCostello.Api.Extensions
+@using MartinCostello.Api.Models
+@using MartinCostello.Api.Options
+@using MartinCostello.Api.Slices
+@using RazorSlices
+
+@tagHelperPrefix __disable_tagHelpers__:
+@removeTagHelper *, Microsoft.AspNetCore.Mvc.Razor
+
+@inject IOptions<SiteOptions> Options
