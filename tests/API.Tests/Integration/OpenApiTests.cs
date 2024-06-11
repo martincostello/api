@@ -15,6 +15,7 @@ namespace MartinCostello.Api.Integration;
 public class OpenApiTests(TestServerFixture fixture, ITestOutputHelper outputHelper) : IntegrationTest(fixture, outputHelper)
 {
     [Theory]
+    [InlineData("/swagger/api/openapi.json")]
     [InlineData("/swagger/api/swagger.json")]
     public async Task Static_And_Dynamic_Schema_Match(string subpath)
     {
