@@ -30,6 +30,9 @@ public static class IServiceCollectionExtensions
             return services;
         }
 
+        // TODO Remove if https://github.com/dotnet/aspnetcore/issues/56189 is implemented
+        services.AddHttpContextAccessor();
+
         services.AddOpenApi("api", (options) =>
         {
             options.UseTransformer<AddApiInfoTransformer>();
