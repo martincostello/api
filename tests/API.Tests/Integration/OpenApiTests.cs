@@ -11,12 +11,13 @@ namespace MartinCostello.Api.Integration;
 [Collection(TestServerCollection.Name)]
 public class OpenApiTests(TestServerFixture fixture, ITestOutputHelper outputHelper) : IntegrationTest(fixture, outputHelper)
 {
-    [Fact]
-    public async Task Static_And_Dynamic_Schema_Should_Match()
+    [Theory]
+    [InlineData("swagger/api/openapi.json")]
+    [InlineData("swagger/api/swagger.json")]
+    public async Task Static_And_Dynamic_Schema_Should_Match(string subpath)
     {
         // Arrange
-        var requestUri = new Uri("/swagger/api/swagger.json", UriKind.Relative);
-        string subpath = "swagger/api/swagger.json";
+        var requestUri = new Uri($"/{subpath}", UriKind.Relative);
 
         var environment = Fixture.Services.GetRequiredService<IWebHostEnvironment>();
 
