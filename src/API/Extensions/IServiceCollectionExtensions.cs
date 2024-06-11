@@ -33,6 +33,7 @@ public static class IServiceCollectionExtensions
         services.AddOpenApi("api", (options) =>
         {
             options.UseTransformer<AddApiInfoTransformer>();
+            options.UseTransformer<AddServersTransformer>();
             options.UseTransformer<RemoveStyleCopPrefixesTransformer>();
 
             options.UseOperationTransformer(OperationTransformers.TransformOperations);
