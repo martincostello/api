@@ -1,0 +1,354 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "api.martincostello.com",
+    "description": "Martin Costello's API",
+    "contact": {
+      "name": "Martin Costello",
+      "url": "https://martincostello.com/"
+    },
+    "license": {
+      "name": "This API is licensed under the MIT License.",
+      "url": "https://github.com/martincostello/api/blob/main/LICENSE"
+    },
+    "version": ""
+  },
+  "paths": {
+    "/time": {
+      "get": {
+        "tags": [
+          "API"
+        ],
+        "summary": "Gets the current UTC time.",
+        "description": "Gets the current date and time in UTC.",
+        "operationId": "Time",
+        "responses": {
+          "200": {
+            "description": "The current UTC date and time.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "timestamp": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "rfc1123": {
+                      "type": "string"
+                    },
+                    "unix": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "universalSortable": {
+                      "type": "string"
+                    },
+                    "universalFull": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "timestamp": "2016-06-03T18:44:14+00:00",
+                  "rfc1123": "Fri, 03 Jun 2016 18:44:14 GMT",
+                  "unix": 1464979454,
+                  "universalSortable": "2016-06-03 18:44:14Z",
+                  "universalFull": "Friday, 03 June 2016 18:44:14"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tools/guid": {
+      "get": {
+        "tags": [
+          "API"
+        ],
+        "summary": "Generates a GUID.",
+        "description": "Generates a new GUID in the specified format.",
+        "operationId": "Guid",
+        "parameters": [
+          {
+            "name": "format",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "description": "The format for which to generate a GUID.",
+              "nullable": true
+            },
+            "example": "D"
+          },
+          {
+            "name": "uppercase",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "description": "Whether to return the GUID in uppercase.",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A GUID was generated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "guid": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "guid": "6bc55a07-3d3e-4d52-8701-362a1187772d"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The specified format is invalid.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "title": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "status": {
+                      "type": "integer",
+                      "format": "int32",
+                      "nullable": true
+                    },
+                    "detail": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "instance": {
+                      "type": "string",
+                      "nullable": true
+                    }
+                  }
+                },
+                "example": {
+                  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                  "title": "Bad Request",
+                  "status": 400,
+                  "detail": "The specified value is invalid."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tools/hash": {
+      "post": {
+        "tags": [
+          "API"
+        ],
+        "summary": "Hashes a string.",
+        "description": "Generates a hash of some plaintext for a specified hash algorithm and returns it in the required format.",
+        "operationId": "Hash",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "algorithm": {
+                    "type": "string"
+                  },
+                  "format": {
+                    "type": "string"
+                  },
+                  "plaintext": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "algorithm": "sha256",
+                "format": "base64",
+                "plaintext": "The quick brown fox jumped over the lazy dog"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The hash was generated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "hash": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "hash": "fTi1zSWiuvha07tbkxE4PmcaihQuswKzJNSl+6h0jGk="
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The specified hash algorithm or output format is invalid.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "title": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "status": {
+                      "type": "integer",
+                      "format": "int32",
+                      "nullable": true
+                    },
+                    "detail": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "instance": {
+                      "type": "string",
+                      "nullable": true
+                    }
+                  }
+                },
+                "example": {
+                  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                  "title": "Bad Request",
+                  "status": 400,
+                  "detail": "The specified value is invalid."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tools/machinekey": {
+      "get": {
+        "tags": [
+          "API"
+        ],
+        "summary": "Generates a machine key.",
+        "description": "Generates a machine key for a Web.config configuration file for ASP.NET.",
+        "operationId": "MachineKey",
+        "parameters": [
+          {
+            "name": "decryptionAlgorithm",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "description": "The name of the decryption algorithm.",
+              "nullable": true
+            },
+            "example": "AES-256"
+          },
+          {
+            "name": "validationAlgorithm",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "description": "The name of the validation algorithm.",
+              "nullable": true
+            },
+            "example": "SHA1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The machine key was generated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "decryptionKey": {
+                      "type": "string"
+                    },
+                    "validationKey": {
+                      "type": "string"
+                    },
+                    "machineKeyXml": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "decryptionKey": "2EA72C07DEEF522B4686C39BDF83E70A96BA92EE1D960029821FCA2E4CD9FB72",
+                  "validationKey": "0A7A92827A74B9B4D2A21918814D8E4A9150BB5ADDB284533BDB50E44ADA6A4BCCFF637A5CB692816EE304121A1BCAA5A6D96BE31A213DEE0BAAEF102A391E8F",
+                  "machineKeyXml": "<machineKey validationKey=\"0A7A92827A74B9B4D2A21918814D8E4A9150BB5ADDB284533BDB50E44ADA6A4BCCFF637A5CB692816EE304121A1BCAA5A6D96BE31A213DEE0BAAEF102A391E8F\" decryptionKey=\"2EA72C07DEEF522B4686C39BDF83E70A96BA92EE1D960029821FCA2E4CD9FB72\" validation=\"SHA1\" decryption=\"AES\" />"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The specified decryption or validation algorithm is invalid.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "title": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "status": {
+                      "type": "integer",
+                      "format": "int32",
+                      "nullable": true
+                    },
+                    "detail": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "instance": {
+                      "type": "string",
+                      "nullable": true
+                    }
+                  }
+                },
+                "example": {
+                  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                  "title": "Bad Request",
+                  "status": 400,
+                  "detail": "The specified value is invalid."
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "API"
+    }
+  ]
+}
