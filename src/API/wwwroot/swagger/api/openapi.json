@@ -13,6 +13,11 @@
     },
     "version": ""
   },
+  "servers": [
+    {
+      "url": "https://api.martincostello.com"
+    }
+  ],
   "paths": {
     "/time": {
       "get": {
