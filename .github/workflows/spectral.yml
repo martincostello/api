@@ -1,0 +1,27 @@
+name: spectral
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dotnet-vnext
+      - dotnet-nightly
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  spectral:
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install Spectral
+      run: npm install -g @stoplight/spectral-cli
+
+    - name: Run Spectral
+      run: spectral lint "./src/API/wwwroot/swagger/api/swagger.json" --fail-severity warn --format github-actions
