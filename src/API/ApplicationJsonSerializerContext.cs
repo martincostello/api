@@ -9,6 +9,7 @@ using MartinCostello.Api.Models;
 namespace MartinCostello.Api;
 
 [ExcludeFromCodeCoverage]
+[JsonSerializable(typeof(bool?))]
 [JsonSerializable(typeof(GuidResponse))]
 [JsonSerializable(typeof(HashRequest))]
 [JsonSerializable(typeof(HashResponse))]
