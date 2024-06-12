@@ -64,7 +64,7 @@ public class OpenApiTests(TestServerFixture fixture, ITestOutputHelper outputHel
 
         // Act
         string nswagJson = await client.GetStringAsync("/swagger/api/swagger.json");
-        string openApiJson = await client.GetStringAsync("/openapi/api.json");
+        string openApiJson = await client.GetStringAsync("/swagger/api/openapi.json");
 
         // Use System.Text.Json equivalent when available.
         // See https://github.com/fluentassertions/fluentassertions/issues/2205.
@@ -75,8 +75,8 @@ public class OpenApiTests(TestServerFixture fixture, ITestOutputHelper outputHel
         [
             "servers", // Removed because the URL won't neccessarily match.
             "components", // TODO OpenAPI current uses inline schemas
-            "openapi", // TODO NSwag uses 3.0.0 and OpenAPI uses 3.0.1
-            "tags", // TODO NSwag doesn't have document-level tags
+            "openapi", // NSwag uses 3.0.0 and OpenAPI uses 3.0.1
+            "tags", // NSwag doesn't have document-level tags
         ];
 
         foreach (string property in propertiesToIgnore)
