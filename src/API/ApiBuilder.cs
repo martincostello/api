@@ -172,7 +172,7 @@ public static class ApiBuilder
         if (RuntimeFeature.IsDynamicCodeSupported)
         {
             app.UseOpenApi();
-            app.MapOpenApi("swagger/{documentName}/openapi.json"); // TODO Use default when NSwag removed
+            app.MapOpenApi("/swagger/{documentName}/openapi.json"); // TODO Use default when NSwag removed
         }
 
         app.UseStaticFiles();
