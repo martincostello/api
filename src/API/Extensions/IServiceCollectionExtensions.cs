@@ -5,7 +5,9 @@ using System.Runtime.CompilerServices;
 using MartinCostello.Api.OpenApi;
 using MartinCostello.Api.OpenApi.NSwag;
 using MartinCostello.Api.Options;
+using Microsoft.AspNetCore.OpenApi;
 using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
 
 namespace MartinCostello.Api.Extensions;
 
@@ -39,6 +41,9 @@ public static class IServiceCollectionExtensions
             options.UseTransformer<RemoveStyleCopPrefixesTransformer>();
 
             options.UseOperationTransformer(OperationTransformers.TransformOperations);
+
+            // HACK See https://github.com/dotnet/aspnetcore/issues/55832
+            options.UseTransformer<ScrubExtensionsTransformer>();
         });
 
         services.AddEndpointsApiExplorer();
@@ -77,5 +82,21 @@ public static class IServiceCollectionExtensions
         });
 
         return services;
+    }
+
+    private sealed class ScrubExtensionsTransformer : IOpenApiDocumentTransformer
+    {
+        public Task TransformAsync(OpenApiDocument document, OpenApiDocumentTransformerContext context, CancellationToken cancellationToken)
+        {
+            foreach (var pathItem in document.Paths.Values)
+            {
+                foreach (var operation in pathItem.Operations.Values)
+                {
+                    operation.Extensions.Remove("x-aspnetcore-id");
+                }
+            }
+
+            return Task.CompletedTask;
+        }
     }
 }
