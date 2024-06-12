@@ -175,8 +175,6 @@ public static class ApiBuilder
 
         app.UseStaticFiles();
 
-        app.UseRouting();
-
         app.UseCors();
 
         app.UseCookiePolicy(new()
