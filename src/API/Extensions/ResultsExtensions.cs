@@ -3,6 +3,7 @@
 
 using Microsoft.AspNetCore.Http.HttpResults;
 
+#pragma warning disable IDE0130
 namespace Microsoft.AspNetCore.Http;
 
 /// <summary>
