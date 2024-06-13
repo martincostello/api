@@ -180,7 +180,8 @@
                   "plaintext": {
                     "type": "string"
                   }
-                }
+                },
+                "nullable": true
               },
               "example": {
                 "algorithm": "sha256",
