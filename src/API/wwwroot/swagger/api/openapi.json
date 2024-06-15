@@ -169,6 +169,11 @@
           "content": {
             "application/json": {
               "schema": {
+                "required": [
+                  "algorithm",
+                  "format",
+                  "plaintext"
+                ],
                 "type": "object",
                 "properties": {
                   "algorithm": {
