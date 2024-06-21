@@ -3,6 +3,7 @@
 
 using System.Net.Http.Json;
 using System.Text.Json;
+using System.Xml.Linq;
 using Microsoft.AspNetCore.WebUtilities;
 
 namespace MartinCostello.Api.EndToEnd;
@@ -74,6 +75,14 @@ public class ApiTests(ApiFixture fixture) : EndToEndTest(fixture)
         response.RootElement.GetProperty("decryptionKey").GetString().ShouldNotBeNullOrWhiteSpace();
         response.RootElement.GetProperty("validationKey").GetString().ShouldNotBeNullOrWhiteSpace();
         response.RootElement.GetProperty("machineKeyXml").GetString().ShouldNotBeNullOrWhiteSpace();
+
+        var element = XElement.Parse(response.RootElement.GetProperty("machineKeyXml").GetString()!);
+
+        element.Name.ShouldBe("machineKey");
+        element.Attribute("decryption")!.Value.ShouldBe("AES");
+        element.Attribute("decryptionKey")!.Value.ShouldBe(response.RootElement.GetProperty("decryptionKey").GetString());
+        element.Attribute("validation")!.Value.ShouldBe("SHA1");
+        element.Attribute("validationKey")!.Value.ShouldBe(response.RootElement.GetProperty("validationKey").GetString());
     }
 
     [SkippableTheory]
