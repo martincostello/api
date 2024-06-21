@@ -3,6 +3,7 @@
 
 using System.Net;
 using System.Net.Http.Json;
+using System.Xml.Linq;
 using MartinCostello.Api.Models;
 
 namespace MartinCostello.Api.Integration;
@@ -74,6 +75,14 @@ public class ToolsTests(TestServerFixture fixture, ITestOutputHelper outputHelpe
         actual.DecryptionKey.ShouldNotBeNullOrWhiteSpace();
         actual.MachineKeyXml.ShouldNotBeNullOrWhiteSpace();
         actual.ValidationKey.ShouldNotBeNullOrWhiteSpace();
+
+        var element = XElement.Parse(actual.MachineKeyXml);
+
+        element.Name.ShouldBe("machineKey");
+        element.Attribute("decryption")!.Value.ShouldBe("AES");
+        element.Attribute("decryptionKey")!.Value.ShouldBe(actual.DecryptionKey);
+        element.Attribute("validation")!.Value.ShouldBe("SHA1");
+        element.Attribute("validationKey")!.Value.ShouldBe(actual.ValidationKey);
     }
 
     [Theory]
