@@ -169,6 +169,11 @@
           "content": {
             "application/json": {
               "schema": {
+                "required": [
+                  "algorithm",
+                  "format",
+                  "plaintext"
+                ],
                 "type": "object",
                 "properties": {
                   "algorithm": {
@@ -180,7 +185,8 @@
                   "plaintext": {
                     "type": "string"
                   }
-                }
+                },
+                "nullable": true
               },
               "example": {
                 "algorithm": "sha256",
