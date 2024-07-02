@@ -24,4 +24,4 @@ jobs:
       run: npm install -g @stoplight/spectral-cli
 
     - name: Run Spectral
-      run: spectral lint "./src/API/wwwroot/swagger/api/swagger.json" --fail-severity warn --format github-actions
+      run: spectral lint "./src/API/wwwroot/swagger/api/*.json" --fail-severity warn --format github-actions

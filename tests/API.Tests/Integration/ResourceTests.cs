@@ -37,6 +37,7 @@ public class ResourceTests(TestServerFixture fixture, ITestOutputHelper outputHe
     [InlineData("/robots.txt", MediaTypeNames.Text.Plain)]
     [InlineData("/robots933456.txt", MediaTypeNames.Text.Plain)]
     [InlineData("/sitemap.xml", MediaTypeNames.Text.Xml)]
+    [InlineData("/swagger/api/openapi.json", MediaTypeNames.Application.Json)]
     [InlineData("/swagger/api/swagger.json", MediaTypeNames.Application.Json)]
     [InlineData("/time", MediaTypeNames.Application.Json)]
     [InlineData("/tools/guid", MediaTypeNames.Application.Json)]

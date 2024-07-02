@@ -2,9 +2,12 @@
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 using System.Runtime.CompilerServices;
+using MartinCostello.Api.OpenApi;
 using MartinCostello.Api.OpenApi.NSwag;
 using MartinCostello.Api.Options;
+using Microsoft.AspNetCore.OpenApi;
 using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
 
 namespace MartinCostello.Api.Extensions;
 
@@ -22,10 +25,26 @@ public static class IServiceCollectionExtensions
     /// </returns>
     public static IServiceCollection AddOpenApiDocumentation(this IServiceCollection services)
     {
+        // HACK Enable for OpenAPI when https://github.com/dotnet/aspnetcore/issues/56023 is fixed
         if (!RuntimeFeature.IsDynamicCodeSupported)
         {
             return services;
         }
+
+        // TODO Remove if https://github.com/dotnet/aspnetcore/issues/56189 is implemented
+        services.AddHttpContextAccessor();
+
+        services.AddOpenApi("api", (options) =>
+        {
+            options.UseTransformer<AddApiInfoTransformer>();
+            options.UseTransformer<AddServersTransformer>();
+            options.UseTransformer<RemoveStyleCopPrefixesTransformer>();
+
+            options.UseOperationTransformer(OperationTransformers.TransformOperations);
+
+            // HACK See https://github.com/dotnet/aspnetcore/issues/55832
+            options.UseTransformer<ScrubExtensionsTransformer>();
+        });
 
         services.AddEndpointsApiExplorer();
         services.AddOpenApiDocument((options, services) =>
@@ -63,5 +82,21 @@ public static class IServiceCollectionExtensions
         });
 
         return services;
+    }
+
+    private sealed class ScrubExtensionsTransformer : IOpenApiDocumentTransformer
+    {
+        public Task TransformAsync(OpenApiDocument document, OpenApiDocumentTransformerContext context, CancellationToken cancellationToken)
+        {
+            foreach (var pathItem in document.Paths.Values)
+            {
+                foreach (var operation in pathItem.Operations.Values)
+                {
+                    operation.Extensions.Remove("x-aspnetcore-id");
+                }
+            }
+
+            return Task.CompletedTask;
+        }
     }
 }
