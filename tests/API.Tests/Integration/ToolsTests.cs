@@ -48,12 +48,12 @@ public class ToolsTests(TestServerFixture fixture, ITestOutputHelper outputHelpe
         using var client = Fixture.CreateClient();
 
         // Act
-        using var response = await client.PostAsJsonAsync("/tools/hash", request);
+        using var response = await client.PostAsJsonAsync("/tools/hash", request, ApplicationJsonSerializerContext.Default.HashRequest);
 
         // Assert
         response.EnsureSuccessStatusCode();
 
-        var actual = await response.Content.ReadFromJsonAsync<HashResponse>();
+        var actual = await response.Content.ReadFromJsonAsync(ApplicationJsonSerializerContext.Default.HashResponse);
 
         actual.ShouldNotBeNull();
         actual.Hash.ShouldBe(expected);
@@ -66,8 +66,9 @@ public class ToolsTests(TestServerFixture fixture, ITestOutputHelper outputHelpe
         using var client = Fixture.CreateClient();
 
         // Act
-        var actual = await client.GetFromJsonAsync<MachineKeyResponse>(
-            "/tools/machinekey?decryptionAlgorithm=AES-256&validationAlgorithm=SHA1");
+        var actual = await client.GetFromJsonAsync(
+            "/tools/machinekey?decryptionAlgorithm=AES-256&validationAlgorithm=SHA1",
+            ApplicationJsonSerializerContext.Default.MachineKeyResponse);
 
         // Assert
         actual.ShouldNotBeNull();
@@ -139,7 +140,7 @@ public class ToolsTests(TestServerFixture fixture, ITestOutputHelper outputHelpe
         using var client = Fixture.CreateClient();
 
         // Act
-        using var response = await client.PostAsJsonAsync("/tools/hash", request);
+        using var response = await client.PostAsJsonAsync("/tools/hash", request, ApplicationJsonSerializerContext.Default.HashRequest);
 
         // Assert
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);

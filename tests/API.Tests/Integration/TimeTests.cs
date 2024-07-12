@@ -2,7 +2,6 @@
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 using System.Net.Http.Json;
-using MartinCostello.Api.Models;
 
 namespace MartinCostello.Api.Integration;
 
@@ -24,7 +23,7 @@ public class TimeTests(TestServerFixture fixture, ITestOutputHelper outputHelper
         using var client = Fixture.CreateClient();
 
         // Act
-        var actual = await client.GetFromJsonAsync<TimeResponse>("/time");
+        var actual = await client.GetFromJsonAsync("/time", ApplicationJsonSerializerContext.Default.TimeResponse);
 
         // Assert
         actual.ShouldNotBeNull();

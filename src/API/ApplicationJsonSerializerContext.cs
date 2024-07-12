@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace MartinCostello.Api;
 
 [ExcludeFromCodeCoverage]
+[JsonSerializable(typeof(bool?))]
 [JsonSerializable(typeof(GuidResponse))]
 [JsonSerializable(typeof(HashRequest))]
 [JsonSerializable(typeof(HashResponse))]
@@ -18,6 +19,6 @@ namespace MartinCostello.Api;
 [JsonSerializable(typeof(ProblemDetails))]
 [JsonSerializable(typeof(TimeResponse))]
 [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase, WriteIndented = true)]
-internal sealed partial class ApplicationJsonSerializerContext : JsonSerializerContext
+public sealed partial class ApplicationJsonSerializerContext : JsonSerializerContext
 {
 }

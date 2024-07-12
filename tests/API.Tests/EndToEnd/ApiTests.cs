@@ -3,6 +3,7 @@
 
 using System.Net.Http.Json;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Xml.Linq;
 using Microsoft.AspNetCore.WebUtilities;
 
@@ -94,11 +95,11 @@ public class ApiTests(ApiFixture fixture) : EndToEndTest(fixture)
     public async Task Can_Generate_Hash(string algorithm, string format, string plaintext, string expected)
     {
         // Arrange
-        var request = new
+        var request = new JsonObject()
         {
-            algorithm,
-            format,
-            plaintext,
+            ["algorithm"] = algorithm,
+            ["format"] = format,
+            ["plaintext"] = plaintext,
         };
 
         using var client = Fixture.CreateClient();
