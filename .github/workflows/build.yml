@@ -69,7 +69,7 @@ jobs:
     # HACK Workaround for https://github.com/dotnet/sdk/issues/42211
     - name: Repair .NET workloads
       if: runner.os == 'Windows'
-      run: dotnet workload repair
+      run: dotnet workload install microsoft.net.sdk.aspire
 
     - name: Setup Node
       uses: actions/setup-node@v4
