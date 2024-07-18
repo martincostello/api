@@ -67,6 +67,7 @@ jobs:
     - name: Install .NET Aspire workload
       if: runner.os == 'Windows'
       run: dotnet workload install microsoft.net.sdk.aspire
+      working-directory: ${{ env.RUNNER_TEMP }}
 
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v4
