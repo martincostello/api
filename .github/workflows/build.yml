@@ -74,7 +74,7 @@ jobs:
 
     - name: Install .NET Aspire workload
       if: runner.os == 'Windows'
-      run: dotnet workload install aspire
+      run: dotnet workload install aspire --skip-manifest-update
 
     - name: List .NET workloads
       run: dotnet workload list
