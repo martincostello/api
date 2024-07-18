@@ -63,7 +63,7 @@ jobs:
     # HACK Workaround for https://github.com/dotnet/sdk/issues/42211
     - name: Install .NET Aspire workload
       if: runner.os == 'Windows'
-      run: dotnet workload install microsoft.net.sdk.aspire
+      run: dotnet workload install aspire
 
     - name: Checkout code
       uses: actions/checkout@v4
