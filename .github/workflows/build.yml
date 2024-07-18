@@ -60,8 +60,23 @@ jobs:
 
     steps:
 
+    # HACK Workaround for https://github.com/dotnet/sdk/issues/42211
+    - name: Update .NET Aspire workload
+      shell: pwsh
+      run: |
+        $manifest = @'
+        {
+          "microsoft.net.sdk.aspire": "8.0.1"
+        }
+        '@
+        $manifestPath = Join-Path ${env:RUNNER_TEMP} "workload-manifest.json"
+        $manifest | Out-File -FilePath $manifestPath -Encoding utf8
+        dotnet workload update --advertising-manifests-only
+        dotnet workload update --from-rollback-file $manifestPath
+        dotnet workload install aspire --skip-manifest-update
+
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v4  
 
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v4
