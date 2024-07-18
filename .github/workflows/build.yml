@@ -60,14 +60,13 @@ jobs:
 
     steps:
 
-    - name: Checkout code
-      uses: actions/checkout@v4
-
     # HACK Workaround for https://github.com/dotnet/sdk/issues/42211
     - name: Install .NET Aspire workload
       if: runner.os == 'Windows'
       run: dotnet workload install microsoft.net.sdk.aspire
-      working-directory: ${{ env.RUNNER_TEMP }}
+
+    - name: Checkout code
+      uses: actions/checkout@v4
 
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v4
