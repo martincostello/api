@@ -25,7 +25,6 @@ internal sealed class AddServersTransformer(IOptions<ForwardedHeadersOptions> op
 
     private static string GetServerUrl(OpenApiDocumentTransformerContext context, ForwardedHeadersOptions options)
     {
-        // TODO Use context.HttpContext if https://github.com/dotnet/aspnetcore/issues/56189 is implemented
         var accessor = context.ApplicationServices.GetRequiredService<IHttpContextAccessor>();
         var request = accessor.HttpContext!.Request;
 
