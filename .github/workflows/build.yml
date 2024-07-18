@@ -66,6 +66,11 @@ jobs:
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v4
 
+    # HACK Workaround for https://github.com/dotnet/sdk/issues/42211
+    - name: Repair .NET workloads
+      if: runner.os == 'Windows'
+      run: dotnet workload repair
+
     - name: Setup Node
       uses: actions/setup-node@v4
       with:
