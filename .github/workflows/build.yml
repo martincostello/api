@@ -73,11 +73,10 @@ jobs:
         $manifestPath = Join-Path ${env:RUNNER_TEMP} "workload-manifest.json"
         $manifest | Out-File -FilePath $manifestPath -Encoding utf8
         dotnet workload update --advertising-manifests-only && `
-        dotnet workload update --from-rollback-file $manifestPath && `
-        dotnet workload install aspire --skip-manifest-update
+        dotnet workload update --from-rollback-file $manifestPath
 
     - name: Checkout code
-      uses: actions/checkout@v4  
+      uses: actions/checkout@v4
 
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v4
