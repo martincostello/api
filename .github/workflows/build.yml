@@ -61,9 +61,21 @@ jobs:
     steps:
 
     # HACK Workaround for https://github.com/dotnet/sdk/issues/42211
+    - name: List .NET workloads
+      run: dotnet workload list
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.100
+
     - name: Install .NET Aspire workload
       if: runner.os == 'Windows'
       run: dotnet workload install aspire
+
+    - name: List .NET workloads
+      run: dotnet workload list
+    # /HACK
 
     - name: Checkout code
       uses: actions/checkout@v4
