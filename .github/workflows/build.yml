@@ -63,13 +63,13 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Setup .NET SDK
-      uses: actions/setup-dotnet@v4
-
     # HACK Workaround for https://github.com/dotnet/sdk/issues/42211
-    - name: Repair .NET workloads
+    - name: Install .NET Aspire workload
       if: runner.os == 'Windows'
       run: dotnet workload install microsoft.net.sdk.aspire
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
 
     - name: Setup Node
       uses: actions/setup-node@v4
