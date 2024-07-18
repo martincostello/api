@@ -69,6 +69,9 @@ jobs:
       with:
         dotnet-version: 8.0.302
 
+    - name: List .NET workloads
+      run: dotnet workload list
+
     - name: Install .NET Aspire workload
       if: runner.os == 'Windows'
       run: dotnet workload install aspire
