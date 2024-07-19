@@ -119,11 +119,16 @@ internal sealed class AddExamplesTransformer(IOptions<JsonOptions> options) : IO
             return;
         }
 
+        if (!body.Content.TryGetValue("application/json", out var mediaType) || mediaType.Example is not null)
+        {
+            return;
+        }
+
         var metadata = examples.FirstOrDefault((p) => p.SchemaType == schemaResponses[0].Type);
 
-        if (metadata is not null && body.Content.TryGetValue("application/json", out var mediaType))
+        if (metadata is not null)
         {
-            mediaType.Example = metadata.GenerateExample(_options);
+            mediaType.Example ??= metadata.GenerateExample(_options);
         }
     }
 
@@ -147,9 +152,9 @@ internal sealed class AddExamplesTransformer(IOptions<JsonOptions> options) : IO
             {
                 foreach (var response in responses.Values)
                 {
-                    if (response.Content.TryGetValue(responseFormat.MediaType, out var mediaType) && mediaType.Example is null)
+                    if (response.Content.TryGetValue(responseFormat.MediaType, out var mediaType))
                     {
-                        mediaType.Example = examples.Single((p) => p.SchemaType == schemaResponse.Type).GenerateExample(_options);
+                        mediaType.Example ??= examples.Single((p) => p.SchemaType == schemaResponse.Type).GenerateExample(_options);
                     }
                 }
             }
