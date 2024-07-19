@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using ProblemDetails = Microsoft.AspNetCore.Mvc.ProblemDetails;
 
 namespace MartinCostello.Api.OpenApi;
 
@@ -52,13 +53,20 @@ internal sealed class AddExamplesTransformer(IOptions<JsonOptions> options) : IO
         OpenApiSchemaTransformerContext context,
         CancellationToken cancellationToken)
     {
-        var metadata = context.JsonTypeInfo.Type.GetCustomAttributes(false)
-            .OfType<IOpenApiExampleMetadata>()
-            .FirstOrDefault();
-
-        if (metadata?.GenerateExample(_options) is { } value)
+        if (context.JsonTypeInfo.Type == typeof(ProblemDetails))
         {
-            schema.Example = value;
+            schema.Example = ExampleFormatter.AsJson<ProblemDetails, ProblemDetailsExampleProvider>(_options);
+        }
+        else
+        {
+            var metadata = context.JsonTypeInfo.Type.GetCustomAttributes(false)
+                .OfType<IOpenApiExampleMetadata>()
+                .FirstOrDefault();
+
+            if (metadata?.GenerateExample(_options) is { } value)
+            {
+                schema.Example = value;
+            }
         }
 
         return Task.CompletedTask;
