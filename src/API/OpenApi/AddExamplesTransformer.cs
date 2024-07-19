@@ -14,19 +14,19 @@ namespace MartinCostello.Api.OpenApi;
 /// <summary>
 /// A class representing an operation processor that adds examples to API endpoints. This class cannot be inherited.
 /// </summary>
-internal sealed class AddExamplesOperationTransformer : IOpenApiOperationTransformer
+internal sealed class AddExamplesTransformer(IOptions<JsonOptions> options) : IOpenApiOperationTransformer, IOpenApiSchemaTransformer
 {
+    private readonly JsonSerializerOptions _options = options.Value.SerializerOptions;
+
     /// <inheritdoc />
     public Task TransformAsync(
         OpenApiOperation operation,
         OpenApiOperationTransformerContext context,
         CancellationToken cancellationToken)
     {
-        var options = context.ApplicationServices.GetRequiredService<IOptions<JsonOptions>>().Value.SerializerOptions;
-
         if (operation.Parameters is { Count: > 0 } parameters)
         {
-            TryAddParameterExamples(parameters, context, options);
+            TryAddParameterExamples(parameters, context);
         }
 
         var examples = context.Description.ActionDescriptor.EndpointMetadata
@@ -37,19 +37,36 @@ internal sealed class AddExamplesOperationTransformer : IOpenApiOperationTransfo
         {
             if (operation.RequestBody is { } body)
             {
-                TryAddRequestExamples(body, context, examples, options);
+                TryAddRequestExamples(body, context, examples);
             }
 
-            TryAddResponseExamples(operation.Responses, context, examples, options);
+            TryAddResponseExamples(operation.Responses, context, examples);
         }
 
         return Task.CompletedTask;
     }
 
-    private static void TryAddParameterExamples(
+    /// <inheritdoc />
+    public Task TransformAsync(
+        OpenApiSchema schema,
+        OpenApiSchemaTransformerContext context,
+        CancellationToken cancellationToken)
+    {
+        var metadata = context.JsonTypeInfo.Type.GetCustomAttributes(false)
+            .OfType<IOpenApiExampleMetadata>()
+            .FirstOrDefault();
+
+        if (metadata?.GenerateExample(_options) is { } value)
+        {
+            schema.Example = value;
+        }
+
+        return Task.CompletedTask;
+    }
+
+    private void TryAddParameterExamples(
         IList<OpenApiParameter> parameters,
-        OpenApiOperationTransformerContext context,
-        JsonSerializerOptions options)
+        OpenApiOperationTransformerContext context)
     {
         var methodInfo = context.Description.ActionDescriptor.EndpointMetadata
             .OfType<MethodInfo>()
@@ -67,7 +84,7 @@ internal sealed class AddExamplesOperationTransformer : IOpenApiOperationTransfo
                     .OfType<IOpenApiExampleMetadata>()
                     .FirstOrDefault((p) => p.SchemaType == argument.ParameterType);
 
-                if (metadata?.GenerateExample(options) is { } value)
+                if (metadata?.GenerateExample(_options) is { } value)
                 {
                     var parameter = parameters.FirstOrDefault((p) => p.Name == argument.Name);
                     if (parameter is not null)
@@ -79,11 +96,10 @@ internal sealed class AddExamplesOperationTransformer : IOpenApiOperationTransfo
         }
     }
 
-    private static void TryAddRequestExamples(
+    private void TryAddRequestExamples(
         OpenApiRequestBody body,
         OpenApiOperationTransformerContext context,
-        IList<IOpenApiExampleMetadata> examples,
-        JsonSerializerOptions options)
+        IList<IOpenApiExampleMetadata> examples)
     {
         var schemaResponses = context.Description.ParameterDescriptions
             .Where((p) => p.Source == BindingSource.Body)
@@ -99,15 +115,14 @@ internal sealed class AddExamplesOperationTransformer : IOpenApiOperationTransfo
 
         if (metadata is not null && body.Content.TryGetValue("application/json", out var mediaType))
         {
-            mediaType.Example = metadata.GenerateExample(options);
+            mediaType.Example = metadata.GenerateExample(_options);
         }
     }
 
-    private static void TryAddResponseExamples(
+    private void TryAddResponseExamples(
         OpenApiResponses responses,
         OpenApiOperationTransformerContext context,
-        IList<IOpenApiExampleMetadata> examples,
-        JsonSerializerOptions options)
+        IList<IOpenApiExampleMetadata> examples)
     {
         var schemaResponses = context.Description.SupportedResponseTypes
             .Where((p) => examples.Any((r) => r.SchemaType == p.Type))
@@ -126,7 +141,7 @@ internal sealed class AddExamplesOperationTransformer : IOpenApiOperationTransfo
                 {
                     if (response.Content.TryGetValue(responseFormat.MediaType, out var mediaType) && mediaType.Example is null)
                     {
-                        mediaType.Example = examples.Single((p) => p.SchemaType == schemaResponse.Type).GenerateExample(options);
+                        mediaType.Example = examples.Single((p) => p.SchemaType == schemaResponse.Type).GenerateExample(_options);
                     }
                 }
             }

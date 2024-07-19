@@ -35,9 +35,10 @@ public static class IServiceCollectionExtensions
         {
             options.AddDocumentTransformer<AddApiInfoTransformer>();
             options.AddDocumentTransformer<AddServersTransformer>();
-            options.AddOperationTransformer<AddExamplesOperationTransformer>();
+            options.AddOperationTransformer<AddExamplesTransformer>();
             options.AddOperationTransformer<AddResponseDescriptionTransformer>();
             options.AddOperationTransformer<RemoveStyleCopPrefixesTransformer>();
+            options.AddSchemaTransformer<AddExamplesTransformer>();
             options.AddSchemaTransformer<RemoveStyleCopPrefixesTransformer>();
         });
 

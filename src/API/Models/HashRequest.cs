@@ -11,6 +11,7 @@ namespace MartinCostello.Api.Models;
 /// <summary>
 /// Represents a request to the <c>/tools/hash</c> API resource.
 /// </summary>
+[OpenApiExample<HashRequest>]
 public sealed class HashRequest : IExampleProvider<HashRequest>
 {
     /// <summary>

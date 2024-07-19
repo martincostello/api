@@ -10,6 +10,7 @@ namespace MartinCostello.Api.Models;
 /// <summary>
 /// Represents the response from the <c>/tools/hash</c> API resource.
 /// </summary>
+[OpenApiExample<HashResponse>]
 public sealed class HashResponse : IExampleProvider<HashResponse>
 {
     /// <summary>

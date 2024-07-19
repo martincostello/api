@@ -12,6 +12,20 @@ namespace MartinCostello.Api.OpenApi;
 internal static class ExampleFormatter
 {
     /// <summary>
+    /// Formats the example for the specified type.
+    /// </summary>
+    /// <typeparam name="T">The type of the value.</typeparam>
+    /// <param name="options">The JSON serializer options to use.</param>
+    /// <returns>
+    /// The <see cref="IOpenApiAny"/> to use as the example.
+    /// </returns>
+    public static IOpenApiAny AsJson<T>(JsonSerializerOptions options)
+        where T : IExampleProvider<T>
+    {
+        return AsJson(T.GenerateExample(), options);
+    }
+
+    /// <summary>
     /// Formats the specified value as JSON.
     /// </summary>
     /// <typeparam name="T">The type of the value.</typeparam>

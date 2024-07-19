@@ -10,6 +10,7 @@ namespace MartinCostello.Api.Models;
 /// <summary>
 /// Represents the response from the <c>/time</c> API resource.
 /// </summary>
+[OpenApiExample<TimeResponse>]
 public sealed class TimeResponse : IExampleProvider<TimeResponse>
 {
     /// <summary>

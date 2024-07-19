@@ -10,6 +10,7 @@ namespace MartinCostello.Api.Models;
 /// <summary>
 /// Represents the response from the <c>/tools/machinekey</c> API resource.
 /// </summary>
+[OpenApiExample<MachineKeyResponse>]
 public sealed class MachineKeyResponse : IExampleProvider<MachineKeyResponse>
 {
     /// <summary>
