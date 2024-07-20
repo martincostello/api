@@ -3,7 +3,6 @@
 
 using System.IO.Compression;
 using System.Net.Mime;
-using System.Runtime.CompilerServices;
 using MartinCostello.Api.Extensions;
 using MartinCostello.Api.Middleware;
 using MartinCostello.Api.Options;
@@ -168,12 +167,7 @@ public static class ApiBuilder
 
         app.UseResponseCompression();
 
-        if (RuntimeFeature.IsDynamicCodeSupported)
-        {
-            app.UseOpenApi();
-        }
-
-        app.MapOpenApi("/swagger/{documentName}/openapi.json"); // TODO Use default when NSwag removed
+        app.MapOpenApi();
 
         app.UseStaticFiles();
 

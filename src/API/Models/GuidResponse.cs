@@ -3,7 +3,6 @@
 
 using System.Text.Json.Serialization;
 using MartinCostello.Api.OpenApi;
-using Newtonsoft.Json;
 
 namespace MartinCostello.Api.Models;
 
@@ -16,7 +15,6 @@ public sealed class GuidResponse : IExampleProvider<GuidResponse>
     /// <summary>
     /// Gets or sets the generated GUID value.
     /// </summary>
-    [JsonProperty("guid")]
     [JsonPropertyName("guid")]
 #pragma warning disable CA1720
     public string Guid { get; set; } = string.Empty;

@@ -40,7 +40,7 @@
     {
         if (name is "links")
         {
-            <link rel="swagger" href="@(HttpContext!.Request.Content("~/swagger/api/openapi.json", appendVersion: false))" />
+            <link rel="swagger" href="@(HttpContext!.Request.Content("~/openapi/api.json", appendVersion: false))" />
         }
         else if (name is "scripts")
         {
