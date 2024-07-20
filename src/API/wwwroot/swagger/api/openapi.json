@@ -33,29 +33,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "timestamp": {
-                      "type": "string",
-                      "format": "date-time"
-                    },
-                    "rfc1123": {
-                      "$ref": "#/components/schemas/string"
-                    },
-                    "unix": {
-                      "type": "integer",
-                      "format": "int64"
-                    },
-                    "universalSortable": {
-                      "$ref": "#/components/schemas/string"
-                    },
-                    "universalFull": {
-                      "$ref": "#/components/schemas/string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/TimeResponse"
                 },
                 "example": {
-                  "timestamp": "2016-06-03T19:44:14+01:00",
+                  "timestamp": "2016-06-03T18:44:14+00:00",
                   "rfc1123": "Fri, 03 Jun 2016 18:44:14 GMT",
                   "unix": 1464979454,
                   "universalSortable": "2016-06-03 18:44:14Z",
@@ -81,7 +62,8 @@
             "in": "query",
             "description": "The format for which to generate a GUID.",
             "schema": {
-              "$ref": "#/components/schemas/string2"
+              "type": "string",
+              "nullable": true
             },
             "example": "D"
           },
@@ -101,12 +83,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "guid": {
-                      "$ref": "#/components/schemas/string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/GuidResponse"
                 },
                 "example": {
                   "guid": "6bc55a07-3d3e-4d52-8701-362a1187772d"
@@ -145,24 +122,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "required": [
-                  "algorithm",
-                  "format",
-                  "plaintext"
-                ],
-                "type": "object",
-                "properties": {
-                  "algorithm": {
-                    "$ref": "#/components/schemas/string"
-                  },
-                  "format": {
-                    "$ref": "#/components/schemas/string"
-                  },
-                  "plaintext": {
-                    "$ref": "#/components/schemas/string"
-                  }
-                },
-                "nullable": true
+                "$ref": "#/components/schemas/HashRequest"
               },
               "example": {
                 "algorithm": "sha256",
@@ -178,12 +138,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "hash": {
-                      "$ref": "#/components/schemas/string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/HashResponse"
                 },
                 "example": {
                   "hash": "fTi1zSWiuvha07tbkxE4PmcaihQuswKzJNSl+6h0jGk="
@@ -224,7 +179,8 @@
             "in": "query",
             "description": "The name of the decryption algorithm.",
             "schema": {
-              "$ref": "#/components/schemas/string2"
+              "type": "string",
+              "nullable": true
             },
             "example": "AES-256"
           },
@@ -233,7 +189,8 @@
             "in": "query",
             "description": "The name of the validation algorithm.",
             "schema": {
-              "$ref": "#/components/schemas/string2"
+              "type": "string",
+              "nullable": true
             },
             "example": "SHA1"
           }
@@ -244,18 +201,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "decryptionKey": {
-                      "$ref": "#/components/schemas/string"
-                    },
-                    "validationKey": {
-                      "$ref": "#/components/schemas/string"
-                    },
-                    "machineKeyXml": {
-                      "$ref": "#/components/schemas/string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/MachineKeyResponse"
                 },
                 "example": {
                   "decryptionKey": "2EA72C07DEEF522B4686C39BDF83E70A96BA92EE1D960029821FCA2E4CD9FB72",
@@ -287,37 +233,121 @@
   },
   "components": {
     "schemas": {
+      "GuidResponse": {
+        "type": "object",
+        "properties": {
+          "guid": {
+            "type": "string",
+            "description": "The generated GUID value."
+          }
+        },
+        "description": "Represents the response from the /tools/guid API resource."
+      },
+      "HashRequest": {
+        "required": [
+          "algorithm",
+          "format",
+          "plaintext"
+        ],
+        "type": "object",
+        "properties": {
+          "algorithm": {
+            "type": "string",
+            "description": "The name of the hash algorithm to use."
+          },
+          "format": {
+            "type": "string",
+            "description": "The format in which to return the hash."
+          },
+          "plaintext": {
+            "type": "string",
+            "description": "The plaintext value to generate the hash from."
+          }
+        },
+        "description": "Represents a request to the /tools/hash API resource.",
+        "nullable": true
+      },
+      "HashResponse": {
+        "type": "object",
+        "properties": {
+          "hash": {
+            "type": "string",
+            "description": "A string containing the generated hash value in the requested format."
+          }
+        },
+        "description": "Represents the response from the /tools/hash API resource."
+      },
+      "MachineKeyResponse": {
+        "type": "object",
+        "properties": {
+          "decryptionKey": {
+            "type": "string",
+            "description": "A string containing the decryption key."
+          },
+          "validationKey": {
+            "type": "string",
+            "description": "A string containing the validation key."
+          },
+          "machineKeyXml": {
+            "type": "string",
+            "description": "A string containing the machineKey XML configuration element."
+          }
+        },
+        "description": "Represents the response from the /tools/machinekey API resource."
+      },
       "ProblemDetails": {
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/string2"
+            "type": "string",
+            "nullable": true
           },
           "title": {
-            "$ref": "#/components/schemas/string2"
+            "type": "string",
+            "nullable": true
           },
           "status": {
-            "$ref": "#/components/schemas/int?"
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           },
           "detail": {
-            "$ref": "#/components/schemas/string2"
+            "type": "string",
+            "nullable": true
           },
           "instance": {
-            "$ref": "#/components/schemas/string2"
+            "type": "string",
+            "nullable": true
           }
         }
       },
-      "int?": {
-        "type": "integer",
-        "format": "int32",
-        "nullable": true
-      },
-      "string": {
-        "type": "string"
-      },
-      "string2": {
-        "type": "string",
-        "nullable": true
+      "TimeResponse": {
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "description": "The timestamp for the response for which the times are generated.",
+            "format": "date-time"
+          },
+          "rfc1123": {
+            "type": "string",
+            "description": "The current UTC date and time in RFC1123 format."
+          },
+          "unix": {
+            "type": "integer",
+            "description": "The number of seconds since the UNIX epoch.",
+            "format": "int64"
+          },
+          "universalSortable": {
+            "type": "string",
+            "description": "The current UTC date and time in universal sortable format."
+          },
+          "universalFull": {
+            "type": "string",
+            "description": "The current UTC date and time in universal full format."
+          }
+        },
+        "description": "Represents the response from the /time API resource."
       }
     }
   },

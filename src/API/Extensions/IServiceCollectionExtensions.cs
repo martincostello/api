@@ -36,14 +36,19 @@ public static class IServiceCollectionExtensions
 
         services.AddOpenApi("api", (options) =>
         {
-            options.UseTransformer<AddApiInfoTransformer>();
-            options.UseTransformer<AddServersTransformer>();
+            options.AddDocumentTransformer<AddApiInfoTransformer>();
+            options.AddDocumentTransformer<AddServersTransformer>();
 
-            options.UseOperationTransformer(CustomTransformers.TransformOperations);
-            options.UseSchemaTransformer(CustomTransformers.TransformSchemas);
+            options.AddOperationTransformer(new AddResponseDescriptionTransformer());
+            options.AddSchemaTransformer(new AddSchemaDescriptionsTransformer());
 
-            // HACK See https://github.com/dotnet/aspnetcore/issues/55832
-            options.UseTransformer<ScrubExtensionsTransformer>();
+            var examples = new AddExamplesTransformer();
+            options.AddOperationTransformer(examples);
+            options.AddSchemaTransformer(examples);
+
+            var prefixes = new RemoveStyleCopPrefixesTransformer();
+            options.AddOperationTransformer(prefixes);
+            options.AddSchemaTransformer(prefixes);
         });
 
         services.AddEndpointsApiExplorer();
