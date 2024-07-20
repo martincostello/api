@@ -5,6 +5,7 @@ using System.Reflection;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi.Models;
+using ProblemDetails = Microsoft.AspNetCore.Mvc.ProblemDetails;
 
 namespace MartinCostello.Api.OpenApi;
 
@@ -49,7 +50,6 @@ internal sealed class AddExamplesTransformer : IOpenApiOperationTransformer, IOp
         OpenApiSchemaTransformerContext context,
         CancellationToken cancellationToken)
     {
-        /*
         if (context.JsonTypeInfo.Type == typeof(ProblemDetails))
         {
             schema.Example = ExampleFormatter.AsJson<ProblemDetails, ProblemDetailsExampleProvider>(Context);
@@ -65,7 +65,6 @@ internal sealed class AddExamplesTransformer : IOpenApiOperationTransformer, IOp
                 schema.Example = value;
             }
         }
-        */
 
         return Task.CompletedTask;
     }
