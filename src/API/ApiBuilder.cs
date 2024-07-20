@@ -168,12 +168,12 @@ public static class ApiBuilder
 
         app.UseResponseCompression();
 
-        // HACK Disabled until https://github.com/dotnet/aspnetcore/issues/56023 is fixed
         if (RuntimeFeature.IsDynamicCodeSupported)
         {
             app.UseOpenApi();
-            app.MapOpenApi("/swagger/{documentName}/openapi.json"); // TODO Use default when NSwag removed
         }
+
+        app.MapOpenApi("/swagger/{documentName}/openapi.json"); // TODO Use default when NSwag removed
 
         app.UseStaticFiles();
 
