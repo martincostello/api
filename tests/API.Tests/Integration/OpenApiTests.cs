@@ -58,6 +58,7 @@ public class OpenApiTests(TestServerFixture fixture, ITestOutputHelper outputHel
     }
 
     [Theory]
+    [InlineData("/swagger/api/openapi.json", Skip = "Generates invalid schemas before .NET 9 preview 7.")]
     [InlineData("/swagger/api/swagger.json")]
     public async Task Schema_Has_No_Validation_Warnings(string requestUrl)
     {
