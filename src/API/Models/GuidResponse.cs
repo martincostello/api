@@ -10,6 +10,7 @@ namespace MartinCostello.Api.Models;
 /// <summary>
 /// Represents the response from the <c>/tools/guid</c> API resource.
 /// </summary>
+[OpenApiExample<GuidResponse>]
 public sealed class GuidResponse : IExampleProvider<GuidResponse>
 {
     /// <summary>

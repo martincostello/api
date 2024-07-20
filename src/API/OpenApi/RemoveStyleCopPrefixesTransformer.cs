@@ -10,42 +10,33 @@ namespace MartinCostello.Api.OpenApi;
 /// A class representing a document processor that removes StyleCop
 /// prefixes from property descriptions. This class cannot be inherited.
 /// </summary>
-internal sealed class RemoveStyleCopPrefixesTransformer : IOpenApiDocumentTransformer
+internal sealed class RemoveStyleCopPrefixesTransformer : IOpenApiOperationTransformer, IOpenApiSchemaTransformer
 {
     private const string Prefix = "Gets or sets ";
 
     /// <inheritdoc/>
-    public Task TransformAsync(
-        OpenApiDocument document,
-        OpenApiDocumentTransformerContext context,
-        CancellationToken cancellationToken)
+    public Task TransformAsync(OpenApiOperation operation, OpenApiOperationTransformerContext context, CancellationToken cancellationToken)
     {
-        if (document.Components?.Schemas is { } schemas)
+        foreach (var response in operation.Responses.Values)
         {
-            foreach (var schema in schemas)
+            foreach (var model in response.Content.Values)
             {
-                foreach (var property in schema.Value.Properties.Values)
+                foreach (var property in model.Schema.Properties.Values)
                 {
                     TryUpdateDescription(property);
                 }
             }
         }
 
-        foreach (var path in document.Paths.Values)
+        return Task.CompletedTask;
+    }
+
+    /// <inheritdoc/>
+    public Task TransformAsync(OpenApiSchema schema, OpenApiSchemaTransformerContext context, CancellationToken cancellationToken)
+    {
+        foreach (var property in schema.Properties.Values)
         {
-            foreach (var operation in path.Operations.Values)
-            {
-                foreach (var response in operation.Responses.Values)
-                {
-                    foreach (var model in response.Content.Values)
-                    {
-                        foreach (var property in model.Schema.Properties.Values)
-                        {
-                            TryUpdateDescription(property);
-                        }
-                    }
-                }
-            }
+            TryUpdateDescription(property);
         }
 
         return Task.CompletedTask;
