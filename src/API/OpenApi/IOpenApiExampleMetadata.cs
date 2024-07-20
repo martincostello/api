@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
-using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Any;
 
 namespace MartinCostello.Api.OpenApi;
@@ -19,9 +19,9 @@ public interface IOpenApiExampleMetadata
     /// <summary>
     /// Generates an example for the schema.
     /// </summary>
-    /// <param name="options">The JSON serializer options to use.</param>
+    /// <param name="context">The JSON serializer context to use.</param>
     /// <returns>
     /// The example to use.
     /// </returns>
-    IOpenApiAny GenerateExample(JsonSerializerOptions options);
+    IOpenApiAny GenerateExample(JsonSerializerContext context);
 }

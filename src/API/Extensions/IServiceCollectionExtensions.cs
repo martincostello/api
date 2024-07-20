@@ -31,16 +31,16 @@ public static class IServiceCollectionExtensions
             return services;
         }
 
-        // TODO Remove if https://github.com/dotnet/aspnetcore/issues/56189 is implemented
         services.AddHttpContextAccessor();
+        services.AddScoped<AddExamplesTransformer>();
 
         services.AddOpenApi("api", (options) =>
         {
             options.UseTransformer<AddApiInfoTransformer>();
             options.UseTransformer<AddServersTransformer>();
-            options.UseTransformer<RemoveStyleCopPrefixesTransformer>();
 
-            options.UseOperationTransformer(OperationTransformers.TransformOperations);
+            options.UseOperationTransformer(CustomTransformers.TransformOperations);
+            options.UseSchemaTransformer(CustomTransformers.TransformSchemas);
 
             // HACK See https://github.com/dotnet/aspnetcore/issues/55832
             options.UseTransformer<ScrubExtensionsTransformer>();

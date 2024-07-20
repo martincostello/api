@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Any;
 
 namespace MartinCostello.Api.OpenApi;
@@ -12,18 +13,31 @@ namespace MartinCostello.Api.OpenApi;
 internal static class ExampleFormatter
 {
     /// <summary>
+    /// Formats the example for the specified type.
+    /// </summary>
+    /// <typeparam name="TSchema">The type of the schema.</typeparam>
+    /// <typeparam name="TProvider">The type of the example provider.</typeparam>
+    /// <param name="context">The JSON serializer context to use.</param>
+    /// <returns>
+    /// The <see cref="IOpenApiAny"/> to use as the example.
+    /// </returns>
+    public static IOpenApiAny AsJson<TSchema, TProvider>(JsonSerializerContext context)
+        where TProvider : IExampleProvider<TSchema>
+        => AsJson(TProvider.GenerateExample(), context);
+
+    /// <summary>
     /// Formats the specified value as JSON.
     /// </summary>
     /// <typeparam name="T">The type of the value.</typeparam>
     /// <param name="example">The example value to format as JSON.</param>
-    /// <param name="options">The JSON serializer options to use.</param>
+    /// <param name="context">The JSON serializer context to use.</param>
     /// <returns>
     /// The <see cref="IOpenApiAny"/> to use as the example.
     /// </returns>
-    public static IOpenApiAny AsJson<T>(T example, JsonSerializerOptions options)
+    public static IOpenApiAny AsJson<T>(T example, JsonSerializerContext context)
     {
         // Apply any formatting rules configured for the API (e.g. camel casing)
-        string? json = JsonSerializer.Serialize(example, options);
+        string? json = JsonSerializer.Serialize(example, typeof(T), context);
         using var document = JsonDocument.Parse(json);
 
         if (document.RootElement.ValueKind == JsonValueKind.String)

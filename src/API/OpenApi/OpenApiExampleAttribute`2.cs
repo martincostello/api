@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
-using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Any;
 
 namespace MartinCostello.Api.OpenApi;
@@ -29,6 +29,6 @@ public class OpenApiExampleAttribute<TSchema, TProvider> : Attribute, IOpenApiEx
     public virtual TSchema GenerateExample() => TProvider.GenerateExample();
 
     /// <inheritdoc/>
-    IOpenApiAny IOpenApiExampleMetadata.GenerateExample(JsonSerializerOptions options)
-        => ExampleFormatter.AsJson(GenerateExample(), options);
+    IOpenApiAny IOpenApiExampleMetadata.GenerateExample(JsonSerializerContext context)
+        => ExampleFormatter.AsJson(GenerateExample(), context);
 }
