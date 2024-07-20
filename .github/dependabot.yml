@@ -30,6 +30,9 @@ updates:
     BenchmarkDotNet:
       patterns:
         - BenchmarkDotNet*
+    Microsoft.OpenApi:
+      patterns:
+        - Microsoft.OpenApi*
     OpenTelemetry:
       patterns:
         - OpenTelemetry*

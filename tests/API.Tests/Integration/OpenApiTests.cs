@@ -4,6 +4,9 @@
 using FluentAssertions.Json;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Readers;
+using Microsoft.OpenApi.Validations;
 using Newtonsoft.Json.Linq;
 
 namespace MartinCostello.Api.Integration;
@@ -13,7 +16,7 @@ public class OpenApiTests(TestServerFixture fixture, ITestOutputHelper outputHel
 {
     [Theory]
     [InlineData("/swagger/api/swagger.json")]
-    public async Task Static_And_Dynamic_Schema_Should_Match(string subpath)
+    public async Task Static_And_Dynamic_Schema_Match(string subpath)
     {
         // Arrange
         var requestUri = new Uri(subpath, UriKind.Relative);
@@ -51,5 +54,30 @@ public class OpenApiTests(TestServerFixture fixture, ITestOutputHelper outputHel
             """;
 
         actual.Should().BeEquivalentTo(expected, customMessage.Trim());
+    }
+
+    [Theory]
+    [InlineData("/swagger/api/swagger.json")]
+    public async Task Schema_Has_No_Validation_Warnings(string requestUrl)
+    {
+        // Arrange
+        var ruleSet = ValidationRuleSet.GetDefaultRuleSet();
+
+        // HACK Workaround for https://github.com/microsoft/OpenAPI.NET/issues/1738
+        ruleSet.Remove("MediaTypeMismatchedDataType");
+
+        using var client = Fixture.CreateClient();
+
+        // Act
+        using var schema = await client.GetStreamAsync(requestUrl);
+
+        // Assert
+        var reader = new OpenApiStreamReader();
+        var actual = await reader.ReadAsync(schema);
+
+        actual.OpenApiDiagnostic.Errors.ShouldBeEmpty();
+
+        var errors = actual.OpenApiDocument.Validate(ruleSet);
+        errors.ShouldBeEmpty();
     }
 }
