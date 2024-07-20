@@ -32,7 +32,6 @@ public sealed class OpenApiExampleProcessor<TSchema, TProvider> : IOperationProc
         {
             schema.Example = TProvider.GenerateExample();
 
-            // HACK Remove once NSwag removed
             if (schema.Example is ProblemDetails problem)
             {
                 schema.AdditionalPropertiesSchema = NJsonSchema.JsonSchema.CreateAnySchema();

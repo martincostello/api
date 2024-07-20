@@ -5,9 +5,7 @@ using System.Runtime.CompilerServices;
 using MartinCostello.Api.OpenApi;
 using MartinCostello.Api.OpenApi.NSwag;
 using MartinCostello.Api.Options;
-using Microsoft.AspNetCore.OpenApi;
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
 
 namespace MartinCostello.Api.Extensions;
 
@@ -25,12 +23,6 @@ public static class IServiceCollectionExtensions
     /// </returns>
     public static IServiceCollection AddOpenApiDocumentation(this IServiceCollection services)
     {
-        // HACK Enable for OpenAPI when https://github.com/dotnet/aspnetcore/issues/56023 is fixed
-        if (!RuntimeFeature.IsDynamicCodeSupported)
-        {
-            return services;
-        }
-
         services.AddHttpContextAccessor();
         services.AddScoped<AddExamplesTransformer>();
 
@@ -51,57 +43,44 @@ public static class IServiceCollectionExtensions
             options.AddSchemaTransformer(prefixes);
         });
 
-        services.AddEndpointsApiExplorer();
-        services.AddOpenApiDocument((options, services) =>
+        if (RuntimeFeature.IsDynamicCodeSupported)
         {
-            var siteOptions = services.GetRequiredService<IOptions<SiteOptions>>().Value;
-
-            options.DocumentName = "api";
-            options.Title = siteOptions.Metadata?.Name;
-            options.Version = string.Empty;
-
-            options.PostProcess = (document) =>
+            services.AddEndpointsApiExplorer();
+            services.AddOpenApiDocument((options, services) =>
             {
-                document.Generator = null;
+                var siteOptions = services.GetRequiredService<IOptions<SiteOptions>>().Value;
 
-                document.Info.Contact = new()
+                options.DocumentName = "api";
+                options.Title = siteOptions.Metadata?.Name;
+                options.Version = string.Empty;
+
+                options.PostProcess = (document) =>
                 {
-                    Name = siteOptions.Metadata?.Author?.Name,
-                    Url = siteOptions.Metadata?.Author?.Website ?? string.Empty,
+                    document.Generator = null;
+
+                    document.Info.Contact = new()
+                    {
+                        Name = siteOptions.Metadata?.Author?.Name,
+                        Url = siteOptions.Metadata?.Author?.Website ?? string.Empty,
+                    };
+
+                    document.Info.Description = siteOptions.Metadata?.Description;
+
+                    document.Info.License = new()
+                    {
+                        Name = siteOptions.Api?.License?.Name,
+                        Url = siteOptions.Api?.License?.Url ?? string.Empty,
+                    };
+
+                    document.Info.Version = string.Empty;
                 };
 
-                document.Info.Description = siteOptions.Metadata?.Description;
-
-                document.Info.License = new()
-                {
-                    Name = siteOptions.Api?.License?.Name,
-                    Url = siteOptions.Api?.License?.Url ?? string.Empty,
-                };
-
-                document.Info.Version = string.Empty;
-            };
-
-            options.OperationProcessors.Add(new RemoveParameterPositionProcessor());
-            options.OperationProcessors.Add(new UpdateProblemDetailsMediaTypeProcessor());
-            options.SchemaSettings.SchemaProcessors.Add(new RemoveStyleCopPrefixesProcessor());
-        });
+                options.OperationProcessors.Add(new RemoveParameterPositionProcessor());
+                options.OperationProcessors.Add(new UpdateProblemDetailsMediaTypeProcessor());
+                options.SchemaSettings.SchemaProcessors.Add(new RemoveStyleCopPrefixesProcessor());
+            });
+        }
 
         return services;
-    }
-
-    private sealed class ScrubExtensionsTransformer : IOpenApiDocumentTransformer
-    {
-        public Task TransformAsync(OpenApiDocument document, OpenApiDocumentTransformerContext context, CancellationToken cancellationToken)
-        {
-            foreach (var pathItem in document.Paths.Values)
-            {
-                foreach (var operation in pathItem.Operations.Values)
-                {
-                    operation.Extensions.Remove("x-aspnetcore-id");
-                }
-            }
-
-            return Task.CompletedTask;
-        }
     }
 }
