@@ -14,12 +14,11 @@ namespace MartinCostello.Api.Integration;
 [Collection(TestServerCollection.Name)]
 public class OpenApiTests(TestServerFixture fixture, ITestOutputHelper outputHelper) : IntegrationTest(fixture, outputHelper)
 {
-    [Theory]
-    [InlineData("/swagger/api/openapi.json")]
-    [InlineData("/swagger/api/swagger.json")]
-    public async Task Static_And_Dynamic_Schema_Match(string subpath)
+    [Fact]
+    public async Task Static_And_Dynamic_Schema_Match()
     {
         // Arrange
+        string subpath = "/openapi/api.json";
         var requestUri = new Uri(subpath, UriKind.Relative);
 
         var environment = Fixture.Services.GetRequiredService<IWebHostEnvironment>();
@@ -57,10 +56,8 @@ public class OpenApiTests(TestServerFixture fixture, ITestOutputHelper outputHel
         actual.Should().BeEquivalentTo(expected, customMessage.Trim());
     }
 
-    [Theory]
-    [InlineData("/swagger/api/openapi.json")]
-    [InlineData("/swagger/api/swagger.json")]
-    public async Task Schema_Has_No_Validation_Warnings(string requestUrl)
+    [Fact]
+    public async Task Schema_Has_No_Validation_Warnings()
     {
         // Arrange
         var ruleSet = ValidationRuleSet.GetDefaultRuleSet();
@@ -71,7 +68,7 @@ public class OpenApiTests(TestServerFixture fixture, ITestOutputHelper outputHel
         using var client = Fixture.CreateClient();
 
         // Act
-        using var schema = await client.GetStreamAsync(requestUrl);
+        using var schema = await client.GetStreamAsync("/openapi/api.json");
 
         // Assert
         var reader = new OpenApiStreamReader();
