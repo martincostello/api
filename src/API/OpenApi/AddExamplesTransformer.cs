@@ -148,12 +148,10 @@ internal sealed class AddExamplesTransformer : IOpenApiOperationTransformer, IOp
         {
             foreach (var responseFormat in schemaResponse.ApiResponseFormats)
             {
-                foreach (var response in responses.Values)
+                if (responses.TryGetValue(schemaResponse.StatusCode.ToString(CultureInfo.InvariantCulture), out var response) &&
+                    response.Content.TryGetValue(responseFormat.MediaType, out var mediaType))
                 {
-                    if (response.Content.TryGetValue(responseFormat.MediaType, out var mediaType))
-                    {
-                        mediaType.Example ??= examples.Single((p) => p.SchemaType == schemaResponse.Type).GenerateExample(Context);
-                    }
+                    mediaType.Example ??= examples.SingleOrDefault((p) => p.SchemaType == schemaResponse.Type)?.GenerateExample(Context);
                 }
             }
         }
