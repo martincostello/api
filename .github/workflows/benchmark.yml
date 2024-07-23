@@ -64,7 +64,7 @@ jobs:
             throw new Error(message);
           }
 
-          core.info(`Verified ${commentUser} is a repo collaborator.`);
+          core.info(`Verified ${username} is a repo collaborator.`);
 
           if (context.eventName !== "issue_comment") {
             throw "Error: This action only works on issue_comment events.";
