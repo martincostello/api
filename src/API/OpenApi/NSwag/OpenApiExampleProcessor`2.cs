@@ -87,7 +87,7 @@ public sealed class OpenApiExampleProcessor<TSchema, TProvider> : IOperationProc
             return null;
         }
 
-        json = serialized!.ToJsonString();
+        json = serialized.ToJsonString();
         return JToken.Parse(json);
     }
 
