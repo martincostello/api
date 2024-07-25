@@ -46,12 +46,10 @@ public sealed class OpenApiExampleProcessor<TSchema, TProvider> : IOperationProc
             }
         }
 
-        // Add examples for any schemas associated with the operation
         if (context.Document.Components.Schemas.TryGetValue(typeof(TSchema).Name, out var schema))
         {
             var example = TProvider.GenerateExample();
 
-            // We cannot change ProblemDetails directly, so we need to adjust it if we see it
             if (example is ProblemDetails)
             {
                 schema.AdditionalPropertiesSchema = NJsonSchema.JsonSchema.CreateAnySchema();
