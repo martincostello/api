@@ -24,9 +24,9 @@ public sealed class OpenApiExampleProcessor<TSchema, TProvider> : IOperationProc
     /// <inheritdoc/>
     public bool Process(OperationProcessorContext context)
     {
-        var examples = context is AspNetCoreOperationProcessorContext aspnet
-            ? aspnet.ApiDescription.ActionDescriptor.EndpointMetadata.OfType<IOpenApiExampleMetadata>().ToArray()
-            : GetExampleMetadata(context.MethodInfo).ToArray();
+        var examples = ((AspNetCoreOperationProcessorContext)context).ApiDescription.ActionDescriptor.EndpointMetadata
+            .OfType<IOpenApiExampleMetadata>()
+            .ToArray();
 
         foreach ((var info, var parameter) in context.Parameters)
         {
@@ -90,9 +90,6 @@ public sealed class OpenApiExampleProcessor<TSchema, TProvider> : IOperationProc
         json = serialized!.ToJsonString();
         return JToken.Parse(json);
     }
-
-    private static IEnumerable<IOpenApiExampleMetadata> GetExampleMetadata(MethodInfo method)
-        => method.GetCustomAttributes().OfType<IOpenApiExampleMetadata>();
 
     private static IEnumerable<IOpenApiExampleMetadata> GetExampleMetadata(ParameterInfo parameter)
         => parameter.GetCustomAttributes().OfType<IOpenApiExampleMetadata>();
