@@ -19,7 +19,7 @@ public sealed class UpdateProblemDetailsMediaTypeProcessor : IOperationProcessor
     {
         foreach ((string status, var response) in context.OperationDescription.Operation.Responses)
         {
-            if (status.StartsWith('2'))
+            if (!status.StartsWith('4'))
             {
                 continue;
             }
@@ -28,9 +28,8 @@ public sealed class UpdateProblemDetailsMediaTypeProcessor : IOperationProcessor
             {
                 if (key is "application/json")
                 {
-                    var responses = context.OperationDescription.Operation.Responses[status];
-                    responses.Content["application/problem+json"] = mediaType;
-                    responses.Content.Remove(key);
+                    response.Content["application/problem+json"] = mediaType;
+                    response.Content.Remove(key);
                 }
             }
         }

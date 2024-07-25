@@ -10,6 +10,4 @@ namespace MartinCostello.Api.OpenApi.NSwag;
 /// </summary>
 /// <typeparam name="T">The type of the schema.</typeparam>
 public sealed class NSwagOpenApiExampleAttribute<T>() : OpenApiOperationProcessorAttribute(typeof(OpenApiExampleProcessor<T, T>))
-    where T : IExampleProvider<T>
-{
-}
+    where T : IExampleProvider<T>;

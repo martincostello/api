@@ -11,6 +11,4 @@ namespace MartinCostello.Api.OpenApi.NSwag;
 /// <typeparam name="TSchema">The type of the schema.</typeparam>
 /// <typeparam name="TProvider">The type of the example provider.</typeparam>
 public sealed class NSwagOpenApiExampleAttribute<TSchema, TProvider>() : OpenApiOperationProcessorAttribute(typeof(OpenApiExampleProcessor<TSchema, TProvider>))
-    where TProvider : IExampleProvider<TSchema>
-{
-}
+    where TProvider : IExampleProvider<TSchema>;

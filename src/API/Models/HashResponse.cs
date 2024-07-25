@@ -3,19 +3,18 @@
 
 using System.Text.Json.Serialization;
 using MartinCostello.Api.OpenApi;
-using Newtonsoft.Json;
 
 namespace MartinCostello.Api.Models;
 
 /// <summary>
 /// Represents the response from the <c>/tools/hash</c> API resource.
 /// </summary>
+[OpenApiExample<HashResponse>]
 public sealed class HashResponse : IExampleProvider<HashResponse>
 {
     /// <summary>
     /// Gets or sets a string containing the generated hash value in the requested format.
     /// </summary>
-    [JsonProperty("hash")]
     [JsonPropertyName("hash")]
     public string Hash { get; set; } = string.Empty;
 

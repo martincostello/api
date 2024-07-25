@@ -18,6 +18,11 @@ public sealed class RemoveParameterPositionProcessor : IOperationProcessor
         foreach (var parameter in context.Parameters.Values)
         {
             parameter.Position = null;
+
+            if (parameter.Kind is global::NSwag.OpenApiParameterKind.Body)
+            {
+                parameter.Name = null;
+            }
         }
 
         return true;
