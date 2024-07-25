@@ -51,7 +51,8 @@ public static class ApiModule
     public static IEndpointRouteBuilder MapApiEndpoints(this IEndpointRouteBuilder builder)
     {
         var group = builder.MapGroup(string.Empty)
-                           .WithTags("API");
+                           .WithTags("API")
+                           .WithMetadata(new OpenApiExampleAttribute<ProblemDetails, ProblemDetailsExampleProvider>());
 
         group.MapGet("/time", GetTime)
              .RequireCors("DefaultCorsPolicy")
@@ -121,9 +122,7 @@ public static class ApiModule
         => Convert.ToHexString(bytes);
 
     [NSwagOpenApiExample<TimeResponse>]
-    [OpenApiExample<TimeResponse>]
     [OpenApiOperation("Gets the current UTC time.", "Gets the current date and time in UTC.")]
-    [OpenApiTag("API")]
     [SwaggerResponse(StatusCodes.Status200OK, typeof(TimeResponse), Description = "The current UTC date and time.")]
     private static Ok<TimeResponse> GetTime(TimeProvider timeProvider)
     {
@@ -144,10 +143,7 @@ public static class ApiModule
 
     [NSwagOpenApiExample<GuidResponse>]
     [NSwagOpenApiExample<ProblemDetails, ProblemDetailsExampleProvider>]
-    [OpenApiExample<GuidResponse>]
-    [OpenApiExample<ProblemDetails, ProblemDetailsExampleProvider>]
     [OpenApiOperation("Generates a GUID.", "Generates a new GUID in the specified format.")]
-    [OpenApiTag("API")]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest, "application/problem+json")]
     [SwaggerResponse(StatusCodes.Status200OK, typeof(GuidResponse), Description = "A GUID was generated successfully.")]
     [SwaggerResponse(StatusCodes.Status400BadRequest, typeof(ProblemDetails), Description = "The specified format is invalid.")]
@@ -177,11 +173,7 @@ public static class ApiModule
     [NSwagOpenApiExample<HashRequest>]
     [NSwagOpenApiExample<HashResponse>]
     [NSwagOpenApiExample<ProblemDetails, ProblemDetailsExampleProvider>]
-    [OpenApiExample<HashRequest>]
-    [OpenApiExample<HashResponse>]
-    [OpenApiExample<ProblemDetails, ProblemDetailsExampleProvider>]
     [OpenApiOperation("Hashes a string.", "Generates a hash of some plaintext for a specified hash algorithm and returns it in the required format.")]
-    [OpenApiTag("API")]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest, "application/problem+json")]
     [SwaggerResponse(StatusCodes.Status200OK, typeof(HashResponse), Description = "The hash was generated successfully.")]
     [SwaggerResponse(StatusCodes.Status400BadRequest, typeof(ProblemDetails), Description = "The specified hash algorithm or output format is invalid.")]
@@ -255,10 +247,7 @@ public static class ApiModule
 
     [NSwagOpenApiExample<MachineKeyResponse>]
     [NSwagOpenApiExample<ProblemDetails, ProblemDetailsExampleProvider>]
-    [OpenApiExample<MachineKeyResponse>]
-    [OpenApiExample<ProblemDetails, ProblemDetailsExampleProvider>]
     [OpenApiOperation("Generates a machine key.", "Generates a machine key for a Web.config configuration file for ASP.NET.")]
-    [OpenApiTag("API")]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest, "application/problem+json")]
     [SwaggerResponse(StatusCodes.Status200OK, typeof(MachineKeyResponse), Description = "The machine key was generated successfully.")]
     [SwaggerResponse(StatusCodes.Status400BadRequest, typeof(ProblemDetails), Description = "The specified decryption or validation algorithm is invalid.")]
