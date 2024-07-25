@@ -19,5 +19,5 @@ public interface IOpenApiExampleMetadata
     /// <returns>
     /// The example to use.
     /// </returns>
-    object GenerateExample();
+    object? GenerateExample();
 }

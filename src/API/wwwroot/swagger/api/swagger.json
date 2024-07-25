@@ -119,7 +119,6 @@
         "description": "Generates a hash of some plaintext for a specified hash algorithm and returns it in the required format.",
         "operationId": "Hash",
         "requestBody": {
-          "x-name": "request",
           "content": {
             "application/json": {
               "schema": {
