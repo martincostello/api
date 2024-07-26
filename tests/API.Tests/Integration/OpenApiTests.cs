@@ -14,6 +14,19 @@ namespace MartinCostello.Api.Integration;
 [Collection(TestServerCollection.Name)]
 public class OpenApiTests(TestServerFixture fixture, ITestOutputHelper outputHelper) : IntegrationTest(fixture, outputHelper)
 {
+    [Fact]
+    public async Task Schema_Is_Correct()
+    {
+        // Arrange
+        using var client = Fixture.CreateClient();
+
+        // Act
+        string actual = await client.GetStringAsync("/openapi/api.json");
+
+        // Assert
+        await VerifyJson(actual);
+    }
+
     [Theory]
     [InlineData("/openapi/api.json")]
     public async Task Static_And_Dynamic_Schema_Match(string subpath)

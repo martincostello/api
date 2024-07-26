@@ -35,6 +35,7 @@ PublishProfiles
 *.[Pp]ublish.xml
 *.publishproj
 *.pubxml
+*.received.*
 *.sdf
 *.sln.cache
 *.sln.docstates
