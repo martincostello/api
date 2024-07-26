@@ -75,6 +75,31 @@ public class ResourceTests(TestServerFixture fixture, ITestOutputHelper outputHe
         response.Content!.Headers.ContentType?.MediaType?.ShouldBe(contentType);
     }
 
+    [Theory]
+    [InlineData("GET", "/time")]
+    [InlineData("GET", "/tools/guid")]
+    [InlineData("POST", "/tools/hash")]
+    [InlineData("GET", "/tools/machinekey?decryptionAlgorithm=3DES&validationAlgorithm=3DES")]
+    public async Task Can_Load_Resource_With_Cors(string requestMethod, string requestUri)
+    {
+        // Arrange
+        using var client = Fixture.CreateClient();
+
+        client.DefaultRequestHeaders.Add("Access-Control-Request-Method", requestMethod);
+        client.DefaultRequestHeaders.Add("Origin", "https://localhost:50001");
+
+        using var message = new HttpRequestMessage(HttpMethod.Options, requestUri);
+
+        // Act
+        using var response = await client.SendAsync(message);
+
+        // Assert
+        response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
+        response.Headers.Contains("Access-Control-Allow-Methods").ShouldBeTrue();
+        response.Headers.Contains("Access-Control-Allow-Origin").ShouldBeTrue();
+        response.Headers.Contains("Access-Control-Allow-Headers").ShouldBeTrue();
+    }
+
     [Fact]
     public async Task Response_Headers_Contains_Expected_Headers()
     {

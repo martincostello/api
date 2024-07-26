@@ -51,11 +51,11 @@ public static class ApiModule
     public static IEndpointRouteBuilder MapApiEndpoints(this IEndpointRouteBuilder builder)
     {
         var group = builder.MapGroup(string.Empty)
+                           .RequireCors("DefaultCorsPolicy")
                            .WithTags("API")
                            .WithMetadata(new OpenApiExampleAttribute<ProblemDetails, ProblemDetailsExampleProvider>());
 
         group.MapGet("/time", GetTime)
-             .RequireCors("DefaultCorsPolicy")
              .WithName("Time")
              .WithSummary("Gets the current UTC time.")
              .WithDescription("Gets the current date and time in UTC.");

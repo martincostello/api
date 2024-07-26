@@ -57,16 +57,8 @@ public static class ApiBuilder
                     policy
                         .WithExposedHeaders(siteOptions.Api?.Cors?.ExposedHeaders ?? [])
                         .WithHeaders(siteOptions.Api?.Cors?.Headers ?? [])
-                        .WithMethods(siteOptions.Api?.Cors?.Methods ?? []);
-
-                    if (builder.Environment.IsDevelopment())
-                    {
-                        policy.AllowAnyOrigin();
-                    }
-                    else
-                    {
-                        policy.WithOrigins(siteOptions.Api?.Cors?.Origins ?? []);
-                    }
+                        .WithMethods(siteOptions.Api?.Cors?.Methods ?? [])
+                        .WithOrigins(siteOptions.Api?.Cors?.Origins ?? []);
                 });
         });
 
