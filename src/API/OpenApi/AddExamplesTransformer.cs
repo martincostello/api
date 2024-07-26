@@ -2,6 +2,8 @@
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 using System.Reflection;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi.Models;
@@ -21,24 +23,7 @@ internal sealed class AddExamplesTransformer : IOpenApiOperationTransformer, IOp
         OpenApiOperationTransformerContext context,
         CancellationToken cancellationToken)
     {
-        if (operation.Parameters is { Count: > 0 } parameters)
-        {
-            TryAddParameterExamples(parameters, context);
-        }
-
-        var examples = context.Description.ActionDescriptor.EndpointMetadata
-            .OfType<IOpenApiExampleMetadata>()
-            .ToArray();
-
-        if (examples.Length > 0)
-        {
-            if (operation.RequestBody is { } body)
-            {
-                TryAddRequestExamples(body, context, examples);
-            }
-
-            TryAddResponseExamples(operation.Responses, context, examples);
-        }
+        Process(operation, context.Description);
 
         return Task.CompletedTask;
     }
@@ -49,36 +34,62 @@ internal sealed class AddExamplesTransformer : IOpenApiOperationTransformer, IOp
         OpenApiSchemaTransformerContext context,
         CancellationToken cancellationToken)
     {
-        /*
-        if (context.JsonTypeInfo.Type == typeof(ProblemDetails))
-        {
-            schema.Example = ExampleFormatter.AsJson<ProblemDetails, ProblemDetailsExampleProvider>(Context);
-        }
-        else
-        {
-            var metadata = context.JsonTypeInfo.Type.GetCustomAttributes(false)
-                .OfType<IOpenApiExampleMetadata>()
-                .FirstOrDefault();
+        Type? type = null; // context.JsonTypeInfo.Type;
 
-            if (metadata?.GenerateExample(Context) is { } value)
-            {
-                schema.Example = value;
-            }
+#pragma warning disable CA1508
+        if (type is not null)
+#pragma warning restore CA1508
+        {
+            Process(schema, type);
         }
-        */
 
         return Task.CompletedTask;
     }
 
+    private static void Process(OpenApiOperation operation, ApiDescription description)
+    {
+        var examples = description.ActionDescriptor.EndpointMetadata
+            .OfType<IOpenApiExampleMetadata>()
+            .ToArray();
+
+        if (operation.Parameters is { Count: > 0 } parameters)
+        {
+            TryAddParameterExamples(parameters, description, examples);
+        }
+
+        if (operation.RequestBody is { } body)
+        {
+            TryAddRequestExamples(body, description, examples);
+        }
+
+        TryAddResponseExamples(operation.Responses, description, examples);
+    }
+
+    private static void Process(OpenApiSchema schema, Type type)
+    {
+        if (schema.Example is not null)
+        {
+            return;
+        }
+
+        if (type == typeof(ProblemDetails))
+        {
+            schema.Example = ExampleFormatter.AsJson<ProblemDetails, ProblemDetailsExampleProvider>(Context);
+        }
+        else if (GetExampleMetadata(type).FirstOrDefault() is { } metadata)
+        {
+            schema.Example = metadata.GenerateExample(Context);
+        }
+    }
+
     private static void TryAddParameterExamples(
         IList<OpenApiParameter> parameters,
-        OpenApiOperationTransformerContext context)
+        ApiDescription description,
+        IList<IOpenApiExampleMetadata> examples)
     {
-        var methodInfo = context.Description.ActionDescriptor.EndpointMetadata
+        var arguments = description.ActionDescriptor.EndpointMetadata
             .OfType<MethodInfo>()
-            .FirstOrDefault();
-
-        var arguments = methodInfo?
+            .FirstOrDefault()?
             .GetParameters()
             .ToArray();
 
@@ -86,16 +97,17 @@ internal sealed class AddExamplesTransformer : IOpenApiOperationTransformer, IOp
         {
             foreach (var argument in arguments)
             {
-                var metadata = argument.GetCustomAttributes()
-                    .OfType<IOpenApiExampleMetadata>()
-                    .FirstOrDefault((p) => p.SchemaType == argument.ParameterType);
+                var metadata =
+                    GetExampleMetadata(argument).FirstOrDefault((p) => p.SchemaType == argument.ParameterType) ??
+                    GetExampleMetadata(argument.ParameterType).FirstOrDefault((p) => p.SchemaType == argument.ParameterType) ??
+                    examples.FirstOrDefault((p) => p.SchemaType == argument.ParameterType);
 
                 if (metadata?.GenerateExample(Context) is { } value)
                 {
                     var parameter = parameters.FirstOrDefault((p) => p.Name == argument.Name);
                     if (parameter is not null)
                     {
-                        parameter.Example = value;
+                        parameter.Example ??= value;
                     }
                 }
             }
@@ -104,25 +116,19 @@ internal sealed class AddExamplesTransformer : IOpenApiOperationTransformer, IOp
 
     private static void TryAddRequestExamples(
         OpenApiRequestBody body,
-        OpenApiOperationTransformerContext context,
+        ApiDescription description,
         IList<IOpenApiExampleMetadata> examples)
     {
-        var schemaResponses = context.Description.ParameterDescriptions
-            .Where((p) => p.Source == BindingSource.Body)
-            .Where((p) => examples.Any((r) => r.SchemaType == p.Type))
-            .ToArray();
-
-        if (schemaResponses.Length < 1)
-        {
-            return;
-        }
-
         if (!body.Content.TryGetValue("application/json", out var mediaType) || mediaType.Example is not null)
         {
             return;
         }
 
-        var metadata = examples.FirstOrDefault((p) => p.SchemaType == schemaResponses[0].Type);
+        var bodyParameter = description.ParameterDescriptions.Single((p) => p.Source == BindingSource.Body);
+
+        var metadata =
+            GetExampleMetadata(bodyParameter.Type).FirstOrDefault() ??
+            examples.FirstOrDefault((p) => p.SchemaType == bodyParameter.Type);
 
         if (metadata is not null)
         {
@@ -132,28 +138,30 @@ internal sealed class AddExamplesTransformer : IOpenApiOperationTransformer, IOp
 
     private static void TryAddResponseExamples(
         OpenApiResponses responses,
-        OpenApiOperationTransformerContext context,
+        ApiDescription description,
         IList<IOpenApiExampleMetadata> examples)
     {
-        var schemaResponses = context.Description.SupportedResponseTypes
-            .Where((p) => examples.Any((r) => r.SchemaType == p.Type))
-            .ToArray();
-
-        if (schemaResponses.Length < 1)
+        foreach (var schemaResponse in description.SupportedResponseTypes)
         {
-            return;
-        }
+            schemaResponse.Type ??= schemaResponse.ModelMetadata?.ModelType;
 
-        foreach (var schemaResponse in schemaResponses)
-        {
+            var metadata = GetExampleMetadata(schemaResponse.Type)?
+                .FirstOrDefault((p) => p.SchemaType == schemaResponse.Type);
+
             foreach (var responseFormat in schemaResponse.ApiResponseFormats)
             {
                 if (responses.TryGetValue(schemaResponse.StatusCode.ToString(CultureInfo.InvariantCulture), out var response) &&
                     response.Content.TryGetValue(responseFormat.MediaType, out var mediaType))
                 {
-                    mediaType.Example ??= examples.SingleOrDefault((p) => p.SchemaType == schemaResponse.Type)?.GenerateExample(Context);
+                    mediaType.Example ??= (metadata ?? examples.SingleOrDefault((p) => p.SchemaType == schemaResponse.Type))?.GenerateExample(Context);
                 }
             }
         }
     }
+
+    private static IEnumerable<IOpenApiExampleMetadata> GetExampleMetadata(ParameterInfo parameter)
+        => parameter.GetCustomAttributes().OfType<IOpenApiExampleMetadata>();
+
+    private static IEnumerable<IOpenApiExampleMetadata> GetExampleMetadata(Type? type)
+        => type?.GetCustomAttributes().OfType<IOpenApiExampleMetadata>() ?? [];
 }

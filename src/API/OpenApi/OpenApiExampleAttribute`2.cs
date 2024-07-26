@@ -29,6 +29,9 @@ public class OpenApiExampleAttribute<TSchema, TProvider> : Attribute, IOpenApiEx
     public virtual TSchema GenerateExample() => TProvider.GenerateExample();
 
     /// <inheritdoc/>
+    object? IOpenApiExampleMetadata.GenerateExample() => GenerateExample();
+
+    /// <inheritdoc/>
     IOpenApiAny IOpenApiExampleMetadata.GenerateExample(JsonSerializerContext context)
         => ExampleFormatter.AsJson(GenerateExample(), context);
 }
