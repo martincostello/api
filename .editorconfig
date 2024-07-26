@@ -11,6 +11,15 @@ trim_trailing_whitespace = true
 [*.{config,csproj,css,js,json,props,ruleset,targets,ts,vsconfig,xml,yml}]
 indent_size = 2
 
+[*.{received,verified}.{txt,xml,json}]
+charset = utf-8-bom
+end_of_line = lf
+indent_size = unset
+indent_style = unset
+insert_final_newline = false
+tab_width = unset
+trim_trailing_whitespace = false
+
 [*.{cs,ts}]
 file_header_template = Copyright (c) Martin Costello, 2016. All rights reserved.\nLicensed under the MIT license. See the LICENSE file in the project root for full license information.
 
