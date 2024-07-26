@@ -86,7 +86,7 @@
                   $ref: #/components/schemas/GuidResponse
                 },
                 example: {
-                  guid: Guid_1
+                  guid: 6bc55a07-3d3e-4d52-8701-362a1187772d
                 }
               }
             }
@@ -268,7 +268,7 @@
         type: object,
         description: Represents the response from the /tools/guid API resource.,
         example: {
-          guid: Guid_1
+          guid: 6bc55a07-3d3e-4d52-8701-362a1187772d
         },
         additionalProperties: false,
         properties: {
