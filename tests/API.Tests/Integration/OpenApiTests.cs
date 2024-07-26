@@ -19,7 +19,6 @@ public class OpenApiTests(TestServerFixture fixture, ITestOutputHelper outputHel
     {
         // Arrange
         var settings = new VerifySettings();
-        settings.DontScrubDateTimes();
         settings.DontScrubGuids();
 
         using var client = Fixture.CreateClient();
