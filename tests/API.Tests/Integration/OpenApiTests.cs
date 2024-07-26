@@ -18,13 +18,17 @@ public class OpenApiTests(TestServerFixture fixture, ITestOutputHelper outputHel
     public async Task Schema_Is_Correct()
     {
         // Arrange
+        var settings = new VerifySettings();
+        settings.DontScrubDateTimes();
+        settings.DontScrubGuids();
+
         using var client = Fixture.CreateClient();
 
         // Act
         string actual = await client.GetStringAsync("/openapi/api.json");
 
         // Assert
-        await VerifyJson(actual);
+        await VerifyJson(actual, settings);
     }
 
     [Theory]

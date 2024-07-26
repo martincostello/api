@@ -36,7 +36,7 @@
                   $ref: #/components/schemas/TimeResponse
                 },
                 example: {
-                  timestamp: DateTimeOffset_1,
+                  timestamp: 2016-06-03T19:44:14+01:00,
                   rfc1123: Fri, 03 Jun 2016 18:44:14 GMT,
                   unix: 1464979454,
                   universalSortable: 2016-06-03 18:44:14Z,
@@ -86,7 +86,7 @@
                   $ref: #/components/schemas/GuidResponse
                 },
                 example: {
-                  guid: Guid_1
+                  guid: 6bc55a07-3d3e-4d52-8701-362a1187772d
                 }
               }
             }
@@ -232,7 +232,7 @@
         type: object,
         description: Represents the response from the /time API resource.,
         example: {
-          timestamp: DateTimeOffset_1,
+          timestamp: 2016-06-03T19:44:14+01:00,
           rfc1123: Fri, 03 Jun 2016 18:44:14 GMT,
           unix: 1464979454,
           universalSortable: 2016-06-03 18:44:14Z,
@@ -268,7 +268,7 @@
         type: object,
         description: Represents the response from the /tools/guid API resource.,
         example: {
-          guid: Guid_1
+          guid: 6bc55a07-3d3e-4d52-8701-362a1187772d
         },
         additionalProperties: false,
         properties: {
