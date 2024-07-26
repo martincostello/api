@@ -2,11 +2,11 @@
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 using System.Reflection;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi.Models;
+using ProblemDetails = Microsoft.AspNetCore.Mvc.ProblemDetails;
 
 namespace MartinCostello.Api.OpenApi;
 
@@ -34,14 +34,7 @@ internal sealed class AddExamplesTransformer : IOpenApiOperationTransformer, IOp
         OpenApiSchemaTransformerContext context,
         CancellationToken cancellationToken)
     {
-        Type? type = null; // context.JsonTypeInfo.Type;
-
-#pragma warning disable CA1508
-        if (type is not null)
-#pragma warning restore CA1508
-        {
-            Process(schema, type);
-        }
+        Process(schema, context.JsonTypeInfo.Type);
 
         return Task.CompletedTask;
     }

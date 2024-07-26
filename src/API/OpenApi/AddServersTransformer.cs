@@ -10,8 +10,11 @@ namespace MartinCostello.Api.OpenApi;
 /// <summary>
 /// A class representing a document processor that server information. This class cannot be inherited.
 /// </summary>
+/// <param name="accessor">The <see cref="IHttpContextAccessor"/> to use.</param>
 /// <param name="options">The configured <see cref="ForwardedHeadersOptions"/>.</param>
-internal sealed class AddServersTransformer(IOptions<ForwardedHeadersOptions> options) : IOpenApiDocumentTransformer
+internal sealed class AddServersTransformer(
+    IHttpContextAccessor accessor,
+    IOptions<ForwardedHeadersOptions> options) : IOpenApiDocumentTransformer
 {
     /// <inheritdoc/>
     public Task TransformAsync(
@@ -19,13 +22,12 @@ internal sealed class AddServersTransformer(IOptions<ForwardedHeadersOptions> op
         OpenApiDocumentTransformerContext context,
         CancellationToken cancellationToken)
     {
-        document.Servers = [new() { Url = GetServerUrl(context, options.Value) }];
+        document.Servers = [new() { Url = GetServerUrl(accessor, options.Value) }];
         return Task.CompletedTask;
     }
 
-    private static string GetServerUrl(OpenApiDocumentTransformerContext context, ForwardedHeadersOptions options)
+    private static string GetServerUrl(IHttpContextAccessor accessor, ForwardedHeadersOptions options)
     {
-        var accessor = context.ApplicationServices.GetRequiredService<IHttpContextAccessor>();
         var request = accessor.HttpContext!.Request;
 
         string scheme = TryGetFirstHeader(options.ForwardedProtoHeaderName) ?? request.Scheme;

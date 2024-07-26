@@ -1,5 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
+    <ContainerBaseImage>mcr.microsoft.com/dotnet/nightly/runtime-deps:9.0-preview-noble-chiseled</ContainerBaseImage>
     <ContainerFamily>noble-chiseled</ContainerFamily>
     <ContainerRepository>martincostello/api</ContainerRepository>
     <Description>https://api.martincostello.com/</Description>
@@ -13,6 +14,7 @@
     <PublishSelfContained>true</PublishSelfContained>
     <RootNamespace>MartinCostello.Api</RootNamespace>
     <TargetFramework>net9.0</TargetFramework>
+    <TrimmerSingleWarn>false</TrimmerSingleWarn>
     <Summary>Martin Costello's API</Summary>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <TypeScriptToolsVersion>latest</TypeScriptToolsVersion>
@@ -26,8 +28,8 @@
     <PackageReference Include="Azure.Monitor.OpenTelemetry.Exporter" />
     <PackageReference Include="Microsoft.AspNetCore.AzureAppServices.HostingStartup" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+    <PackageReference Include="Microsoft.OpenApi" />
     <PackageReference Include="Microsoft.TypeScript.MSBuild" />
-    <PackageReference Include="NSwag.AspNetCore" />
     <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" />
     <PackageReference Include="OpenTelemetry.Extensions.Hosting" />
     <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" />
@@ -61,5 +63,26 @@
     <WriteLinesToFile File="$(GITHUB_OUTPUT)" Lines="container-digest=$(GeneratedContainerDigest)" />
     <WriteLinesToFile File="$(GITHUB_OUTPUT)" Lines="container-image=$(_ContainerImage)" />
     <WriteLinesToFile File="$(GITHUB_OUTPUT)" Lines="container-tag=$(_ContainerTag)" />
+  </Target>
+  <!--
+    HACK Remove when the following pull requests are merged:
+    https://github.com/dotnet/aspnetcore/pull/56827
+    https://github.com/microsoft/OpenAPI.NET/pull/1717
+  -->
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);IL2104;IL3053</NoWarn>
+  </PropertyGroup>
+  <Target Name="SuppressTrimWarnings" BeforeTargets="PrepareForILLink">
+    <ItemGroup>
+      <IlcArg Include="--singlewarnassembly:Microsoft.AspNetCore.Mvc.Abstractions" />
+      <IlcArg Include="--singlewarnassembly:Microsoft.AspNetCore.Mvc.ApiExplorer" />
+      <IlcArg Include="--singlewarnassembly:Microsoft.OpenApi" />
+    </ItemGroup>
+    <ItemGroup>
+      <ManagedAssemblyToLink Condition="'%(Filename)' == 'Microsoft.AspNetCore.Mvc.Abstractions' OR '%(Filename)' == 'Microsoft.AspNetCore.Mvc.ApiExplorer' OR '%(Filename)' == 'Microsoft.OpenApi'">
+        <IsTrimmable>true</IsTrimmable>
+        <TrimmerSingleWarn>true</TrimmerSingleWarn>
+      </ManagedAssemblyToLink>
+    </ItemGroup>
   </Target>
 </Project>

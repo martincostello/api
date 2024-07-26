@@ -19,14 +19,6 @@ public interface IOpenApiExampleMetadata
     /// <summary>
     /// Generates an example object for the schema.
     /// </summary>
-    /// <returns>
-    /// The example to use.
-    /// </returns>
-    object? GenerateExample();
-
-    /// <summary>
-    /// Generates an example for the schema.
-    /// </summary>
     /// <param name="context">The JSON serializer context to use.</param>
     /// <returns>
     /// The example to use.
