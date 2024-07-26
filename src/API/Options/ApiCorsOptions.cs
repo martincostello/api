@@ -9,6 +9,11 @@ namespace MartinCostello.Api.Options;
 public sealed class ApiCorsOptions
 {
     /// <summary>
+    /// Gets or sets a value indicating whether to allow any origin.
+    /// </summary>
+    public bool AllowAnyOrigin { get; set; }
+
+    /// <summary>
     /// Gets or sets the names of the HTTP response headers exposed.
     /// </summary>
     public string[] ExposedHeaders { get; set; } = [];
