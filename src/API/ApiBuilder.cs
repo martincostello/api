@@ -170,7 +170,11 @@ public static class ApiBuilder
 
         if (RuntimeFeature.IsDynamicCodeSupported)
         {
-            app.UseOpenApi();
+            app.UseOpenApi((p) =>
+            {
+                p.DocumentName = "api";
+                p.Path = "/openapi/{documentName}.json";
+            });
         }
 
         app.UseStaticFiles();

@@ -15,7 +15,7 @@ namespace MartinCostello.Api.Integration;
 public class OpenApiTests(TestServerFixture fixture, ITestOutputHelper outputHelper) : IntegrationTest(fixture, outputHelper)
 {
     [Theory]
-    [InlineData("/swagger/api/swagger.json")]
+    [InlineData("/openapi/api.json")]
     public async Task Static_And_Dynamic_Schema_Match(string subpath)
     {
         // Arrange
@@ -57,7 +57,7 @@ public class OpenApiTests(TestServerFixture fixture, ITestOutputHelper outputHel
     }
 
     [Theory]
-    [InlineData("/swagger/api/swagger.json")]
+    [InlineData("/openapi/api.json")]
     public async Task Schema_Has_No_Validation_Warnings(string requestUrl)
     {
         // Arrange
