@@ -54,11 +54,18 @@ public static class ApiBuilder
                 "DefaultCorsPolicy",
                 (policy) =>
                 {
-                    policy
-                        .WithExposedHeaders(siteOptions.Api?.Cors?.ExposedHeaders ?? [])
-                        .WithHeaders(siteOptions.Api?.Cors?.Headers ?? [])
-                        .WithMethods(siteOptions.Api?.Cors?.Methods ?? [])
-                        .WithOrigins(siteOptions.Api?.Cors?.Origins ?? []);
+                    policy.WithExposedHeaders(siteOptions.Api?.Cors?.ExposedHeaders ?? [])
+                          .WithHeaders(siteOptions.Api?.Cors?.Headers ?? [])
+                          .WithMethods(siteOptions.Api?.Cors?.Methods ?? []);
+
+                    if (siteOptions.Api?.Cors?.AllowAnyOrigin is true)
+                    {
+                        policy.AllowAnyOrigin();
+                    }
+                    else
+                    {
+                        policy.WithOrigins(siteOptions.Api?.Cors?.Origins ?? []);
+                    }
                 });
         });
 
