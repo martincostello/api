@@ -43,7 +43,7 @@ public sealed class TimeResponse : IExampleProvider<TimeResponse>
     public string UniversalFull { get; set; } = string.Empty;
 
     /// <inheritdoc/>
-    static TimeResponse IExampleProvider<TimeResponse>.GenerateExample()
+    public static TimeResponse GenerateExample()
     {
         return new()
         {

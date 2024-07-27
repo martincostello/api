@@ -2,9 +2,11 @@
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 using System.Runtime.CompilerServices;
-using MartinCostello.Api.OpenApi.NSwag;
+using MartinCostello.Api.OpenApi;
 using MartinCostello.Api.Options;
 using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace MartinCostello.Api.Extensions;
 
@@ -28,40 +30,54 @@ public static class IServiceCollectionExtensions
         }
 
         services.AddEndpointsApiExplorer();
-        services.AddOpenApiDocument((options, services) =>
+        services.AddHttpContextAccessor();
+
+        services.AddSwaggerGen((options) =>
         {
-            var siteOptions = services.GetRequiredService<IOptions<SiteOptions>>().Value;
+            using var provider = services.BuildServiceProvider();
+            var siteOptions = provider.GetRequiredService<IOptions<SiteOptions>>().Value;
 
-            options.DocumentName = "api";
-            options.Title = siteOptions.Metadata?.Name;
-            options.Version = string.Empty;
-
-            options.PostProcess = (document) =>
+            var info = new OpenApiInfo()
             {
-                document.Generator = null;
-
-                document.Info.Contact = new()
+                Contact = new()
                 {
                     Name = siteOptions.Metadata?.Author?.Name,
-                    Url = siteOptions.Metadata?.Author?.Website ?? string.Empty,
-                };
-
-                document.Info.Description = siteOptions.Metadata?.Description;
-
-                document.Info.License = new()
+                    Url = new(siteOptions.Metadata?.Author?.Website ?? string.Empty),
+                },
+                Description = siteOptions.Metadata?.Description,
+                License = new()
                 {
                     Name = siteOptions.Api?.License?.Name,
-                    Url = siteOptions.Api?.License?.Url ?? string.Empty,
-                };
-
-                document.Info.Version = string.Empty;
+                    Url = new(siteOptions.Api?.License?.Url ?? string.Empty),
+                },
+                Title = siteOptions.Metadata?.Name,
+                Version = string.Empty,
             };
 
-            options.OperationProcessors.Add(new RemoveParameterPositionProcessor());
-            options.OperationProcessors.Add(new UpdateProblemDetailsMediaTypeProcessor());
-            options.SchemaSettings.SchemaProcessors.Add(new RemoveStyleCopPrefixesProcessor());
+            options.SwaggerDoc("api", info);
+
+            options.EnableAnnotations();
+            options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "API.xml"));
+
+            options.DocumentFilter<AddDocumentTags>();
+            options.DocumentFilter<AddServers>();
+            options.OperationFilter<AddDescriptions>();
+
+            var examples = new AddExamples();
+            options.AddOperationFilterInstance(examples);
+            options.AddSchemaFilterInstance(examples);
+
+            var prefixes = new RemoveStyleCopPrefixes();
+            options.AddOperationFilterInstance(prefixes);
+            options.AddSchemaFilterInstance(prefixes);
         });
 
         return services;
+    }
+
+    private sealed class AddDocumentTags : IDocumentFilter
+    {
+        public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
+            => swaggerDoc.Tags.Add(new() { Name = "API" });
     }
 }

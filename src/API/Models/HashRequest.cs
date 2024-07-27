@@ -35,7 +35,7 @@ public sealed class HashRequest : IExampleProvider<HashRequest>
     public string Plaintext { get; set; } = string.Empty;
 
     /// <inheritdoc/>
-    static HashRequest IExampleProvider<HashRequest>.GenerateExample()
+    public static HashRequest GenerateExample()
     {
         return new()
         {

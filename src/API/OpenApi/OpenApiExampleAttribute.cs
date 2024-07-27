@@ -8,7 +8,7 @@ namespace MartinCostello.Api.OpenApi;
 /// </summary>
 /// <param name="value">The example value.</param>
 [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false)]
-public sealed class OpenApiExampleAttribute(string value) : OpenApiExampleAttribute<string, OpenApiExampleAttribute>, IExampleProvider<string>
+internal sealed class OpenApiExampleAttribute(string value) : OpenApiExampleAttribute<string, OpenApiExampleAttribute>, IExampleProvider<string>
 {
     /// <summary>
     /// Gets the example value.

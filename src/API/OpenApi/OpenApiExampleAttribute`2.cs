@@ -1,6 +1,9 @@
 ﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
+using System.Text.Json.Serialization;
+using Microsoft.OpenApi.Any;
+
 namespace MartinCostello.Api.OpenApi;
 
 #pragma warning disable CA1813
@@ -11,11 +14,11 @@ namespace MartinCostello.Api.OpenApi;
 /// <typeparam name="TSchema">The type of the schema.</typeparam>
 /// <typeparam name="TProvider">The type of the example provider.</typeparam>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Parameter, AllowMultiple = true)]
-public class OpenApiExampleAttribute<TSchema, TProvider> : Attribute, IOpenApiExampleMetadata
+internal class OpenApiExampleAttribute<TSchema, TProvider> : Attribute, IOpenApiExampleMetadata
     where TProvider : IExampleProvider<TSchema>
 {
     /// <inheritdoc/>
-    public Type SchemaType => typeof(TSchema);
+    public Type SchemaType { get; } = typeof(TSchema);
 
     /// <summary>
     /// Generates the example to use.
@@ -26,5 +29,6 @@ public class OpenApiExampleAttribute<TSchema, TProvider> : Attribute, IOpenApiEx
     public virtual TSchema GenerateExample() => TProvider.GenerateExample();
 
     /// <inheritdoc/>
-    object? IOpenApiExampleMetadata.GenerateExample() => GenerateExample()!;
+    IOpenApiAny IOpenApiExampleMetadata.GenerateExample(JsonSerializerContext context)
+        => ExampleFormatter.AsJson(GenerateExample(), context);
 }

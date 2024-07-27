@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.0",
+  "openapi": "3.0.1",
   "info": {
     "title": "api.martincostello.com",
     "description": "Martin Costello's API",
@@ -62,8 +62,7 @@
             "in": "query",
             "description": "The format for which to generate a GUID.",
             "schema": {
-              "type": "string",
-              "nullable": true
+              "type": "string"
             },
             "example": "D"
           },
@@ -72,8 +71,7 @@
             "in": "query",
             "description": "Whether to return the GUID in uppercase.",
             "schema": {
-              "type": "boolean",
-              "nullable": true
+              "type": "boolean"
             }
           }
         ],
@@ -123,6 +121,11 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/HashRequest"
+              },
+              "example": {
+                "algorithm": "sha256",
+                "format": "base64",
+                "plaintext": "The quick brown fox jumped over the lazy dog"
               }
             }
           }
@@ -174,8 +177,7 @@
             "in": "query",
             "description": "The name of the decryption algorithm.",
             "schema": {
-              "type": "string",
-              "nullable": true
+              "type": "string"
             },
             "example": "AES-256"
           },
@@ -184,8 +186,7 @@
             "in": "query",
             "description": "The name of the validation algorithm.",
             "schema": {
-              "type": "string",
-              "nullable": true
+              "type": "string"
             },
             "example": "SHA1"
           }
@@ -228,65 +229,97 @@
   },
   "components": {
     "schemas": {
-      "TimeResponse": {
-        "type": "object",
-        "description": "Represents the response from the /time API resource.",
-        "example": {
-          "timestamp": "2016-06-03T18:44:14+00:00",
-          "rfc1123": "Fri, 03 Jun 2016 18:44:14 GMT",
-          "unix": 1464979454,
-          "universalSortable": "2016-06-03 18:44:14Z",
-          "universalFull": "Friday, 03 June 2016 18:44:14"
-        },
-        "additionalProperties": false,
-        "properties": {
-          "timestamp": {
-            "type": "string",
-            "description": "The timestamp for the response for which the times are generated.",
-            "format": "date-time"
-          },
-          "rfc1123": {
-            "type": "string",
-            "description": "The current UTC date and time in RFC1123 format."
-          },
-          "unix": {
-            "type": "integer",
-            "description": "The number of seconds since the UNIX epoch.",
-            "format": "int64"
-          },
-          "universalSortable": {
-            "type": "string",
-            "description": "The current UTC date and time in universal sortable format."
-          },
-          "universalFull": {
-            "type": "string",
-            "description": "The current UTC date and time in universal full format."
-          }
-        }
-      },
       "GuidResponse": {
         "type": "object",
-        "description": "Represents the response from the /tools/guid API resource.",
-        "example": {
-          "guid": "6bc55a07-3d3e-4d52-8701-362a1187772d"
-        },
-        "additionalProperties": false,
         "properties": {
           "guid": {
             "type": "string",
-            "description": "The generated GUID value."
+            "description": "The generated GUID value.",
+            "nullable": true
           }
+        },
+        "additionalProperties": false,
+        "description": "Represents the response from the /tools/guid API resource.",
+        "example": {
+          "guid": "6bc55a07-3d3e-4d52-8701-362a1187772d"
+        }
+      },
+      "HashRequest": {
+        "required": [
+          "algorithm",
+          "format",
+          "plaintext"
+        ],
+        "type": "object",
+        "properties": {
+          "algorithm": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The name of the hash algorithm to use."
+          },
+          "format": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The format in which to return the hash."
+          },
+          "plaintext": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The plaintext value to generate the hash from."
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents a request to the /tools/hash API resource.",
+        "example": {
+          "algorithm": "sha256",
+          "format": "base64",
+          "plaintext": "The quick brown fox jumped over the lazy dog"
+        }
+      },
+      "HashResponse": {
+        "type": "object",
+        "properties": {
+          "hash": {
+            "type": "string",
+            "description": "A string containing the generated hash value in the requested format.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents the response from the /tools/hash API resource.",
+        "example": {
+          "hash": "fTi1zSWiuvha07tbkxE4PmcaihQuswKzJNSl+6h0jGk="
+        }
+      },
+      "MachineKeyResponse": {
+        "type": "object",
+        "properties": {
+          "decryptionKey": {
+            "type": "string",
+            "description": "A string containing the decryption key.",
+            "nullable": true
+          },
+          "validationKey": {
+            "type": "string",
+            "description": "A string containing the validation key.",
+            "nullable": true
+          },
+          "machineKeyXml": {
+            "type": "string",
+            "description": "A string containing the machineKey XML configuration element.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents the response from the /tools/machinekey API resource.",
+        "example": {
+          "decryptionKey": "2EA72C07DEEF522B4686C39BDF83E70A96BA92EE1D960029821FCA2E4CD9FB72",
+          "validationKey": "0A7A92827A74B9B4D2A21918814D8E4A9150BB5ADDB284533BDB50E44ADA6A4BCCFF637A5CB692816EE304121A1BCAA5A6D96BE31A213DEE0BAAEF102A391E8F",
+          "machineKeyXml": "<machineKey validationKey=\"0A7A92827A74B9B4D2A21918814D8E4A9150BB5ADDB284533BDB50E44ADA6A4BCCFF637A5CB692816EE304121A1BCAA5A6D96BE31A213DEE0BAAEF102A391E8F\" decryptionKey=\"2EA72C07DEEF522B4686C39BDF83E70A96BA92EE1D960029821FCA2E4CD9FB72\" validation=\"SHA1\" decryption=\"AES\" />"
         }
       },
       "ProblemDetails": {
         "type": "object",
-        "example": {
-          "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
-          "title": "Bad Request",
-          "status": 400,
-          "detail": "The specified value is invalid."
-        },
-        "additionalProperties": {},
         "properties": {
           "type": {
             "type": "string",
@@ -309,78 +342,59 @@
             "type": "string",
             "nullable": true
           }
+        },
+        "additionalProperties": {},
+        "example": {
+          "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+          "title": "Bad Request",
+          "status": 400,
+          "detail": "The specified value is invalid."
         }
       },
-      "HashResponse": {
+      "TimeResponse": {
         "type": "object",
-        "description": "Represents the response from the /tools/hash API resource.",
-        "example": {
-          "hash": "fTi1zSWiuvha07tbkxE4PmcaihQuswKzJNSl+6h0jGk="
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "description": "The timestamp for the response for which the times are generated.",
+            "format": "date-time"
+          },
+          "rfc1123": {
+            "type": "string",
+            "description": "The current UTC date and time in RFC1123 format.",
+            "nullable": true
+          },
+          "unix": {
+            "type": "integer",
+            "description": "The number of seconds since the UNIX epoch.",
+            "format": "int64"
+          },
+          "universalSortable": {
+            "type": "string",
+            "description": "The current UTC date and time in universal sortable format.",
+            "nullable": true
+          },
+          "universalFull": {
+            "type": "string",
+            "description": "The current UTC date and time in universal full format.",
+            "nullable": true
+          }
         },
         "additionalProperties": false,
-        "properties": {
-          "hash": {
-            "type": "string",
-            "description": "A string containing the generated hash value in the requested format."
-          }
-        }
-      },
-      "HashRequest": {
-        "type": "object",
-        "description": "Represents a request to the /tools/hash API resource.",
+        "description": "Represents the response from the /time API resource.",
         "example": {
-          "algorithm": "sha256",
-          "format": "base64",
-          "plaintext": "The quick brown fox jumped over the lazy dog"
-        },
-        "additionalProperties": false,
-        "required": [
-          "algorithm",
-          "format",
-          "plaintext"
-        ],
-        "properties": {
-          "algorithm": {
-            "type": "string",
-            "description": "The name of the hash algorithm to use.",
-            "minLength": 1
-          },
-          "format": {
-            "type": "string",
-            "description": "The format in which to return the hash.",
-            "minLength": 1
-          },
-          "plaintext": {
-            "type": "string",
-            "description": "The plaintext value to generate the hash from.",
-            "minLength": 1
-          }
-        }
-      },
-      "MachineKeyResponse": {
-        "type": "object",
-        "description": "Represents the response from the /tools/machinekey API resource.",
-        "example": {
-          "decryptionKey": "2EA72C07DEEF522B4686C39BDF83E70A96BA92EE1D960029821FCA2E4CD9FB72",
-          "validationKey": "0A7A92827A74B9B4D2A21918814D8E4A9150BB5ADDB284533BDB50E44ADA6A4BCCFF637A5CB692816EE304121A1BCAA5A6D96BE31A213DEE0BAAEF102A391E8F",
-          "machineKeyXml": "<machineKey validationKey=\"0A7A92827A74B9B4D2A21918814D8E4A9150BB5ADDB284533BDB50E44ADA6A4BCCFF637A5CB692816EE304121A1BCAA5A6D96BE31A213DEE0BAAEF102A391E8F\" decryptionKey=\"2EA72C07DEEF522B4686C39BDF83E70A96BA92EE1D960029821FCA2E4CD9FB72\" validation=\"SHA1\" decryption=\"AES\" />"
-        },
-        "additionalProperties": false,
-        "properties": {
-          "decryptionKey": {
-            "type": "string",
-            "description": "A string containing the decryption key."
-          },
-          "validationKey": {
-            "type": "string",
-            "description": "A string containing the validation key."
-          },
-          "machineKeyXml": {
-            "type": "string",
-            "description": "A string containing the machineKey XML configuration element."
-          }
+          "timestamp": "2016-06-03T18:44:14+00:00",
+          "rfc1123": "Fri, 03 Jun 2016 18:44:14 GMT",
+          "unix": 1464979454,
+          "universalSortable": "2016-06-03 18:44:14Z",
+          "universalFull": "Friday, 03 June 2016 18:44:14"
         }
       }
     }
-  }
+  },
+  "tags": [
+    {
+      "name": "API"
+    }
+  ]
 }
