@@ -122,7 +122,6 @@ jobs:
 
     - name: Generate SBOM for binaries
       uses: anchore/sbom-action@v0
-      if: runner.os != 'Windows' # HACK Disabled due to https://github.com/anchore/sbom-action/issues/472
       with:
         artifact-name: 'publish-${{ matrix.os-name }}.spdx.json'
         output-file: ./artifacts/publish.spdx.json
@@ -130,7 +129,7 @@ jobs:
 
     - name: Generate SBOM for container
       uses: anchore/sbom-action@v0
-      if: steps.publish-container.outputs.container-tag != '' && runner.os != 'Windows' # HACK Disabled due to https://github.com/anchore/sbom-action/issues/472
+      if: steps.publish-container.outputs.container-tag != ''
       with:
         image: ${{ steps.publish-container.outputs.container-tag }}
         output-file: ./artifacts/container.spdx.json
@@ -145,7 +144,7 @@ jobs:
 
     - name: Attest SBOM for container
       uses: actions/attest-sbom@v1
-      if: steps.publish-container.outputs.container-digest != '' && runner.os != 'Windows' # HACK Disabled due to https://github.com/anchore/sbom-action/issues/472
+      if: steps.publish-container.outputs.container-digest != ''
       with:
         push-to-registry: true
         sbom-path: ./artifacts/container.spdx.json
