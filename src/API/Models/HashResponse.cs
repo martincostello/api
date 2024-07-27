@@ -19,7 +19,7 @@ public sealed class HashResponse : IExampleProvider<HashResponse>
     public string Hash { get; set; } = string.Empty;
 
     /// <inheritdoc/>
-    static HashResponse IExampleProvider<HashResponse>.GenerateExample()
+    public static HashResponse GenerateExample()
     {
         return new()
         {

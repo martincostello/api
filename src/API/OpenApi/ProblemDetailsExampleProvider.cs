@@ -8,7 +8,7 @@ namespace MartinCostello.Api.OpenApi;
 /// <summary>
 /// A class representing an example provider for <see cref="ProblemDetails"/>.
 /// </summary>
-public sealed class ProblemDetailsExampleProvider : IExampleProvider<ProblemDetails>
+internal sealed class ProblemDetailsExampleProvider : IExampleProvider<ProblemDetails>
 {
     /// <inheritdoc/>
     public static ProblemDetails GenerateExample()

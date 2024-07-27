@@ -21,7 +21,7 @@ public sealed class GuidResponse : IExampleProvider<GuidResponse>
 #pragma warning restore CA1720
 
     /// <inheritdoc/>
-    static GuidResponse IExampleProvider<GuidResponse>.GenerateExample()
+    public static GuidResponse GenerateExample()
     {
         return new()
         {

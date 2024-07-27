@@ -31,7 +31,7 @@ public sealed class MachineKeyResponse : IExampleProvider<MachineKeyResponse>
     public string MachineKeyXml { get; set; } = string.Empty;
 
     /// <inheritdoc/>
-    static MachineKeyResponse IExampleProvider<MachineKeyResponse>.GenerateExample()
+    public static MachineKeyResponse GenerateExample()
     {
         return new()
         {

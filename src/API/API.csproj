@@ -26,7 +26,6 @@
     <PackageReference Include="Azure.Monitor.OpenTelemetry.Exporter" />
     <PackageReference Include="Microsoft.AspNetCore.AzureAppServices.HostingStartup" />
     <PackageReference Include="Microsoft.TypeScript.MSBuild" />
-    <PackageReference Include="NSwag.AspNetCore" />
     <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" />
     <PackageReference Include="OpenTelemetry.Extensions.Hosting" />
     <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" />
@@ -35,6 +34,8 @@
     <PackageReference Include="OpenTelemetry.Resources.Azure" />
     <PackageReference Include="OpenTelemetry.Resources.Container" />
     <PackageReference Include="RazorSlices" />
+    <PackageReference Include="Swashbuckle.AspNetCore" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="coverage\**;package.json;package-lock.json;tsconfig.json" CopyToPublishDirectory="Never" />
