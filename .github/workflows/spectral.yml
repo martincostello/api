@@ -20,8 +20,21 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
+
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
     - name: Install Spectral
       run: npm install -g @stoplight/spectral-cli
 
+    - name: Generate OpenAPI document
+      shell: pwsh
+      run: |
+        dotnet build ./src/API
+
     - name: Run Spectral
-      run: spectral lint "./src/API/wwwroot/openapi/*.json" --fail-severity warn --format github-actions
+      run: spectral lint "./artifacts/openapi/*" --fail-severity warn --format github-actions

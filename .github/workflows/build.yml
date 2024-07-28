@@ -118,7 +118,7 @@ jobs:
       env:
         ContainerRegistry: ${{ env.PUBLISH_CONTAINER == 'true' && env.CONTAINER_REGISTRY || '' }}
       run: |
-        dotnet publish ./src/API --arch x64 --os linux -p:PublishProfile=DefaultContainer
+        dotnet publish ./src/API --arch x64 --os linux -p:PublishAot=true -p:PublishProfile=DefaultContainer
 
     - name: Generate SBOM for binaries
       uses: anchore/sbom-action@v0
