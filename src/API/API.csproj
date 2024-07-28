@@ -13,6 +13,7 @@
     <PublishSelfContained>true</PublishSelfContained>
     <RootNamespace>MartinCostello.Api</RootNamespace>
     <TargetFramework>net8.0</TargetFramework>
+    <TrimmerSingleWarn>false</TrimmerSingleWarn>
     <Summary>Martin Costello's API</Summary>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <TypeScriptToolsVersion>latest</TypeScriptToolsVersion>
