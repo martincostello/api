@@ -4,7 +4,6 @@
 using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Reflection;
-using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 using System.Xml;
 using System.Xml.XPath;
@@ -53,7 +52,7 @@ internal sealed class AddDescriptions : IOpenApiOperationTransformer, IOpenApiSc
     public Task TransformAsync(OpenApiSchema schema, OpenApiSchemaTransformerContext context, CancellationToken cancellationToken)
     {
         if (schema.Description is null &&
-            GetMemberName(JsonTypeInfo.CreateJsonTypeInfo<string>(JsonSerializerOptions.Default), null) is { Length: > 0 } memberName &&
+            GetMemberName(context.JsonTypeInfo, context.JsonPropertyInfo) is { Length: > 0 } memberName &&
             GetDescription(memberName) is { Length: > 0 } description)
         {
             schema.Description = description;

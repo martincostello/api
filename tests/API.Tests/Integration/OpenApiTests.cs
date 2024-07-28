@@ -26,7 +26,7 @@ public class OpenApiTests(TestServerFixture fixture, ITestOutputHelper outputHel
         await VerifyJson(actual, settings);
     }
 
-    [Fact(Skip = "Disabled until .NET 9 preview 7.")]
+    [Fact]
     public async Task Schema_Has_No_Validation_Warnings()
     {
         // Arrange
