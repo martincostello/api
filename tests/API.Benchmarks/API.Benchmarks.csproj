@@ -5,10 +5,11 @@
     <IsTestProject>false</IsTestProject>
     <NoWarn>$(NoWarn);CA2007;CA2234;SA1600</NoWarn>
     <OpenApiGenerateDocuments>false</OpenApiGenerateDocuments>
+    <OpenApiGenerateDocumentsOnBuild>false</OpenApiGenerateDocumentsOnBuild>
     <OutputType>Exe</OutputType>
     <RootNamespace>MartinCostello.API.Benchmarks</RootNamespace>
     <Summary>$(Description)</Summary>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\API\API.csproj" />

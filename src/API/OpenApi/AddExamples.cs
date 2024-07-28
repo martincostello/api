@@ -4,8 +4,8 @@
 using System.Reflection;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerGen;
 using ProblemDetails = Microsoft.AspNetCore.Mvc.ProblemDetails;
 
 namespace MartinCostello.Api.OpenApi;
@@ -13,20 +13,37 @@ namespace MartinCostello.Api.OpenApi;
 /// <summary>
 /// A class that adds examples to OpenAPI operations and schemas. This class cannot be inherited.
 /// </summary>
-internal sealed class AddExamples : IOperationFilter, ISchemaFilter
+internal sealed class AddExamples : IOpenApiOperationTransformer, IOpenApiSchemaTransformer
 {
     private static readonly ApplicationJsonSerializerContext Context = ApplicationJsonSerializerContext.Default;
 
     /// <inheritdoc />
-    public void Apply(OpenApiOperation operation, OperationFilterContext context)
+    public Task TransformAsync(
+        OpenApiOperation operation,
+        OpenApiOperationTransformerContext context,
+        CancellationToken cancellationToken)
     {
-        Process(operation, context.ApiDescription);
+        Process(operation, context.Description);
+
+        return Task.CompletedTask;
     }
 
     /// <inheritdoc />
-    public void Apply(OpenApiSchema schema, SchemaFilterContext context)
+    public Task TransformAsync(
+        OpenApiSchema schema,
+        OpenApiSchemaTransformerContext context,
+        CancellationToken cancellationToken)
     {
-        Process(schema, context.Type);
+        Type? type = null; // context.JsonTypeInfo.Type;
+
+#pragma warning disable CA1508
+        if (type is not null)
+#pragma warning restore CA1508
+        {
+            Process(schema, type);
+        }
+
+        return Task.CompletedTask;
     }
 
     private static void Process(OpenApiOperation operation, ApiDescription description)
