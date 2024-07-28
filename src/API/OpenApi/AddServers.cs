@@ -24,7 +24,12 @@ internal sealed class AddServers(
 
     private static string GetServerUrl(IHttpContextAccessor accessor, ForwardedHeadersOptions options)
     {
-        var request = accessor.HttpContext!.Request;
+        var request = accessor.HttpContext?.Request;
+
+        if (request is null)
+        {
+            return "https://api.martincostello.com";
+        }
 
         string scheme = TryGetFirstHeader(options.ForwardedProtoHeaderName) ?? request.Scheme;
         string host = TryGetFirstHeader(options.ForwardedHostHeaderName) ?? request.Host.ToString();
