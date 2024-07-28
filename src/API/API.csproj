@@ -7,6 +7,7 @@
     <EnableRequestDelegateGenerator>true</EnableRequestDelegateGenerator>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <InvariantGlobalization>true</InvariantGlobalization>
+    <OpenApiDocumentsDirectory>$([System.IO.Path]::Combine($(ArtifactsPath), 'openapi'))</OpenApiDocumentsDirectory>
     <OutputType>Exe</OutputType>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <PublishAot>true</PublishAot>
@@ -19,6 +20,10 @@
     <TypeScriptToolsVersion>latest</TypeScriptToolsVersion>
     <UserSecretsId>api.martincostello.com</UserSecretsId>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(PublishAot)' != 'true'">
+    <OpenApiGenerateDocuments>true</OpenApiGenerateDocuments>
+    <OpenApiGenerateDocumentsOnBuild>true</OpenApiGenerateDocumentsOnBuild>
+  </PropertyGroup>
   <ItemGroup>
     <ContainerPort Include="8080" Type="tcp" />
     <Content Update="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
@@ -26,6 +31,7 @@
   <ItemGroup>
     <PackageReference Include="Azure.Monitor.OpenTelemetry.Exporter" />
     <PackageReference Include="Microsoft.AspNetCore.AzureAppServices.HostingStartup" />
+    <PackageReference Include="Microsoft.Extensions.ApiDescription.Server" NoWarn="RT0003" PrivateAssets="all" />
     <PackageReference Include="Microsoft.TypeScript.MSBuild" />
     <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" />
     <PackageReference Include="OpenTelemetry.Extensions.Hosting" />
@@ -62,5 +68,12 @@
     <WriteLinesToFile File="$(GITHUB_OUTPUT)" Lines="container-digest=$(GeneratedContainerDigest)" />
     <WriteLinesToFile File="$(GITHUB_OUTPUT)" Lines="container-image=$(_ContainerImage)" />
     <WriteLinesToFile File="$(GITHUB_OUTPUT)" Lines="container-tag=$(_ContainerTag)" />
+  </Target>
+  <Target Name="RenameOpenApiDocument" AfterTargets="GenerateOpenApiDocuments" Condition="Exists($(OpenApiDocumentsDirectory))">
+    <PropertyGroup>
+      <_SourceDocument>$([System.IO.Path]::Combine($(OpenApiDocumentsDirectory), 'API_api.json'))</_SourceDocument>
+      <_DestinationDocument>$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), 'wwwroot', 'openapi', 'api.json'))</_DestinationDocument>
+    </PropertyGroup>
+    <Copy SourceFiles="$(_SourceDocument)" DestinationFiles="$(_DestinationDocument)" />
   </Target>
 </Project>

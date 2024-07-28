@@ -20,6 +20,7 @@ obj
 packages
 project.lock.json
 src/API/wwwroot/assets
+src/API/wwwroot/openapi
 src/API/wwwroot/lib/*
 TestResults
 UpgradeLog*.htm
