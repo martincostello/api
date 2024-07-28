@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
+using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace MartinCostello.Api.OpenApi;
 
@@ -10,12 +10,15 @@ namespace MartinCostello.Api.OpenApi;
 /// A class representing that modifies XML documentation for operations and schemas that matches <c>StyleCop</c>
 /// requirements to be more human-readable for display in OpenAPI documentation. This class cannot be inherited.
 /// </summary>
-internal sealed class RemoveStyleCopPrefixes : IOperationFilter, ISchemaFilter
+internal sealed class RemoveStyleCopPrefixes : IOpenApiOperationTransformer, IOpenApiSchemaTransformer
 {
     private const string Prefix = "Gets or sets ";
 
     /// <inheritdoc/>
-    public void Apply(OpenApiOperation operation, OperationFilterContext context)
+    public Task TransformAsync(
+        OpenApiOperation operation,
+        OpenApiOperationTransformerContext context,
+        CancellationToken cancellationToken)
     {
         foreach (var response in operation.Responses.Values)
         {
@@ -27,10 +30,15 @@ internal sealed class RemoveStyleCopPrefixes : IOperationFilter, ISchemaFilter
                 }
             }
         }
+
+        return Task.CompletedTask;
     }
 
     /// <inheritdoc/>
-    public void Apply(OpenApiSchema schema, SchemaFilterContext context)
+    public Task TransformAsync(
+        OpenApiSchema schema,
+        OpenApiSchemaTransformerContext context,
+        CancellationToken cancellationToken)
     {
         if (schema.Description is not null)
         {
@@ -41,6 +49,8 @@ internal sealed class RemoveStyleCopPrefixes : IOperationFilter, ISchemaFilter
         {
             TryUpdateDescription(property);
         }
+
+        return Task.CompletedTask;
     }
 
     private static void TryUpdateDescription(OpenApiSchema property)
