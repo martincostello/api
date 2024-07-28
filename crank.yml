@@ -33,6 +33,16 @@ scenarios:
       variables:
         serverPort: 5000
         path: /tools/guid
+  openapi:
+    application:
+      job: server
+      framework: net8.0
+    load:
+      job: bombardier
+      framework: net8.0
+      variables:
+        serverPort: 5000
+        path: /openapi/api.json
   time:
     application:
       job: server

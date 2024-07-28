@@ -38,6 +38,7 @@ jobs:
         script: |
           const availableBenchmarks = {
             "guid": "Runs the GUID benchmark",
+            "openapi": "Runs the OpenAPI benchmark",
             "root": "Runs the root benchmark",
             "time": "Runs the time benchmark",
           };
@@ -126,8 +127,18 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Setup .NET SDK
+    - name: Setup .NET SDK for crank
       uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Setup .NET SDK for app
+      uses: actions/setup-dotnet@v4
+
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
 
     - name: Install crank
       shell: pwsh

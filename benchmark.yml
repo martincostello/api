@@ -18,6 +18,9 @@ benchmarks:
   guid:
     description: GUID
     arguments: --config ./crank.yml --scenario guid
+  openapi:
+    description: OpenAPI
+    arguments: --config ./crank.yml --scenario openapi
   time:
     description: Time
     arguments: --config ./crank.yml --scenario time
