@@ -1,23 +1,35 @@
 ﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
+using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Reflection;
+using System.Text.Json;
+using System.Text.Json.Serialization.Metadata;
+using System.Xml;
+using System.Xml.XPath;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace MartinCostello.Api.OpenApi;
 
 /// <summary>
 /// A class that adds descriptions to OpenAPI operations. This class cannot be inherited.
 /// </summary>
-internal sealed class AddDescriptions : IOperationFilter
+internal sealed class AddDescriptions : IOpenApiOperationTransformer, IOpenApiSchemaTransformer
 {
+    private readonly Assembly _thisAssembly = typeof(AddDescriptions).Assembly;
+    private readonly ConcurrentDictionary<string, string?> _descriptions = [];
+    private XPathNavigator? _navigator;
+
     /// <inheritdoc/>
-    public void Apply(OpenApiOperation operation, OperationFilterContext context)
+    public Task TransformAsync(
+        OpenApiOperation operation,
+        OpenApiOperationTransformerContext context,
+        CancellationToken cancellationToken)
     {
-        var attributes = context.ApiDescription.ActionDescriptor.EndpointMetadata
+        var attributes = context.Description.ActionDescriptor.EndpointMetadata
             .OfType<OpenApiResponseAttribute>()
             .ToArray();
 
@@ -31,8 +43,23 @@ internal sealed class AddDescriptions : IOperationFilter
 
         if (operation.Parameters is { Count: > 0 })
         {
-            TryAddParameterDescriptions(operation.Parameters, context.ApiDescription);
+            TryAddParameterDescriptions(operation.Parameters, context.Description);
         }
+
+        return Task.CompletedTask;
+    }
+
+    /// <inheritdoc/>
+    public Task TransformAsync(OpenApiSchema schema, OpenApiSchemaTransformerContext context, CancellationToken cancellationToken)
+    {
+        if (schema.Description is null &&
+            GetMemberName(JsonTypeInfo.CreateJsonTypeInfo<string>(JsonSerializerOptions.Default), null) is { Length: > 0 } memberName &&
+            GetDescription(memberName) is { Length: > 0 } description)
+        {
+            schema.Description = description;
+        }
+
+        return Task.CompletedTask;
     }
 
     private static void TryAddParameterDescriptions(
@@ -63,5 +90,60 @@ internal sealed class AddDescriptions : IOperationFilter
                 }
             }
         }
+    }
+
+    private string? GetDescription(string memberName)
+    {
+        if (_descriptions.TryGetValue(memberName, out string? description))
+        {
+            return description;
+        }
+
+        var navigator = CreateNavigator();
+        var node = navigator.SelectSingleNode($"/doc/members/member[@name='{memberName}']/summary");
+
+        if (node is not null)
+        {
+            description = node.Value.Trim();
+        }
+
+        _descriptions[memberName] = description;
+
+        return description;
+    }
+
+    private string? GetMemberName(JsonTypeInfo typeInfo, JsonPropertyInfo? propertyInfo)
+    {
+        if (typeInfo.Type.Assembly != _thisAssembly &&
+            propertyInfo?.DeclaringType.Assembly != _thisAssembly)
+        {
+            return null;
+        }
+        else if (propertyInfo is not null)
+        {
+            string? typeName = propertyInfo.DeclaringType.FullName;
+            string propertyName =
+                propertyInfo.AttributeProvider is PropertyInfo property ?
+                property.Name :
+                $"{char.ToUpperInvariant(propertyInfo.Name[0])}{propertyInfo.Name[1..]}";
+
+            return $"P:{typeName}{Type.Delimiter}{propertyName}";
+        }
+        else
+        {
+            return $"T:{typeInfo.Type.FullName}";
+        }
+    }
+
+    private XPathNavigator CreateNavigator()
+    {
+        if (_navigator is null)
+        {
+            string path = Path.Combine(AppContext.BaseDirectory, $"{_thisAssembly.GetName().Name}.xml");
+            using var reader = XmlReader.Create(path);
+            _navigator = new XPathDocument(reader).CreateNavigator();
+        }
+
+        return _navigator;
     }
 }
