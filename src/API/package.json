@@ -1,8 +1,7 @@
 {
   "name": "api",
   "private": true,
-  "type": "module",
-  "version": "8.0.0",
+  "version": "9.0.0",
   "description": "Martin Costello's API",
   "scripts": {
     "build": "npm run compile && npm run format && npm run lint",
