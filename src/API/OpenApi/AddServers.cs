@@ -1,9 +1,9 @@
 ﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
+using Microsoft.AspNetCore.OpenApi;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace MartinCostello.Api.OpenApi;
 
@@ -14,12 +14,16 @@ namespace MartinCostello.Api.OpenApi;
 /// <param name="options">The configured <see cref="ForwardedHeadersOptions"/>.</param>
 internal sealed class AddServers(
     IHttpContextAccessor accessor,
-    IOptions<ForwardedHeadersOptions> options) : IDocumentFilter
+    IOptions<ForwardedHeadersOptions> options) : IOpenApiDocumentTransformer
 {
     /// <inheritdoc/>
-    public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
+    public Task TransformAsync(
+        OpenApiDocument document,
+        OpenApiDocumentTransformerContext context,
+        CancellationToken cancellationToken)
     {
-        swaggerDoc.Servers = [new() { Url = GetServerUrl(accessor, options.Value) }];
+        document.Servers = [new() { Url = GetServerUrl(accessor, options.Value) }];
+        return Task.CompletedTask;
     }
 
     private static string GetServerUrl(IHttpContextAccessor accessor, ForwardedHeadersOptions options)
