@@ -168,9 +168,10 @@ public static class ApiBuilder
 
         app.UseResponseCompression();
 
+        // HACK Disabled until https://github.com/dotnet/aspnetcore/issues/56023 is fixed
         if (RuntimeFeature.IsDynamicCodeSupported)
         {
-            app.UseSwagger((p) => p.RouteTemplate = "/openapi/{documentName}.json");
+            app.MapOpenApi();
         }
 
         app.UseStaticFiles();
