@@ -108,14 +108,14 @@ $publishProjects = @(
     (Join-Path $solutionPath "src" "API" "API.csproj")
 )
 
+Write-Host "Publishing solution..." -ForegroundColor Green
+ForEach ($project in $publishProjects) {
+    DotNetPublish $project
+}
+
 if ($SkipTests -eq $false) {
     Write-Host "Testing $($testProjects.Count) project(s)..." -ForegroundColor Green
     ForEach ($project in $testProjects) {
         DotNetTest $project
     }
-}
-
-Write-Host "Publishing solution..." -ForegroundColor Green
-ForEach ($project in $publishProjects) {
-    DotNetPublish $project
 }
