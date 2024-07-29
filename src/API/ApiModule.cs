@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.Json.Nodes;
 using MartinCostello.Api.Models;
 using MartinCostello.Api.OpenApi;
+using MartinCostello.OpenApi;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
