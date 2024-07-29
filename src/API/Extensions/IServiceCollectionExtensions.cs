@@ -40,6 +40,7 @@ public static class IServiceCollectionExtensions
         {
             options.AddExamples = true;
             options.AddServerUrls = true;
+            options.DefaultServerUrl = "https://api.martincostello.com";
             options.SerializationContext = ApplicationJsonSerializerContext.Default;
 
             options.AddXmlComments<Program>();
