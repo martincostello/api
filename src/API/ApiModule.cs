@@ -9,7 +9,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json.Nodes;
 using MartinCostello.Api.Models;
-using MartinCostello.Api.OpenApi;
 using MartinCostello.OpenApi;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -51,31 +50,37 @@ public static class ApiModule
     {
         var group = builder.MapGroup(string.Empty)
                            .RequireCors("DefaultCorsPolicy")
-                           .WithTags("API")
-                           .WithMetadata(new OpenApiExampleAttribute<ProblemDetails, ProblemDetailsExampleProvider>());
+                           .WithTags("API");
 
         group.MapGet("/time", GetTime)
              .WithName("Time")
              .WithSummary("Gets the current UTC time.")
-             .WithDescription("Gets the current date and time in UTC.");
+             .WithDescription("Gets the current date and time in UTC.")
+             .ProducesOpenApiResponse(StatusCodes.Status200OK, "The current UTC date and time.");
 
         group.MapGet("/tools/guid", GenerateGuid)
              .WithName("Guid")
              .WithSummary("Generates a GUID.")
              .WithDescription("Generates a new GUID in the specified format.")
-             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest, "application/problem+json");
+             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest, "application/problem+json")
+             .ProducesOpenApiResponse(StatusCodes.Status200OK, "A GUID was generated successfully.")
+             .ProducesOpenApiResponse(StatusCodes.Status400BadRequest, "The specified format is invalid.");
 
         group.MapPost("/tools/hash", GenerateHash)
              .WithName("Hash")
              .WithSummary("Hashes a string.")
              .WithDescription("Generates a hash of some plaintext for a specified hash algorithm and returns it in the required format.")
-             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest, "application/problem+json");
+             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest, "application/problem+json")
+             .ProducesOpenApiResponse(StatusCodes.Status200OK, "The hash was generated successfully.")
+             .ProducesOpenApiResponse(StatusCodes.Status400BadRequest, "The specified hash algorithm or output format is invalid.");
 
         group.MapGet("/tools/machinekey", GenerateMachineKey)
              .WithName("MachineKey")
              .WithSummary("Generates a machine key.")
              .WithDescription("Generates a machine key for a Web.config configuration file for ASP.NET.")
-             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest, "application/problem+json");
+             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest, "application/problem+json")
+             .ProducesOpenApiResponse(StatusCodes.Status200OK, "The machine key was generated successfully.")
+             .ProducesOpenApiResponse(StatusCodes.Status400BadRequest, "The specified decryption or validation algorithm is invalid.");
 
         builder.MapGet("/version", static () =>
                 {
@@ -124,7 +129,6 @@ public static class ApiModule
     private static string BytesToHexString(ReadOnlySpan<byte> bytes, bool toLower = false)
         => toLower ? Convert.ToHexStringLower(bytes) : Convert.ToHexString(bytes);
 
-    [OpenApiResponse(StatusCodes.Status200OK, "The current UTC date and time.")]
     private static Ok<TimeResponse> GetTime(TimeProvider timeProvider)
     {
         var formatProvider = CultureInfo.InvariantCulture;
@@ -142,8 +146,6 @@ public static class ApiModule
         return TypedResults.Ok(result);
     }
 
-    [OpenApiResponse(StatusCodes.Status200OK, "A GUID was generated successfully.")]
-    [OpenApiResponse(StatusCodes.Status400BadRequest, "The specified format is invalid.")]
     private static Results<Ok<GuidResponse>, ProblemHttpResult> GenerateGuid(
         [Description("The format for which to generate a GUID.")][OpenApiExample("D")] string? format,
         [Description("Whether to return the GUID in uppercase.")] bool? uppercase)
@@ -167,8 +169,6 @@ public static class ApiModule
         return TypedResults.Ok(new GuidResponse() { Guid = guid });
     }
 
-    [OpenApiResponse(StatusCodes.Status200OK, "The hash was generated successfully.")]
-    [OpenApiResponse(StatusCodes.Status400BadRequest, "The specified hash algorithm or output format is invalid.")]
     private static Results<Ok<HashResponse>, ProblemHttpResult> GenerateHash(HashRequest? request)
     {
         if (request == null)
@@ -235,8 +235,6 @@ public static class ApiModule
         return TypedResults.Ok(result);
     }
 
-    [OpenApiResponse(StatusCodes.Status200OK, "The machine key was generated successfully.")]
-    [OpenApiResponse(StatusCodes.Status400BadRequest, "The specified decryption or validation algorithm is invalid.")]
     private static Results<Ok<MachineKeyResponse>, ProblemHttpResult> GenerateMachineKey(
         [Description("The name of the decryption algorithm.")][OpenApiExample("AES-256")] string? decryptionAlgorithm,
         [Description("The name of the validation algorithm.")][OpenApiExample("SHA1")] string? validationAlgorithm)
