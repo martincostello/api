@@ -3,6 +3,7 @@
 
 using System.Runtime.CompilerServices;
 using MartinCostello.Api.OpenApi;
+using MartinCostello.OpenApi;
 
 namespace MartinCostello.Api.Extensions;
 
@@ -28,22 +29,20 @@ public static class IServiceCollectionExtensions
 
         services.AddHttpContextAccessor();
 
-        services.AddOpenApi("api", (options) =>
+        const string DocumentName = "api";
+
+        services.AddOpenApi(DocumentName, (options) =>
         {
             options.UseTransformer<AddApiInfo>();
-            options.UseTransformer<AddServers>();
+        });
 
-            var descriptions = new AddDescriptions();
-            options.UseOperationTransformer((a, b, c) => descriptions.TransformAsync(a, b, c));
-            options.UseSchemaTransformer((a, b, c) => descriptions.TransformAsync(a, b, c));
+        services.AddOpenApiExtensions(DocumentName, (options) =>
+        {
+            options.AddExamples = true;
+            options.AddServerUrls = true;
+            options.SerializationContext = ApplicationJsonSerializerContext.Default;
 
-            var examples = new AddExamples();
-            options.UseOperationTransformer((a, b, c) => examples.TransformAsync(a, b, c));
-            options.UseSchemaTransformer((a, b, c) => examples.TransformAsync(a, b, c));
-
-            var prefixes = new RemoveStyleCopPrefixes();
-            options.UseOperationTransformer((a, b, c) => prefixes.TransformAsync(a, b, c));
-            options.UseSchemaTransformer((a, b, c) => prefixes.TransformAsync(a, b, c));
+            options.AddXmlComments<Program>();
         });
 
         return services;
