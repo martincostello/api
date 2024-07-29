@@ -4,6 +4,7 @@
 using System.Runtime.CompilerServices;
 using MartinCostello.Api.OpenApi;
 using MartinCostello.OpenApi;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MartinCostello.Api.Extensions;
 
@@ -43,6 +44,7 @@ public static class IServiceCollectionExtensions
             options.DefaultServerUrl = "https://api.martincostello.com";
             options.SerializationContext = ApplicationJsonSerializerContext.Default;
 
+            options.AddExample<ProblemDetails, ProblemDetailsExampleProvider>();
             options.AddXmlComments<Program>();
         });
 
