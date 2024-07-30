@@ -10,7 +10,7 @@ namespace MartinCostello.Api.Integration;
 [Collection(TestServerCollection.Name)]
 public class OpenApiTests(TestServerFixture fixture, ITestOutputHelper outputHelper) : IntegrationTest(fixture, outputHelper)
 {
-    [Fact(Skip = "Disabled until .NET 9 preview 7.")]
+    [Fact(Skip = "https://github.com/microsoft/OpenAPI.NET/pull/1736")]
     public async Task Schema_Is_Correct()
     {
         // Arrange
