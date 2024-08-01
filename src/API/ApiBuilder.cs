@@ -7,6 +7,7 @@ using MartinCostello.Api.Extensions;
 using MartinCostello.Api.Middleware;
 using MartinCostello.Api.Options;
 using MartinCostello.Api.Slices;
+using MartinCostello.OpenApi;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.ResponseCompression;
@@ -167,6 +168,7 @@ public static class ApiBuilder
         app.UseResponseCompression();
 
         app.MapOpenApi();
+        app.MapOpenApiYaml();
 
         app.UseStaticFiles();
 
