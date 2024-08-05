@@ -19,6 +19,4 @@ namespace MartinCostello.Api;
 [JsonSerializable(typeof(ProblemDetails))]
 [JsonSerializable(typeof(TimeResponse))]
 [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase, WriteIndented = true)]
-public sealed partial class ApplicationJsonSerializerContext : JsonSerializerContext
-{
-}
+public sealed partial class ApplicationJsonSerializerContext : JsonSerializerContext;
