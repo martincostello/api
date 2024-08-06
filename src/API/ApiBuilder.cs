@@ -3,11 +3,11 @@
 
 using System.IO.Compression;
 using System.Net.Mime;
-using System.Runtime.CompilerServices;
 using MartinCostello.Api.Extensions;
 using MartinCostello.Api.Middleware;
 using MartinCostello.Api.Options;
 using MartinCostello.Api.Slices;
+using MartinCostello.OpenApi;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.ResponseCompression;
@@ -167,11 +167,8 @@ public static class ApiBuilder
 
         app.UseResponseCompression();
 
-        // HACK Disabled until https://github.com/dotnet/aspnetcore/issues/56023 is fixed
-        if (RuntimeFeature.IsDynamicCodeSupported)
-        {
-            app.MapOpenApi();
-        }
+        app.MapOpenApi();
+        app.MapOpenApiYaml();
 
         app.UseStaticFiles();
 
