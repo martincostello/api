@@ -15,7 +15,7 @@ param(
 $crankAgent = "crank-agent"
 $crankPR = "crank-pr"
 
-if (![string]::IsNullOrEmpty($CrankPath)) {
+if (-Not [string]::IsNullOrEmpty($CrankPath)) {
     $crankAgent = Join-Path $CrankPath $crankAgent
     $crankPR = Join-Path $CrankPath $crankPR
 }
@@ -35,7 +35,7 @@ $profiles = "local"
 
 $additionalArgs = @()
 
-if (![string]::IsNullOrEmpty($AccessToken)) {
+if (-Not [string]::IsNullOrEmpty($AccessToken)) {
     $additionalArgs += "--access-token"
     $additionalArgs += $AccessToken
 
@@ -59,3 +59,6 @@ finally {
     Stop-Process -InputObject $agent -Force | Out-Null
 }
 
+if ($LASTEXITCODE -ne 0) {
+    throw "crank-pr failed with exit code $LASTEXITCODE"
+}
