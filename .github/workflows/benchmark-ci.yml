@@ -46,12 +46,12 @@ jobs:
       shell: pwsh
       run: ./benchmark.ps1
 
-    - name: Publish benchmark results
+    - name: Publish results
       uses: benchmark-action/github-action-benchmark@v1
       with:
         auto-push: true
         alert-comment-cc-users: '@${{ github.repository_owner }}'
-        benchmark-data-dir-path: ''
+        benchmark-data-dir-path: 'api'
         comment-on-alert: true
         fail-on-alert: true
         gh-pages-branch: main
