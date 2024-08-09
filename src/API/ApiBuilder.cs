@@ -136,6 +136,7 @@ public static class ApiBuilder
         }
 
         builder.Services.AddOpenApiDocumentation();
+        builder.Services.AddOutputCache();
 
         builder.Services.TryAddSingleton(TimeProvider.System);
 
@@ -167,15 +168,16 @@ public static class ApiBuilder
 
         app.UseResponseCompression();
 
+        app.UseCors();
+        app.UseOutputCache();
+
         // HACK Disabled until https://github.com/dotnet/aspnetcore/issues/56023 is fixed
         if (RuntimeFeature.IsDynamicCodeSupported)
         {
-            app.MapOpenApi();
+            app.MapOpenApi().CacheOutput();
         }
 
         app.UseStaticFiles();
-
-        app.UseCors();
 
         app.UseCookiePolicy(new()
         {
