@@ -1,10 +1,11 @@
 ﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
-using System.Runtime.CompilerServices;
 using MartinCostello.Api.OpenApi;
+using MartinCostello.Api.Options;
 using MartinCostello.OpenApi;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace MartinCostello.Api.Extensions;
 
@@ -22,32 +23,32 @@ public static class IServiceCollectionExtensions
     /// </returns>
     public static IServiceCollection AddOpenApiDocumentation(this IServiceCollection services)
     {
-        // HACK Enable when https://github.com/dotnet/aspnetcore/issues/56023 is fixed
-        if (!RuntimeFeature.IsDynamicCodeSupported)
-        {
-            return services;
-        }
-
         services.AddHttpContextAccessor();
+        services.AddSingleton<IPostConfigureOptions<OpenApiExtensionsOptions>, PostConfigureOpenApiExtensionsOptions>();
 
         const string DocumentName = "api";
 
         services.AddOpenApi(DocumentName, (options) =>
         {
-            options.UseTransformer<AddApiInfo>();
+            options.AddDocumentTransformer<AddApiInfo>();
         });
 
         services.AddOpenApiExtensions(DocumentName, (options) =>
         {
             options.AddExamples = true;
             options.AddServerUrls = true;
-            options.DefaultServerUrl = "https://api.martincostello.com";
-            options.SerializationContext = ApplicationJsonSerializerContext.Default;
+            options.SerializationContexts.Add(ApplicationJsonSerializerContext.Default);
 
             options.AddExample<ProblemDetails, ProblemDetailsExampleProvider>();
             options.AddXmlComments<Program>();
         });
 
         return services;
+    }
+
+    private sealed class PostConfigureOpenApiExtensionsOptions(IOptionsMonitor<SiteOptions> monitor) : IPostConfigureOptions<OpenApiExtensionsOptions>
+    {
+        public void PostConfigure(string? name, OpenApiExtensionsOptions options)
+            => options.DefaultServerUrl = $"https://{monitor.CurrentValue.Metadata!.Domain}";
     }
 }
