@@ -1,0 +1,61 @@
+name: benchmark-ci
+
+env:
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  DOTNET_NOLOGO: true
+  DOTNET_SYSTEM_CONSOLE_ALLOW_ANSI_COLOR_REDIRECTION: 1
+  NUGET_XMLDOC_MODE: skip
+  TERM: xterm
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - '**/*.gitattributes'
+      - '**/*.gitignore'
+      - '**/*.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  benchmark:
+    name: benchmark
+    runs-on: ubuntu-latest
+
+    concurrency:
+      group: ${{ github.workflow }}
+      cancel-in-progress: false
+
+    steps:
+
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
+
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Run benchmarks
+      shell: pwsh
+      run: ./benchmark.ps1
+
+    - name: Publish results
+      uses: benchmark-action/github-action-benchmark@v1
+      with:
+        auto-push: true
+        alert-comment-cc-users: '@${{ github.repository_owner }}'
+        benchmark-data-dir-path: 'api'
+        comment-on-alert: true
+        fail-on-alert: true
+        gh-pages-branch: main
+        gh-repository: 'github.com/${{ github.repository_owner }}/benchmarks'
+        github-token: ${{ secrets.BENCHMARKS_SECRET }}
+        name: API Benchmarks
+        output-file-path: tests/API.Benchmarks/BenchmarkDotNet.Artifacts/results/MartinCostello.Api.Benchmarks.ApiBenchmarks-report-full-compressed.json
+        tool: 'benchmarkdotnet'
