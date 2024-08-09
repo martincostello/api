@@ -3,10 +3,8 @@
 
 using System.Runtime.CompilerServices;
 using MartinCostello.Api.OpenApi;
-using MartinCostello.Api.Options;
-using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerGen;
+using MartinCostello.OpenApi;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MartinCostello.Api.Extensions;
 
@@ -24,60 +22,32 @@ public static class IServiceCollectionExtensions
     /// </returns>
     public static IServiceCollection AddOpenApiDocumentation(this IServiceCollection services)
     {
+        // HACK Enable when https://github.com/dotnet/aspnetcore/issues/56023 is fixed
         if (!RuntimeFeature.IsDynamicCodeSupported)
         {
             return services;
         }
 
-        services.AddEndpointsApiExplorer();
         services.AddHttpContextAccessor();
 
-        services.AddSwaggerGen((options) =>
+        const string DocumentName = "api";
+
+        services.AddOpenApi(DocumentName, (options) =>
         {
-            using var provider = services.BuildServiceProvider();
-            var siteOptions = provider.GetRequiredService<IOptions<SiteOptions>>().Value;
+            options.UseTransformer<AddApiInfo>();
+        });
 
-            var info = new OpenApiInfo()
-            {
-                Contact = new()
-                {
-                    Name = siteOptions.Metadata?.Author?.Name,
-                    Url = new(siteOptions.Metadata?.Author?.Website ?? string.Empty),
-                },
-                Description = siteOptions.Metadata?.Description,
-                License = new()
-                {
-                    Name = siteOptions.Api?.License?.Name,
-                    Url = new(siteOptions.Api?.License?.Url ?? string.Empty),
-                },
-                Title = siteOptions.Metadata?.Name,
-                Version = string.Empty,
-            };
+        services.AddOpenApiExtensions(DocumentName, (options) =>
+        {
+            options.AddExamples = true;
+            options.AddServerUrls = true;
+            options.DefaultServerUrl = "https://api.martincostello.com";
+            options.SerializationContext = ApplicationJsonSerializerContext.Default;
 
-            options.SwaggerDoc("api", info);
-
-            options.EnableAnnotations();
-            options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "API.xml"));
-
-            options.DocumentFilter<AddDocumentTags>();
-            options.DocumentFilter<AddServers>();
-            options.OperationFilter<AddDescriptions>();
-
-            var examples = new AddExamples();
-            options.AddOperationFilterInstance(examples);
-            options.AddSchemaFilterInstance(examples);
-
-            var prefixes = new RemoveStyleCopPrefixes();
-            options.AddOperationFilterInstance(prefixes);
-            options.AddSchemaFilterInstance(prefixes);
+            options.AddExample<ProblemDetails, ProblemDetailsExampleProvider>();
+            options.AddXmlComments<Program>();
         });
 
         return services;
-    }
-
-    private sealed class AddDocumentTags : IDocumentFilter
-    {
-        public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
-            => swaggerDoc.Tags.Add(new() { Name = "API" });
     }
 }

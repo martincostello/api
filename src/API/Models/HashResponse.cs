@@ -2,7 +2,7 @@
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 using System.Text.Json.Serialization;
-using MartinCostello.Api.OpenApi;
+using MartinCostello.OpenApi;
 
 namespace MartinCostello.Api.Models;
 

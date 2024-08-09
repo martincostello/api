@@ -36,9 +36,6 @@ updates:
     OpenTelemetry:
       patterns:
         - OpenTelemetry*
-    Swashbuckle.AspNetCore:
-      patterns:
-        - Swashbuckle.AspNetCore*
     xunit:
       patterns:
         - Verify.Xunit
