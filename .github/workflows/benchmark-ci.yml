@@ -9,8 +9,7 @@ env:
 
 on:
   push:
-    # TODO Remove once tested
-    branches: [ main, continuous-benchmarks ]
+    branches: [ main ]
     paths-ignore:
       - '**/*.gitattributes'
       - '**/*.gitignore'
