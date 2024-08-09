@@ -4,9 +4,12 @@
 #Requires -Version 7
 
 param(
+    [Parameter(Mandatory = $false)][string] $Filter = "",
+    [Parameter(Mandatory = $false)][string] $Job = ""
 )
 
 $ErrorActionPreference = "Stop"
+$ProgressPreference = "SilentlyContinue"
 
 if ($null -eq $env:MSBUILDTERMINALLOGGER) {
     $env:MSBUILDTERMINALLOGGER = "auto"
@@ -62,4 +65,21 @@ $benchmarks = (Join-Path $solutionPath "tests" "API.Benchmarks" "API.Benchmarks.
 
 Write-Host "Running benchmarks..." -ForegroundColor Green
 
-& $dotnet run --project $benchmarks --configuration "Release" -- --filter '*'
+$additionalArgs = @()
+
+if (-Not [string]::IsNullOrEmpty($Filter)) {
+    $additionalArgs += "--filter"
+    $additionalArgs += $Filter
+}
+
+if (-Not [string]::IsNullOrEmpty($Job)) {
+    $additionalArgs += "--job"
+    $additionalArgs += $Job
+}
+
+if (-Not [string]::IsNullOrEmpty(${env:GITHUB_SHA})) {
+    $additionalArgs += "--exporters"
+    $additionalArgs += "json"
+}
+
+& $dotnet run --project $benchmarks --configuration "Release" -- $additionalArgs
