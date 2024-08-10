@@ -55,7 +55,7 @@ jobs:
         fail-on-alert: true
         gh-pages-branch: main
         gh-repository: 'github.com/${{ github.repository_owner }}/benchmarks'
-        github-token: ${{ secrets.BENCHMARKS_SECRET }}
+        github-token: ${{ secrets.BENCHMARKS_TOKEN }}
         name: API Benchmarks
         output-file-path: tests/API.Benchmarks/BenchmarkDotNet.Artifacts/results/MartinCostello.Api.Benchmarks.ApiBenchmarks-report-full-compressed.json
         tool: 'benchmarkdotnet'
