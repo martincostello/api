@@ -9,10 +9,17 @@ if (args.SequenceEqual(["--test"]))
     await using var benchmark = new ApiBenchmarks();
     await benchmark.StartServer();
 
-    _ = await benchmark.Hash();
-    _ = await benchmark.Time();
-
-    await benchmark.StopServer();
+    try
+    {
+        _ = await benchmark.Root();
+        _ = await benchmark.Version();
+        _ = await benchmark.Hash();
+        _ = await benchmark.Time();
+    }
+    finally
+    {
+        await benchmark.StopServer();
+    }
 }
 else
 {
