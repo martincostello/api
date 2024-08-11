@@ -3,8 +3,6 @@
 
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Diagnosers;
-using Microsoft.AspNetCore.Hosting.Server;
-using Microsoft.AspNetCore.Hosting.Server.Features;
 
 namespace MartinCostello.Api.Benchmarks;
 
@@ -12,59 +10,37 @@ namespace MartinCostello.Api.Benchmarks;
 [MemoryDiagnoser]
 public class ApiBenchmarks : IAsyncDisposable
 {
-    private WebApplication? _app;
+    private ApiServer? _app = new();
     private HttpClient? _client;
     private bool _disposed;
-
-    public ApiBenchmarks()
-    {
-        var builder = WebApplication.CreateBuilder(["--contentRoot=" + GetContentRoot()]);
-
-        builder.Logging.ClearProviders();
-        builder.WebHost.UseUrls("https://127.0.0.1:0");
-
-        _app = ApiBuilder.Configure(builder);
-    }
 
     [GlobalSetup]
     public async Task StartServer()
     {
-        if (_app != null)
+        if (_app is { } app)
         {
-            await _app.StartAsync();
-
-            var server = _app.Services.GetRequiredService<IServer>();
-            var addresses = server.Features.Get<IServerAddressesFeature>();
-
-            var baseAddress = addresses!.Addresses
-                .Select((p) => new Uri(p))
-                .Last();
-
-#pragma warning disable CA2000
-#pragma warning disable CA5400
-            var handler = new HttpClientHandler
-            {
-                ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
-            };
-
-            _client = new HttpClient(handler, disposeHandler: true)
-            {
-                BaseAddress = baseAddress,
-            };
-#pragma warning restore CA2000
-#pragma warning restore CA5400
+            await app.StartAsync();
+            _client = app.CreateHttpClient();
         }
     }
 
     [GlobalCleanup]
     public async Task StopServer()
     {
-        if (_app != null)
+        if (_app is { } app)
         {
-            await _app.StopAsync();
+            await app.StopAsync();
             _app = null;
         }
     }
+
+    [Benchmark]
+    public async Task<byte[]> Root()
+        => await _client!.GetByteArrayAsync("/");
+
+    [Benchmark]
+    public async Task<byte[]> Version()
+        => await _client!.GetByteArrayAsync("/version");
 
     [Benchmark]
     public async Task<byte[]> Hash()
@@ -89,35 +65,15 @@ public class ApiBenchmarks : IAsyncDisposable
         if (!_disposed)
         {
             _client?.Dispose();
+            _client = null;
 
             if (_app is not null)
             {
                 await _app.DisposeAsync();
+                _app = null;
             }
         }
 
         _disposed = true;
-    }
-
-    private static string GetContentRoot()
-    {
-        string contentRoot = string.Empty;
-        var directoryInfo = new DirectoryInfo(Path.GetDirectoryName(typeof(ApiBenchmarks).Assembly.Location)!);
-
-        do
-        {
-            string? solutionPath = Directory.EnumerateFiles(directoryInfo.FullName, "API.sln").FirstOrDefault();
-
-            if (solutionPath != null)
-            {
-                contentRoot = Path.GetFullPath(Path.Combine(directoryInfo.FullName, "src", "API"));
-                break;
-            }
-
-            directoryInfo = directoryInfo.Parent;
-        }
-        while (directoryInfo is not null);
-
-        return contentRoot;
     }
 }
