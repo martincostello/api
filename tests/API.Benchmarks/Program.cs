@@ -4,15 +4,13 @@
 using BenchmarkDotNet.Running;
 using MartinCostello.Api.Benchmarks;
 
-args ??= [];
-
-if (args.Length == 1 && string.Equals(args[0], "--test", StringComparison.OrdinalIgnoreCase))
+if (args.SequenceEqual(["--test"]))
 {
     await using var benchmark = new ApiBenchmarks();
     await benchmark.StartServer();
 
-    await benchmark.Hash();
-    await benchmark.Time();
+    _ = await benchmark.Hash();
+    _ = await benchmark.Time();
 
     await benchmark.StopServer();
 }

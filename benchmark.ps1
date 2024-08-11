@@ -65,7 +65,10 @@ $benchmarks = (Join-Path $solutionPath "tests" "API.Benchmarks" "API.Benchmarks.
 
 Write-Host "Running benchmarks..." -ForegroundColor Green
 
-$additionalArgs = @()
+$additionalArgs = @(
+    "--artifacts",
+    (Join-Path $solutionPath "BenchmarkDotNet.Artifacts")
+)
 
 if (-Not [string]::IsNullOrEmpty($Filter)) {
     $additionalArgs += "--filter"

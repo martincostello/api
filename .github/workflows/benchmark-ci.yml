@@ -57,14 +57,14 @@ jobs:
         gh-repository: 'github.com/${{ github.repository_owner }}/benchmarks'
         github-token: ${{ secrets.BENCHMARKS_TOKEN }}
         name: API Benchmarks
-        output-file-path: tests/API.Benchmarks/BenchmarkDotNet.Artifacts/results/MartinCostello.Api.Benchmarks.ApiBenchmarks-report-full-compressed.json
+        output-file-path: BenchmarkDotNet.Artifacts/results/MartinCostello.Api.Benchmarks.ApiBenchmarks-report-full-compressed.json
         tool: 'benchmarkdotnet'
 
     - name: Output summary
       shell: pwsh
       run: |
         $repoName = ${env:GITHUB_REPOSITORY}.Split("/")[-1]
-        $summary = Get-Content -Path (Join-Path ${env:GITHUB_WORKSPACE} "tests" "API.Benchmarks" "BenchmarkDotNet.Artifacts" "results" "MartinCostello.Api.Benchmarks.ApiBenchmarks-report-github.md") -Raw
+        $summary = Get-Content -Path (Join-Path ${env:GITHUB_WORKSPACE} "BenchmarkDotNet.Artifacts" "results" "MartinCostello.Api.Benchmarks.ApiBenchmarks-report-github.md") -Raw
         $summary += "`n`n"
         $summary += "View benchmark results history [here](https://benchmarks.martincostello.com/${repoName})."
         $summary >> ${env:GITHUB_STEP_SUMMARY}
