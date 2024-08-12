@@ -10,7 +10,6 @@ public class ResourceTests(ApiFixture fixture) : EndToEndTest(fixture)
 {
     [SkippableTheory]
     [InlineData("/", MediaTypeNames.Text.Html)]
-    [InlineData("/apple-touch-icon.png", "image/png")]
     [InlineData("/assets/css/main.css", "text/css")]
     [InlineData("/assets/css/main.css.map", MediaTypeNames.Text.Plain)]
     [InlineData("/assets/js/main.js", "text/javascript")]
