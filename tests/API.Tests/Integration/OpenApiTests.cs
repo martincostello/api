@@ -10,8 +10,8 @@ namespace MartinCostello.Api.Integration;
 [Collection(TestServerCollection.Name)]
 public class OpenApiTests(TestServerFixture fixture, ITestOutputHelper outputHelper) : IntegrationTest(fixture, outputHelper)
 {
-    [Fact(Skip = "Disabled until .NET 9 preview 7.")]
-    public async Task Schema_Is_Correct()
+    [Fact]
+    public async Task Json_Schema_Is_Correct()
     {
         // Arrange
         var settings = new VerifySettings();
@@ -26,8 +26,26 @@ public class OpenApiTests(TestServerFixture fixture, ITestOutputHelper outputHel
         await VerifyJson(actual, settings);
     }
 
-    [Fact(Skip = "Disabled until .NET 9 preview 7.")]
-    public async Task Schema_Has_No_Validation_Warnings()
+    [Fact]
+    public async Task Yaml_Schema_Is_Correct()
+    {
+        // Arrange
+        var settings = new VerifySettings();
+        settings.DontScrubGuids();
+
+        using var client = Fixture.CreateClient();
+
+        // Act
+        string actual = await client.GetStringAsync("/openapi/api.yaml");
+
+        // Assert
+        await Verify(actual, settings);
+    }
+
+    [Theory]
+    [InlineData("/openapi/api.json")]
+    [InlineData("/openapi/api.yaml")]
+    public async Task Schema_Has_No_Validation_Warnings(string requestUrl)
     {
         // Arrange
         var ruleSet = ValidationRuleSet.GetDefaultRuleSet();
@@ -38,7 +56,7 @@ public class OpenApiTests(TestServerFixture fixture, ITestOutputHelper outputHel
         using var client = Fixture.CreateClient();
 
         // Act
-        using var schema = await client.GetStreamAsync("/openapi/api.json");
+        using var schema = await client.GetStreamAsync(requestUrl);
 
         // Assert
         var reader = new OpenApiStreamReader();
