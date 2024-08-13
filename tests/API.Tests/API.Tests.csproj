@@ -2,8 +2,7 @@
   <PropertyGroup>
     <Description>Tests for https://api.martincostello.com/</Description>
     <IsTestProject>true</IsTestProject>
-    <!-- HACK Disable with ASP.NET Core 9 preview 7 -->
-    <JsonSerializerIsReflectionEnabledByDefault>true</JsonSerializerIsReflectionEnabledByDefault>
+    <JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
     <NoWarn>$(NoWarn);CA1707;CA1711;CA2007;CA2234;SA1600</NoWarn>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <RootNamespace>MartinCostello.Api</RootNamespace>

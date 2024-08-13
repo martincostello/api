@@ -8,10 +8,12 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <InvariantGlobalization>true</InvariantGlobalization>
     <OpenApiDocumentsDirectory>$([System.IO.Path]::Combine($(ArtifactsPath), 'openapi'))</OpenApiDocumentsDirectory>
+    <OpenApiGenerateDocuments>true</OpenApiGenerateDocuments>
     <!-- HACK Remove once https://github.com/dotnet/aspnetcore/pull/57096 is available -->
     <OpenApiGenerateDocumentsOptions>--openapi-version OpenApi3_0</OpenApiGenerateDocumentsOptions>
     <OutputType>Exe</OutputType>
     <PreserveCompilationContext>true</PreserveCompilationContext>
+    <PublishAot>true</PublishAot>
     <PublishSelfContained>true</PublishSelfContained>
     <RootNamespace>MartinCostello.Api</RootNamespace>
     <TargetFramework>net9.0</TargetFramework>
@@ -20,14 +22,6 @@
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <TypeScriptToolsVersion>latest</TypeScriptToolsVersion>
     <UserSecretsId>api.martincostello.com</UserSecretsId>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(PublishAot)' == 'true' ">
-    <OpenApiGenerateDocuments>false</OpenApiGenerateDocuments>
-    <OpenApiGenerateDocumentsOnBuild>false</OpenApiGenerateDocumentsOnBuild>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(PublishAot)' != 'true' ">
-    <OpenApiGenerateDocuments>true</OpenApiGenerateDocuments>
-    <OpenApiGenerateDocumentsOnBuild>true</OpenApiGenerateDocumentsOnBuild>
   </PropertyGroup>
   <ItemGroup>
     <ContainerPort Include="8080" Type="tcp" />
@@ -74,12 +68,5 @@
     <WriteLinesToFile File="$(GITHUB_OUTPUT)" Lines="container-digest=$(GeneratedContainerDigest)" />
     <WriteLinesToFile File="$(GITHUB_OUTPUT)" Lines="container-image=$(_ContainerImage)" />
     <WriteLinesToFile File="$(GITHUB_OUTPUT)" Lines="container-tag=$(_ContainerTag)" />
-  </Target>
-  <Target Name="RenameOpenApiDocument" AfterTargets="GenerateOpenApiDocuments" Condition="Exists($(OpenApiDocumentsDirectory))">
-    <PropertyGroup>
-      <_SourceDocument>$([System.IO.Path]::Combine($(OpenApiDocumentsDirectory), 'API_api.json'))</_SourceDocument>
-      <_DestinationDocument>$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), 'wwwroot', 'openapi', 'api.json'))</_DestinationDocument>
-    </PropertyGroup>
-    <Copy SourceFiles="$(_SourceDocument)" DestinationFiles="$(_DestinationDocument)" />
   </Target>
 </Project>
