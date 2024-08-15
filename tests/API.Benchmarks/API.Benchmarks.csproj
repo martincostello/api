@@ -1,8 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Description>Benchmarks for the API.</Description>
-    <GenerateProgramFile>false</GenerateProgramFile>
-    <IsTestProject>false</IsTestProject>
     <NoWarn>$(NoWarn);CA2007;CA2234;SA1600</NoWarn>
     <OpenApiGenerateDocuments>false</OpenApiGenerateDocuments>
     <OutputType>Exe</OutputType>
@@ -15,7 +13,5 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" />
-    <PackageReference Include="BenchmarkDotNet.TestAdapter" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" />
   </ItemGroup>
 </Project>

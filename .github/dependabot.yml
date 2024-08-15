@@ -27,9 +27,6 @@ updates:
 - package-ecosystem: nuget
   directory: "/"
   groups:
-    BenchmarkDotNet:
-      patterns:
-        - BenchmarkDotNet*
     Microsoft.OpenApi:
       patterns:
         - Microsoft.OpenApi*
