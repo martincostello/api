@@ -52,9 +52,12 @@ jobs:
         "repo-name=${repoName}" >> ${env:GITHUB_OUTPUT}
 
     - name: Publish results
-      uses: martincostello/benchmarkdotnet-results-publisher@step-summaries
+      uses: martincostello/benchmarkdotnet-results-publisher@fail-on-threshold
       with:
         branch: ${{ github.ref_name }}
+        fail-on-threshold: true
+        fail-threshold-duration: 0.1
+        fail-threshold-memory: 0.1
         name: API
         output-file-path: '${{ steps.get-repo-name.outputs.repo-name }}/data.json'
         repo: '${{ github.repository_owner }}/benchmarks'
