@@ -128,8 +128,10 @@ public static class ApiModule
         var formatProvider = CultureInfo.InvariantCulture;
         var now = timeProvider.GetUtcNow();
 
+        /*
         System.Threading.Thread.Sleep(TimeSpan.FromSeconds(8));
         _ = new System.Text.StringBuilder(new string(' ', 16096)).ToString();
+        */
 
         var result = new TimeResponse()
         {
