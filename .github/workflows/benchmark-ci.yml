@@ -55,6 +55,7 @@ jobs:
       uses: martincostello/benchmarkdotnet-results-publisher@fail-on-threshold
       with:
         branch: ${{ github.ref_name }}
+        comment-on-threshold: true
         fail-on-threshold: true
         fail-threshold-duration: 0.1
         fail-threshold-memory: 0.1
