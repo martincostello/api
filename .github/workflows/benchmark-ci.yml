@@ -54,7 +54,7 @@ jobs:
     - name: Publish results
       uses: martincostello/benchmarkdotnet-results-publisher@main
       with:
-        branch: test #${{ github.ref_name }}
+        branch: ${{ github.ref_name }}
         name: API
         output-file-path: '${{ steps.get-repo-name.outputs.repo-name }}/data.json'
         repo: '${{ github.repository_owner }}/benchmarks'
