@@ -52,7 +52,7 @@ jobs:
         "repo-name=${repoName}" >> ${env:GITHUB_OUTPUT}
 
     - name: Publish results
-      uses: martincostello/benchmarkdotnet-results-publisher@v1
+      uses: martincostello/benchmarkdotnet-results-publisher@step-summaries
       with:
         branch: ${{ github.ref_name }}
         name: API
