@@ -45,14 +45,12 @@ paths:
           description: The format for which to generate a GUID.
           schema:
             type: string
-            nullable: true
           example: D
         - name: uppercase
           in: query
           description: Whether to return the GUID in uppercase.
           schema:
             type: boolean
-            nullable: true
       responses:
         '200':
           description: A GUID was generated successfully.
@@ -122,14 +120,12 @@ paths:
           description: The name of the decryption algorithm.
           schema:
             type: string
-            nullable: true
           example: AES-256
         - name: validationAlgorithm
           in: query
           description: The name of the validation algorithm.
           schema:
             type: string
-            nullable: true
           example: SHA1
       responses:
         '200':
