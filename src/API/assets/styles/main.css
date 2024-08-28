@@ -17,11 +17,11 @@
 a,
 .url,
 .swagger-ui .info a {
-  color: #0f7661;
+  filter: brightness(60%);
 }
 
 .body-content {
-  padding-top: 85px;
+  padding-top: 5rem;
 }
 
 /* stylelint-disable-next-line selector-class-pattern */
