@@ -46,11 +46,13 @@ public static class GitHubModule
             var response = await client.PostAsync(requestUri, null, cancellationToken);
             response.EnsureSuccessStatusCode();
 
+            var jsonTypeInfo = ApplicationJsonSerializerContext.Default.GitHubDeviceCode;
+
             var deviceCode = await response.Content.ReadFromJsonAsync(
-                ApplicationJsonSerializerContext.Default.GitHubDeviceCode,
+                jsonTypeInfo,
                 cancellationToken);
 
-            return Results.Json(deviceCode);
+            return Results.Json(deviceCode, jsonTypeInfo);
         });
 
         // See https://docs.github.com/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps#step-3-app-polls-github-to-check-if-the-user-authorized-the-device
@@ -75,11 +77,13 @@ public static class GitHubModule
             var response = await client.PostAsync(requestUri, null, cancellationToken);
             response.EnsureSuccessStatusCode();
 
+            var jsonTypeInfo = ApplicationJsonSerializerContext.Default.GitHubAccessToken;
+
             var accessToken = await response.Content.ReadFromJsonAsync(
-                ApplicationJsonSerializerContext.Default.GitHubAccessToken,
+                jsonTypeInfo,
                 cancellationToken);
 
-            return Results.Json(accessToken);
+            return Results.Json(accessToken, jsonTypeInfo);
         });
 
         return builder;
