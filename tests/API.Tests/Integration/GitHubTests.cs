@@ -24,14 +24,16 @@ public class GitHubTests(TestServerFixture fixture, ITestOutputHelper outputHelp
         var builder = new HttpRequestInterceptionBuilder()
             .ForPost()
             .ForUrl("https://github.com/login/device/code?client_id=dkd73mfo9ASgjsfnhJD8&scope=public_repo")
-            .WithJsonContent(new
-            {
-                device_code = "3584d83530557fdd1f46af8289938c8ef79f9dc5",
-                expires_in = 900,
-                interval = 5,
-                user_code = "WDJB-MJHT",
-                verification_uri = "https://github.com/login/device",
-            });
+            .WithJsonContent(
+                new()
+                {
+                    DeviceCode = "3584d83530557fdd1f46af8289938c8ef79f9dc5",
+                    ExpiresInSeconds = 900,
+                    RefreshIntervalInSeconds = 5,
+                    UserCode = "WDJB-MJHT",
+                    VerificationUrl = "https://github.com/login/device",
+                },
+                ApplicationJsonSerializerContext.Default.GitHubDeviceCode);
 
         builder.RegisterWith(Fixture.Interceptor);
 
@@ -60,12 +62,14 @@ public class GitHubTests(TestServerFixture fixture, ITestOutputHelper outputHelp
         var builder = new HttpRequestInterceptionBuilder()
             .ForPost()
             .ForUrl("https://github.com/login/oauth/access_token?client_id=dkd73mfo9ASgjsfnhJD8&device_code=3584d83530557fdd1f46af8289938c8ef79f9dc5&grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Adevice_code")
-            .WithJsonContent(new
-            {
-                access_token = "not_a_real_token",
-                token_type = "bearer",
-                scope = "public_repo",
-            });
+            .WithJsonContent(
+                new()
+                {
+                    AccessToken = "not_a_real_token",
+                    TokenType = "bearer",
+                    Scopes = "public_repo",
+                },
+                ApplicationJsonSerializerContext.Default.GitHubAccessToken);
 
         builder.RegisterWith(Fixture.Interceptor);
 
