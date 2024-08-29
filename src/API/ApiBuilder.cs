@@ -135,6 +135,7 @@ public static class ApiBuilder
             });
         }
 
+        builder.Services.AddHttpClient();
         builder.Services.AddOpenApiDocumentation();
 
         builder.Services.TryAddSingleton(TimeProvider.System);
@@ -183,6 +184,7 @@ public static class ApiBuilder
         });
 
         app.MapApiEndpoints();
+        app.MapGitHubEndpoints();
 
         string[] methods = [HttpMethod.Get.Method, HttpMethod.Head.Method];
 
