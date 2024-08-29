@@ -11,6 +11,8 @@ namespace MartinCostello.Api;
 
 [ExcludeFromCodeCoverage]
 [JsonSerializable(typeof(bool?))]
+[JsonSerializable(typeof(GitHubAccessToken))]
+[JsonSerializable(typeof(GitHubDeviceCode))]
 [JsonSerializable(typeof(GuidResponse))]
 [JsonSerializable(typeof(HashRequest))]
 [JsonSerializable(typeof(HashResponse))]
