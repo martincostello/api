@@ -29,7 +29,7 @@ public sealed class GitHubDeviceCode
     public string VerificationUrl { get; set; } = default!;
 
     /// <summary>
-    /// Gets or sets the number of seconds of seconds before the device and user codes expire.
+    /// Gets or sets the number of seconds before the device and user codes expire.
     /// </summary>
     [JsonPropertyName("expires_in")]
     public int ExpiresInSeconds { get; set; }
