@@ -58,7 +58,7 @@ public sealed class CustomHttpHeadersMiddleware
     /// <returns>
     /// A <see cref="Task"/> representing the actions performed by the middleware.
     /// </returns>
-    public async Task Invoke(HttpContext context)
+    public async Task InvokeAsync(HttpContext context)
     {
         var stopwatch = Stopwatch.StartNew();
 
