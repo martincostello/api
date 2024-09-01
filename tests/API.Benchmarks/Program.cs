@@ -15,6 +15,7 @@ if (args.SequenceEqual(["--test"]))
         _ = await benchmark.Version();
         _ = await benchmark.Hash();
         _ = await benchmark.Time();
+        _ = await benchmark.OpenApi();
     }
     finally
     {

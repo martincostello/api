@@ -59,6 +59,10 @@ public class ApiBenchmarks : IAsyncDisposable
     public async Task<byte[]> Time()
         => await _client!.GetByteArrayAsync("/time");
 
+    [Benchmark]
+    public async Task<byte[]> OpenApi()
+        => await _client!.GetByteArrayAsync("/openapi/api.json");
+
     public async ValueTask DisposeAsync()
     {
         GC.SuppressFinalize(this);
