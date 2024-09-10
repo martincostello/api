@@ -9,8 +9,6 @@
     <InvariantGlobalization>true</InvariantGlobalization>
     <OpenApiDocumentsDirectory>$([System.IO.Path]::Combine($(ArtifactsPath), 'openapi'))</OpenApiDocumentsDirectory>
     <OpenApiGenerateDocuments>true</OpenApiGenerateDocuments>
-    <!-- HACK Remove once https://github.com/dotnet/aspnetcore/pull/57096 is available -->
-    <OpenApiGenerateDocumentsOptions>--openapi-version OpenApi3_0</OpenApiGenerateDocumentsOptions>
     <OutputType>Exe</OutputType>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <PublishAot>true</PublishAot>
