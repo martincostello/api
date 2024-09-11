@@ -4,12 +4,13 @@
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using System.Xml.Linq;
 using Microsoft.AspNetCore.WebUtilities;
 
 namespace MartinCostello.Api.EndToEnd;
 
-public class ApiTests(ApiFixture fixture) : EndToEndTest(fixture)
+public partial class ApiTests(ApiFixture fixture) : EndToEndTest(fixture)
 {
     [SkippableFact]
     public async Task Can_Get_Time()
@@ -20,7 +21,7 @@ public class ApiTests(ApiFixture fixture) : EndToEndTest(fixture)
         using var client = Fixture.CreateClient();
 
         // Act
-        using var response = await client.GetFromJsonAsync<JsonDocument>("/time");
+        using var response = await client.GetFromJsonAsync("/time", AppJsonSerializerContext.Default.JsonDocument);
 
         // Assert
         response.ShouldNotBeNull();
@@ -47,7 +48,7 @@ public class ApiTests(ApiFixture fixture) : EndToEndTest(fixture)
         using var client = Fixture.CreateClient();
 
         // Act
-        using var response = await client.GetFromJsonAsync<JsonDocument>("/tools/guid");
+        using var response = await client.GetFromJsonAsync("/tools/guid", AppJsonSerializerContext.Default.JsonDocument);
 
         // Assert
         response.ShouldNotBeNull();
@@ -69,7 +70,7 @@ public class ApiTests(ApiFixture fixture) : EndToEndTest(fixture)
         string requestUri = QueryHelpers.AddQueryString("/tools/machinekey", parameters);
 
         // Act
-        using var response = await client.GetFromJsonAsync<JsonDocument>(requestUri);
+        using var response = await client.GetFromJsonAsync(requestUri, AppJsonSerializerContext.Default.JsonDocument);
 
         // Assert
         response.ShouldNotBeNull();
@@ -105,7 +106,7 @@ public class ApiTests(ApiFixture fixture) : EndToEndTest(fixture)
         using var client = Fixture.CreateClient();
 
         // Act
-        using var response = await client.PostAsJsonAsync("/tools/hash", request);
+        using var response = await client.PostAsJsonAsync("/tools/hash", request, AppJsonSerializerContext.Default.JsonObject);
 
         // Assert
         response.EnsureSuccessStatusCode();
@@ -114,4 +115,8 @@ public class ApiTests(ApiFixture fixture) : EndToEndTest(fixture)
 
         result.RootElement.GetProperty("hash").GetString().ShouldBe(expected);
     }
+
+    [JsonSerializable(typeof(JsonDocument))]
+    [JsonSerializable(typeof(JsonObject))]
+    private sealed partial class AppJsonSerializerContext : JsonSerializerContext;
 }
