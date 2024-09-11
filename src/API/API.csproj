@@ -20,6 +20,8 @@
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <TypeScriptToolsVersion>latest</TypeScriptToolsVersion>
     <UserSecretsId>api.martincostello.com</UserSecretsId>
+    <!-- HACK Workaround for https://github.com/dotnet/runtime/issues/106566 -->
+    <UseSystemZlib>false</UseSystemZlib>
   </PropertyGroup>
   <ItemGroup>
     <ContainerPort Include="8080" Type="tcp" />
