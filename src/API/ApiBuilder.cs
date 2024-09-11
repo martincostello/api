@@ -3,11 +3,11 @@
 
 using System.IO.Compression;
 using System.Net.Mime;
-using System.Runtime.CompilerServices;
 using MartinCostello.Api.Extensions;
 using MartinCostello.Api.Middleware;
 using MartinCostello.Api.Options;
 using MartinCostello.Api.Slices;
+using MartinCostello.OpenApi;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.ResponseCompression;
@@ -137,6 +137,7 @@ public static class ApiBuilder
 
         builder.Services.AddHttpClient();
         builder.Services.AddOpenApiDocumentation();
+        builder.Services.AddOutputCache();
 
         builder.Services.TryAddSingleton(TimeProvider.System);
 
@@ -168,14 +169,13 @@ public static class ApiBuilder
 
         app.UseResponseCompression();
 
-        if (RuntimeFeature.IsDynamicCodeSupported)
-        {
-            app.UseSwagger((p) => p.RouteTemplate = "/openapi/{documentName}.json");
-        }
+        app.UseCors();
+        app.UseOutputCache();
+
+        app.MapOpenApi().CacheOutput();
+        app.MapOpenApiYaml().CacheOutput();
 
         app.UseStaticFiles();
-
-        app.UseCors();
 
         app.UseCookiePolicy(new()
         {

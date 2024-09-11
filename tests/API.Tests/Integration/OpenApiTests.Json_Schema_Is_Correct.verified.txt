@@ -234,11 +234,9 @@
         properties: {
           guid: {
             type: string,
-            description: The generated GUID value.,
-            nullable: true
+            description: The generated GUID value.
           }
         },
-        additionalProperties: false,
         description: Represents the response from the /tools/guid API resource.,
         example: {
           guid: 6bc55a07-3d3e-4d52-8701-362a1187772d
@@ -253,23 +251,20 @@
         type: object,
         properties: {
           algorithm: {
-            minLength: 1,
             type: string,
             description: The name of the hash algorithm to use.
           },
           format: {
-            minLength: 1,
             type: string,
             description: The format in which to return the hash.
           },
           plaintext: {
-            minLength: 1,
             type: string,
             description: The plaintext value to generate the hash from.
           }
         },
-        additionalProperties: false,
         description: Represents a request to the /tools/hash API resource.,
+        nullable: true,
         example: {
           algorithm: sha256,
           format: base64,
@@ -281,11 +276,9 @@
         properties: {
           hash: {
             type: string,
-            description: A string containing the generated hash value in the requested format.,
-            nullable: true
+            description: A string containing the generated hash value in the requested format.
           }
         },
-        additionalProperties: false,
         description: Represents the response from the /tools/hash API resource.,
         example: {
           hash: fTi1zSWiuvha07tbkxE4PmcaihQuswKzJNSl+6h0jGk=
@@ -296,21 +289,17 @@
         properties: {
           decryptionKey: {
             type: string,
-            description: A string containing the decryption key.,
-            nullable: true
+            description: A string containing the decryption key.
           },
           validationKey: {
             type: string,
-            description: A string containing the validation key.,
-            nullable: true
+            description: A string containing the validation key.
           },
           machineKeyXml: {
             type: string,
-            description: A string containing the machineKey XML configuration element.,
-            nullable: true
+            description: A string containing the machineKey XML configuration element.
           }
         },
-        additionalProperties: false,
         description: Represents the response from the /tools/machinekey API resource.,
         example: {
           decryptionKey: 2EA72C07DEEF522B4686C39BDF83E70A96BA92EE1D960029821FCA2E4CD9FB72,
@@ -360,8 +349,7 @@
           },
           rfc1123: {
             type: string,
-            description: The current UTC date and time in RFC1123 format.,
-            nullable: true
+            description: The current UTC date and time in RFC1123 format.
           },
           unix: {
             type: integer,
@@ -370,16 +358,13 @@
           },
           universalSortable: {
             type: string,
-            description: The current UTC date and time in universal sortable format.,
-            nullable: true
+            description: The current UTC date and time in universal sortable format.
           },
           universalFull: {
             type: string,
-            description: The current UTC date and time in universal full format.,
-            nullable: true
+            description: The current UTC date and time in universal full format.
           }
         },
-        additionalProperties: false,
         description: Represents the response from the /time API resource.,
         example: {
           timestamp: DateTimeOffset_1,

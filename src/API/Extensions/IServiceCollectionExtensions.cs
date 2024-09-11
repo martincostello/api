@@ -1,12 +1,11 @@
 ﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
-using System.Runtime.CompilerServices;
 using MartinCostello.Api.OpenApi;
 using MartinCostello.Api.Options;
+using MartinCostello.OpenApi;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace MartinCostello.Api.Extensions;
 
@@ -24,60 +23,32 @@ public static class IServiceCollectionExtensions
     /// </returns>
     public static IServiceCollection AddOpenApiDocumentation(this IServiceCollection services)
     {
-        if (!RuntimeFeature.IsDynamicCodeSupported)
-        {
-            return services;
-        }
-
-        services.AddEndpointsApiExplorer();
         services.AddHttpContextAccessor();
+        services.AddSingleton<IPostConfigureOptions<OpenApiExtensionsOptions>, PostConfigureOpenApiExtensionsOptions>();
 
-        services.AddSwaggerGen((options) =>
+        const string DocumentName = "api";
+
+        services.AddOpenApi(DocumentName, (options) =>
         {
-            using var provider = services.BuildServiceProvider();
-            var siteOptions = provider.GetRequiredService<IOptions<SiteOptions>>().Value;
+            options.AddDocumentTransformer<AddApiInfo>();
+        });
 
-            var info = new OpenApiInfo()
-            {
-                Contact = new()
-                {
-                    Name = siteOptions.Metadata?.Author?.Name,
-                    Url = new(siteOptions.Metadata?.Author?.Website ?? string.Empty),
-                },
-                Description = siteOptions.Metadata?.Description,
-                License = new()
-                {
-                    Name = siteOptions.Api?.License?.Name,
-                    Url = new(siteOptions.Api?.License?.Url ?? string.Empty),
-                },
-                Title = siteOptions.Metadata?.Name,
-                Version = string.Empty,
-            };
+        services.AddOpenApiExtensions(DocumentName, (options) =>
+        {
+            options.AddExamples = true;
+            options.AddServerUrls = true;
+            options.SerializationContexts.Add(ApplicationJsonSerializerContext.Default);
 
-            options.SwaggerDoc("api", info);
-
-            options.EnableAnnotations();
-            options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "API.xml"));
-
-            options.DocumentFilter<AddDocumentTags>();
-            options.DocumentFilter<AddServers>();
-            options.OperationFilter<AddDescriptions>();
-
-            var examples = new AddExamples();
-            options.AddOperationFilterInstance(examples);
-            options.AddSchemaFilterInstance(examples);
-
-            var prefixes = new RemoveStyleCopPrefixes();
-            options.AddOperationFilterInstance(prefixes);
-            options.AddSchemaFilterInstance(prefixes);
+            options.AddExample<ProblemDetails, ProblemDetailsExampleProvider>();
+            options.AddXmlComments<Program>();
         });
 
         return services;
     }
 
-    private sealed class AddDocumentTags : IDocumentFilter
+    private sealed class PostConfigureOpenApiExtensionsOptions(IOptionsMonitor<SiteOptions> monitor) : IPostConfigureOptions<OpenApiExtensionsOptions>
     {
-        public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
-            => swaggerDoc.Tags.Add(new() { Name = "API" });
+        public void PostConfigure(string? name, OpenApiExtensionsOptions options)
+            => options.DefaultServerUrl = $"https://{monitor.CurrentValue.Metadata!.Domain}";
     }
 }
