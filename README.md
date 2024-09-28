@@ -13,7 +13,7 @@ Any feedback or issues can be added to the issues for this project in [GitHub](h
 
 ## Repository
 
-The repository is hosted in [GitHub](https://github.com/martincostello/api): [https://github.com/martincostello/api.git](https://github.com/martincostello/api.git)
+The repository is hosted in [GitHub](https://github.com/martincostello/api): <https://github.com/martincostello/api.git>
 
 ## License
 
