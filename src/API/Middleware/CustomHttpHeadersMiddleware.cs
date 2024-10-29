@@ -134,9 +134,9 @@ manifest-src 'self';";
         {
             builder.Append("upgrade-insecure-requests;");
 
-            if (options?.ExternalLinks?.Reports?.ContentSecurityPolicy != null)
+            if (options?.ExternalLinks?.Reports?.ContentSecurityPolicy is { } reportUri)
             {
-                builder.Append(CultureInfo.InvariantCulture, $"report-uri {options.ExternalLinks.Reports.ContentSecurityPolicy};");
+                builder.Append(CultureInfo.InvariantCulture, $"report-uri {reportUri};");
             }
         }
 
