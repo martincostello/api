@@ -23,7 +23,7 @@ public sealed class ApiFixture
 
     public HttpClient CreateClient()
     {
-        Skip.If(ServerAddress is null, $"The {WebsiteUrl} environment variable is not set or is not a valid absolute URI.");
+        Assert.SkipWhen(ServerAddress is null, $"The {WebsiteUrl} environment variable is not set or is not a valid absolute URI.");
 
         var client = new HttpClient()
         {

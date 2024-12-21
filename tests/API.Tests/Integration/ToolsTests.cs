@@ -16,7 +16,7 @@ namespace MartinCostello.Api.Integration;
 /// </remarks>
 /// <param name="fixture">The fixture to use.</param>
 /// <param name="outputHelper">The test output helper to use.</param>
-[Collection(TestServerCollection.Name)]
+[Collection<TestServerCollection>]
 public class ToolsTests(TestServerFixture fixture, ITestOutputHelper outputHelper) : IntegrationTest(fixture, outputHelper)
 {
     [Theory]
@@ -48,12 +48,12 @@ public class ToolsTests(TestServerFixture fixture, ITestOutputHelper outputHelpe
         using var client = Fixture.CreateClient();
 
         // Act
-        using var response = await client.PostAsJsonAsync("/tools/hash", request, ApplicationJsonSerializerContext.Default.HashRequest);
+        using var response = await client.PostAsJsonAsync("/tools/hash", request, ApplicationJsonSerializerContext.Default.HashRequest, CancellationToken);
 
         // Assert
         response.EnsureSuccessStatusCode();
 
-        var actual = await response.Content.ReadFromJsonAsync(ApplicationJsonSerializerContext.Default.HashResponse);
+        var actual = await response.Content.ReadFromJsonAsync(ApplicationJsonSerializerContext.Default.HashResponse, CancellationToken);
 
         actual.ShouldNotBeNull();
         actual.Hash.ShouldBe(expected);
@@ -68,7 +68,8 @@ public class ToolsTests(TestServerFixture fixture, ITestOutputHelper outputHelpe
         // Act
         var actual = await client.GetFromJsonAsync(
             "/tools/machinekey?decryptionAlgorithm=AES-256&validationAlgorithm=SHA1",
-            ApplicationJsonSerializerContext.Default.MachineKeyResponse);
+            ApplicationJsonSerializerContext.Default.MachineKeyResponse,
+            CancellationToken);
 
         // Assert
         actual.ShouldNotBeNull();
@@ -96,7 +97,8 @@ public class ToolsTests(TestServerFixture fixture, ITestOutputHelper outputHelpe
 
         // Act
         using var response = await client.GetAsync(
-            $"/tools/guid?format={format}");
+            $"/tools/guid?format={format}",
+            CancellationToken);
 
         // Assert
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
@@ -116,7 +118,8 @@ public class ToolsTests(TestServerFixture fixture, ITestOutputHelper outputHelpe
 
         // Act
         using var response = await client.GetAsync(
-            $"/tools/machinekey?decryptionAlgorithm={decryptionAlgorithm}&validationAlgorithm={validationAlgorithm}");
+            $"/tools/machinekey?decryptionAlgorithm={decryptionAlgorithm}&validationAlgorithm={validationAlgorithm}",
+            CancellationToken);
 
         // Assert
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
@@ -140,7 +143,11 @@ public class ToolsTests(TestServerFixture fixture, ITestOutputHelper outputHelpe
         using var client = Fixture.CreateClient();
 
         // Act
-        using var response = await client.PostAsJsonAsync("/tools/hash", request, ApplicationJsonSerializerContext.Default.HashRequest);
+        using var response = await client.PostAsJsonAsync(
+            "/tools/hash",
+            request,
+            ApplicationJsonSerializerContext.Default.HashRequest,
+            CancellationToken);
 
         // Assert
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);

@@ -14,7 +14,7 @@ namespace MartinCostello.Api.Integration;
 /// </remarks>
 /// <param name="fixture">The fixture to use.</param>
 /// <param name="outputHelper">The test output helper to use.</param>
-[Collection(TestServerCollection.Name)]
+[Collection<TestServerCollection>]
 public class GitHubTests(TestServerFixture fixture, ITestOutputHelper outputHelper) : IntegrationTest(fixture, outputHelper)
 {
     [Fact]
@@ -40,11 +40,16 @@ public class GitHubTests(TestServerFixture fixture, ITestOutputHelper outputHelp
         using var client = Fixture.CreateClient();
 
         // Act
-        var actual = await client.PostAsync("/github/login/device/code?client_id=dkd73mfo9ASgjsfnhJD8&scope=public_repo", null);
+        var actual = await client.PostAsync(
+            "/github/login/device/code?client_id=dkd73mfo9ASgjsfnhJD8&scope=public_repo",
+            null,
+            CancellationToken);
 
         actual.EnsureSuccessStatusCode();
 
-        var deviceCode = await actual.Content.ReadFromJsonAsync(ApplicationJsonSerializerContext.Default.GitHubDeviceCode);
+        var deviceCode = await actual.Content.ReadFromJsonAsync(
+            ApplicationJsonSerializerContext.Default.GitHubDeviceCode,
+            CancellationToken);
 
         // Assert
         deviceCode.ShouldNotBeNull();
@@ -76,11 +81,16 @@ public class GitHubTests(TestServerFixture fixture, ITestOutputHelper outputHelp
         using var client = Fixture.CreateClient();
 
         // Act
-        var actual = await client.PostAsync("/github/login/oauth/access_token?client_id=dkd73mfo9ASgjsfnhJD8&device_code=3584d83530557fdd1f46af8289938c8ef79f9dc5&grant_type=urn:ietf:params:oauth:grant-type:device_code", null);
+        var actual = await client.PostAsync(
+            "/github/login/oauth/access_token?client_id=dkd73mfo9ASgjsfnhJD8&device_code=3584d83530557fdd1f46af8289938c8ef79f9dc5&grant_type=urn:ietf:params:oauth:grant-type:device_code",
+            null,
+            CancellationToken);
 
         actual.EnsureSuccessStatusCode();
 
-        var deviceCode = await actual.Content.ReadFromJsonAsync(ApplicationJsonSerializerContext.Default.GitHubAccessToken);
+        var deviceCode = await actual.Content.ReadFromJsonAsync(
+            ApplicationJsonSerializerContext.Default.GitHubAccessToken,
+            CancellationToken);
 
         // Assert
         deviceCode.ShouldNotBeNull();

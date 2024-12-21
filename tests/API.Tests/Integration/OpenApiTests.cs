@@ -7,7 +7,7 @@ using Microsoft.OpenApi.Validations;
 
 namespace MartinCostello.Api.Integration;
 
-[Collection(TestServerCollection.Name)]
+[Collection<TestServerCollection>]
 public class OpenApiTests(TestServerFixture fixture, ITestOutputHelper outputHelper) : IntegrationTest(fixture, outputHelper)
 {
     [Fact]
@@ -20,7 +20,7 @@ public class OpenApiTests(TestServerFixture fixture, ITestOutputHelper outputHel
         using var client = Fixture.CreateClient();
 
         // Act
-        string actual = await client.GetStringAsync("/openapi/api.json");
+        string actual = await client.GetStringAsync("/openapi/api.json", CancellationToken);
 
         // Assert
         await VerifyJson(actual, settings);
@@ -36,7 +36,7 @@ public class OpenApiTests(TestServerFixture fixture, ITestOutputHelper outputHel
         using var client = Fixture.CreateClient();
 
         // Act
-        string actual = await client.GetStringAsync("/openapi/api.yaml");
+        string actual = await client.GetStringAsync("/openapi/api.yaml", CancellationToken);
 
         // Assert
         await Verify(actual, settings);
@@ -56,11 +56,11 @@ public class OpenApiTests(TestServerFixture fixture, ITestOutputHelper outputHel
         using var client = Fixture.CreateClient();
 
         // Act
-        using var schema = await client.GetStreamAsync(requestUrl);
+        using var schema = await client.GetStreamAsync(requestUrl, CancellationToken);
 
         // Assert
         var reader = new OpenApiStreamReader();
-        var actual = await reader.ReadAsync(schema);
+        var actual = await reader.ReadAsync(schema, CancellationToken);
 
         actual.OpenApiDiagnostic.Errors.ShouldBeEmpty();
 
