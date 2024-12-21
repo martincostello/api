@@ -13,7 +13,7 @@ namespace MartinCostello.Api.Integration;
 /// </remarks>
 /// <param name="fixture">The fixture to use.</param>
 /// <param name="outputHelper">The test output helper to use.</param>
-[Collection(TestServerCollection.Name)]
+[Collection<TestServerCollection>]
 public class TimeTests(TestServerFixture fixture, ITestOutputHelper outputHelper) : IntegrationTest(fixture, outputHelper)
 {
     [Fact]
@@ -23,7 +23,7 @@ public class TimeTests(TestServerFixture fixture, ITestOutputHelper outputHelper
         using var client = Fixture.CreateClient();
 
         // Act
-        var actual = await client.GetFromJsonAsync("/time", ApplicationJsonSerializerContext.Default.TimeResponse);
+        var actual = await client.GetFromJsonAsync("/time", ApplicationJsonSerializerContext.Default.TimeResponse, CancellationToken);
 
         // Assert
         actual.ShouldNotBeNull();

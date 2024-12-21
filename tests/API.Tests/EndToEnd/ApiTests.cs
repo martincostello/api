@@ -12,7 +12,7 @@ namespace MartinCostello.Api.EndToEnd;
 
 public partial class ApiTests(ApiFixture fixture) : EndToEndTest(fixture)
 {
-    [SkippableFact]
+    [Fact]
     public async Task Can_Get_Time()
     {
         // Arrange
@@ -21,7 +21,7 @@ public partial class ApiTests(ApiFixture fixture) : EndToEndTest(fixture)
         using var client = Fixture.CreateClient();
 
         // Act
-        using var response = await client.GetFromJsonAsync("/time", AppJsonSerializerContext.Default.JsonDocument);
+        using var response = await client.GetFromJsonAsync("/time", AppJsonSerializerContext.Default.JsonDocument, CancellationToken);
 
         // Assert
         response.ShouldNotBeNull();
@@ -41,21 +41,21 @@ public partial class ApiTests(ApiFixture fixture) : EndToEndTest(fixture)
         DateTimeOffset.FromUnixTimeSeconds(unix).ShouldBe(utcNow, TimeSpan.FromSeconds(5), "The value of unix is incorrect.");
     }
 
-    [SkippableFact]
+    [Fact]
     public async Task Can_Generate_Guid()
     {
         // Arrange
         using var client = Fixture.CreateClient();
 
         // Act
-        using var response = await client.GetFromJsonAsync("/tools/guid", AppJsonSerializerContext.Default.JsonDocument);
+        using var response = await client.GetFromJsonAsync("/tools/guid", AppJsonSerializerContext.Default.JsonDocument, CancellationToken);
 
         // Assert
         response.ShouldNotBeNull();
         response.RootElement.GetProperty("guid").GetGuid().ShouldNotBe(Guid.Empty);
     }
 
-    [SkippableFact]
+    [Fact]
     public async Task Can_Generate_Machine_Key()
     {
         // Arrange
@@ -70,7 +70,7 @@ public partial class ApiTests(ApiFixture fixture) : EndToEndTest(fixture)
         string requestUri = QueryHelpers.AddQueryString("/tools/machinekey", parameters);
 
         // Act
-        using var response = await client.GetFromJsonAsync(requestUri, AppJsonSerializerContext.Default.JsonDocument);
+        using var response = await client.GetFromJsonAsync(requestUri, AppJsonSerializerContext.Default.JsonDocument, CancellationToken);
 
         // Assert
         response.ShouldNotBeNull();
@@ -87,7 +87,7 @@ public partial class ApiTests(ApiFixture fixture) : EndToEndTest(fixture)
         element.Attribute("validationKey")!.Value.ShouldBe(response.RootElement.GetProperty("validationKey").GetString());
     }
 
-    [SkippableTheory]
+    [Theory]
     [InlineData("md5", "hexadecimal", "martincostello.com", "e6c3105bdb8e6466f9db1dab47a85131")]
     [InlineData("sha1", "hexadecimal", "martincostello.com", "7fbd8e8cf806e5282af895396f5268483bf6af1b")]
     [InlineData("sha256", "hexadecimal", "martincostello.com", "3b8143aa8119eaf0910aef5cade45dd0e6bb7b70e8d1c8c057bf3fc125248642")]
@@ -106,12 +106,12 @@ public partial class ApiTests(ApiFixture fixture) : EndToEndTest(fixture)
         using var client = Fixture.CreateClient();
 
         // Act
-        using var response = await client.PostAsJsonAsync("/tools/hash", request, AppJsonSerializerContext.Default.JsonObject);
+        using var response = await client.PostAsJsonAsync("/tools/hash", request, AppJsonSerializerContext.Default.JsonObject, CancellationToken);
 
         // Assert
         response.EnsureSuccessStatusCode();
 
-        using var result = await JsonDocument.ParseAsync(await response.Content.ReadAsStreamAsync());
+        using var result = await JsonDocument.ParseAsync(await response.Content.ReadAsStreamAsync(CancellationToken), cancellationToken: CancellationToken);
 
         result.RootElement.GetProperty("hash").GetString().ShouldBe(expected);
     }

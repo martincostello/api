@@ -8,7 +8,7 @@ namespace MartinCostello.Api.EndToEnd;
 
 public class ResourceTests(ApiFixture fixture) : EndToEndTest(fixture)
 {
-    [SkippableTheory]
+    [Theory]
     [InlineData("/", MediaTypeNames.Text.Html)]
     [InlineData("/assets/css/main.css", "text/css")]
     [InlineData("/assets/css/main.css.map", MediaTypeNames.Text.Plain)]
@@ -38,7 +38,7 @@ public class ResourceTests(ApiFixture fixture) : EndToEndTest(fixture)
         using var client = Fixture.CreateClient();
 
         // Act
-        using var response = await client.GetAsync(requestUri);
+        using var response = await client.GetAsync(requestUri, CancellationToken);
 
         // Assert
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -46,7 +46,7 @@ public class ResourceTests(ApiFixture fixture) : EndToEndTest(fixture)
         response.Content!.Headers.ContentType?.MediaType?.ShouldBe(contentType);
     }
 
-    [SkippableFact]
+    [Fact]
     public async Task Response_Headers_Contains_Expected_Headers()
     {
         // Arrange
@@ -67,7 +67,7 @@ public class ResourceTests(ApiFixture fixture) : EndToEndTest(fixture)
         using var client = Fixture.CreateClient();
 
         // Act
-        using var response = await client.GetAsync("/");
+        using var response = await client.GetAsync("/", CancellationToken);
 
         // Assert
         foreach (string expected in expectedHeaders)
