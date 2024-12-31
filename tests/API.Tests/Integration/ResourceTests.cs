@@ -107,6 +107,9 @@ public class ResourceTests(TestServerFixture fixture, ITestOutputHelper outputHe
         string[] expectedHeaders =
         [
             "content-security-policy",
+            "Cross-Origin-Embedder-Policy",
+            "Cross-Origin-Opener-Policy",
+            "Cross-Origin-Resource-Policy",
             "Permissions-Policy",
             "Referrer-Policy",
             "X-Content-Type-Options",
