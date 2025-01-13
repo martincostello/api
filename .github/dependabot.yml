@@ -35,7 +35,7 @@ updates:
         - OpenTelemetry*
     xunit:
       patterns:
-        - Verify.Xunit
+        - Verify.Xunit*
         - xunit*
   schedule:
     interval: daily
