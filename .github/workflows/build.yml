@@ -61,6 +61,9 @@ jobs:
 
     - name: Checkout code
       uses: actions/checkout@v4
+      with:
+        filter: 'tree:0'
+        show-progress: false
 
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v4
@@ -73,7 +76,8 @@ jobs:
     - name: Get npm cache directory
       id: npm-cache-dir
       shell: pwsh
-      run: echo "dir=$(npm config get cache)" >> ${env:GITHUB_OUTPUT}
+      run: |
+        "dir=$(npm config get cache)" >> ${env:GITHUB_OUTPUT}
 
     - name: Setup npm cache
       uses: actions/cache@v4
@@ -256,6 +260,9 @@ jobs:
 
     - name: Checkout code
       uses: actions/checkout@v4
+      with:
+        filter: 'tree:0'
+        show-progress: false
 
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v4
@@ -268,7 +275,8 @@ jobs:
     - name: Get npm cache directory
       id: npm-cache-dir
       shell: pwsh
-      run: echo "dir=$(npm config get cache)" >> ${env:GITHUB_OUTPUT}
+      run: |
+        "dir=$(npm config get cache)" >> ${env:GITHUB_OUTPUT}
 
     - name: Setup npm cache
       uses: actions/cache@v4
