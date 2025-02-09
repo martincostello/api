@@ -8,12 +8,14 @@ on:
       - dotnet-nightly
   workflow_dispatch:
 
-permissions:
-  contents: read
+permissions: {}
 
 jobs:
   spectral:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
 
     steps:
 
@@ -35,7 +37,6 @@ jobs:
       run: npm install --global @stoplight/spectral-cli
 
     - name: Generate OpenAPI document
-      shell: pwsh
       run: dotnet build ./src/API
 
     - name: Run Spectral
