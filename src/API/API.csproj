@@ -28,7 +28,7 @@
   <ItemGroup>
     <PackageReference Include="Azure.Monitor.OpenTelemetry.Exporter" />
     <PackageReference Include="MartinCostello.OpenApi.Extensions" />
-    <PackageReference Include="Microsoft.AspNetCore.AzureAppServices.HostingStartup" />
+    <PackageReference Include="Microsoft.AspNetCore.AzureAppServices.HostingStartup" NoWarn="RT0003" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
     <PackageReference Include="Microsoft.Extensions.ApiDescription.Server" NoWarn="RT0003" PrivateAssets="all" />
     <PackageReference Include="Microsoft.OpenApi" />
