@@ -14,7 +14,7 @@
     <PublishAot>true</PublishAot>
     <PublishSelfContained>true</PublishSelfContained>
     <RootNamespace>MartinCostello.Api</RootNamespace>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <TrimmerSingleWarn>false</TrimmerSingleWarn>
     <Summary>Martin Costello's API</Summary>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
