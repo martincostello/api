@@ -17,7 +17,7 @@ public class OpenApiTests(TestServerFixture fixture, ITestOutputHelper outputHel
         OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
     }
 
-    [Fact]
+    [Fact(Skip = "https://github.com/dotnet/aspnetcore/issues/60630")]
     public async Task Json_Schema_Is_Correct()
     {
         // Arrange
@@ -34,7 +34,7 @@ public class OpenApiTests(TestServerFixture fixture, ITestOutputHelper outputHel
         await VerifyJson(actual, settings);
     }
 
-    [Fact]
+    [Fact(Skip = "https://github.com/dotnet/aspnetcore/issues/60630")]
     public async Task Yaml_Schema_Is_Correct()
     {
         // Arrange
