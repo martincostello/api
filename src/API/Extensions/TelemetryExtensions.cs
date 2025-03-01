@@ -20,7 +20,9 @@ public static class TelemetryExtensions
     public static ResourceBuilder ResourceBuilder { get; } = ResourceBuilder.CreateDefault()
         .AddService(ApplicationTelemetry.ServiceName, serviceVersion: ApplicationTelemetry.ServiceVersion)
         .AddAzureAppServiceDetector()
-        .AddContainerDetector();
+        .AddContainerDetector()
+        .AddOperatingSystemDetector()
+        .AddProcessRuntimeDetector();
 
     /// <summary>
     /// Adds telemetry services to the specified <see cref="IServiceCollection"/>.
@@ -44,6 +46,7 @@ public static class TelemetryExtensions
                 builder.SetResourceBuilder(ResourceBuilder)
                        .AddAspNetCoreInstrumentation()
                        .AddHttpClientInstrumentation()
+                       .AddProcessInstrumentation()
                        .AddRuntimeInstrumentation();
 
                 if (IsAzureMonitorConfigured())
