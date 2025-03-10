@@ -2,7 +2,6 @@
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 using System.Diagnostics;
-using System.Text;
 using MartinCostello.Api.Options;
 using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;

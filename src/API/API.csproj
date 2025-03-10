@@ -2,7 +2,7 @@
   <PropertyGroup>
     <ContainerFamily>noble-chiseled</ContainerFamily>
     <ContainerRepository>martincostello/api</ContainerRepository>
-    <Description>https://api.martincostello.com/</Description>
+    <Description>Martin Costello's API</Description>
     <EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
     <EnableRequestDelegateGenerator>true</EnableRequestDelegateGenerator>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -10,13 +10,10 @@
     <OpenApiDocumentsDirectory>$([System.IO.Path]::Combine($(ArtifactsPath), 'openapi'))</OpenApiDocumentsDirectory>
     <OpenApiGenerateDocuments>true</OpenApiGenerateDocuments>
     <OutputType>Exe</OutputType>
-    <PreserveCompilationContext>true</PreserveCompilationContext>
     <PublishAot>true</PublishAot>
     <PublishSelfContained>true</PublishSelfContained>
     <RootNamespace>MartinCostello.Api</RootNamespace>
     <TargetFramework>net9.0</TargetFramework>
-    <TrimmerSingleWarn>false</TrimmerSingleWarn>
-    <Summary>Martin Costello's API</Summary>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <TypeScriptToolsVersion>latest</TypeScriptToolsVersion>
     <UserSecretsId>api.martincostello.com</UserSecretsId>
@@ -50,24 +47,12 @@
     <None Remove="assets\scripts\**\*.ts" />
     <TypeScriptCompile Include="assets\scripts\**\*.ts" />
   </ItemGroup>
-  <Target Name="BundleAssets" BeforeTargets="BeforeBuild">
-    <Exec Command="npm ci" Condition=" !Exists('$(MSBuildThisFileDirectory)\node_modules') AND '$(GITHUB_ACTIONS)' != '' " />
-    <Exec Command="npm install" Condition=" !Exists('$(MSBuildThisFileDirectory)\node_modules') AND '$(GITHUB_ACTIONS)' == '' " />
+  <Target Name="BundleAssets" BeforeTargets="BeforeBuild" DependsOnTargets="RestoreNpmPackages">
     <Exec Command="npm run build" Condition=" !Exists('$(MSBuildThisFileDirectory)\wwwroot\assets\js\main.js') " />
   </Target>
-  <Target Name="AddGeneratedContentItems" BeforeTargets="AssignTargetPaths" Condition="'$(CI)' != ''">
+  <Target Name="AddGeneratedContentItems" BeforeTargets="AssignTargetPaths" Condition=" '$(CI)' != '' ">
     <ItemGroup>
       <Content Include="wwwroot/**" CopyToPublishDirectory="PreserveNewest" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder);@(Content)" />
     </ItemGroup>
-  </Target>
-  <Target Name="SetGitHubContainerOutputs" AfterTargets="PublishContainer" Condition=" '$(GITHUB_OUTPUT)' != '' AND '$(ContainerRegistry)' != '' ">
-    <PropertyGroup>
-      <_ContainerImage>$(ContainerRegistry)/$(ContainerRepository)</_ContainerImage>
-      <_ContainerImage>$(_ContainerImage.ToLowerInvariant())</_ContainerImage>
-      <_ContainerTag>$(_ContainerImage):github-$(GITHUB_RUN_NUMBER)</_ContainerTag>
-    </PropertyGroup>
-    <WriteLinesToFile File="$(GITHUB_OUTPUT)" Lines="container-digest=$(GeneratedContainerDigest)" />
-    <WriteLinesToFile File="$(GITHUB_OUTPUT)" Lines="container-image=$(_ContainerImage)" />
-    <WriteLinesToFile File="$(GITHUB_OUTPUT)" Lines="container-tag=$(_ContainerTag)" />
   </Target>
 </Project>
