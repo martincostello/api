@@ -1,13 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Description>Tests for https://api.martincostello.com/</Description>
-    <IsTestProject>true</IsTestProject>
+    <Description>Tests for Martin Costello's API</Description>
     <JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
-    <NoWarn>$(NoWarn);CA1707;CA1711;CA2007;CA2234;SA1600</NoWarn>
+    <NoWarn>$(NoWarn);CA2234</NoWarn>
     <OutputType>Exe</OutputType>
-    <PreserveCompilationContext>true</PreserveCompilationContext>
     <RootNamespace>MartinCostello.Api</RootNamespace>
-    <Summary>Tests for Martin Costello's API</Summary>
     <TargetFramework>net9.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
@@ -32,15 +29,11 @@
     <PackageReference Include="xunit.runner.visualstudio" />
     <PackageReference Include="xunit.v3" />
   </ItemGroup>
-  <ItemGroup>
-    <Using Include="Shouldly" />
-    <Using Include="Xunit" />
-  </ItemGroup>
   <PropertyGroup>
     <CollectCoverage Condition=" '$(WEBSITE_URL)' == '' ">true</CollectCoverage>
-    <CoverletOutputFormat>cobertura,json</CoverletOutputFormat>
-    <Exclude>[xunit.*]*</Exclude>
-    <ExcludeByAttribute>GeneratedCodeAttribute</ExcludeByAttribute>
     <Threshold>85,60,75</Threshold>
   </PropertyGroup>
+  <ItemGroup>
+    <CoverletExclude Include="$([MSBuild]::Escape('[MartinCostello.OpenApi.Extensions]*'))" />
+  </ItemGroup>
 </Project>

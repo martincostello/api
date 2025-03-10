@@ -6,7 +6,6 @@
     <OpenApiGenerateDocumentsOnBuild>false</OpenApiGenerateDocumentsOnBuild>
     <OutputType>Exe</OutputType>
     <RootNamespace>MartinCostello.API.Benchmarks</RootNamespace>
-    <Summary>$(Description)</Summary>
     <TargetFramework>net9.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>

@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
-using System.Text;
 using System.Text.Json.Nodes;
 using MartinCostello.Api.Models;
 using MartinCostello.OpenApi;
