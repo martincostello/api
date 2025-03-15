@@ -58,7 +58,7 @@
   </Target>
   <Target Name="AddPyroscope" BeforeTargets="AssignTargetPaths" Condition=" '$(EnablePyroscope)' == 'true' ">
     <ItemGroup>
-      <Content Include="$($(MSBuildThisFileDirectory)/../../.pyroscope/**/*" CopyToPublishDirectory="IfDifferent" />
+      <Content Include="$(MSBuildThisFileDirectory)/../../.pyroscope/**/*" CopyToPublishDirectory="IfDifferent" />
     </ItemGroup>
   </Target>
   <ItemGroup Condition=" '$(EnablePyroscope)' == 'true' ">
