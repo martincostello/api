@@ -124,7 +124,7 @@ jobs:
         PYROSCOPE_VARIANT: 'glibc'
         PYROSCOPE_VERSION: '0.9.4'
       run: |
-        if (${env:EnablePyroscope} -eq "") {true}
+        if (${env:EnablePyroscope} -eq "true") {
           Write-Output "Downloading Pyroscope..."
 
           $pyroscope = (gh api "/repos/grafana/pyroscope-dotnet/releases/tags/v${env:PYROSCOPE_VERSION}" | ConvertFrom-Json)
