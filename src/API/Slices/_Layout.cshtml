@@ -14,7 +14,7 @@
 <html lang="en-gb">
 <head prefix="og:http://ogp.me/ns#">
     @(await RenderPartialAsync<_Meta, MetaModel>(meta))
-    @(await RenderPartialAsync<_Links>())
+    @(await RenderPartialAsync<_Links, string?>(meta.CanonicalUri))
     @await RenderSectionAsync("links")
     @await RenderSectionAsync("styles")
     <script type="text/javascript">

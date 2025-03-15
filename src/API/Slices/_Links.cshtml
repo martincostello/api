@@ -1,9 +1,9 @@
+@inherits RazorSlice<string?>
 @{
     var options = Options.Value;
     var request = HttpContext!.Request;
-    var canonical = request.Canonical();
 }
-<link rel="canonical" href="@(canonical)" />
+<link rel="canonical" href="@(Model)" />
 <link rel="manifest" href="@(request.Content("~/manifest.webmanifest"))" />
 <link rel="sitemap" type="application/xml" href="@(request.Content("~/sitemap.xml"))" />
 <link rel="shortcut icon" type="image/x-icon" href="@(request.CdnContent("favicon.ico", options))" />
