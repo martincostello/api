@@ -2,6 +2,7 @@
 .dotnet
 .dotnetcli
 .metadata
+.pyroscope
 .settings
 .vs
 _Chutzpah*
