@@ -1,10 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-    <!--
-      HACK Need non-chiseled for pyroscope to be able to upload profiles.
-      See https://github.com/dotnet/dotnet-docker/issues/5045#issuecomment-2726588006.
-    -->
-    <ContainerFamily>noble</ContainerFamily>
+    <ContainerFamily>noble-chiseled</ContainerFamily>
     <ContainerRepository>martincostello/api</ContainerRepository>
     <Description>Martin Costello's API</Description>
     <EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
@@ -60,6 +56,17 @@
       <Content Include="wwwroot/**" CopyToPublishDirectory="PreserveNewest" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder);@(Content)" />
     </ItemGroup>
   </Target>
+  <PropertyGroup Condition=" '$(EnablePyroscope)' == 'true' ">
+    <!--
+      HACK Need non-chiseled for pyroscope to be able to upload profiles.
+      See https://github.com/dotnet/dotnet-docker/issues/5045#issuecomment-2726588006.
+    -->
+    <ContainerFamily>noble</ContainerFamily>
+    <!--
+      HACK Pyroscope's profiler does not work with native AoT
+     -->
+    <PublishAot>false</PublishAot>
+  </PropertyGroup>
   <Target Name="AddPyroscope" BeforeTargets="AssignTargetPaths" Condition=" '$(EnablePyroscope)' == 'true' ">
     <ItemGroup>
       <Content Include="$(MSBuildThisFileDirectory)\..\..\.pyroscope\**\*" CopyToPublishDirectory="PreserveNewest" />
