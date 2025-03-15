@@ -56,6 +56,17 @@
       <Content Include="wwwroot/**" CopyToPublishDirectory="PreserveNewest" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder);@(Content)" />
     </ItemGroup>
   </Target>
+  <PropertyGroup Condition=" '$(EnablePyroscope)' == 'true' ">
+    <!--
+      HACK Need non-chiseled for pyroscope to be able to upload profiles.
+      See https://github.com/dotnet/dotnet-docker/issues/5045#issuecomment-2726588006.
+    -->
+    <ContainerFamily>noble</ContainerFamily>
+    <!--
+      HACK Pyroscope's profiler does not work with native AoT
+     -->
+    <PublishAot>false</PublishAot>
+  </PropertyGroup>
   <Target Name="AddPyroscope" BeforeTargets="AssignTargetPaths" Condition=" '$(EnablePyroscope)' == 'true' ">
     <ItemGroup>
       <Content Include="$(MSBuildThisFileDirectory)\..\..\.pyroscope\**\*" CopyToPublishDirectory="PreserveNewest" />
@@ -64,8 +75,8 @@
   <ItemGroup Condition=" '$(EnablePyroscope)' == 'true' ">
     <ContainerEnvironmentVariable Include="CORECLR_ENABLE_PROFILING" Value="1" />
     <ContainerEnvironmentVariable Include="CORECLR_PROFILER" Value="{BD1A650D-AC5D-4896-B64F-D6FA25D6B26A}" />
-    <ContainerEnvironmentVariable Include="CORECLR_PROFILER_PATH" Value="Pyroscope.Profiler.Native.so" />
-    <ContainerEnvironmentVariable Include="LD_PRELOAD" Value="Pyroscope.Linux.ApiWrapper.x64.so" />
+    <ContainerEnvironmentVariable Include="CORECLR_PROFILER_PATH" Value="/app/Pyroscope.Profiler.Native.so" />
+    <ContainerEnvironmentVariable Include="LD_PRELOAD" Value="/app/Pyroscope.Linux.ApiWrapper.x64.so" />
     <ContainerEnvironmentVariable Include="PYROSCOPE_APPLICATION_NAME" Value="api.martincostello.com" />
     <ContainerEnvironmentVariable Include="PYROSCOPE_LABELS" Value="api" />
     <ContainerEnvironmentVariable Include="PYROSCOPE_PROFILING_ENABLED" Value="1" />
