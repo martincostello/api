@@ -56,20 +56,20 @@
       <Content Include="wwwroot/**" CopyToPublishDirectory="PreserveNewest" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder);@(Content)" />
     </ItemGroup>
   </Target>
+  <!--
+    HACK Pyroscope's profiler does not work with native AoT
+  -->
   <PropertyGroup Condition=" '$(EnablePyroscope)' == 'true' ">
-    <!--
-      HACK Need non-chiseled for pyroscope to be able to upload profiles.
-      See https://github.com/dotnet/dotnet-docker/issues/5045#issuecomment-2726588006.
-    -->
-    <ContainerFamily>noble</ContainerFamily>
-    <!--
-      HACK Pyroscope's profiler does not work with native AoT
-     -->
     <PublishAot>false</PublishAot>
   </PropertyGroup>
   <Target Name="AddPyroscope" BeforeTargets="AssignTargetPaths" Condition=" '$(EnablePyroscope)' == 'true' ">
     <ItemGroup>
       <Content Include="$(MSBuildThisFileDirectory)\..\..\.pyroscope\**\*" CopyToPublishDirectory="PreserveNewest" />
+      <!--
+        HACK The chiseled images do not contain the appropriate certificates for uploading profiles.
+        See https://github.com/dotnet/dotnet-docker/issues/5045#issuecomment-2726588006.
+      -->
+      <Content Include="/etc/ssl/certs/ca-certificates.crt" CopyToPublishDirectory="PreserveNewest" />
     </ItemGroup>
   </Target>
   <ItemGroup Condition=" '$(EnablePyroscope)' == 'true' ">
@@ -87,5 +87,6 @@
     <ContainerEnvironmentVariable Include="PYROSCOPE_PROFILING_HEAP_ENABLED" Value="true" />
     <ContainerEnvironmentVariable Include="PYROSCOPE_PROFILING_LOCK_ENABLED" Value="true" />
     <ContainerEnvironmentVariable Include="PYROSCOPE_PROFILING_WALLTIME_ENABLED" Value="true" />
+    <ContainerEnvironmentVariable Include="SSL_CERT_FILE" Value="/app/ca-certificates.crt" />
   </ItemGroup>
 </Project>
