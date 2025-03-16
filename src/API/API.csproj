@@ -11,8 +11,8 @@
     <OpenApiGenerateDocuments>true</OpenApiGenerateDocuments>
     <OutputType>Exe</OutputType>
     <PyroscopeApplicationName>api.martincostello.com</PyroscopeApplicationName>
-    <PublishAot>$([MSBuild]::ValueOrDefault('$(PublishAot)', 'true'))</PublishAot>
-    <PublishSelfContained>$([MSBuild]::ValueOrDefault('$(PublishSelfContained)', 'true'))</PublishSelfContained>
+    <PublishAot>true</PublishAot>
+    <PublishSelfContained>true</PublishSelfContained>
     <RootNamespace>MartinCostello.Api</RootNamespace>
     <TargetFramework>net9.0</TargetFramework>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
@@ -58,4 +58,10 @@
       <Content Include="wwwroot/**" CopyToPublishDirectory="PreserveNewest" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder);@(Content)" />
     </ItemGroup>
   </Target>
+  <!--
+    HACK Pyroscope's profiler does not work with native AoT
+  -->
+  <PropertyGroup Condition=" '$(UsePyroscope)' == 'true' ">
+    <PublishAot>false</PublishAot>
+  </PropertyGroup>
 </Project>
