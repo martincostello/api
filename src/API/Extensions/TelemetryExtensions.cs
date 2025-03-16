@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
-using Azure.Monitor.OpenTelemetry.Exporter;
 using OpenTelemetry.Instrumentation.Http;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
@@ -33,12 +32,6 @@ public static class TelemetryExtensions
     {
         ArgumentNullException.ThrowIfNull(services);
 
-        if (IsAzureMonitorConfigured())
-        {
-            services.Configure<AzureMonitorExporterOptions>(
-                (p) => p.ConnectionString = AzureMonitorConnectionString());
-        }
-
         services
             .AddOpenTelemetry()
             .WithMetrics((builder) =>
@@ -48,11 +41,6 @@ public static class TelemetryExtensions
                        .AddHttpClientInstrumentation()
                        .AddProcessInstrumentation()
                        .AddRuntimeInstrumentation();
-
-                if (IsAzureMonitorConfigured())
-                {
-                    builder.AddAzureMonitorMetricExporter();
-                }
 
                 if (IsOtlpCollectorConfigured())
                 {
@@ -71,17 +59,12 @@ public static class TelemetryExtensions
                     builder.SetSampler(new AlwaysOnSampler());
                 }
 
-                if (IsAzureMonitorConfigured())
-                {
-                    builder.AddAzureMonitorTraceExporter();
-                }
-
                 if (IsOtlpCollectorConfigured())
                 {
                     builder.AddOtlpExporter();
                 }
 
-                if (Environment.GetEnvironmentVariable("PYROSCOPE_PROFILING_ENABLED") is "1")
+                if (IsPyroscopeConfigured())
                 {
                     builder.AddProcessor(new Pyroscope.OpenTelemetry.PyroscopeSpanProcessor());
                 }
@@ -92,15 +75,6 @@ public static class TelemetryExtensions
     }
 
     /// <summary>
-    /// Returns whether Azure Monitor is configured.
-    /// </summary>
-    /// <returns>
-    /// <see langword="true"/> if Azure Monitor is configured; otherwise <see langword="false"/>.
-    /// </returns>
-    internal static bool IsAzureMonitorConfigured()
-        => !string.IsNullOrEmpty(AzureMonitorConnectionString());
-
-    /// <summary>
     /// Returns whether an OTLP collector is configured.
     /// </summary>
     /// <returns>
@@ -109,6 +83,12 @@ public static class TelemetryExtensions
     internal static bool IsOtlpCollectorConfigured()
         => !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("OTEL_EXPORTER_OTLP_ENDPOINT"));
 
-    private static string? AzureMonitorConnectionString()
-        => Environment.GetEnvironmentVariable("APPLICATIONINSIGHTS_CONNECTION_STRING");
+    /// <summary>
+    /// Returns whether Pyroscope is configured.
+    /// </summary>
+    /// <returns>
+    /// <see langword="true"/> if Pyroscope is configured; otherwise <see langword="false"/>.
+    /// </returns>
+    internal static bool IsPyroscopeConfigured()
+        => Environment.GetEnvironmentVariable("PYROSCOPE_PROFILING_ENABLED") is "1";
 }
