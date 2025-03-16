@@ -10,6 +10,7 @@
     <OpenApiDocumentsDirectory>$([System.IO.Path]::Combine($(ArtifactsPath), 'openapi'))</OpenApiDocumentsDirectory>
     <OpenApiGenerateDocuments>true</OpenApiGenerateDocuments>
     <OutputType>Exe</OutputType>
+    <PyroscopeApplicationName>api.martincostello.com</PyroscopeApplicationName>
     <PublishAot>true</PublishAot>
     <PublishSelfContained>true</PublishSelfContained>
     <RootNamespace>MartinCostello.Api</RootNamespace>
@@ -21,6 +22,7 @@
   <ItemGroup>
     <ContainerPort Include="8080" Type="tcp" />
     <Content Update="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
+    <PyroscopeLabels Include="api" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Azure.Monitor.OpenTelemetry.Exporter" />
@@ -59,34 +61,7 @@
   <!--
     HACK Pyroscope's profiler does not work with native AoT
   -->
-  <PropertyGroup Condition=" '$(EnablePyroscope)' == 'true' ">
+  <PropertyGroup Condition=" '$(UsePyroscope)' == 'true' ">
     <PublishAot>false</PublishAot>
   </PropertyGroup>
-  <Target Name="AddPyroscope" BeforeTargets="AssignTargetPaths" Condition=" '$(EnablePyroscope)' == 'true' ">
-    <ItemGroup>
-      <Content Include="$(MSBuildThisFileDirectory)\..\..\.pyroscope\**\*" CopyToPublishDirectory="PreserveNewest" />
-      <!--
-        HACK The chiseled images do not contain the appropriate certificates for uploading profiles.
-        See https://github.com/dotnet/dotnet-docker/issues/5045#issuecomment-2726588006.
-      -->
-      <Content Include="/etc/ssl/certs/ca-certificates.crt" CopyToPublishDirectory="PreserveNewest" />
-    </ItemGroup>
-  </Target>
-  <ItemGroup Condition=" '$(EnablePyroscope)' == 'true' ">
-    <ContainerEnvironmentVariable Include="CORECLR_ENABLE_PROFILING" Value="1" />
-    <ContainerEnvironmentVariable Include="CORECLR_PROFILER" Value="{BD1A650D-AC5D-4896-B64F-D6FA25D6B26A}" />
-    <ContainerEnvironmentVariable Include="CORECLR_PROFILER_PATH" Value="/app/Pyroscope.Profiler.Native.so" />
-    <ContainerEnvironmentVariable Include="LD_PRELOAD" Value="/app/Pyroscope.Linux.ApiWrapper.x64.so" />
-    <ContainerEnvironmentVariable Include="PYROSCOPE_APPLICATION_NAME" Value="api.martincostello.com" />
-    <ContainerEnvironmentVariable Include="PYROSCOPE_LABELS" Value="api" />
-    <ContainerEnvironmentVariable Include="PYROSCOPE_PROFILING_ENABLED" Value="1" />
-    <ContainerEnvironmentVariable Include="PYROSCOPE_PROFILING_ALLOCATION_ENABLED" Value="true" />
-    <ContainerEnvironmentVariable Include="PYROSCOPE_PROFILING_CONTENTION_ENABLED" Value="true" />
-    <ContainerEnvironmentVariable Include="PYROSCOPE_PROFILING_CPU_ENABLED" Value="true" />
-    <ContainerEnvironmentVariable Include="PYROSCOPE_PROFILING_EXCEPTION_ENABLED" Value="true" />
-    <ContainerEnvironmentVariable Include="PYROSCOPE_PROFILING_HEAP_ENABLED" Value="true" />
-    <ContainerEnvironmentVariable Include="PYROSCOPE_PROFILING_LOCK_ENABLED" Value="true" />
-    <ContainerEnvironmentVariable Include="PYROSCOPE_PROFILING_WALLTIME_ENABLED" Value="true" />
-    <ContainerEnvironmentVariable Include="SSL_CERT_FILE" Value="/app/ca-certificates.crt" />
-  </ItemGroup>
 </Project>

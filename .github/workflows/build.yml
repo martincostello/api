@@ -118,13 +118,13 @@ jobs:
       shell: pwsh
       env:
         ContainerRegistry: ${{ env.PUBLISH_CONTAINER == 'true' && env.CONTAINER_REGISTRY || '' }}
-        EnablePyroscope: 'false'
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         PYROSCOPE_ARCH: 'x86_64'
         PYROSCOPE_VARIANT: 'glibc'
         PYROSCOPE_VERSION: '0.9.4'
+        UsePyroscope: 'true'
       run: |
-        if (${env:EnablePyroscope} -eq "true") {
+        if (${env:UsePyroscope} -eq "true") {
           Write-Output "Downloading Pyroscope..."
 
           $pyroscope = (gh api "/repos/grafana/pyroscope-dotnet/releases/tags/v${env:PYROSCOPE_VERSION}" | ConvertFrom-Json)
