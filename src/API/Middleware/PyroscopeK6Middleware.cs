@@ -62,7 +62,8 @@ internal sealed class PyroscopeK6Middleware(RequestDelegate next)
             {
                 string label = key.Replace('.', '_');
 
-                labels ??= [];
+                // See https://github.com/grafana/jslib.k6.io/blob/80255ea7b239d3d4a8cd4e82192eef4ba27941a2/lib/http-instrumentation-pyroscope/1.0.1/index.js#L11
+                labels ??= new(3);
                 labels[label] = value;
             }
         }
