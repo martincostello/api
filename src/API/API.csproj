@@ -25,7 +25,6 @@
     <PyroscopeLabels Include="api" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Azure.Monitor.OpenTelemetry.Exporter" />
     <PackageReference Include="MartinCostello.OpenApi.Extensions" />
     <PackageReference Include="Microsoft.AspNetCore.AzureAppServices.HostingStartup" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
@@ -42,6 +41,7 @@
     <PackageReference Include="OpenTelemetry.Resources.Container" />
     <PackageReference Include="OpenTelemetry.Resources.OperatingSystem" />
     <PackageReference Include="OpenTelemetry.Resources.ProcessRuntime" />
+    <PackageReference Include="Pyroscope" />
     <PackageReference Include="Pyroscope.OpenTelemetry" />
     <PackageReference Include="RazorSlices" />
   </ItemGroup>
