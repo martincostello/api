@@ -3,7 +3,7 @@
 
 //// Based on https://github.com/grafana/pyroscope-go/blob/8fff2bccb5ed5611fdb09fdbd9a727367ab35f39/x/k6/baggage.go
 
-using System.Diagnostics;
+using OpenTelemetry;
 using Pyroscope;
 
 namespace MartinCostello.Api.Middleware;
@@ -52,11 +52,10 @@ internal sealed class PyroscopeK6Middleware(RequestDelegate next, ILogger<Pyrosc
     private Dictionary<string, string>? ExtractK6Baggage()
     {
 #pragma warning disable CA1848 // Use the LoggerMessage delegates
-        _logger.LogInformation("Baggage count: {Count}", Activity.Current?.Baggage?.Count());
+        _logger.LogInformation("Baggage count: {Count}", Baggage.GetBaggage().Count);
 #pragma warning restore CA1848 // Use the LoggerMessage delegates
 
-        if (Activity.Current is not { } activity ||
-            activity.Baggage is not { } baggage)
+        if (Baggage.GetBaggage() is not { Count: > 0 } baggage)
         {
             return null;
         }
