@@ -28,6 +28,8 @@ internal sealed class PyroscopeK6Middleware(RequestDelegate next)
         {
             try
             {
+                Profiler.Instance.ClearDynamicTags();
+
                 foreach ((string key, string value) in baggage)
                 {
                     Profiler.Instance.SetDynamicTag(key, value);
