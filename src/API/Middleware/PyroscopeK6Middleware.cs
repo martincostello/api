@@ -63,7 +63,7 @@ internal sealed class PyroscopeK6Middleware(RequestDelegate next)
                 string label = key.Replace('.', '_');
 
                 labels ??= [];
-                labels[key] = value;
+                labels[label] = value;
             }
         }
 
