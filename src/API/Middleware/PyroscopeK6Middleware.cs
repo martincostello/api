@@ -11,10 +11,9 @@ namespace MartinCostello.Api.Middleware;
 /// <summary>
 /// A class representing middleware for adding profiler labels for Pyroscope from k6. This class cannot be inherited.
 /// </summary>
-internal sealed class PyroscopeK6Middleware(RequestDelegate next, ILogger<PyroscopeK6Middleware> logger)
+internal sealed class PyroscopeK6Middleware(RequestDelegate next)
 {
     private readonly RequestDelegate _next = next;
-    private readonly ILogger<PyroscopeK6Middleware> _logger = logger;
 
     /// <summary>
     /// Invokes the middleware asynchronously.
@@ -49,12 +48,8 @@ internal sealed class PyroscopeK6Middleware(RequestDelegate next, ILogger<Pyrosc
         }
     }
 
-    private Dictionary<string, string>? ExtractK6Baggage()
+    private static Dictionary<string, string>? ExtractK6Baggage()
     {
-#pragma warning disable CA1848 // Use the LoggerMessage delegates
-        _logger.LogInformation("Baggage count: {Count}", Activity.Current?.Baggage?.Count());
-#pragma warning restore CA1848 // Use the LoggerMessage delegates
-
         if (Activity.Current is not { } activity ||
             activity.Baggage is not { } baggage)
         {
