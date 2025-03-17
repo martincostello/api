@@ -19,5 +19,5 @@ internal sealed class PyroscopeK6Middleware(RequestDelegate next)
     /// </returns>
     [System.Diagnostics.StackTraceHidden]
     public Task InvokeAsync(HttpContext context) =>
-        ApplicationTelemetry.ProfileAsync((_next, context), (state) => state._next(state.context));
+        ApplicationTelemetry.ProfileAsync((_next, context), static (state) => state._next(state.context));
 }
