@@ -3,7 +3,6 @@
 
 using OpenTelemetry.Instrumentation.Http;
 using OpenTelemetry.Metrics;
-using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
 namespace MartinCostello.Api.Extensions;
@@ -13,16 +12,6 @@ namespace MartinCostello.Api.Extensions;
 /// </summary>
 public static class TelemetryExtensions
 {
-    /// <summary>
-    /// Gets the <see cref="ResourceBuilder"/> to use for telemetry.
-    /// </summary>
-    public static ResourceBuilder ResourceBuilder { get; } = ResourceBuilder.CreateDefault()
-        .AddService(ApplicationTelemetry.ServiceName, serviceVersion: ApplicationTelemetry.ServiceVersion)
-        .AddAzureAppServiceDetector()
-        .AddContainerDetector()
-        .AddOperatingSystemDetector()
-        .AddProcessRuntimeDetector();
-
     /// <summary>
     /// Adds telemetry services to the specified <see cref="IServiceCollection"/>.
     /// </summary>
@@ -36,20 +25,20 @@ public static class TelemetryExtensions
             .AddOpenTelemetry()
             .WithMetrics((builder) =>
             {
-                builder.SetResourceBuilder(ResourceBuilder)
+                builder.SetResourceBuilder(ApplicationTelemetry.ResourceBuilder)
                        .AddAspNetCoreInstrumentation()
                        .AddHttpClientInstrumentation()
                        .AddProcessInstrumentation()
                        .AddRuntimeInstrumentation();
 
-                if (IsOtlpCollectorConfigured())
+                if (ApplicationTelemetry.IsOtlpCollectorConfigured())
                 {
                     builder.AddOtlpExporter();
                 }
             })
             .WithTracing((builder) =>
             {
-                builder.SetResourceBuilder(ResourceBuilder)
+                builder.SetResourceBuilder(ApplicationTelemetry.ResourceBuilder)
                        .AddAspNetCoreInstrumentation()
                        .AddHttpClientInstrumentation()
                        .AddSource(ApplicationTelemetry.ServiceName);
@@ -59,12 +48,12 @@ public static class TelemetryExtensions
                     builder.SetSampler(new AlwaysOnSampler());
                 }
 
-                if (IsOtlpCollectorConfigured())
+                if (ApplicationTelemetry.IsOtlpCollectorConfigured())
                 {
                     builder.AddOtlpExporter();
                 }
 
-                if (IsPyroscopeConfigured())
+                if (ApplicationTelemetry.IsPyroscopeConfigured())
                 {
                     builder.AddProcessor(new Pyroscope.OpenTelemetry.PyroscopeSpanProcessor());
                 }
@@ -73,22 +62,4 @@ public static class TelemetryExtensions
         services.AddOptions<HttpClientTraceInstrumentationOptions>()
                 .Configure<IServiceProvider>((options, _) => options.RecordException = true);
     }
-
-    /// <summary>
-    /// Returns whether an OTLP collector is configured.
-    /// </summary>
-    /// <returns>
-    /// <see langword="true"/> if OLTP is configured; otherwise <see langword="false"/>.
-    /// </returns>
-    internal static bool IsOtlpCollectorConfigured()
-        => !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("OTEL_EXPORTER_OTLP_ENDPOINT"));
-
-    /// <summary>
-    /// Returns whether Pyroscope is configured.
-    /// </summary>
-    /// <returns>
-    /// <see langword="true"/> if Pyroscope is configured; otherwise <see langword="false"/>.
-    /// </returns>
-    internal static bool IsPyroscopeConfigured()
-        => Environment.GetEnvironmentVariable("PYROSCOPE_PROFILING_ENABLED") is "1";
 }
