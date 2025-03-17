@@ -42,7 +42,7 @@ public static class ApplicationTelemetry
     /// Returns whether an OTLP collector is configured.
     /// </summary>
     /// <returns>
-    /// <see langword="true"/> if OLTP is configured; otherwise <see langword="false"/>.
+    /// <see langword="true"/> if OTLP is configured; otherwise <see langword="false"/>.
     /// </returns>
     internal static bool IsOtlpCollectorConfigured()
         => !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("OTEL_EXPORTER_OTLP_ENDPOINT"));
