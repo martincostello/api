@@ -2,14 +2,12 @@
   <PropertyGroup>
     <Description>Tests for Martin Costello's API</Description>
     <JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
-    <NoWarn>$(NoWarn);CA2234</NoWarn>
+    <NoWarn>$(NoWarn);SA1601</NoWarn>
     <OutputType>Exe</OutputType>
     <RootNamespace>MartinCostello.Api</RootNamespace>
     <TargetFramework>net9.0</TargetFramework>
+    <UseDefaultCodeAnalysisRuleSet>true</UseDefaultCodeAnalysisRuleSet>
   </PropertyGroup>
-  <ItemGroup>
-    <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\API\API.csproj" />
   </ItemGroup>
