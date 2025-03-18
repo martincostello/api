@@ -33,6 +33,9 @@ updates:
     OpenTelemetry:
       patterns:
         - OpenTelemetry*
+    Pyroscope:
+      patterns:
+        - Pyroscope*
     xunit:
       patterns:
         - Verify.Xunit*

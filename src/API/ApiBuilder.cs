@@ -147,7 +147,7 @@ public static class ApiBuilder
 
         var app = builder.Build();
 
-        if (TelemetryExtensions.IsPyroscopeConfigured())
+        if (ApplicationTelemetry.IsPyroscopeConfigured())
         {
             app.UseMiddleware<PyroscopeK6Middleware>();
         }
