@@ -18,8 +18,8 @@
     <PackageVersion Include="Microsoft.Extensions.ApiDescription.Server" Version="10.0.0-preview.2.25164.1" />
     <PackageVersion Include="Microsoft.Extensions.TimeProvider.Testing" Version="9.3.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
-    <PackageVersion Include="Microsoft.OpenApi" Version="2.0.0-preview5" />
-    <PackageVersion Include="Microsoft.OpenApi.Readers" Version="2.0.0-preview5" />
+    <PackageVersion Include="Microsoft.OpenApi" Version="2.0.0-preview7" />
+    <PackageVersion Include="Microsoft.OpenApi.Readers" Version="2.0.0-preview7" />
     <PackageVersion Include="Microsoft.TypeScript.MSBuild" Version="5.8.1" />
     <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.11.2" />
     <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.11.2" />
