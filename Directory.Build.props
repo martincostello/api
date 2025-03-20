@@ -9,7 +9,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <TypeScriptToolsVersion>latest</TypeScriptToolsVersion>
     <UseArtifactsOutput>true</UseArtifactsOutput>
-    <VersionPrefix>9.0.$([MSBuild]::ValueOrDefault('$(GITHUB_RUN_NUMBER)', '0'))</VersionPrefix>
+    <VersionPrefix>10.0.$([MSBuild]::ValueOrDefault('$(GITHUB_RUN_NUMBER)', '0'))</VersionPrefix>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(EnableReferenceTrimmer)' != 'false' AND '$(GenerateDocumentationFile)' != 'true' ">
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
