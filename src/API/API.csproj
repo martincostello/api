@@ -27,7 +27,7 @@
   <ItemGroup>
     <PackageReference Include="MartinCostello.OpenApi.Extensions" />
     <PackageReference Include="Microsoft.AspNetCore.AzureAppServices.HostingStartup" NoWarn="RT0003" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" GeneratePathProperty="true" />
     <PackageReference Include="Microsoft.Extensions.ApiDescription.Server" NoWarn="RT0003" PrivateAssets="all" />
     <PackageReference Include="Microsoft.OpenApi" />
     <PackageReference Include="Microsoft.TypeScript.MSBuild" />
@@ -64,4 +64,12 @@
   <PropertyGroup Condition=" '$(UsePyroscope)' == 'true' ">
     <PublishAot>false</PublishAot>
   </PropertyGroup>
+  <!--
+    HACK Workaround for https://github.com/dotnet/aspnetcore/issues/61019
+  -->
+  <Target Name="DisableCompileTimeOpenApiXmlGenerator" BeforeTargets="CoreCompile">
+    <ItemGroup>
+      <Analyzer Remove="$(PkgMicrosoft_AspNetCore_OpenApi)\analyzers\dotnet\cs\Microsoft.AspNetCore.OpenApi.SourceGenerators.dll" />
+    </ItemGroup>
+  </Target>
 </Project>
