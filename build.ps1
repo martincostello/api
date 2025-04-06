@@ -70,7 +70,7 @@ if ($installDotNetSdk) {
 }
 
 function DotNetTest {
-    param([string]$Project)
+    param()
 
     $additionalArgs = @()
 
@@ -79,7 +79,7 @@ function DotNetTest {
         $additionalArgs += "GitHubActions;report-warnings=false"
     }
 
-    & $dotnet test $Project --configuration "Release" $additionalArgs -- RunConfiguration.TestSessionTimeout=1200000
+    & $dotnet test --configuration "Release" $additionalArgs -- RunConfiguration.TestSessionTimeout=1200000
 
     if ($LASTEXITCODE -ne 0) {
         throw "dotnet test failed with exit code $LASTEXITCODE"
@@ -96,10 +96,6 @@ function DotNetPublish {
     }
 }
 
-$testProjects = @(
-    (Join-Path $solutionPath "tests" "API.Tests" "API.Tests.csproj")
-)
-
 $publishProjects = @(
     (Join-Path $solutionPath "src" "API" "API.csproj")
 )
@@ -110,8 +106,6 @@ ForEach ($project in $publishProjects) {
 }
 
 if (-Not $SkipTests) {
-    Write-Information "Testing $($testProjects.Count) project(s)..."
-    ForEach ($project in $testProjects) {
-        DotNetTest $project
-    }
+    Write-Information "Testing solution..."
+    DotNetTest
 }
