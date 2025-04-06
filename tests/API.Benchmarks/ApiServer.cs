@@ -83,7 +83,7 @@ internal sealed class ApiServer : IAsyncDisposable
 
         do
         {
-            string? solutionPath = Directory.EnumerateFiles(directoryInfo.FullName, "API.sln").FirstOrDefault();
+            string? solutionPath = Directory.EnumerateFiles(directoryInfo.FullName, "API.slnx").FirstOrDefault();
 
             if (solutionPath is not null)
             {

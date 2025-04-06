@@ -1,0 +1,47 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".gitignore" />
+    <File Path=".spectral.yaml" />
+    <File Path=".vsconfig" />
+    <File Path="API.ruleset" />
+    <File Path="benchmark-crank.ps1" />
+    <File Path="benchmark.ps1" />
+    <File Path="benchmark.yml" />
+    <File Path="build.ps1" />
+    <File Path="crank.ps1" />
+    <File Path="crank.yml" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="global.json" />
+    <File Path="LICENSE" />
+    <File Path="NuGet.config" />
+    <File Path="README.md" />
+    <File Path="stylecop.json" />
+  </Folder>
+  <Folder Name="/Solution Items/.github/">
+    <File Path=".github/actionlint-matcher.json" />
+    <File Path=".github/dependabot.yml" />
+  </Folder>
+  <Folder Name="/Solution Items/.github/workflows/">
+    <File Path=".github/workflows/benchmark.yml" />
+    <File Path=".github/workflows/build.yml" />
+    <File Path=".github/workflows/codeql.yml" />
+    <File Path=".github/workflows/dependency-review.yml" />
+    <File Path=".github/workflows/lint.yml" />
+    <File Path=".github/workflows/npm-audit-fix.yml" />
+    <File Path=".github/workflows/spectral.yml" />
+  </Folder>
+  <Folder Name="/Solution Items/.vscode/">
+    <File Path=".vscode/extensions.json" />
+    <File Path=".vscode/launch.json" />
+    <File Path=".vscode/tasks.json" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/API/API.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/API.Benchmarks/API.Benchmarks.csproj" />
+    <Project Path="tests/API.Tests/API.Tests.csproj" />
+  </Folder>
+</Solution>
