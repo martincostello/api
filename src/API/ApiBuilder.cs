@@ -74,6 +74,7 @@ public static class ApiBuilder
 
         builder.Services.ConfigureHttpJsonOptions((options) =>
         {
+            options.SerializerOptions.NumberHandling = System.Text.Json.Serialization.JsonNumberHandling.Strict;
             options.SerializerOptions.PropertyNameCaseInsensitive = false;
             options.SerializerOptions.WriteIndented = true;
             options.SerializerOptions.TypeInfoResolverChain.Insert(0, ApplicationJsonSerializerContext.Default);
