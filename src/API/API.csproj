@@ -2,7 +2,7 @@
   <PropertyGroup>
     <ContainerFamily>noble-chiseled</ContainerFamily>
     <ContainerRepository>martincostello/api</ContainerRepository>
-    <ContainerBaseImage>mcr.microsoft.com/dotnet/nightly/runtime-deps:10.0-preview-$(ContainerFamily)</ContainerBaseImage>
+    <ContainerBaseImage>mcr.microsoft.com/dotnet/nightly/runtime-deps:10.0-preview-$(ContainerFamily)</ContainerBaseImage>
     <Description>Martin Costello's API</Description>
     <EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
     <EnableRequestDelegateGenerator>true</EnableRequestDelegateGenerator>
