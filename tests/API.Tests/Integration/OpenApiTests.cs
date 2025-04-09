@@ -3,8 +3,6 @@
 
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Reader;
-using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Validations;
 
 namespace MartinCostello.Api.Integration;
@@ -12,12 +10,7 @@ namespace MartinCostello.Api.Integration;
 [Collection<TestServerCollection>]
 public class OpenApiTests(TestServerFixture fixture, ITestOutputHelper outputHelper) : IntegrationTest(fixture, outputHelper)
 {
-    static OpenApiTests()
-    {
-        OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
-    }
-
-    [Fact(Skip = "https://github.com/dotnet/aspnetcore/issues/60630")]
+    [Fact]
     public async Task Json_Schema_Is_Correct()
     {
         // Arrange
@@ -34,7 +27,7 @@ public class OpenApiTests(TestServerFixture fixture, ITestOutputHelper outputHel
         await VerifyJson(actual, settings);
     }
 
-    [Fact(Skip = "https://github.com/dotnet/aspnetcore/issues/60630")]
+    [Fact]
     public async Task Yaml_Schema_Is_Correct()
     {
         // Arrange
@@ -53,7 +46,7 @@ public class OpenApiTests(TestServerFixture fixture, ITestOutputHelper outputHel
 
     [Theory]
     [InlineData("/openapi/api.json")]
-    [InlineData("/openapi/api.yaml")]
+    [InlineData("/openapi/api.yaml", Skip = "Need 2.0.0-preview.14 before YAML can be loaded again.")]
     public async Task Schema_Has_No_Validation_Warnings(string requestUrl)
     {
         // Arrange
