@@ -4,7 +4,6 @@
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Reader;
-using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Validations;
 
 namespace MartinCostello.Api.Integration;
@@ -12,12 +11,7 @@ namespace MartinCostello.Api.Integration;
 [Collection<TestServerCollection>]
 public class OpenApiTests(TestServerFixture fixture, ITestOutputHelper outputHelper) : IntegrationTest(fixture, outputHelper)
 {
-    static OpenApiTests()
-    {
-        OpenApiReaderRegistry.RegisterReader(OpenApiConstants.Yaml, new OpenApiYamlReader());
-    }
-
-    [Fact(Skip = "https://github.com/dotnet/aspnetcore/issues/60630")]
+    [Fact]
     public async Task Json_Schema_Is_Correct()
     {
         // Arrange
@@ -34,7 +28,7 @@ public class OpenApiTests(TestServerFixture fixture, ITestOutputHelper outputHel
         await VerifyJson(actual, settings);
     }
 
-    [Fact(Skip = "https://github.com/dotnet/aspnetcore/issues/60630")]
+    [Fact]
     public async Task Yaml_Schema_Is_Correct()
     {
         // Arrange
@@ -58,6 +52,9 @@ public class OpenApiTests(TestServerFixture fixture, ITestOutputHelper outputHel
     {
         // Arrange
         string format = Path.GetExtension(requestUrl).TrimStart('.');
+        var settings = new OpenApiReaderSettings();
+        settings.AddYamlReader();
+
         var ruleSet = ValidationRuleSet.GetDefaultRuleSet();
 
         using var client = Fixture.CreateClient();
@@ -66,7 +63,7 @@ public class OpenApiTests(TestServerFixture fixture, ITestOutputHelper outputHel
         using var schema = await client.GetStreamAsync(requestUrl, CancellationToken);
 
         // Assert
-        var actual = await OpenApiDocument.LoadAsync(schema, format, cancellationToken: CancellationToken);
+        var actual = await OpenApiDocument.LoadAsync(schema, format, settings, cancellationToken: CancellationToken);
 
         actual.Diagnostic.Errors.ShouldBeEmpty();
 
