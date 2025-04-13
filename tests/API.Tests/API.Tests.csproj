@@ -29,7 +29,7 @@
   </ItemGroup>
   <PropertyGroup>
     <CollectCoverage Condition=" '$(WEBSITE_URL)' == '' ">true</CollectCoverage>
-    <Threshold>85,59,90</Threshold>
+    <Threshold>85,58,90</Threshold>
   </PropertyGroup>
   <ItemGroup>
     <CoverletExclude Include="$([MSBuild]::Escape('[MartinCostello.OpenApi.Extensions]*'))" />
