@@ -3,8 +3,8 @@
 
 namespace MartinCostello.Api.EndToEnd;
 
+[Category("EndToEnd")]
 [Collection<ApiCollection>]
-[Trait("Category", "EndToEnd")]
 public abstract class EndToEndTest(ApiFixture fixture)
 {
     protected virtual CancellationToken CancellationToken => TestContext.Current.CancellationToken;
