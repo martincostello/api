@@ -65,4 +65,8 @@
   <PropertyGroup Condition=" '$(UsePyroscope)' == 'true' ">
     <PublishAot>false</PublishAot>
   </PropertyGroup>
+  <!-- HACK Workaround for https://github.com/getsentry/sentry-dotnet/issues/3928 -->
+  <ItemGroup>
+    <LinkerArg Include="/NODEFAULTLIB:MSVCRT" />
+  </ItemGroup>
 </Project>
