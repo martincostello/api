@@ -69,4 +69,14 @@
   <ItemGroup Condition=" $([System.OperatingSystem]::IsWindows()) ">
     <LinkerArg Include="/NODEFAULTLIB:MSVCRT" />
   </ItemGroup>
+  <!-- Add the native binaries for Sentry to the container -->
+  <Target Name="_AddSentryNativeBinaries" BeforeTargets="AssignTargetPaths" Condition="$([System.OperatingSystem]::IsLinux())">
+    <PropertyGroup>
+      <libcurlBinariesPath>/usr/lib/x86_64-linux-gnu</libcurlBinariesPath>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(libcurlBinariesPath)')" Text="Cannot find the libcurl binaries directory '$(libcurlBinariesPath)'." />
+    <ItemGroup>
+      <Content Include="$(libcurlBinariesPath)\**\libcurl*" CopyToPublishDirectory="PreserveNewest" />
+    </ItemGroup>
+  </Target>
 </Project>
