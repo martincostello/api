@@ -142,7 +142,7 @@ jobs:
       shell: bash
       run: |
         sudo apt-get update
-        sudo apt-get install --yes --no-install-recommends libidn2-dev libnghttp2-dev libunistring-dev
+        sudo apt-get install --yes --no-install-recommends libidn2-dev libnghttp2-dev librtmp-dev libunistring-dev
 
     - name: Publish container
       id: publish-container
