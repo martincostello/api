@@ -76,8 +76,8 @@ jobs:
 
     # HACK Workaround https://github.com/getsentry/sentry-dotnet/issues/4116
     - name: Install native dependencies for Sentry
-      shell: bash
       if: runner.os == 'Linux'
+      shell: bash
       run: |
         sudo apt-get update
         sudo apt-get install --yes --no-install-recommends libcurl4-openssl-dev libz-dev
@@ -135,6 +135,14 @@ jobs:
         registry: ${{ env.CONTAINER_REGISTRY }}
         username: ${{ secrets.ACR_REGISTRY_USERNAME }}
         password: ${{ secrets.ACR_REGISTRY_PASSWORD }}
+
+    # HACK Workaround https://github.com/getsentry/sentry-dotnet/issues/4116
+    - name: Install native container runtime dependencies for Sentry
+      if: runner.os == 'Linux'
+      shell: bash
+      run: |
+        sudo apt-get update
+        sudo apt-get install --yes --no-install-recommends libnghttp2-dev
 
     - name: Publish container
       id: publish-container
