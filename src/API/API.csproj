@@ -69,7 +69,7 @@
   <ItemGroup Condition=" $([System.OperatingSystem]::IsWindows()) ">
     <LinkerArg Include="/NODEFAULTLIB:MSVCRT" />
   </ItemGroup>
-  <!-- Add the native binaries for Sentry to the container -->
+  <!-- HACK Workaround https://github.com/getsentry/sentry-dotnet/issues/4116 by adding the native binaries for Sentry to the container -->
   <Target Name="_AddSentryNativeBinaries" BeforeTargets="AssignTargetPaths" Condition="$([System.OperatingSystem]::IsLinux())">
     <PropertyGroup>
       <libcurlBinariesPath>/usr/lib/x86_64-linux-gnu</libcurlBinariesPath>
@@ -78,6 +78,11 @@
     <ItemGroup>
       <Content Include="$(libcurlBinariesPath)\**\libcurl*" CopyToPublishDirectory="PreserveNewest" />
       <Content Include="$(libcurlBinariesPath)\**\libnghttp2*" CopyToPublishDirectory="PreserveNewest" />
+    </ItemGroup>
+  </Target>
+  <Target Name="_ConfigureSentryNative" BeforeTargets="PublishContainer" DependsOnTargets="ComputeContainerConfig" Condition="$([System.OperatingSystem]::IsLinux())">
+    <ItemGroup>
+      <ContainerEnvironmentVariables Include="LD_PRELOAD" Value="$(ContainerWorkingDirectory)libnghttp2.so" />
     </ItemGroup>
   </Target>
 </Project>
