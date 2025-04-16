@@ -77,6 +77,7 @@
     <Error Condition="!Exists('$(libcurlBinariesPath)')" Text="Cannot find the native binaries directory '$(libcurlBinariesPath)'." />
     <ItemGroup>
       <Content Include="$(libcurlBinariesPath)\**\libcurl*" CopyToPublishDirectory="PreserveNewest" />
+      <Content Include="$(libcurlBinariesPath)\**\libgnutls*" CopyToPublishDirectory="PreserveNewest" />
       <Content Include="$(libcurlBinariesPath)\**\libidn2*" CopyToPublishDirectory="PreserveNewest" />
       <Content Include="$(libcurlBinariesPath)\**\libnghttp2*" CopyToPublishDirectory="PreserveNewest" />
       <Content Include="$(libcurlBinariesPath)\**\librtmp*" CopyToPublishDirectory="PreserveNewest" />
@@ -85,7 +86,7 @@
   </Target>
   <Target Name="_ConfigureSentryNative" BeforeTargets="PublishContainer" DependsOnTargets="ComputeContainerConfig" Condition="$([System.OperatingSystem]::IsLinux())">
     <ItemGroup>
-      <ContainerEnvironmentVariables Include="LD_PRELOAD" Value="$(ContainerWorkingDirectory)libnghttp2.so $(ContainerWorkingDirectory)libidn2.so $(ContainerWorkingDirectory)libunistring.so $(ContainerWorkingDirectory)librtmp.so" />
+      <ContainerEnvironmentVariables Include="LD_PRELOAD" Value="$(ContainerWorkingDirectory)libnghttp2.so $(ContainerWorkingDirectory)libidn2.so $(ContainerWorkingDirectory)libunistring.so $(ContainerWorkingDirectory)librtmp.so $(ContainerWorkingDirectory)libgnutls.so" />
     </ItemGroup>
   </Target>
 </Project>
