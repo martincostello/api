@@ -44,7 +44,6 @@
     <PackageReference Include="Pyroscope" />
     <PackageReference Include="Pyroscope.OpenTelemetry" />
     <PackageReference Include="RazorSlices" />
-    <PackageReference Include="Sentry.AspNetCore" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="coverage\**;package.json;package-lock.json;tsconfig.json" CopyToPublishDirectory="Never" />
@@ -65,28 +64,4 @@
   <PropertyGroup Condition=" '$(UsePyroscope)' == 'true' ">
     <PublishAot>false</PublishAot>
   </PropertyGroup>
-  <!-- HACK Workaround for https://github.com/getsentry/sentry-dotnet/issues/3928 -->
-  <ItemGroup Condition=" $([System.OperatingSystem]::IsWindows()) ">
-    <LinkerArg Include="/NODEFAULTLIB:MSVCRT" />
-  </ItemGroup>
-  <!-- HACK Workaround https://github.com/getsentry/sentry-dotnet/issues/4116 by adding the native binaries for Sentry to the container -->
-  <Target Name="_AddSentryNativeBinaries" BeforeTargets="AssignTargetPaths" Condition="$([System.OperatingSystem]::IsLinux())">
-    <PropertyGroup>
-      <libcurlBinariesPath>/usr/lib/x86_64-linux-gnu</libcurlBinariesPath>
-    </PropertyGroup>
-    <Error Condition="!Exists('$(libcurlBinariesPath)')" Text="Cannot find the native binaries directory '$(libcurlBinariesPath)'." />
-    <ItemGroup>
-      <Content Include="$(libcurlBinariesPath)\**\libcurl*" CopyToPublishDirectory="PreserveNewest" />
-      <Content Include="$(libcurlBinariesPath)\**\libgnutls*" CopyToPublishDirectory="PreserveNewest" />
-      <Content Include="$(libcurlBinariesPath)\**\libidn2*" CopyToPublishDirectory="PreserveNewest" />
-      <Content Include="$(libcurlBinariesPath)\**\libnghttp2*" CopyToPublishDirectory="PreserveNewest" />
-      <Content Include="$(libcurlBinariesPath)\**\librtmp*" CopyToPublishDirectory="PreserveNewest" />
-      <Content Include="$(libcurlBinariesPath)\**\libunistring*" CopyToPublishDirectory="PreserveNewest" />
-    </ItemGroup>
-  </Target>
-  <Target Name="_ConfigureSentryNative" BeforeTargets="PublishContainer" DependsOnTargets="ComputeContainerConfig" Condition="$([System.OperatingSystem]::IsLinux())">
-    <ItemGroup>
-      <ContainerEnvironmentVariables Include="LD_PRELOAD" Value="$(ContainerWorkingDirectory)libnghttp2.so $(ContainerWorkingDirectory)libidn2.so $(ContainerWorkingDirectory)libunistring.so $(ContainerWorkingDirectory)librtmp.so $(ContainerWorkingDirectory)libgnutls.so" />
-    </ItemGroup>
-  </Target>
 </Project>
