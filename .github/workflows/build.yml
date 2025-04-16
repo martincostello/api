@@ -74,14 +74,6 @@ jobs:
           "NUGET_PACKAGES=$nugetHome" >> ${env:GITHUB_ENV}
         }
 
-    # HACK Workaround https://github.com/getsentry/sentry-dotnet/issues/4116
-    - name: Install native dependencies for Sentry
-      if: runner.os == 'Linux'
-      shell: bash
-      run: |
-        sudo apt-get update
-        sudo apt-get install --yes --no-install-recommends libcurl4-openssl-dev libz-dev
-
     - name: Checkout code
       uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       with:
@@ -136,14 +128,6 @@ jobs:
         username: ${{ secrets.ACR_REGISTRY_USERNAME }}
         password: ${{ secrets.ACR_REGISTRY_PASSWORD }}
 
-    # HACK Workaround https://github.com/getsentry/sentry-dotnet/issues/4116
-    - name: Install native container runtime dependencies for Sentry
-      if: runner.os == 'Linux'
-      shell: bash
-      run: |
-        sudo apt-get update
-        sudo apt-get install --yes --no-install-recommends libgnutls28-dev libidn2-dev libnghttp2-dev librtmp-dev libunistring-dev
-
     - name: Publish container
       id: publish-container
       if: runner.os == 'Linux'
@@ -154,7 +138,6 @@ jobs:
         PYROSCOPE_ARCH: 'x86_64'
         PYROSCOPE_VARIANT: 'glibc'
         PYROSCOPE_VERSION: '0.9.4'
-        SentryAuthToken: ${{ secrets.SENTRY_TOKEN }}
         UsePyroscope: 'false'
       run: |
         if (${env:UsePyroscope} -eq "true") {
