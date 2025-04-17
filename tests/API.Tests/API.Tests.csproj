@@ -35,12 +35,4 @@
   <ItemGroup>
     <CoverletExclude Include="$([MSBuild]::Escape('[MartinCostello.OpenApi.Extensions]*'))" />
   </ItemGroup>
-  <!--
-    HACK Workaround for https://github.com/dotnet/aspnetcore/issues/61019
-  -->
-  <Target Name="DisableCompileTimeOpenApiXmlGenerator" BeforeTargets="CoreCompile">
-    <ItemGroup>
-      <Analyzer Remove="$(PkgMicrosoft_AspNetCore_OpenApi)\analyzers\dotnet\cs\Microsoft.AspNetCore.OpenApi.SourceGenerators.dll" />
-    </ItemGroup>
-  </Target>
 </Project>
