@@ -65,6 +65,9 @@ public class OpenApiTests(TestServerFixture fixture, ITestOutputHelper outputHel
         // Assert
         var actual = await OpenApiDocument.LoadAsync(schema, format, settings, cancellationToken: CancellationToken);
 
+        actual.ShouldNotBeNull();
+        actual.Document.ShouldNotBeNull();
+        actual.Diagnostic.ShouldNotBeNull();
         actual.Diagnostic.Errors.ShouldBeEmpty();
 
         var errors = actual.Document.Validate(ruleSet);
