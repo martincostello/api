@@ -115,7 +115,7 @@ jobs:
       run: ./build.ps1
 
     - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@ad3126e916f78f00edff4ed0317cf185271ccc2d # v5.4.2
+      uses: codecov/codecov-action@18283e04ce6e62d37312384ff67231eb8fd56d24 # v5.4.3
       with:
         flags: ${{ matrix.os-name }}
         token: ${{ secrets.CODECOV_TOKEN }}
@@ -172,14 +172,14 @@ jobs:
         dotnet publish ./src/API --arch x64 --os linux -p:PublishProfile=DefaultContainer
 
     - name: Generate SBOM for binaries
-      uses: anchore/sbom-action@9f7302141466aa6482940f15371237e9d9f4c34a # v0.19.0
+      uses: anchore/sbom-action@e11c554f704a0b820cbf8c51673f6945e0731532 # v0.20.0
       with:
         artifact-name: 'publish-${{ matrix.os-name }}.spdx.json'
         output-file: ./artifacts/publish.spdx.json
         path: ./artifacts/publish
 
     - name: Generate SBOM for container
-      uses: anchore/sbom-action@9f7302141466aa6482940f15371237e9d9f4c34a # v0.19.0
+      uses: anchore/sbom-action@e11c554f704a0b820cbf8c51673f6945e0731532 # v0.20.0
       if: steps.publish-container.outputs.container-tag != ''
       with:
         image: ${{ steps.publish-container.outputs.container-tag }}
