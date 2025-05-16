@@ -14,8 +14,6 @@
     <PublishAot>true</PublishAot>
     <PublishSelfContained>true</PublishSelfContained>
     <RootNamespace>MartinCostello.Api</RootNamespace>
-    <!-- HACK Workaround for https://github.com/getsentry/sentry-dotnet/issues/4116 -->
-    <SentryNative>false</SentryNative>
     <TargetFramework>net9.0</TargetFramework>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <TypeScriptToolsVersion>latest</TypeScriptToolsVersion>
@@ -46,7 +44,6 @@
     <PackageReference Include="Pyroscope" />
     <PackageReference Include="Pyroscope.OpenTelemetry" />
     <PackageReference Include="RazorSlices" />
-    <PackageReference Include="Sentry.AspNetCore" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="coverage\**;package.json;package-lock.json;tsconfig.json" CopyToPublishDirectory="Never" />
