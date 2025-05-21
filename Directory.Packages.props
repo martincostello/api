@@ -1,6 +1,6 @@
 <Project>
   <ItemGroup>
-    <GlobalPackageReference Include="MartinCostello.BuildKit" Version="0.6.2" />
+    <GlobalPackageReference Include="MartinCostello.BuildKit" Version="0.6.3" />
     <GlobalPackageReference Include="ReferenceTrimmer" Version="3.3.11" PrivateAssets="All" />
     <GlobalPackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556" PrivateAssets="All" />
   </ItemGroup>
@@ -17,7 +17,7 @@
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0-preview.5.25269.109" />
     <PackageVersion Include="Microsoft.Extensions.ApiDescription.Server" Version="10.0.0-preview.5.25269.109" />
     <PackageVersion Include="Microsoft.Extensions.TimeProvider.Testing" Version="9.5.0" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.0" />
     <PackageVersion Include="Microsoft.OpenApi" Version="2.0.0-preview.18" />
     <PackageVersion Include="Microsoft.OpenApi.YamlReader" Version="2.0.0-preview.18" />
     <PackageVersion Include="Microsoft.TypeScript.MSBuild" Version="5.8.3" />
@@ -31,8 +31,8 @@
     <PackageVersion Include="OpenTelemetry.Resources.Container" Version="1.11.0-beta.2" />
     <PackageVersion Include="OpenTelemetry.Resources.OperatingSystem" Version="1.11.0-beta.2" />
     <PackageVersion Include="OpenTelemetry.Resources.ProcessRuntime" Version="1.11.0-beta.2" />
-    <PackageVersion Include="Pyroscope" Version="0.9.4" />
-    <PackageVersion Include="Pyroscope.OpenTelemetry" Version="0.2.0" />
+    <PackageVersion Include="Pyroscope" Version="0.10.0" />
+    <PackageVersion Include="Pyroscope.OpenTelemetry" Version="0.3.0" />
     <PackageVersion Include="RazorSlices" Version="0.9.1" />
     <PackageVersion Include="ReportGenerator" Version="5.4.7" />
     <PackageVersion Include="Shouldly" Version="4.3.0" />
