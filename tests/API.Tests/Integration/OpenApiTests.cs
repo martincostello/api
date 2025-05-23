@@ -68,7 +68,6 @@ public class OpenApiTests(TestServerFixture fixture, ITestOutputHelper outputHel
         actual.ShouldNotBeNull();
         actual.Document.ShouldNotBeNull();
         actual.Diagnostic.ShouldNotBeNull();
-        actual.Diagnostic.Errors.ShouldNotBeNull();
         actual.Diagnostic.Errors.ShouldBeEmpty();
 
         var errors = actual.Document.Validate(ruleSet);
