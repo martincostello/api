@@ -2,7 +2,8 @@
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Readers;
+using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Validations;
 
 namespace MartinCostello.Api.Integration;
@@ -50,10 +51,11 @@ public class OpenApiTests(TestServerFixture fixture, ITestOutputHelper outputHel
     public async Task Schema_Has_No_Validation_Warnings(string requestUrl)
     {
         // Arrange
-        var ruleSet = ValidationRuleSet.GetDefaultRuleSet();
+        string format = Path.GetExtension(requestUrl).TrimStart('.');
+        var settings = new OpenApiReaderSettings();
+        settings.AddYamlReader();
 
-        // HACK Workaround for https://github.com/microsoft/OpenAPI.NET/issues/1738
-        ruleSet.Remove("MediaTypeMismatchedDataType");
+        var ruleSet = ValidationRuleSet.GetDefaultRuleSet();
 
         using var client = Fixture.CreateClient();
 
@@ -61,12 +63,14 @@ public class OpenApiTests(TestServerFixture fixture, ITestOutputHelper outputHel
         using var schema = await client.GetStreamAsync(requestUrl, CancellationToken);
 
         // Assert
-        var reader = new OpenApiStreamReader();
-        var actual = await reader.ReadAsync(schema, CancellationToken);
+        var actual = await OpenApiDocument.LoadAsync(schema, format, settings, cancellationToken: CancellationToken);
 
-        actual.OpenApiDiagnostic.Errors.ShouldBeEmpty();
+        actual.ShouldNotBeNull();
+        actual.Document.ShouldNotBeNull();
+        actual.Diagnostic.ShouldNotBeNull();
+        actual.Diagnostic.Errors.ShouldBeEmpty();
 
-        var errors = actual.OpenApiDocument.Validate(ruleSet);
+        var errors = actual.Document.Validate(ruleSet);
         errors.ShouldBeEmpty();
     }
 }
