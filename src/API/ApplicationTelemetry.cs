@@ -35,6 +35,7 @@ public static class ApplicationTelemetry
         .AddService(ServiceName, serviceVersion: ServiceVersion)
         .AddAzureAppServiceDetector()
         .AddContainerDetector()
+        .AddHostDetector()
         .AddOperatingSystemDetector()
         .AddProcessRuntimeDetector();
 
