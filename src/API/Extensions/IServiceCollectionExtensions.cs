@@ -40,7 +40,6 @@ public static class IServiceCollectionExtensions
             options.SerializationContexts.Add(ApplicationJsonSerializerContext.Default);
 
             options.AddExample<ProblemDetails, ProblemDetailsExampleProvider>();
-            options.AddXmlComments<Program>();
         });
 
         return services;

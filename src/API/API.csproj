@@ -16,7 +16,7 @@
     <RootNamespace>MartinCostello.Api</RootNamespace>
     <!-- HACK Workaround for https://github.com/getsentry/sentry-dotnet/issues/4296 -->
     <SentryNative>false</SentryNative>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <TypeScriptToolsVersion>latest</TypeScriptToolsVersion>
     <UserSecretsId>api.martincostello.com</UserSecretsId>
@@ -28,7 +28,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MartinCostello.OpenApi.Extensions" />
-    <PackageReference Include="Microsoft.AspNetCore.AzureAppServices.HostingStartup" />
+    <PackageReference Include="Microsoft.AspNetCore.AzureAppServices.HostingStartup" NoWarn="RT0003" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
     <PackageReference Include="Microsoft.Extensions.ApiDescription.Server" NoWarn="RT0003" PrivateAssets="all" />
     <PackageReference Include="Microsoft.OpenApi" />
