@@ -12,11 +12,12 @@ namespace MartinCostello.Api.EndToEnd;
 
 public partial class ApiTests(ApiFixture fixture) : EndToEndTest(fixture)
 {
+    private static readonly TimeSpan Tolerance = TimeSpan.FromSeconds(5);
+
     [Fact]
-    public async Task Can_Get_Time()
+    public async Task Can_Get_Time_With_Json()
     {
         // Arrange
-        var tolerance = TimeSpan.FromSeconds(5);
         var utcNow = DateTimeOffset.UtcNow;
         using var client = Fixture.CreateClient();
 
@@ -25,20 +26,52 @@ public partial class ApiTests(ApiFixture fixture) : EndToEndTest(fixture)
 
         // Assert
         response.ShouldNotBeNull();
-        response.RootElement.GetProperty("timestamp").GetDateTimeOffset().ShouldBe(utcNow, tolerance);
+        response.RootElement.GetProperty("timestamp").GetDateTimeOffset().ShouldBe(utcNow, Tolerance);
 
         DateTimeOffset.TryParse(response.RootElement.GetProperty("rfc1123").GetString(), out var actual).ShouldBeTrue();
-        actual.ShouldBe(utcNow, TimeSpan.FromSeconds(5), "rfc1123 is not a valid DateTimeOffset.");
+        actual.ShouldBe(utcNow, Tolerance, "rfc1123 is not a valid DateTimeOffset.");
 
         DateTimeOffset.TryParse(response.RootElement.GetProperty("universalSortable").GetString(), out actual).ShouldBeTrue();
-        actual.ShouldBe(utcNow, TimeSpan.FromSeconds(5), "universalSortable is not a valid DateTimeOffset.");
+        actual.ShouldBe(utcNow, Tolerance, "universalSortable is not a valid DateTimeOffset.");
 
         DateTimeOffset.TryParse(response.RootElement.GetProperty("universalFull").GetString(), CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out actual).ShouldBeTrue();
-        actual.ShouldBe(utcNow, TimeSpan.FromSeconds(5), "universalFull is not a valid DateTimeOffset.");
+        actual.ShouldBe(utcNow, Tolerance, "universalFull is not a valid DateTimeOffset.");
 
         long unix = response.RootElement.GetProperty("unix").GetInt64();
         unix.ShouldBeGreaterThan(DateTimeOffset.UnixEpoch.ToUnixTimeSeconds());
-        DateTimeOffset.FromUnixTimeSeconds(unix).ShouldBe(utcNow, TimeSpan.FromSeconds(5), "The value of unix is incorrect.");
+        DateTimeOffset.FromUnixTimeSeconds(unix).ShouldBe(utcNow, Tolerance, "The value of unix is incorrect.");
+    }
+
+    [Fact(Skip = "Enable once application/grpc-web deployed.")]
+    public async Task Can_Get_Time_With_Grpc()
+    {
+        // Arrange
+        var utcNow = DateTimeOffset.UtcNow;
+
+        using var channel = Fixture.CreateGrpcChannel();
+
+        var client = new Time.TimeClient(channel);
+
+        // Act
+        var actual = await client.NowAsync(new(), cancellationToken: CancellationToken);
+
+        // Assert
+        actual.ShouldNotBeNull();
+
+        DateTimeOffset.TryParse(actual.Timestamp, out var value).ShouldBeTrue();
+        value.ShouldBe(utcNow, Tolerance, "timestamp is not a valid DateTimeOffset.");
+
+        DateTimeOffset.TryParse(actual.Rfc1123, out value).ShouldBeTrue();
+        value.ShouldBe(utcNow, Tolerance, "rfc1123 is not a valid DateTimeOffset.");
+
+        DateTimeOffset.TryParse(actual.UniversalSortable, out value).ShouldBeTrue();
+        value.ShouldBe(utcNow, Tolerance, "universalSortable is not a valid DateTimeOffset.");
+
+        DateTimeOffset.TryParse(actual.UniversalFull, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out value).ShouldBeTrue();
+        value.ShouldBe(utcNow, Tolerance, "universalFull is not a valid DateTimeOffset.");
+
+        actual.Unix.ShouldBeGreaterThan(DateTimeOffset.UnixEpoch.ToUnixTimeSeconds());
+        DateTimeOffset.FromUnixTimeSeconds(actual.Unix).ShouldBe(utcNow, Tolerance, "The value of unix is incorrect.");
     }
 
     [Fact]

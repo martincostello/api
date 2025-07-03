@@ -17,6 +17,7 @@
     <PackageReference Include="GitHubActionsTestLogger" NoWarn="RT0003" />
     <PackageReference Include="Google.Protobuf" />
     <PackageReference Include="Grpc.Net.Client" />
+    <PackageReference Include="Grpc.Net.Client.Web" />
     <PackageReference Include="Grpc.Tools" PrivateAssets="all" />
     <PackageReference Include="JunitXml.TestLogger" NoWarn="RT0003" />
     <PackageReference Include="JustEat.HttpClientInterception" />
