@@ -198,6 +198,8 @@ public static class ApiBuilder
 
         app.MapApiEndpoints();
         app.MapGitHubEndpoints();
+
+        app.UseGrpcWeb(new() { DefaultEnabled = true });
         app.MapGrpcService<TimeGrpcService>();
 
         string[] methods = [HttpMethod.Get.Method, HttpMethod.Head.Method];
