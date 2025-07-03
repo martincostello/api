@@ -42,7 +42,7 @@ public partial class ApiTests(ApiFixture fixture) : EndToEndTest(fixture)
         DateTimeOffset.FromUnixTimeSeconds(unix).ShouldBe(utcNow, Tolerance, "The value of unix is incorrect.");
     }
 
-    [Fact(Skip = "Enable once application/grpc-web deployed.")]
+    [Fact]
     public async Task Can_Get_Time_With_Grpc()
     {
         // Arrange
