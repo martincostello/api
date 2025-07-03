@@ -4,7 +4,7 @@
 using MartinCostello.Api.Options;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 
 namespace MartinCostello.Api.OpenApi;
 
