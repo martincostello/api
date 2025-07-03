@@ -129,21 +129,7 @@ public static class ApiModule
         => toLower ? Convert.ToHexStringLower(bytes) : Convert.ToHexString(bytes);
 
     private static Ok<TimeResponse> GetTime(TimeProvider timeProvider)
-    {
-        var formatProvider = CultureInfo.InvariantCulture;
-        var now = timeProvider.GetUtcNow();
-
-        var result = new TimeResponse()
-        {
-            Timestamp = now,
-            Rfc1123 = now.ToString("r", formatProvider),
-            UniversalFull = now.UtcDateTime.ToString("U", formatProvider),
-            UniversalSortable = now.UtcDateTime.ToString("u", formatProvider),
-            Unix = now.ToUnixTimeSeconds(),
-        };
-
-        return TypedResults.Ok(result);
-    }
+        => TypedResults.Ok(TimeService.Now(timeProvider));
 
     private static Results<Ok<GuidResponse>, ProblemHttpResult> GenerateGuid(
         [Description("The format for which to generate a GUID.")][OpenApiExample("D")] string? format,

@@ -25,6 +25,7 @@
     <PyroscopeLabels Include="api" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Grpc.AspNetCore" />
     <PackageReference Include="MartinCostello.OpenApi.Extensions" />
     <PackageReference Include="Microsoft.AspNetCore.AzureAppServices.HostingStartup" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
@@ -49,6 +50,7 @@
   <ItemGroup>
     <Content Update="coverage\**;package.json;package-lock.json;tsconfig.json" CopyToPublishDirectory="Never" />
     <None Remove="assets\scripts\**\*.ts" />
+    <Protobuf Include="Protos\**\*.proto" Access="Internal" GrpcServices="Server" />
     <TypeScriptCompile Include="assets\scripts\**\*.ts" />
   </ItemGroup>
   <Target Name="BundleAssets" BeforeTargets="BeforeBuild" DependsOnTargets="RestoreNpmPackages">
