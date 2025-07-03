@@ -69,6 +69,8 @@ public static class ApiBuilder
                 });
         });
 
+        builder.Services.AddGrpc();
+
         builder.Services.Configure<BrotliCompressionProviderOptions>((p) => p.Level = CompressionLevel.Fastest);
         builder.Services.Configure<GzipCompressionProviderOptions>((p) => p.Level = CompressionLevel.Fastest);
 
@@ -196,6 +198,7 @@ public static class ApiBuilder
 
         app.MapApiEndpoints();
         app.MapGitHubEndpoints();
+        app.MapGrpcService<TimeGrpcService>();
 
         string[] methods = [HttpMethod.Get.Method, HttpMethod.Head.Method];
 

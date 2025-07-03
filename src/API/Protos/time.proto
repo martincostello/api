@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option csharp_namespace = "MartinCostello.Api";
+
+package time;
+
+service Time {
+  rpc Now (TimeRequest) returns (TimeReply);
+}
+
+message TimeRequest {
+}
+
+message TimeReply {
+  string timestamp = 1;
+  string rfc1123 = 2;
+  int64 unix = 3;
+  string universalSortable = 4;
+  string universalFull = 5;
+}
