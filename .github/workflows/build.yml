@@ -113,7 +113,7 @@ jobs:
       if: runner.os == 'macOS'
       run: |
         curl -O http://r11.c.lencr.org/83.crl
-        sudo security import 83.crl -k /Library/Keychains/System.keychain
+        certtool crl-info < 83.crl
 
     - name: Build, test and publish
       id: build
