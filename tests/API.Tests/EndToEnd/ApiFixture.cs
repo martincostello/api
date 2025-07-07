@@ -10,6 +10,8 @@ public sealed class ApiFixture
 {
     private const string WebsiteUrl = "WEBSITE_URL";
 
+    private static readonly ProductInfoHeaderValue UserAgent = new("MartinCostello.Api.Tests", "1.0.0+" + GitMetadata.Commit);
+
     public ApiFixture()
     {
         string url = Environment.GetEnvironmentVariable(WebsiteUrl) ?? string.Empty;
@@ -19,6 +21,8 @@ public sealed class ApiFixture
             ServerAddress = address;
         }
     }
+
+    public static string UserAgentString => UserAgent.ToString();
 
     public Uri? ServerAddress { get; }
 
@@ -31,10 +35,7 @@ public sealed class ApiFixture
             BaseAddress = ServerAddress,
         };
 
-        client.DefaultRequestHeaders.UserAgent.Add(
-            new ProductInfoHeaderValue(
-                "MartinCostello.Api.Tests",
-                "1.0.0+" + GitMetadata.Commit));
+        client.DefaultRequestHeaders.UserAgent.Add(UserAgent);
 
         return client;
     }
