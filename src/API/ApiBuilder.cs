@@ -147,7 +147,22 @@ public static class ApiBuilder
         builder.Logging.AddTelemetry();
 
         builder.WebHost.CaptureStartupErrors(true);
-        builder.WebHost.ConfigureKestrel((p) => p.AddServerHeader = false);
+        builder.WebHost.ConfigureKestrel((options) =>
+        {
+            options.AddServerHeader = false;
+
+            if (builder.Configuration["ASPNETCORE_HTTP_PORTS"] is { Length: > 0 } httpPort &&
+                int.TryParse(httpPort, CultureInfo.InvariantCulture, out int port))
+            {
+                options.ListenAnyIP(port);
+            }
+
+            if (builder.Configuration["HTTP20_ONLY_PORT"] is { Length: > 0 } http20Port &&
+                int.TryParse(http20Port, CultureInfo.InvariantCulture, out port))
+            {
+                options.ListenAnyIP(port, (p) => p.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http2);
+            }
+        });
 
         if (builder.Configuration["Sentry:Dsn"] is { Length: > 0 } dsn)
         {
