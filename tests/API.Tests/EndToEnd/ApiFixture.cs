@@ -3,7 +3,6 @@
 
 using System.Net.Http.Headers;
 using Grpc.Net.Client;
-using Grpc.Net.Client.Web;
 
 namespace MartinCostello.Api.EndToEnd;
 
@@ -43,9 +42,6 @@ public sealed class ApiFixture
     public GrpcChannel CreateGrpcChannel()
     {
         Assert.SkipWhen(ServerAddress is null, $"The {WebsiteUrl} environment variable is not set or is not a valid absolute URI.");
-        return GrpcChannel.ForAddress(ServerAddress, new()
-        {
-            HttpHandler = new GrpcWebHandler(new HttpClientHandler()),
-        });
+        return GrpcChannel.ForAddress(ServerAddress);
     }
 }
