@@ -51,9 +51,13 @@ public partial class ApiTests(ApiFixture fixture) : EndToEndTest(fixture)
         using var channel = Fixture.CreateGrpcChannel();
 
         var client = new Time.TimeClient(channel);
+        var headers = new Grpc.Core.Metadata()
+        {
+            { "User-Agent", ApiFixture.UserAgentString },
+        };
 
         // Act
-        var actual = await client.NowAsync(new(), cancellationToken: CancellationToken);
+        var actual = await client.NowAsync(new(), headers, cancellationToken: CancellationToken);
 
         // Assert
         actual.ShouldNotBeNull();
