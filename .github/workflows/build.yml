@@ -114,7 +114,7 @@ jobs:
       shell: pwsh
       run: |
         curl https://f.feedz.io/martincostello/openapi-extensions/nuget/index.json
-        dotnet restore --verbosity diagnostic
+        dotnet restore
 
     - name: Build, test and publish
       id: build
