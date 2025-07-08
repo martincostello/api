@@ -112,7 +112,9 @@ jobs:
     - name: Restore NuGet packages
       if: runner.os == 'macOS'
       shell: pwsh
-      run: dotnet restore --verbosity diagnostic
+      run: |
+        curl https://f.feedz.io/martincostello/openapi-extensions/nuget/index.json
+        dotnet restore --verbosity diagnostic
 
     - name: Build, test and publish
       id: build
