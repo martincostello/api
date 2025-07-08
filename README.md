@@ -21,7 +21,7 @@ This project is licensed under the [MIT](https://github.com/martincostello/api/b
 
 ## Building and Testing
 
-To build and test the website run the following command using PowerShell Core:
+To build and test the website run the following command using PowerShell:
 
 ```powershell
 .\build.ps1
