@@ -22,7 +22,6 @@ env:
   DOTNET_NOLOGO: true
   DOTNET_SYSTEM_CONSOLE_ALLOW_ANSI_COLOR_REDIRECTION: 1
   FORCE_COLOR: 3
-  NUGET_CERT_REVOCATION_MODE: offline # HACK feedz.io certificate renewed on 2025-07-05 and now is failing revocation checks on macOS
   NUGET_XMLDOC_MODE: skip
   TERM: xterm
 
@@ -109,6 +108,11 @@ jobs:
         path: ${{ env.NUGET_PACKAGES }}
         key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/*.props') }}
         restore-keys: ${{ runner.os }}-nuget-
+
+    - name: Restore NuGet packages
+      if: runner.os == 'macOS'
+      shell: pwsh
+      run: dotnet restore --verbosity diagnostic
 
     - name: Build, test and publish
       id: build
