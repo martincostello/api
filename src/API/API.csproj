@@ -10,7 +10,7 @@
     <OpenApiDocumentsDirectory>$([System.IO.Path]::Combine($(ArtifactsPath), 'openapi'))</OpenApiDocumentsDirectory>
     <OpenApiGenerateDocuments>true</OpenApiGenerateDocuments>
     <OutputType>Exe</OutputType>
-    <PyroscopeApplicationName>api.martincostello.com</PyroscopeApplicationName>
+    <PyroscopeApplicationName>api-martincostello</PyroscopeApplicationName>
     <PublishAot>true</PublishAot>
     <PublishSelfContained>true</PublishSelfContained>
     <RootNamespace>MartinCostello.Api</RootNamespace>
