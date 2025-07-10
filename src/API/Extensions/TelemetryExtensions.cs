@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
+using System.Diagnostics;
 using OpenTelemetry.Instrumentation.Http;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
@@ -60,6 +61,35 @@ public static class TelemetryExtensions
             });
 
         services.AddOptions<HttpClientTraceInstrumentationOptions>()
-                .Configure<IServiceProvider>((options, _) => options.RecordException = true);
+                .Configure((options) =>
+                {
+                    options.EnrichWithHttpRequestMessage = EnrichHttpActivity;
+                    options.EnrichWithHttpResponseMessage = EnrichHttpActivity;
+                    options.RecordException = true;
+                });
+    }
+
+    private static void EnrichHttpActivity(Activity activity, HttpRequestMessage request)
+    {
+        if (GetTag("server.address", activity.Tags) is { Length: > 0 } hostName)
+        {
+            activity.AddTag("peer.service", hostName);
+        }
+
+        static string? GetTag(string name, IEnumerable<KeyValuePair<string, string?>> tags)
+            => tags.FirstOrDefault((p) => p.Key == name).Value;
+    }
+
+    private static void EnrichHttpActivity(Activity activity, HttpResponseMessage response)
+    {
+        if (response.RequestMessage?.Headers.TryGetValues("x-ms-client-request-id", out var clientRequestId) is true)
+        {
+            activity.SetTag("az.client_request_id", clientRequestId);
+        }
+
+        if (response.Headers.TryGetValues("x-ms-request-id", out var requestId))
+        {
+            activity.SetTag("az.service_request_id", requestId);
+        }
     }
 }
