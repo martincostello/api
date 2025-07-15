@@ -49,8 +49,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os-name: macos
-            runner: macos-latest
+          # HACK Workaround https://github.com/dotnet/sdk/issues/49785
+          #- os-name: macos
+          #  runner: macos-latest
           - os-name: linux
             runner: ubuntu-latest
           - os-name: windows
