@@ -1,10 +1,8 @@
 ﻿// Copyright (c) Martin Costello, 2016. All rights reserved.
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
-using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Microsoft.OpenApi.Reader;
-using Microsoft.OpenApi.Validations;
 
 namespace MartinCostello.Api.Integration;
 
@@ -68,7 +66,6 @@ public class OpenApiTests(TestServerFixture fixture, ITestOutputHelper outputHel
         actual.ShouldNotBeNull();
         actual.Document.ShouldNotBeNull();
         actual.Diagnostic.ShouldNotBeNull();
-        actual.Diagnostic.Errors.ShouldNotBeNull();
         actual.Diagnostic.Errors.ShouldBeEmpty();
 
         var errors = actual.Document.Validate(ruleSet);
