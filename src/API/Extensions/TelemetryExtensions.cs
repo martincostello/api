@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 using System.Diagnostics;
+using OpenTelemetry;
 using OpenTelemetry.Instrumentation.Http;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
@@ -22,43 +23,38 @@ public static class TelemetryExtensions
     {
         ArgumentNullException.ThrowIfNull(services);
 
-        services
-            .AddOpenTelemetry()
-            .WithMetrics((builder) =>
-            {
-                builder.SetResourceBuilder(ApplicationTelemetry.ResourceBuilder)
-                       .AddAspNetCoreInstrumentation()
-                       .AddHttpClientInstrumentation()
-                       .AddProcessInstrumentation()
-                       .AddMeter("System.Runtime");
+        var builder = services.AddOpenTelemetry();
 
-                if (ApplicationTelemetry.IsOtlpCollectorConfigured())
-                {
-                    builder.AddOtlpExporter();
-                }
-            })
-            .WithTracing((builder) =>
-            {
-                builder.SetResourceBuilder(ApplicationTelemetry.ResourceBuilder)
-                       .AddAspNetCoreInstrumentation()
-                       .AddHttpClientInstrumentation()
-                       .AddSource(ApplicationTelemetry.ServiceName);
+        if (ApplicationTelemetry.IsOtlpCollectorConfigured())
+        {
+            builder.UseOtlpExporter();
+        }
 
-                if (environment.IsDevelopment())
-                {
-                    builder.SetSampler(new AlwaysOnSampler());
-                }
+        builder.WithMetrics((builder) =>
+               {
+                   builder.SetResourceBuilder(ApplicationTelemetry.ResourceBuilder)
+                          .AddAspNetCoreInstrumentation()
+                          .AddHttpClientInstrumentation()
+                          .AddProcessInstrumentation()
+                          .AddMeter("System.Runtime");
+               })
+               .WithTracing((builder) =>
+               {
+                   builder.SetResourceBuilder(ApplicationTelemetry.ResourceBuilder)
+                          .AddAspNetCoreInstrumentation()
+                          .AddHttpClientInstrumentation()
+                          .AddSource(ApplicationTelemetry.ServiceName);
 
-                if (ApplicationTelemetry.IsOtlpCollectorConfigured())
-                {
-                    builder.AddOtlpExporter();
-                }
+                   if (environment.IsDevelopment())
+                   {
+                       builder.SetSampler(new AlwaysOnSampler());
+                   }
 
-                if (ApplicationTelemetry.IsPyroscopeConfigured())
-                {
-                    builder.AddProcessor(new Pyroscope.OpenTelemetry.PyroscopeSpanProcessor());
-                }
-            });
+                   if (ApplicationTelemetry.IsPyroscopeConfigured())
+                   {
+                       builder.AddProcessor(new Pyroscope.OpenTelemetry.PyroscopeSpanProcessor());
+                   }
+               });
 
         services.AddOptions<HttpClientTraceInstrumentationOptions>()
                 .Configure((options) =>
