@@ -8,10 +8,10 @@
     <meta http-equiv="pragma" content="no-cache" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="language" content="en" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
     <meta name="robots" content="NOINDEX" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1" />
-</head>
-<body>
+    <link rel="shortcut icon" type="image/x-icon" href="https://cdn.martincostello.com/favicon.ico" />
     <script type="text/javascript">
         if (self == top) {
             document.documentElement.className = document.documentElement.className.replace(/\bjs-flash\b/, '');
@@ -20,35 +20,34 @@
             top.location = self.location;
         }
     </script>
-    <div class="navbar navbar-default navbar-fixed-top">
+    <style>
+        a {
+            color: #0F7661;
+        }
+
+        .body-content {
+            padding-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a id="link-home" class="navbar-brand" href="/">api.martincostello.com</a>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a id="link-blog" href="https://blog.martincostello.com/" target="_blank">Blog</a></li>
-                    <li><a id="link-about" href="https://martincostello.com/home/about/" target="_blank">About</a></li>
-                </ul>
+                <a class="navbar-brand" href="/" title="View the homepage">api.martincostello.com</a>
             </div>
         </div>
-    </div>
-    <div class="container body-content">
+    </nav>
+    <main class="container body-content">
         <h1 class="text-danger">Error</h1>
         <h2 class="text-danger">An error occurred while processing your request.</h2>
         <hr />
         <footer>
             <p>
-                &copy; Martin Costello 2019
+                &copy; Martin Costello 2025
             </p>
         </footer>
-    </div>
+    </main>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3.7/flatly/bootstrap.min.css" integrity="sha512-O+EA0Agf5+pB8u7CtnIAYq/BKyFPMT8c0DFjmqLyfIJJ9Fm8GBohV/0H0TFaZ96+jieN8zUVY4IkSBso9z6hpg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.7/js/bootstrap.bundle.min.js" integrity="sha512-Tc0i+vRogmX4NN7tuLbQfBxa8JkfUSAxSFVzmU31nVdHyiHElPPy2cWfFacmCJKw0VqovrzKhdd2TSTMdAxp2g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </body>
