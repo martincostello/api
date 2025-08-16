@@ -37,6 +37,11 @@ public abstract class IntegrationTest : IDisposable
     protected virtual CancellationToken CancellationToken => TestContext.Current.CancellationToken;
 
     /// <summary>
+    /// Gets the <see cref="ApplicationJsonSerializerContext"/> to use.
+    /// </summary>
+    protected virtual ApplicationJsonSerializerContext SerializerContext => ApplicationJsonSerializerContext.Default;
+
+    /// <summary>
     /// Gets the <see cref="TestServerFixture"/> to use.
     /// </summary>
     protected TestServerFixture Fixture { get; }
