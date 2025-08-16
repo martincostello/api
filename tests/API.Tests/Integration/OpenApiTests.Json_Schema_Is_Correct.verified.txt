@@ -330,6 +330,15 @@
           instance: {
             type: string,
             nullable: true
+          },
+          errors: {
+            type: object,
+            additionalProperties: {
+              type: array,
+              items: {
+                type: string
+              }
+            }
           }
         },
         example: {

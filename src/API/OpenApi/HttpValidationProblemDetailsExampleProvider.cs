@@ -2,17 +2,16 @@
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 using MartinCostello.OpenApi;
-using Microsoft.AspNetCore.Mvc;
 
 namespace MartinCostello.Api.OpenApi;
 
 /// <summary>
-/// A class representing an example provider for <see cref="ProblemDetails"/>.
+/// A class representing an example provider for <see cref="HttpValidationProblemDetails"/>.
 /// </summary>
-internal sealed class ProblemDetailsExampleProvider : IExampleProvider<ProblemDetails>
+internal sealed class HttpValidationProblemDetailsExampleProvider : IExampleProvider<HttpValidationProblemDetails>
 {
     /// <inheritdoc/>
-    public static ProblemDetails GenerateExample()
+    public static HttpValidationProblemDetails GenerateExample()
     {
         return new()
         {

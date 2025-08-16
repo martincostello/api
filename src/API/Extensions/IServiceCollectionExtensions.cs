@@ -4,7 +4,6 @@
 using MartinCostello.Api.OpenApi;
 using MartinCostello.Api.Options;
 using MartinCostello.OpenApi;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
 namespace MartinCostello.Api.Extensions;
@@ -31,6 +30,17 @@ public static class IServiceCollectionExtensions
         services.AddOpenApi(DocumentName, (options) =>
         {
             options.AddDocumentTransformer<AddApiInfo>();
+
+            var original = options.CreateSchemaReferenceId;
+            options.CreateSchemaReferenceId = (type) =>
+            {
+                if (type.Type == typeof(HttpValidationProblemDetails))
+                {
+                    return "ProblemDetails";
+                }
+
+                return original(type);
+            };
         });
 
         services.AddOpenApiExtensions(DocumentName, (options) =>
@@ -39,7 +49,7 @@ public static class IServiceCollectionExtensions
             options.AddServerUrls = true;
             options.SerializationContexts.Add(ApplicationJsonSerializerContext.Default);
 
-            options.AddExample<ProblemDetails, ProblemDetailsExampleProvider>();
+            options.AddExample<HttpValidationProblemDetails, HttpValidationProblemDetailsExampleProvider>();
             options.AddXmlComments<Program>();
         });
 
