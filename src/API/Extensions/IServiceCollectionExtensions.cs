@@ -50,7 +50,6 @@ public static class IServiceCollectionExtensions
             options.SerializationContexts.Add(ApplicationJsonSerializerContext.Default);
 
             options.AddExample<HttpValidationProblemDetails, HttpValidationProblemDetailsExampleProvider>();
-            options.AddXmlComments<Program>();
         });
 
         return services;
