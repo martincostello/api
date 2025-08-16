@@ -88,6 +88,8 @@ public static class ApiBuilder
             options.Providers.Add<GzipCompressionProvider>();
         });
 
+        builder.Services.AddValidation();
+
         builder.Services.Configure<RouteOptions>((options) =>
         {
             options.AppendTrailingSlash = true;
