@@ -5,7 +5,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using MartinCostello.Api.Models;
-using Microsoft.AspNetCore.Mvc;
 
 namespace MartinCostello.Api;
 
@@ -16,9 +15,9 @@ namespace MartinCostello.Api;
 [JsonSerializable(typeof(GuidResponse))]
 [JsonSerializable(typeof(HashRequest))]
 [JsonSerializable(typeof(HashResponse))]
+[JsonSerializable(typeof(HttpValidationProblemDetails))]
 [JsonSerializable(typeof(JsonObject))]
 [JsonSerializable(typeof(MachineKeyResponse))]
-[JsonSerializable(typeof(ProblemDetails))]
 [JsonSerializable(typeof(TimeResponse))]
 [JsonSourceGenerationOptions(
     NumberHandling = JsonNumberHandling.Strict,

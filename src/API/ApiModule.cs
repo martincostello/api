@@ -10,7 +10,6 @@ using System.Text.Json.Nodes;
 using MartinCostello.Api.Models;
 using MartinCostello.OpenApi;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 
 namespace MartinCostello.Api;
 
@@ -61,7 +60,7 @@ public static class ApiModule
              .WithName("Guid")
              .WithSummary("Generates a GUID.")
              .WithDescription("Generates a new GUID in the specified format.")
-             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest, "application/problem+json")
+             .Produces<HttpValidationProblemDetails>(StatusCodes.Status400BadRequest, "application/problem+json")
              .ProducesOpenApiResponse(StatusCodes.Status200OK, "A GUID was generated successfully.")
              .ProducesOpenApiResponse(StatusCodes.Status400BadRequest, "The specified format is invalid.");
 
@@ -69,7 +68,7 @@ public static class ApiModule
              .WithName("Hash")
              .WithSummary("Hashes a string.")
              .WithDescription("Generates a hash of some plaintext for a specified hash algorithm and returns it in the required format.")
-             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest, "application/problem+json")
+             .Produces<HttpValidationProblemDetails>(StatusCodes.Status400BadRequest, "application/problem+json")
              .ProducesOpenApiResponse(StatusCodes.Status200OK, "The hash was generated successfully.")
              .ProducesOpenApiResponse(StatusCodes.Status400BadRequest, "The specified hash algorithm or output format is invalid.");
 
@@ -77,7 +76,7 @@ public static class ApiModule
              .WithName("MachineKey")
              .WithSummary("Generates a machine key.")
              .WithDescription("Generates a machine key for a Web.config configuration file for ASP.NET.")
-             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest, "application/problem+json")
+             .Produces<HttpValidationProblemDetails>(StatusCodes.Status400BadRequest, "application/problem+json")
              .ProducesOpenApiResponse(StatusCodes.Status200OK, "The machine key was generated successfully.")
              .ProducesOpenApiResponse(StatusCodes.Status400BadRequest, "The specified decryption or validation algorithm is invalid.");
 
@@ -131,7 +130,7 @@ public static class ApiModule
     private static Ok<TimeResponse> GetTime(TimeProvider timeProvider)
         => TypedResults.Ok(TimeService.Now(timeProvider));
 
-    private static Results<Ok<GuidResponse>, ProblemHttpResult> GenerateGuid(
+    private static Results<Ok<GuidResponse>, ValidationProblem> GenerateGuid(
         [Description("The format for which to generate a GUID.")][OpenApiExample("D")] string? format,
         [Description("Whether to return the GUID in uppercase.")] bool? uppercase)
     {
@@ -154,7 +153,7 @@ public static class ApiModule
         return TypedResults.Ok(new GuidResponse() { Guid = guid });
     }
 
-    private static Results<Ok<HashResponse>, ProblemHttpResult> GenerateHash(HashRequest? request)
+    private static Results<Ok<HashResponse>, ValidationProblem> GenerateHash(HashRequest? request)
     {
         if (request == null)
         {
@@ -220,7 +219,7 @@ public static class ApiModule
         return TypedResults.Ok(result);
     }
 
-    private static Results<Ok<MachineKeyResponse>, ProblemHttpResult> GenerateMachineKey(
+    private static Results<Ok<MachineKeyResponse>, ValidationProblem> GenerateMachineKey(
         [Description("The name of the decryption algorithm.")][OpenApiExample("AES-256")] string? decryptionAlgorithm,
         [Description("The name of the validation algorithm.")][OpenApiExample("SHA1")] string? validationAlgorithm)
     {

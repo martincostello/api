@@ -71,6 +71,7 @@ paths:
                 title: Bad Request
                 status: 400
                 detail: The specified value is invalid.
+                errors: { }
   /tools/hash:
     post:
       tags:
@@ -107,6 +108,7 @@ paths:
                 title: Bad Request
                 status: 400
                 detail: The specified value is invalid.
+                errors: { }
   /tools/machinekey:
     get:
       tags:
@@ -149,6 +151,7 @@ paths:
                 title: Bad Request
                 status: 400
                 detail: The specified value is invalid.
+                errors: { }
 components:
   schemas:
     GuidResponse:
@@ -227,11 +230,18 @@ components:
         instance:
           type: string
           nullable: true
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
       example:
         type: https://tools.ietf.org/html/rfc7231#section-6.5.1
         title: Bad Request
         status: 400
         detail: The specified value is invalid.
+        errors: { }
     TimeResponse:
       type: object
       properties:

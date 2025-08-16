@@ -17,11 +17,11 @@ internal static class ResultsExtensions
     /// <param name="resultExtensions">The <see cref="IResultExtensions"/> being extended.</param>
     /// <param name="detail">The error detail.</param>
     /// <returns>
-    /// The <see cref="ProblemHttpResult"/> representing the response.
+    /// The <see cref="ValidationProblem"/> representing the response.
     /// </returns>
-    public static ProblemHttpResult InvalidRequest(this IResultExtensions resultExtensions, string detail)
+    public static ValidationProblem InvalidRequest(this IResultExtensions resultExtensions, string detail)
     {
         ArgumentNullException.ThrowIfNull(resultExtensions);
-        return TypedResults.Problem(detail, statusCode: StatusCodes.Status400BadRequest);
+        return TypedResults.ValidationProblem([], detail);
     }
 }
