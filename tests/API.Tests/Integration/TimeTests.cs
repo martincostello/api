@@ -24,11 +24,11 @@ public class TimeTests(TestServerFixture fixture, ITestOutputHelper outputHelper
         using var client = Fixture.CreateClient();
 
         // Act
-        var actual = await client.GetFromJsonAsync("/time", ApplicationJsonSerializerContext.Default.TimeResponse, CancellationToken);
+        var actual = await client.GetFromJsonAsync("/time", SerializerContext.TimeResponse, CancellationToken);
 
         // Assert
         actual.ShouldNotBeNull();
-        actual!.Timestamp.ShouldBe(new DateTimeOffset(2016, 05, 24, 12, 34, 56, TimeSpan.Zero));
+        actual.Timestamp.ShouldBe(new DateTimeOffset(2016, 05, 24, 12, 34, 56, TimeSpan.Zero));
         actual.Rfc1123.ShouldBe("Tue, 24 May 2016 12:34:56 GMT");
         actual.UniversalFull.ShouldBe("Tuesday, 24 May 2016 12:34:56");
         actual.UniversalSortable.ShouldBe("2016-05-24 12:34:56Z");
@@ -52,7 +52,7 @@ public class TimeTests(TestServerFixture fixture, ITestOutputHelper outputHelper
 
         // Assert
         actual.ShouldNotBeNull();
-        actual!.Timestamp.ShouldBe("2016-05-24T12:34:56.0000000+00:00");
+        actual.Timestamp.ShouldBe("2016-05-24T12:34:56.0000000+00:00");
         actual.Rfc1123.ShouldBe("Tue, 24 May 2016 12:34:56 GMT");
         actual.UniversalFull.ShouldBe("Tuesday, 24 May 2016 12:34:56");
         actual.UniversalSortable.ShouldBe("2016-05-24 12:34:56Z");
