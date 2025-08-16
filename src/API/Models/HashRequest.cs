@@ -31,7 +31,7 @@ public sealed class HashRequest : IExampleProvider<HashRequest>
     /// Gets or sets the plaintext value to generate the hash from.
     /// </summary>
     [JsonPropertyName("plaintext")]
-    [Required(AllowEmptyStrings = true)]
+    [Required]
     public string Plaintext { get; set; } = string.Empty;
 
     /// <inheritdoc/>

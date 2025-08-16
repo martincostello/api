@@ -3,6 +3,7 @@
 
 using System.Net;
 using System.Net.Http.Json;
+using System.Text.Json;
 using System.Xml.Linq;
 using MartinCostello.Api.Models;
 
@@ -51,9 +52,10 @@ public class ToolsTests(TestServerFixture fixture, ITestOutputHelper outputHelpe
         using var response = await client.PostAsJsonAsync("/tools/hash", request, ApplicationJsonSerializerContext.Default.HashRequest, CancellationToken);
 
         // Assert
-        response.EnsureSuccessStatusCode();
+        string body = await response.Content.ReadAsStringAsync(CancellationToken);
+        response.StatusCode.ShouldBe(HttpStatusCode.OK, body);
 
-        var actual = await response.Content.ReadFromJsonAsync(ApplicationJsonSerializerContext.Default.HashResponse, CancellationToken);
+        var actual = JsonSerializer.Deserialize(body, ApplicationJsonSerializerContext.Default.HashResponse);
 
         actual.ShouldNotBeNull();
         actual.Hash.ShouldBe(expected);
