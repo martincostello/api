@@ -120,7 +120,14 @@
           content: {
             application/json: {
               schema: {
-                $ref: #/components/schemas/HashRequest
+                oneOf: [
+                  {
+                    type: null
+                  },
+                  {
+                    $ref: #/components/schemas/HashRequest
+                  }
+                ]
               },
               example: {
                 algorithm: sha256,
@@ -248,10 +255,7 @@
           format,
           plaintext
         ],
-        type: [
-          null,
-          object
-        ],
+        type: object,
         properties: {
           algorithm: {
             type: string,
