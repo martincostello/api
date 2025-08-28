@@ -5,7 +5,7 @@
     <NoWarn>$(NoWarn);SA1601</NoWarn>
     <OutputType>Exe</OutputType>
     <RootNamespace>MartinCostello.Api</RootNamespace>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <UseDefaultCodeAnalysisRuleSet>true</UseDefaultCodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
@@ -24,7 +24,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
     <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
-    <PackageReference Include="Microsoft.OpenApi.Readers" />
+    <PackageReference Include="Microsoft.OpenApi.YamlReader" />
     <PackageReference Include="ReportGenerator" />
     <PackageReference Include="Shouldly" />
     <PackageReference Include="Verify.XunitV3" />
