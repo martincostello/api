@@ -24,7 +24,7 @@ public class ResourceTests(ApiFixture fixture) : EndToEndTest(fixture)
     [InlineData("/humans.txt", MediaTypeNames.Text.Plain)]
     [InlineData("/keybase.txt", MediaTypeNames.Text.Plain)]
     [InlineData("/openapi/api.json", MediaTypeNames.Application.Json)]
-    [InlineData("/openapi/api.yaml", MediaTypeNames.Application.Yaml)]
+    [InlineData("/openapi/api.yaml", "text/plain+yaml")]
     [InlineData("/robots.txt", MediaTypeNames.Text.Plain)]
     [InlineData("/robots933456.txt", MediaTypeNames.Text.Plain)]
     [InlineData("/sitemap.xml", MediaTypeNames.Text.Xml)]
