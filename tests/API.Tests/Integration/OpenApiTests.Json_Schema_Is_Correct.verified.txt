@@ -1,5 +1,5 @@
 ﻿{
-  openapi: 3.0.4,
+  openapi: 3.1.1,
   info: {
     title: api.martincostello.com,
     description: Martin Costello's API,
@@ -120,7 +120,14 @@
           content: {
             application/json: {
               schema: {
-                $ref: #/components/schemas/HashRequest
+                oneOf: [
+                  {
+                    type: null
+                  },
+                  {
+                    $ref: #/components/schemas/HashRequest
+                  }
+                ]
               },
               example: {
                 algorithm: sha256,
@@ -264,7 +271,6 @@
           }
         },
         description: Represents a request to the /tools/hash API resource.,
-        nullable: true,
         example: {
           algorithm: sha256,
           format: base64,
@@ -311,25 +317,35 @@
         type: object,
         properties: {
           type: {
-            type: string,
-            nullable: true
+            type: [
+              null,
+              string
+            ]
           },
           title: {
-            type: string,
-            nullable: true
+            type: [
+              null,
+              string
+            ]
           },
           status: {
-            type: integer,
-            format: int32,
-            nullable: true
+            type: [
+              null,
+              integer
+            ],
+            format: int32
           },
           detail: {
-            type: string,
-            nullable: true
+            type: [
+              null,
+              string
+            ]
           },
           instance: {
-            type: string,
-            nullable: true
+            type: [
+              null,
+              string
+            ]
           },
           errors: {
             type: object,
