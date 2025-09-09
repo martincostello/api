@@ -3,21 +3,21 @@
   "isRoot": true,
   "tools": {
     "microsoft.crank.agent": {
-      "version": "0.2.0-alpha.25418.1",
+      "version": "0.2.0-alpha.25426.4",
       "commands": [
         "crank-agent"
       ],
       "rollForward": true
     },
     "microsoft.crank.controller": {
-      "version": "0.2.0-alpha.25418.1",
+      "version": "0.2.0-alpha.25426.4",
       "commands": [
         "crank"
       ],
       "rollForward": true
     },
     "microsoft.crank.pullrequestbot": {
-      "version": "0.2.0-alpha.25418.1",
+      "version": "0.2.0-alpha.25426.4",
       "commands": [
         "crank-pr"
       ],

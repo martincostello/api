@@ -170,7 +170,9 @@ components:
         - algorithm
         - format
         - plaintext
-      type: object
+      type:
+        - 'null'
+        - object
       properties:
         algorithm:
           type: string
