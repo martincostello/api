@@ -16,7 +16,12 @@
         and the source code can be found on <a href="@(options.Metadata?.Repository)" rel="noopener" target="_blank" title="This application's GitHub repository">GitHub</a>.
     </p>
     <p>
-        It is currently running @(System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription).
+        @{
+            string? description = System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription;
+            string? version = description?.Split(' ')[^1];
+            string releaseUrl = $"https://github.com/dotnet/dotnet/releases/tag/v{version}";
+        }
+        It is currently running <a href="@(releaseUrl)" target="_blank" rel="noopener">@(description)</a>.
     </p>
 </div>
 <div class="row">
