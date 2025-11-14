@@ -120,7 +120,7 @@ script-src 'self' ajax.googleapis.com cdnjs.cloudflare.com www.googletagmanager.
 style-src 'self' ajax.googleapis.com cdnjs.cloudflare.com fonts.googleapis.com 'unsafe-inline';
 img-src 'self' data: online.swagger.io www.googletagmanager.com {GetCdnOriginForContentSecurityPolicy(options)};
 font-src 'self' ajax.googleapis.com fonts.googleapis.com fonts.gstatic.com;
-connect-src 'self' region1.google-analytics.com www.google-analytics.com;
+connect-src 'self' cdnjs.cloudflare.com region1.google-analytics.com www.google-analytics.com;
 media-src 'none';
 object-src 'none';
 child-src 'none';
