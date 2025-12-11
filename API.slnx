@@ -39,6 +39,7 @@
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/API/API.csproj" />
+    <Project Path="src/API.AppHost/API.AppHost.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/API.Benchmarks/API.Benchmarks.csproj" />

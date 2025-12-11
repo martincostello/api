@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "AppHost": {
+      "commandName": "Project",
+      "applicationUrl": "https://localhost:15298;http://localhost:15299",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DOTNET_ENVIRONMENT": "Development",
+        "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "https://localhost:17098",
+        "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL": "https://localhost:17099",
+        "OTEL_DOTNET_EXPERIMENTAL_ASPNETCORE_ENABLE_GRPC_INSTRUMENTATION": "true"
+      }
+    }
+  }
+}
