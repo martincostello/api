@@ -25,7 +25,7 @@
     "@typescript-eslint/eslint-plugin": "8.49.0",
     "@typescript-eslint/parser": "8.49.0",
     "css-loader": "7.1.2",
-    "css-minimizer-webpack-plugin": "7.0.3",
+    "css-minimizer-webpack-plugin": "7.0.4",
     "eslint": "9.39.1",
     "eslint-config-prettier": "10.1.8",
     "globals": "16.5.0",
