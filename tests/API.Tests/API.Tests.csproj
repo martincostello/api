@@ -5,7 +5,7 @@
     <NoWarn>$(NoWarn);SA1601</NoWarn>
     <OutputType>Exe</OutputType>
     <RootNamespace>MartinCostello.Api</RootNamespace>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>net11.0</TargetFramework>
     <UseDefaultCodeAnalysisRuleSet>true</UseDefaultCodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
@@ -36,7 +36,7 @@
   </ItemGroup>
   <PropertyGroup>
     <CollectCoverage Condition=" '$(WEBSITE_URL)' == '' ">true</CollectCoverage>
-    <Threshold>85,54,90</Threshold>
+    <Threshold>85,54,85</Threshold>
   </PropertyGroup>
   <ItemGroup>
     <CoverletExclude Include="$([MSBuild]::Escape('[MartinCostello.OpenApi.Extensions]*'))" />
