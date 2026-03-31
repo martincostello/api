@@ -4,7 +4,7 @@
 import moment from 'moment';
 
 document.addEventListener('DOMContentLoaded', () => {
-    const trackingId = document.querySelector('meta[name="google-analytics"]').getAttribute('content');
+    const trackingId = document.querySelector('meta[name="google-analytics"]')?.getAttribute('content');
     if (trackingId && 'dataLayer' in window) {
         const dataLayer = (window.dataLayer as any[]) || [];
         const gtag = (...args: any[]) => {
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const timestamp = element.getAttribute('data-timestamp');
         const format = element.getAttribute('data-format');
 
-        const value = moment(timestamp, format);
+        const value = moment(timestamp, format ?? undefined);
         if (value.isValid()) {
             const text: string = value.fromNow();
             element.textContent = `(${text})`;
@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if ('SwaggerUIBundle' in window && 'SwaggerUIStandalonePreset' in window) {
         const swaggerUIBundle = window['SwaggerUIBundle'] as any;
         const swaggerUIStandalonePreset = window['SwaggerUIStandalonePreset'] as any;
-        const url = document.querySelector('link[rel="swagger"]').getAttribute('href');
+        const url = document.querySelector('link[rel="swagger"]')?.getAttribute('href');
         const ui: any = swaggerUIBundle({
             url: url,
             /* eslint-disable @typescript-eslint/naming-convention */
