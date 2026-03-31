@@ -216,10 +216,10 @@ public static class ApiBuilder
 
         string[] methods = [HttpMethod.Get.Method, HttpMethod.Head.Method];
 
-        app.MapMethods("/", methods, () => Results.Extensions.RazorSlice<Home>())
+        app.MapMethods("/", methods, () => Results.RazorSlice<Home>())
            .ExcludeFromDescription();
 
-        app.MapMethods("/docs", methods, () => Results.Extensions.RazorSlice<Docs>())
+        app.MapMethods("/docs", methods, () => Results.RazorSlice<Docs>())
            .ExcludeFromDescription();
 
         app.MapMethods("/error", methods, (int? id) =>
@@ -232,7 +232,7 @@ public static class ApiBuilder
                 statusCode = status;
             }
 
-            return Results.Extensions.RazorSlice<Error>(statusCode);
+            return Results.RazorSlice<Error>(statusCode);
         }).ExcludeFromDescription();
 
         return app;
