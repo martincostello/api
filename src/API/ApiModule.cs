@@ -142,7 +142,7 @@ public static class ApiModule
         }
         catch (FormatException)
         {
-            return Results.InvalidRequest($"The specified format '{format}' is invalid.");
+            return Results.Extensions.InvalidRequest($"The specified format '{format}' is invalid.");
         }
 
         if (uppercase is true)
@@ -157,17 +157,17 @@ public static class ApiModule
     {
         if (request == null)
         {
-            return Results.InvalidRequest("No hash request specified.");
+            return Results.Extensions.InvalidRequest("No hash request specified.");
         }
 
         if (string.IsNullOrWhiteSpace(request.Algorithm))
         {
-            return Results.InvalidRequest("No hash algorithm name specified.");
+            return Results.Extensions.InvalidRequest("No hash algorithm name specified.");
         }
 
         if (string.IsNullOrWhiteSpace(request.Format))
         {
-            return Results.InvalidRequest("No hash output format specified.");
+            return Results.Extensions.InvalidRequest("No hash output format specified.");
         }
 
         bool formatAsBase64;
@@ -183,14 +183,14 @@ public static class ApiModule
                 break;
 
             default:
-                return Results.InvalidRequest($"The specified hash format '{request.Format}' is invalid.");
+                return Results.Extensions.InvalidRequest($"The specified hash format '{request.Format}' is invalid.");
         }
 
         const int MaxPlaintextLength = 4096;
 
         if (request.Plaintext?.Length > MaxPlaintextLength)
         {
-            return Results.InvalidRequest($"The plaintext to hash cannot be more than {MaxPlaintextLength} characters in length.");
+            return Results.Extensions.InvalidRequest($"The plaintext to hash cannot be more than {MaxPlaintextLength} characters in length.");
         }
 
         byte[] buffer = Encoding.UTF8.GetBytes(request.Plaintext ?? string.Empty);
@@ -206,7 +206,7 @@ public static class ApiModule
 
         if (hashAlgorithm is not { } algorithm)
         {
-            return Results.InvalidRequest($"The specified hash algorithm '{request.Algorithm}' is not supported.");
+            return Results.Extensions.InvalidRequest($"The specified hash algorithm '{request.Algorithm}' is not supported.");
         }
 
         byte[] hash = CryptographicOperations.HashData(algorithm, buffer);
@@ -226,13 +226,13 @@ public static class ApiModule
         if (string.IsNullOrEmpty(decryptionAlgorithm) ||
             !HashSizes.TryGetValue(decryptionAlgorithm + "-D", out int decryptionKeyLength))
         {
-            return Results.InvalidRequest($"The specified decryption algorithm '{decryptionAlgorithm}' is invalid.");
+            return Results.Extensions.InvalidRequest($"The specified decryption algorithm '{decryptionAlgorithm}' is invalid.");
         }
 
         if (string.IsNullOrEmpty(validationAlgorithm) ||
             !HashSizes.TryGetValue(validationAlgorithm + "-V", out int validationKeyLength))
         {
-            return Results.InvalidRequest($"The specified validation algorithm '{validationAlgorithm}' is invalid.");
+            return Results.Extensions.InvalidRequest($"The specified validation algorithm '{validationAlgorithm}' is invalid.");
         }
 
         byte[] decryptionKey = RandomNumberGenerator.GetBytes(decryptionKeyLength);
