@@ -101,7 +101,6 @@ public static class ApiBuilder
 
             options.ContentTypeProvider = provider;
             options.DefaultContentType = MediaTypeNames.Application.Json;
-            options.ServeUnknownFileTypes = true;
 
             options.OnPrepareResponse = (context) =>
             {
