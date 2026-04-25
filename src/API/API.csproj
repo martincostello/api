@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-    <ContainerFamily>noble-chiseled</ContainerFamily>
+    <ContainerFamily>resolute-chiseled</ContainerFamily>
     <ContainerRepository>martincostello/api</ContainerRepository>
     <Description>Martin Costello's API</Description>
     <EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
