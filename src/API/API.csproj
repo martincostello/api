@@ -24,10 +24,6 @@
     <Content Update="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
     <PyroscopeLabels Include="api" />
   </ItemGroup>
-  <!-- HACK https://github.com/dotnet/runtime/issues/125435 -->
-  <ItemGroup Condition="$([System.OperatingSystem]::IsLinux())">
-    <LinkerArg Include="-Wl,--no-warn-execstack" />
-  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Grpc.AspNetCore" />
     <PackageReference Include="MartinCostello.OpenApi.Extensions" />
