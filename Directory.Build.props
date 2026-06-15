@@ -3,6 +3,8 @@
     <Authors>Martin Costello</Authors>
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)API.ruleset</CodeAnalysisRuleSet>
+    <!-- HACK Workaround for https://github.com/getsentry/sentry-dotnet/issues/4801 -->
+    <ControlFlowGuard>false</ControlFlowGuard>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
