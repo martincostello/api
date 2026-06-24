@@ -61,6 +61,10 @@
       <Content Include="wwwroot/**" CopyToPublishDirectory="PreserveNewest" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder);@(Content)" />
     </ItemGroup>
   </Target>
+  <!-- See https://learn.microsoft.com/aspnet/core/release-notes/aspnetcore-11#native-opentelemetry-tracing-for-aspnet-core -->
+  <ItemGroup>
+    <RuntimeHostConfigurationOption Include="Microsoft.AspNetCore.Hosting.SuppressActivityOpenTelemetryData" Value="false" />
+  </ItemGroup>
   <!--
     HACK Pyroscope's profiler does not work with native AoT
   -->
