@@ -16,7 +16,7 @@ jobs:
 
     env:
       # renovate: datasource=npm depName=spectral-cli packageName=@stoplight/spectral-cli
-      SPECTRAL_CLI_VERSION: '6.16.0'
+      SPECTRAL_CLI_VERSION: '6.16.1'
 
     permissions:
       contents: read
