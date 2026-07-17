@@ -9,7 +9,6 @@
     <InvariantGlobalization>true</InvariantGlobalization>
     <OpenApiDocumentsDirectory>$([System.IO.Path]::Combine($(ArtifactsPath), 'openapi'))</OpenApiDocumentsDirectory>
     <OpenApiGenerateDocuments>true</OpenApiGenerateDocuments>
-    <OpenApiGenerateDocumentsOptions>--openapi-version OpenApi3_1</OpenApiGenerateDocumentsOptions>
     <OutputType>Exe</OutputType>
     <PyroscopeApplicationName>api-martincostello</PyroscopeApplicationName>
     <PublishAot>true</PublishAot>
