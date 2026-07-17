@@ -2,7 +2,6 @@
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
     <File Path=".gitignore" />
-    <File Path=".spectral.yaml" />
     <File Path=".vsconfig" />
     <File Path="API.ruleset" />
     <File Path="benchmark-crank.ps1" />
@@ -30,7 +29,6 @@
     <File Path=".github/workflows/dependency-review.yml" />
     <File Path=".github/workflows/lint.yml" />
     <File Path=".github/workflows/npm-audit-fix.yml" />
-    <File Path=".github/workflows/spectral.yml" />
   </Folder>
   <Folder Name="/Solution Items/.vscode/">
     <File Path=".vscode/extensions.json" />
