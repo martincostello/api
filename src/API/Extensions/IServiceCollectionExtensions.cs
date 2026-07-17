@@ -29,7 +29,6 @@ public static class IServiceCollectionExtensions
 
         services.AddOpenApi(DocumentName, (options) =>
         {
-            options.OpenApiVersion = Microsoft.OpenApi.OpenApiSpecVersion.OpenApi3_1;
             options.AddDocumentTransformer<AddApiInfo>();
 
             var original = options.CreateSchemaReferenceId;
