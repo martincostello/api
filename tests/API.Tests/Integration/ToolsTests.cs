@@ -2,7 +2,6 @@
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 using System.Net;
-using System.Net.Http.Json;
 using System.Text.Json;
 using System.Xml.Linq;
 using MartinCostello.Api.Models;
