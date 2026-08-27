@@ -28,6 +28,7 @@
     <PackageReference Include="Microsoft.AspNetCore.AzureAppServices.HostingStartup" NoWarn="RT0003" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
     <PackageReference Include="Microsoft.Extensions.ApiDescription.Server" NoWarn="RT0003" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.ResourceMonitoring" />
     <PackageReference Include="Microsoft.OpenApi" />
     <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" />
     <PackageReference Include="OpenTelemetry.Extensions.Hosting" />

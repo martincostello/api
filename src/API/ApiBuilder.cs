@@ -142,6 +142,12 @@ public static class ApiBuilder
 
         builder.Services.TryAddSingleton(TimeProvider.System);
 
+        // Workaround for https://github.com/dotnet/extensions/issues/5962
+        if (OperatingSystem.IsLinux() || OperatingSystem.IsWindows())
+        {
+            builder.Services.AddResourceMonitoring();
+        }
+
         builder.Logging.AddTelemetry();
 
         builder.WebHost.CaptureStartupErrors(true);
