@@ -1,4 +1,4 @@
-﻿openapi: '3.1.1'
+﻿openapi: '3.2.0'
 info:
   title: api.martincostello.com
   description: Martin Costello's API
@@ -157,15 +157,19 @@ paths:
 components:
   schemas:
     GuidResponse:
+      examples:
+        - guid: 6bc55a07-3d3e-4d52-8701-362a1187772d
       type: object
       properties:
         guid:
           type: string
           description: The generated GUID value.
       description: Represents the response from the /tools/guid API resource.
-      example:
-        guid: 6bc55a07-3d3e-4d52-8701-362a1187772d
     HashRequest:
+      examples:
+        - algorithm: sha256
+          format: base64
+          plaintext: The quick brown fox jumped over the lazy dog
       required:
         - algorithm
         - format
@@ -182,20 +186,20 @@ components:
           type: string
           description: The plaintext value to generate the hash from.
       description: Represents a request to the /tools/hash API resource.
-      example:
-        algorithm: sha256
-        format: base64
-        plaintext: The quick brown fox jumped over the lazy dog
     HashResponse:
+      examples:
+        - hash: fTi1zSWiuvha07tbkxE4PmcaihQuswKzJNSl+6h0jGk=
       type: object
       properties:
         hash:
           type: string
           description: A string containing the generated hash value in the requested format.
       description: Represents the response from the /tools/hash API resource.
-      example:
-        hash: fTi1zSWiuvha07tbkxE4PmcaihQuswKzJNSl+6h0jGk=
     MachineKeyResponse:
+      examples:
+        - decryptionKey: 2EA72C07DEEF522B4686C39BDF83E70A96BA92EE1D960029821FCA2E4CD9FB72
+          validationKey: 0A7A92827A74B9B4D2A21918814D8E4A9150BB5ADDB284533BDB50E44ADA6A4BCCFF637A5CB692816EE304121A1BCAA5A6D96BE31A213DEE0BAAEF102A391E8F
+          machineKeyXml: <machineKey validationKey="0A7A92827A74B9B4D2A21918814D8E4A9150BB5ADDB284533BDB50E44ADA6A4BCCFF637A5CB692816EE304121A1BCAA5A6D96BE31A213DEE0BAAEF102A391E8F" decryptionKey="2EA72C07DEEF522B4686C39BDF83E70A96BA92EE1D960029821FCA2E4CD9FB72" validation="SHA1" decryption="AES" />
       type: object
       properties:
         decryptionKey:
@@ -208,11 +212,13 @@ components:
           type: string
           description: A string containing the machineKey XML configuration element.
       description: Represents the response from the /tools/machinekey API resource.
-      example:
-        decryptionKey: 2EA72C07DEEF522B4686C39BDF83E70A96BA92EE1D960029821FCA2E4CD9FB72
-        validationKey: 0A7A92827A74B9B4D2A21918814D8E4A9150BB5ADDB284533BDB50E44ADA6A4BCCFF637A5CB692816EE304121A1BCAA5A6D96BE31A213DEE0BAAEF102A391E8F
-        machineKeyXml: <machineKey validationKey="0A7A92827A74B9B4D2A21918814D8E4A9150BB5ADDB284533BDB50E44ADA6A4BCCFF637A5CB692816EE304121A1BCAA5A6D96BE31A213DEE0BAAEF102A391E8F" decryptionKey="2EA72C07DEEF522B4686C39BDF83E70A96BA92EE1D960029821FCA2E4CD9FB72" validation="SHA1" decryption="AES" />
     ProblemDetails:
+      examples:
+        - type: https://tools.ietf.org/html/rfc7231#section-6.5.1
+          title: Bad Request
+          status: 400
+          detail: The specified value is invalid.
+          errors: { }
       type: object
       properties:
         type:
@@ -242,13 +248,13 @@ components:
             type: array
             items:
               type: string
-      example:
-        type: https://tools.ietf.org/html/rfc7231#section-6.5.1
-        title: Bad Request
-        status: 400
-        detail: The specified value is invalid.
-        errors: { }
     TimeResponse:
+      examples:
+        - timestamp: '2016-06-03T18:44:14+00:00'
+          rfc1123: 'Fri, 03 Jun 2016 18:44:14 GMT'
+          unix: 1464979454
+          universalSortable: '2016-06-03 18:44:14Z'
+          universalFull: 'Friday, 03 June 2016 18:44:14'
       type: object
       properties:
         timestamp:
@@ -269,11 +275,5 @@ components:
           type: string
           description: The current UTC date and time in universal full format.
       description: Represents the response from the /time API resource.
-      example:
-        timestamp: '2016-06-03T18:44:14+00:00'
-        rfc1123: 'Fri, 03 Jun 2016 18:44:14 GMT'
-        unix: 1464979454
-        universalSortable: '2016-06-03 18:44:14Z'
-        universalFull: 'Friday, 03 June 2016 18:44:14'
 tags:
   - name: API
