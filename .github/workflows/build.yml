@@ -259,7 +259,7 @@ jobs:
   deploy-production:
     if: github.event.repository.fork == false && github.ref_name == github.event.repository.default_branch
     needs: build
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     concurrency: production_environment
 
     environment:
@@ -380,7 +380,7 @@ jobs:
 
   test-production:
     needs: deploy-production
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     concurrency: production_environment
 
     permissions:
