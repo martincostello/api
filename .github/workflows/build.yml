@@ -96,6 +96,10 @@ jobs:
       with:
         node-version: '24.x'
 
+    - name: Install .NET Tools
+      shell: pwsh
+      run: dotnet tool restore
+
     - name: Build, test and publish
       id: build
       shell: pwsh
@@ -404,6 +408,6 @@ jobs:
         node-version: '24.x'
 
     - name: Run end-to-end tests
-      run: dotnet test ./tests/API.Tests --configuration Release --filter Category=EndToEnd --logger "GitHubActions;report-warnings=false"
+      run: dotnet test ./tests/API.Tests --configuration Release --filter-trait "Category=EndToEnd"
       env:
         WEBSITE_URL: ${{ env.APPLICATION_URL_PROD }}
