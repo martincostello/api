@@ -16,6 +16,11 @@
     <RootNamespace>MartinCostello.Api</RootNamespace>
     <TargetFramework>net11.0</TargetFramework>
     <UserSecretsId>api.martincostello.com</UserSecretsId>
+    <!--
+      HACK Work around .NET 11 RC2 SDK issue where the optimized AOT publish path skips copying
+      the XML documentation file to the output directory but publish still expects it there.
+    -->
+    <UseOptimizedPublish>false</UseOptimizedPublish>
   </PropertyGroup>
   <ItemGroup>
     <ContainerPort Include="8080" Type="tcp" />
