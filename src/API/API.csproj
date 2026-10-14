@@ -16,6 +16,8 @@
     <RootNamespace>MartinCostello.Api</RootNamespace>
     <TargetFramework>net11.0</TargetFramework>
     <UserSecretsId>api.martincostello.com</UserSecretsId>
+    <!-- HACK Workaround for https://github.com/dotnet/sdk/issues/56618 -->
+    <UseOptimizedPublish>false</UseOptimizedPublish>
   </PropertyGroup>
   <ItemGroup>
     <ContainerPort Include="8080" Type="tcp" />
