@@ -11,6 +11,7 @@ namespace MartinCostello.Api.OpenApi;
 /// <summary>
 /// A class that adds API information. This class cannot be inherited.
 /// </summary>
+/// <param name="options">The site options.</param>
 internal sealed class AddApiInfo(IOptions<SiteOptions> options) : IOpenApiDocumentTransformer
 {
     /// <inheritdoc/>
