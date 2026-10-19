@@ -6,6 +6,7 @@ namespace MartinCostello.Api.Middleware;
 /// <summary>
 /// A class representing middleware for adding profiler labels for Pyroscope from k6. This class cannot be inherited.
 /// </summary>
+/// <param name="next">The delegate for the next part of the pipeline.</param>
 internal sealed class PyroscopeK6Middleware(RequestDelegate next)
 {
     private readonly RequestDelegate _next = next;
