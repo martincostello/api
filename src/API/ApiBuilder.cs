@@ -72,6 +72,7 @@ public static class ApiBuilder
 
         builder.Services.Configure<BrotliCompressionProviderOptions>((p) => p.Level = CompressionLevel.Fastest);
         builder.Services.Configure<GzipCompressionProviderOptions>((p) => p.Level = CompressionLevel.Fastest);
+        builder.Services.Configure<ZstandardCompressionOptions>((p) => p.Quality = 1);
 
         builder.Services.ConfigureHttpJsonOptions((options) =>
         {
@@ -83,10 +84,9 @@ public static class ApiBuilder
 
         builder.Services.AddResponseCompression((options) =>
         {
-            options.EnableForHttps = true;
+            options.Providers.Add<ZstandardCompressionProvider>();
             options.Providers.Add<BrotliCompressionProvider>();
             options.Providers.Add<GzipCompressionProvider>();
-            options.Providers.Add<ZstandardCompressionProvider>();
         });
 
         builder.Services.Configure<RouteOptions>((options) =>
