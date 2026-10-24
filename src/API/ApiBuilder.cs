@@ -86,6 +86,7 @@ public static class ApiBuilder
             options.EnableForHttps = true;
             options.Providers.Add<BrotliCompressionProvider>();
             options.Providers.Add<GzipCompressionProvider>();
+            options.Providers.Add<ZstandardCompressionProvider>();
         });
 
         builder.Services.Configure<RouteOptions>((options) =>
