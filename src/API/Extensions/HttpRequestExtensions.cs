@@ -37,7 +37,7 @@ public static class HttpRequestExtensions
         builder.Query = string.Empty;
         builder.Scheme = "https";
 
-        string canonicalUri = builder.Uri.AbsoluteUri.ToLowerInvariant();
+        string canonicalUri = builder.Uri.AbsoluteUri.ToLowerOrdinal();
 
         if (!canonicalUri.EndsWith('/'))
         {

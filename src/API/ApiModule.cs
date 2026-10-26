@@ -147,7 +147,7 @@ public static class ApiModule
 
         if (uppercase is true)
         {
-            guid = guid.ToUpperInvariant();
+            guid = guid.ToUpperOrdinal();
         }
 
         return TypedResults.Ok(new GuidResponse() { Guid = guid });
@@ -172,7 +172,7 @@ public static class ApiModule
 
         bool formatAsBase64;
 
-        switch (request.Format.ToUpperInvariant())
+        switch (request.Format.ToUpperOrdinal())
         {
             case "BASE64":
                 formatAsBase64 = true;
@@ -194,7 +194,7 @@ public static class ApiModule
         }
 
         byte[] buffer = Encoding.UTF8.GetBytes(request.Plaintext ?? string.Empty);
-        HashAlgorithmName? hashAlgorithm = request.Algorithm.ToUpperInvariant() switch
+        HashAlgorithmName? hashAlgorithm = request.Algorithm.ToUpperOrdinal() switch
         {
             "MD5" => HashAlgorithmName.MD5,
             "SHA1" => HashAlgorithmName.SHA1,
@@ -249,8 +249,8 @@ public static class ApiModule
             @"<machineKey validationKey=""{0}"" decryptionKey=""{1}"" validation=""{2}"" decryption=""{3}"" />",
             result.ValidationKey,
             result.DecryptionKey,
-            validationAlgorithm.Split('-', StringSplitOptions.RemoveEmptyEntries)[0].ToUpperInvariant(),
-            decryptionAlgorithm.Split('-', StringSplitOptions.RemoveEmptyEntries)[0].ToUpperInvariant());
+            validationAlgorithm.Split('-', StringSplitOptions.RemoveEmptyEntries)[0].ToUpperOrdinal(),
+            decryptionAlgorithm.Split('-', StringSplitOptions.RemoveEmptyEntries)[0].ToUpperOrdinal());
 
         return TypedResults.Ok(result);
     }
