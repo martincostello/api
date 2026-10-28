@@ -94,7 +94,7 @@ jobs:
     - name: Setup Node
       uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
       with:
-        node-version: '24.x'
+        node-version: '26.x'
 
     - name: Install .NET Tools
       shell: pwsh
@@ -405,7 +405,7 @@ jobs:
     - name: Setup Node
       uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
       with:
-        node-version: '24.x'
+        node-version: '26.x'
 
     - name: Run end-to-end tests
       run: dotnet test ./tests/API.Tests --configuration Release --filter-trait "Category=EndToEnd"
