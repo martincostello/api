@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See the LICENSE file in the project root for full license information.
 
 using System.Diagnostics;
+using Microsoft.Extensions.Diagnostics.Tracing;
 using OpenTelemetry;
 using OpenTelemetry.Instrumentation.Http;
 using OpenTelemetry.Metrics;
@@ -17,53 +18,56 @@ public static class TelemetryExtensions
     /// <summary>
     /// Adds telemetry services to the specified <see cref="IServiceCollection"/>.
     /// </summary>
-    /// <param name="services">The <see cref="IServiceCollection"/> to configure telemetry for.</param>
-    /// <param name="environment">The current <see cref="IWebHostEnvironment"/>.</param>
-    public static void AddTelemetry(this IServiceCollection services, IWebHostEnvironment environment)
+    /// <param name="builder">The <see cref="IHostApplicationBuilder"/> to configure telemetry for.</param>
+    public static void AddTelemetry(this IHostApplicationBuilder builder)
     {
-        ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(builder);
 
-        var builder = services.AddOpenTelemetry();
+        builder.Services.AddMetrics();
+        builder.Services.AddTracing((p) => p.AddConfiguration(builder.Configuration.GetSection("Tracing")));
+
+        var telemetry = builder.Services.AddOpenTelemetry();
 
         if (ApplicationTelemetry.IsOtlpCollectorConfigured())
         {
-            builder.UseOtlpExporter();
+            telemetry.UseOtlpExporter();
         }
 
-        builder.WithMetrics((builder) =>
-               {
-                   builder.SetResourceBuilder(ApplicationTelemetry.ResourceBuilder)
-                          .AddAspNetCoreInstrumentation()
-                          .AddHttpClientInstrumentation()
-                          .AddProcessInstrumentation()
-                          .AddMeter("Microsoft.Extensions.Diagnostics.ResourceMonitoring")
-                          .AddMeter("System.Runtime")
-                          .SetExemplarFilter(ExemplarFilterType.TraceBased);
-               })
-               .WithTracing((builder) =>
-               {
-                   builder.SetResourceBuilder(ApplicationTelemetry.ResourceBuilder)
-                          .AddAspNetCoreInstrumentation()
-                          .AddHttpClientInstrumentation()
-                          .AddSource(ApplicationTelemetry.ServiceName);
+        telemetry
+            .WithMetrics((metrics) =>
+            {
+                metrics.SetResourceBuilder(ApplicationTelemetry.ResourceBuilder)
+                        .AddAspNetCoreInstrumentation()
+                        .AddHttpClientInstrumentation()
+                        .AddProcessInstrumentation()
+                        .SetExemplarFilter(ExemplarFilterType.TraceBased);
+            })
+            .WithTracing((tracing) =>
+            {
+                tracing.SetResourceBuilder(ApplicationTelemetry.ResourceBuilder)
+                        .AddAspNetCoreInstrumentation()
+                        .AddHttpClientInstrumentation();
 
-                   if (environment.IsDevelopment())
-                   {
-                       builder.SetSampler(new AlwaysOnSampler());
-                   }
-
-                   if (ApplicationTelemetry.IsPyroscopeConfigured())
-                   {
-                       builder.AddProcessor(new Pyroscope.OpenTelemetry.PyroscopeSpanProcessor());
-                   }
-               });
-
-        services.AddOptions<HttpClientTraceInstrumentationOptions>()
-                .Configure((options) =>
+                if (builder.Environment.IsDevelopment())
                 {
-                    options.EnrichWithHttpResponseMessage = EnrichHttpActivity;
-                    options.RecordException = true;
-                });
+                    tracing.SetSampler(new AlwaysOnSampler());
+                }
+
+                if (ApplicationTelemetry.IsPyroscopeConfigured())
+                {
+                    tracing.AddProcessor(new Pyroscope.OpenTelemetry.PyroscopeSpanProcessor());
+                }
+            });
+
+        builder.Services
+            .AddOptions<HttpClientTraceInstrumentationOptions>()
+            .Configure((options) =>
+            {
+                options.EnrichWithHttpResponseMessage = EnrichHttpActivity;
+                options.RecordException = true;
+            });
+
+        builder.Logging.AddTelemetry();
     }
 
     private static void EnrichHttpActivity(Activity activity, HttpResponseMessage response)

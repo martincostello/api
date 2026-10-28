@@ -32,7 +32,7 @@ public static class ApiBuilder
         builder.Services.AddOptions();
         builder.Services.Configure<SiteOptions>(builder.Configuration.GetSection("Site"));
 
-        builder.Services.AddTelemetry(builder.Environment);
+        builder.AddTelemetry();
 
         builder.Services.AddAntiforgery((options) =>
         {
@@ -148,8 +148,6 @@ public static class ApiBuilder
         {
             builder.Services.AddResourceMonitoring();
         }
-
-        builder.Logging.AddTelemetry();
 
         builder.WebHost.CaptureStartupErrors(true);
         builder.WebHost.ConfigureKestrel((options) =>
