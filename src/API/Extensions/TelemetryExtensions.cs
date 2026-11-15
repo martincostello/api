@@ -37,7 +37,6 @@ public static class TelemetryExtensions
             .WithMetrics((metrics) =>
             {
                 metrics.SetResourceBuilder(ApplicationTelemetry.ResourceBuilder)
-                        .AddAspNetCoreInstrumentation()
                         .AddHttpClientInstrumentation()
                         .AddProcessInstrumentation()
                         .SetExemplarFilter(ExemplarFilterType.TraceBased);
@@ -45,7 +44,6 @@ public static class TelemetryExtensions
             .WithTracing((tracing) =>
             {
                 tracing.SetResourceBuilder(ApplicationTelemetry.ResourceBuilder)
-                        .AddAspNetCoreInstrumentation()
                         .AddHttpClientInstrumentation();
 
                 if (builder.Environment.IsDevelopment())
