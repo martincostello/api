@@ -3,9 +3,7 @@
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-const string Project = "API";
-
-builder.AddProject<Projects.API>(Project)
+builder.AddDotnetProject("API", "../API")
        .WithHttpHealthCheck("/version");
 
 var app = builder.Build();
